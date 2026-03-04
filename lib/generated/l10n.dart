@@ -814,6 +814,181 @@ class TR {
   String get toolsFeedbackLog {
     return Intl.message('反馈日志', name: 'toolsFeedbackLog', desc: '', args: []);
   }
+
+  /// `上传失败`
+  String get Upload_F {
+    return Intl.message('上传失败', name: 'Upload_F', desc: '', args: []);
+  }
+
+  /// `上传成功`
+  String get Upload_S {
+    return Intl.message('上传成功', name: 'Upload_S', desc: '', args: []);
+  }
+
+  /// `麦克风权限未开启`
+  String get audio_ability_unsupport {
+    return Intl.message(
+      '麦克风权限未开启',
+      name: 'audio_ability_unsupport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `录音时长至少要大于1秒`
+  String get Recording_Times_Not_DURATION {
+    return Intl.message(
+      '录音时长至少要大于1秒',
+      name: 'Recording_Times_Not_DURATION',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `操作失败`
+  String get operator_failed {
+    return Intl.message('操作失败', name: 'operator_failed', desc: '', args: []);
+  }
+
+  /// `文件大小超过最大限制`
+  String get TR_File_Size_Exceed_Max_Size {
+    return Intl.message(
+      '文件大小超过最大限制',
+      name: 'TR_File_Size_Exceed_Max_Size',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请输入报警提示语`
+  String get TR_Please_Enter_Alarm_Tips {
+    return Intl.message(
+      '请输入报警提示语',
+      name: 'TR_Please_Enter_Alarm_Tips',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `自定义语音`
+  String get tr_settings_alarm_bell_customize {
+    return Intl.message(
+      '自定义语音',
+      name: 'tr_settings_alarm_bell_customize',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `试听`
+  String get TR_Audition {
+    return Intl.message('试听', name: 'TR_Audition', desc: '', args: []);
+  }
+
+  /// `上传提示音`
+  String get TR_Upload_Prompt_Voice {
+    return Intl.message(
+      '上传提示音',
+      name: 'TR_Upload_Prompt_Voice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `正在录音，再次点击结束录音`
+  String get tr_pet_function_recording_state {
+    return Intl.message(
+      '正在录音，再次点击结束录音',
+      name: 'tr_pet_function_recording_state',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `点击开始录音`
+  String get tr_pet_function_record_start {
+    return Intl.message(
+      '点击开始录音',
+      name: 'tr_pet_function_record_start',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `录音中...`
+  String get tr_recording {
+    return Intl.message('录音中...', name: 'tr_recording', desc: '', args: []);
+  }
+
+  /// `男`
+  String get TR_Sex_Male {
+    return Intl.message('男', name: 'TR_Sex_Male', desc: '', args: []);
+  }
+
+  /// `女`
+  String get TR_Sex_Female {
+    return Intl.message('女', name: 'TR_Sex_Female', desc: '', args: []);
+  }
+
+  /// `按下结束录音`
+  String get TR_Press_To_End_Record {
+    return Intl.message(
+      '按下结束录音',
+      name: 'TR_Press_To_End_Record',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `按下后开始录音`
+  String get TR_Press_To_Record {
+    return Intl.message(
+      '按下后开始录音',
+      name: 'TR_Press_To_Record',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `录制呼唤音`
+  String get tr_pet_setting_sound_record_function {
+    return Intl.message(
+      '录制呼唤音',
+      name: 'tr_pet_setting_sound_record_function',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文字转语音`
+  String get TR_Text_To_Voice {
+    return Intl.message('文字转语音', name: 'TR_Text_To_Voice', desc: '', args: []);
+  }
+
+  /// `录制提示音`
+  String get TR_Record_Prompt {
+    return Intl.message('录制提示音', name: 'TR_Record_Prompt', desc: '', args: []);
+  }
+
+  /// `设备警铃`
+  String get tr_settings_alarm_beep {
+    return Intl.message(
+      '设备警铃',
+      name: 'tr_settings_alarm_beep',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备警铃选择`
+  String get tr_settings_alarm_bell_select {
+    return Intl.message(
+      '设备警铃选择',
+      name: 'tr_settings_alarm_bell_select',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

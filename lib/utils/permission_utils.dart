@@ -50,6 +50,9 @@ class PermissionUtils {
       case XPermission.localNet:
         handler = LocalNetPermissionHandler();
         break;
+      case XPermission.microphone:
+        handler = MicrophonePermissionHandler();
+        break;
       default:
         break;
     }
@@ -380,4 +383,10 @@ class LocalNetPermissionHandler extends PermissionHandler {
       }
     }
   }
+}
+
+///麦克风权限
+class MicrophonePermissionHandler extends PermissionHandler {
+  @override
+  Future<Permission> get permission => Future.value(Permission.microphone);
 }

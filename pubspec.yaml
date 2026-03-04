@@ -57,14 +57,6 @@ dependencies:
     git:
       url: "https://gitee.com/openharmony-sig/flutter_permission_handler.git"
       path: "permission_handler"
-  
-  #设备信息
-  device_info_plus:
-    git:
-      url: "https://gitcode.com/openharmony-sig/flutter_plus_plugins.git"
-      ref: "br_device_info_plus-v11.1.0_ohos"
-      path: "packages/device_info_plus/device_info_plus"
-
   cached_network_image: 3.4.1
 #  sqflite:
 #    git:
@@ -101,6 +93,22 @@ dependencies:
     git:
       url: "https://gitcode.com/openharmony-sig/flutter_plus_plugins.git"
       path: "packages/share_plus/share_plus"
+  record:
+    git:
+      url: "https://gitcode.com/openharmony-sig/fluttertpc_record.git"
+      ref: "br_v6.0.0_ohos"
+      path: "record"
+  audioplayers: 
+    git:
+      url: https://gitcode.com/openharmony-sig/flutter_audioplayers.git
+      path: packages/audioplayers
+      ref: "br_audioplayers-v6.1.0_ohos"
+    #设备信息
+  device_info_plus:
+    git:
+      url: "https://gitcode.com/openharmony-sig/flutter_plus_plugins.git"
+      ref: "br_device_info_plus-v11.1.0_ohos"
+      path: "packages/device_info_plus/device_info_plus"
 
 dependency_overrides:
   http: 0.13.6

@@ -33,6 +33,28 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "TR_Audition": MessageLookupByLibrary.simpleMessage("Audition"),
+    "TR_File_Size_Exceed_Max_Size": MessageLookupByLibrary.simpleMessage(
+      "The File size exceeds the maximum limit",
+    ),
+    "TR_Please_Enter_Alarm_Tips": MessageLookupByLibrary.simpleMessage(
+      "Please fill the warning message",
+    ),
+    "TR_Press_To_End_Record": MessageLookupByLibrary.simpleMessage(
+      "Press to end recording",
+    ),
+    "TR_Press_To_Record": MessageLookupByLibrary.simpleMessage(
+      "Start recording after pressing",
+    ),
+    "TR_Record_Prompt": MessageLookupByLibrary.simpleMessage("Record a beep"),
+    "TR_Sex_Female": MessageLookupByLibrary.simpleMessage("female"),
+    "TR_Sex_Male": MessageLookupByLibrary.simpleMessage("male"),
+    "TR_Text_To_Voice": MessageLookupByLibrary.simpleMessage("Text to speech"),
+    "TR_Upload_Prompt_Voice": MessageLookupByLibrary.simpleMessage(
+      "Upload prompt tone",
+    ),
+    "Upload_F": MessageLookupByLibrary.simpleMessage("Uploading failed"),
+    "Upload_S": MessageLookupByLibrary.simpleMessage("Uploaded successfully"),
     "accountCancel": MessageLookupByLibrary.simpleMessage(
       "Account Cancellation",
     ),
@@ -49,6 +71,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "album": MessageLookupByLibrary.simpleMessage("Album"),
     "areaCode": MessageLookupByLibrary.simpleMessage("Choose Area Code"),
+    "audio_ability_unsupport": MessageLookupByLibrary.simpleMessage(
+      "Microphone permission is not enabled",
+    ),
     "baseStationHumanDetectionSwitch": MessageLookupByLibrary.simpleMessage(
       "Humanoid detection switch",
     ),
@@ -155,6 +180,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "normalAlarm": MessageLookupByLibrary.simpleMessage("Normal Alarm"),
     "nothing": MessageLookupByLibrary.simpleMessage("Nothing!"),
     "on": MessageLookupByLibrary.simpleMessage("open"),
+    "operator_failed": MessageLookupByLibrary.simpleMessage("Operation failed"),
     "other": MessageLookupByLibrary.simpleMessage("other setting"),
     "phone": MessageLookupByLibrary.simpleMessage("phone no"),
     "phoneMailTip": m2,
@@ -216,6 +242,24 @@ class MessageLookup extends MessageLookupByLibrary {
       "storage management",
     ),
     "toolsFeedbackLog": MessageLookupByLibrary.simpleMessage("Feedback Log"),
+    "tr_pet_function_record_start": MessageLookupByLibrary.simpleMessage(
+      "Click to Start Recording",
+    ),
+    "tr_pet_function_recording_state": MessageLookupByLibrary.simpleMessage(
+      "Recording in progress. Click again to stop recording.",
+    ),
+    "tr_pet_setting_sound_record_function":
+        MessageLookupByLibrary.simpleMessage("Record summoning sound"),
+    "tr_recording": MessageLookupByLibrary.simpleMessage("Recording..."),
+    "tr_settings_alarm_beep": MessageLookupByLibrary.simpleMessage(
+      "Device alarm beep",
+    ),
+    "tr_settings_alarm_bell_customize": MessageLookupByLibrary.simpleMessage(
+      "Custom voice",
+    ),
+    "tr_settings_alarm_bell_select": MessageLookupByLibrary.simpleMessage(
+      "Device bell selection",
+    ),
     "verCodeLogin": MessageLookupByLibrary.simpleMessage(
       "Verification code login",
     ),

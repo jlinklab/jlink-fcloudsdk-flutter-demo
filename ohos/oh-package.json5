@@ -18,13 +18,14 @@
     "permission_handler_ohos": "file:./har/permission_handler_ohos.har",
     "package_info_plus": "file:./har/package_info_plus.har",
     "flutter_geolocator_ohos": "file:./har/flutter_geolocator_ohos.har",
-    "app_settings": "file:./har/app_settings.har",
     "qr_code_scanner_ohos": "file:./har/qr_code_scanner_ohos.har",
     "video_thumbnail_ohos": "file:./har/video_thumbnail_ohos.har",
     "xcloudsdk_flutter": "file:./har/xcloudsdk_flutter.har",
     "@ohos/flutter_module": "file:./entry",
     "@ohos/flutter_ohos": "file:./har/flutter.har",
     "device_info_plus": "file:./har/device_info_plus.har",
-    "share_plus": "file:./har/share_plus.har"
+    "share_plus": "file:./har/share_plus.har",
+    "record_ohos": "file:./har/record_ohos.har",
+    "audioplayers_ohos": "file:./har/audioplayers_ohos.har"
   }
 }

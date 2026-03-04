@@ -15,8 +15,9 @@
     "qr_code_scanner_ohos": "file:../har/qr_code_scanner_ohos.har",
     "flutter_geolocator_ohos": "file:../har/flutter_geolocator_ohos.har",
     "@ohos/flutter_ohos": "har/flutter.har",
-    "app_settings": "file:../har/app_settings.har",
     "device_info_plus": "file:../har/device_info_plus.har",
-    "share_plus": "file:../har/share_plus.har"
+    "share_plus": "file:../har/share_plus.har",
+    "record_ohos": "file:../har/record_ohos.har",
+    "audioplayers_ohos": "file:../har/audioplayers_ohos.har"
   }
 }

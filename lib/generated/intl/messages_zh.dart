@@ -32,6 +32,25 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "Recording_Times_Not_DURATION": MessageLookupByLibrary.simpleMessage(
+      "录音时长至少要大于1秒",
+    ),
+    "TR_Audition": MessageLookupByLibrary.simpleMessage("试听"),
+    "TR_File_Size_Exceed_Max_Size": MessageLookupByLibrary.simpleMessage(
+      "文件大小超过最大限制",
+    ),
+    "TR_Please_Enter_Alarm_Tips": MessageLookupByLibrary.simpleMessage(
+      "请输入报警提示语",
+    ),
+    "TR_Press_To_End_Record": MessageLookupByLibrary.simpleMessage("按下结束录音"),
+    "TR_Press_To_Record": MessageLookupByLibrary.simpleMessage("按下后开始录音"),
+    "TR_Record_Prompt": MessageLookupByLibrary.simpleMessage("录制提示音"),
+    "TR_Sex_Female": MessageLookupByLibrary.simpleMessage("女"),
+    "TR_Sex_Male": MessageLookupByLibrary.simpleMessage("男"),
+    "TR_Text_To_Voice": MessageLookupByLibrary.simpleMessage("文字转语音"),
+    "TR_Upload_Prompt_Voice": MessageLookupByLibrary.simpleMessage("上传提示音"),
+    "Upload_F": MessageLookupByLibrary.simpleMessage("上传失败"),
+    "Upload_S": MessageLookupByLibrary.simpleMessage("上传成功"),
     "accountCancel": MessageLookupByLibrary.simpleMessage("账号注销"),
     "add": MessageLookupByLibrary.simpleMessage("添加"),
     "addConnectDevFailed": MessageLookupByLibrary.simpleMessage("配网失败"),
@@ -43,6 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "alarmSubscription": MessageLookupByLibrary.simpleMessage("报警订阅"),
     "album": MessageLookupByLibrary.simpleMessage("相册"),
     "areaCode": MessageLookupByLibrary.simpleMessage("区号选择"),
+    "audio_ability_unsupport": MessageLookupByLibrary.simpleMessage("麦克风权限未开启"),
     "baseStationHumanDetectionSwitch": MessageLookupByLibrary.simpleMessage(
       "人形检测开关",
     ),
@@ -127,6 +147,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "normalAlarm": MessageLookupByLibrary.simpleMessage("普通报警"),
     "nothing": MessageLookupByLibrary.simpleMessage("什么也没有！"),
     "on": MessageLookupByLibrary.simpleMessage("开启"),
+    "operator_failed": MessageLookupByLibrary.simpleMessage("操作失败"),
     "other": MessageLookupByLibrary.simpleMessage("其他"),
     "phone": MessageLookupByLibrary.simpleMessage("手机号"),
     "phoneMailTip": m2,
@@ -181,6 +202,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "stopScan": MessageLookupByLibrary.simpleMessage("停止搜索"),
     "storageManagement": MessageLookupByLibrary.simpleMessage("存储管理"),
     "toolsFeedbackLog": MessageLookupByLibrary.simpleMessage("反馈日志"),
+    "tr_pet_function_record_start": MessageLookupByLibrary.simpleMessage(
+      "点击开始录音",
+    ),
+    "tr_pet_function_recording_state": MessageLookupByLibrary.simpleMessage(
+      "正在录音，再次点击结束录音",
+    ),
+    "tr_pet_setting_sound_record_function":
+        MessageLookupByLibrary.simpleMessage("录制呼唤音"),
+    "tr_recording": MessageLookupByLibrary.simpleMessage("录音中..."),
+    "tr_settings_alarm_beep": MessageLookupByLibrary.simpleMessage("设备警铃"),
+    "tr_settings_alarm_bell_customize": MessageLookupByLibrary.simpleMessage(
+      "自定义语音",
+    ),
+    "tr_settings_alarm_bell_select": MessageLookupByLibrary.simpleMessage(
+      "设备警铃选择",
+    ),
     "verCodeLogin": MessageLookupByLibrary.simpleMessage("验证码登录"),
     "version": MessageLookupByLibrary.simpleMessage("版本信息"),
     "video": MessageLookupByLibrary.simpleMessage("录像"),

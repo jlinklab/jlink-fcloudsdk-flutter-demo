@@ -1,10 +1,12 @@
 import { FlutterEngine, Log } from '@ohos/flutter_ohos';
+import AudioplayersPlugin from 'audioplayers_ohos';
 import DeviceInfoPlusPlugin from 'device_info_plus';
 import GeolocatorOhosPlugin from 'flutter_geolocator_ohos';
 import PackageInfoPlugin from 'package_info_plus';
 import PathProviderPlugin from 'path_provider_ohos';
 import PermissionHandlerPlugin from 'permission_handler_ohos';
 import QrCodeScannerOhosPlugin from 'qr_code_scanner_ohos';
+import RecordOhosPlugin from 'record_ohos';
 import SharePlusOhosPlugin from 'share_plus';
 import SharedPreferencesPlugin from 'shared_preferences_ohos';
 import VideoThumbnailOhosPlugin from 'video_thumbnail_ohos';
@@ -22,12 +24,14 @@ export class GeneratedPluginRegistrant {
 
   static registerWith(flutterEngine: FlutterEngine) {
     try {
+      flutterEngine.getPlugins()?.add(new AudioplayersPlugin());
       flutterEngine.getPlugins()?.add(new DeviceInfoPlusPlugin());
       flutterEngine.getPlugins()?.add(new GeolocatorOhosPlugin());
       flutterEngine.getPlugins()?.add(new PackageInfoPlugin());
       flutterEngine.getPlugins()?.add(new PathProviderPlugin());
       flutterEngine.getPlugins()?.add(new PermissionHandlerPlugin());
       flutterEngine.getPlugins()?.add(new QrCodeScannerOhosPlugin());
+      flutterEngine.getPlugins()?.add(new RecordOhosPlugin());
       flutterEngine.getPlugins()?.add(new SharePlusOhosPlugin());
       flutterEngine.getPlugins()?.add(new SharedPreferencesPlugin());
       flutterEngine.getPlugins()?.add(new VideoThumbnailOhosPlugin());

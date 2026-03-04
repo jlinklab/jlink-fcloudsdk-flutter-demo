@@ -4,12 +4,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
+import 'package:xcloudsdk_flutter/api/mobile_systeminfo/MobileSystemInfo_api.dart';
 import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
+import 'package:xcloudsdk_flutter_example/pages/device_setting/device_alarm_custom_voice_page.dart';
+import 'package:xcloudsdk_flutter_example/views/x_single_selector.dart';
 
 import '../../../models/user_instance.dart';
 import '../../../views/toast/toast.dart';
 import '../../device_ability/device_ability_manager.dart';
+import 'package:go_router/go_router.dart';
 
 class DeviceAlarmController extends ChangeNotifier {
   final BuildContext context;
@@ -33,6 +37,12 @@ class DeviceAlarmController extends ChangeNotifier {
   ///是否-移动侦测-消息上报
   bool isMoveMotionMessage = false;
 
+  ///是否支持设备警铃
+  bool supportAlarmBeep = false;
+
+  ///是否-设备警铃
+  bool isAlarmBeep = false;
+
   ///存储移动侦测配置数据
   late Map<String, dynamic> motionDataSource;
 
@@ -51,12 +61,11 @@ class DeviceAlarmController extends ChangeNotifier {
   }
 
   _queryData() async {
-    // KToast.show();
     await _queryMoveMotionConfig();
     await _queryAlarmSubscribe();
     await _queryConfigHumanDetect();
+    await _queryConfigAlarmBeep();
     _configDeviceSetItemMoleList();
-    KToast.dismiss();
   }
 
   _queryMoveMotionConfig() async {
@@ -75,6 +84,15 @@ class DeviceAlarmController extends ChangeNotifier {
       isMoveMotionRecord = jsonMap['EventHandler']['RecordEnable'];
       isMoveMotionSnap = jsonMap['EventHandler']['SnapEnable'];
       isMoveMotionMessage = jsonMap['EventHandler']['MessageEnable'];
+
+      ///设备警铃
+      supportAlarmBeep = await DeviceAbilityManager.queryAbility(
+          deviceId: deviceId,
+          type: DeviceAbilityType.bOtherFunctionSupportAlarmVoiceTipsType);
+      if (supportAlarmBeep) {
+        isAlarmBeep = jsonMap['EventHandler']['VoiceEnable'];
+        beepVoiceEnum = jsonMap['EventHandler']['VoiceType'];
+      }
     } catch (e) {
       KToast.show(status: KErrorMsg(e));
     }
@@ -302,6 +320,27 @@ class DeviceAlarmController extends ChangeNotifier {
                   isMoveMotionSnap;
               _onSetMoveMotion(tempMap, bShowLoading: true);
             })));
+
+    dataSource.add(ListTile(
+        title: Text(TR.current.tr_settings_alarm_beep),
+        trailing: CupertinoSwitch(
+            value: isAlarmBeep,
+            onChanged: (value) {
+              isAlarmBeep = value;
+              _configDeviceSetItemMoleList();
+              Map tempMap = Map.from(motionDataSource);
+              tempMap[moveMotionName]['EventHandler']['VoiceEnable'] =
+                  isAlarmBeep;
+              _onSetMoveMotion(tempMap, bShowLoading: true);
+            })));
+    if (isAlarmBeep) {
+      dataSource.add(ListTile(
+        title: Text(TR.current.tr_settings_alarm_bell_select),
+        onTap: () {
+          onChooseBeepVoice();
+        },
+      ));
+    }
     dataSource.add(ListTile(
         title: Text(TR.current.messageReporting),
         trailing: CupertinoSwitch(
@@ -315,5 +354,134 @@ class DeviceAlarmController extends ChangeNotifier {
             })));
 
     notifyListeners();
+  }
+
+  ///beepStr
+  Map? mapAlarmVoice;
+  List beepVoiceList = [];
+  int beepVoiceEnum = 0;
+  String beepStr = '';
+
+  Future _queryConfigAlarmBeep({bool bShowLoading = false}) async {
+    if (supportAlarmBeep == false) {
+      return;
+    }
+    if (bShowLoading) {
+      KToast.show();
+    }
+    try {
+      /// 需要先设置设备语言
+      String deviceLanguage =
+          await MobileSystemAPI.instance.xcLocalePreferredLanguage();
+      int language =
+          deviceLanguage.toLowerCase().startsWith('zh') ? 1 : 0; //1：中文 0：英文
+      Map tempMap = {
+        'BrowserLanguageType': language,
+      };
+      final String jsStr = jsonEncode(tempMap);
+      final resultLanguage = await JFApi.xcDevice.xcDevSetSysConfig(
+          deviceId: deviceId,
+          commandName: 'BrowserLanguage',
+          config: jsStr,
+          configLen: 0,
+          command: 1040,
+          timeout: 10000);
+      if (bShowLoading) {
+        KToast.dismiss();
+      }
+      if (resultLanguage >= 0) {
+        debugPrint('设备语言设置成功: ${TR.current.local}');
+      }
+    } catch (e) {
+      KToast.show(status: KErrorMsg(e));
+      if (bShowLoading == false && context.mounted) {
+        context.pop();
+      }
+    }
+
+    ///再获取beepVoiceList
+    if (bShowLoading) {
+      KToast.show();
+    }
+    try {
+      final resultMap = await JFApi.xcDevice.xcDevGetSysConfig(
+          deviceId: deviceId,
+          commandName: 'Ability.VoiceTipType',
+          timeout: 20000);
+      if (bShowLoading) {
+        KToast.dismiss();
+      }
+      if (resultMap['Ret'] == 100 &&
+          resultMap['Ability.VoiceTipType'] != null) {
+        if (resultMap['Ability.VoiceTipType']!.runtimeType == List) {
+          List list = resultMap['Ability.VoiceTipType']! as List;
+          if (list.isNotEmpty) {
+            mapAlarmVoice = list[0];
+          }
+        } else {
+          mapAlarmVoice = resultMap['Ability.VoiceTipType']!;
+          List tempVoiceList = mapAlarmVoice!['VoiceTip'];
+
+          for (Map voice in tempVoiceList) {
+            beepVoiceList.add(voice);
+          }
+        }
+        if (bShowLoading) {
+          _configDeviceSetItemMoleList();
+        }
+      }
+    } catch (e) {
+      KToast.show(status: KErrorMsg(e));
+      if (bShowLoading == false && context.mounted) {
+        context.pop();
+      }
+    }
+    return;
+  }
+
+  onChooseBeepVoice() {
+    final List<String> dataList =
+        beepVoiceList.map((e) => e['VoiceText'] as String).toList();
+    int? index;
+    for (int i = 0; i < beepVoiceList.length; i++) {
+      Map voice = beepVoiceList[i];
+      if (voice['VoiceEnum'] == beepVoiceEnum) {
+        index = i;
+      }
+    }
+    XSingleSelector.show(
+        context: context,
+        title: '',
+        dataList: dataList,
+        onSelect: (int index) {
+          final Map voice = beepVoiceList[index];
+          int selectBeepVoiceEnum = voice['VoiceEnum'];
+          String selectBeepStr = voice['VoiceText'];
+          _onSetAlarmBell(selectBeepVoiceEnum, selectBeepStr, true);
+        },
+        curIndex: index);
+  }
+
+  _onSetAlarmBell(
+      int selectBeepVoiceEnum, String selectBeepStr, bool isHandle550) {
+    beepVoiceEnum = selectBeepVoiceEnum;
+    if (beepVoiceEnum == 550 && isHandle550) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (BuildContext context) {
+        return DeviceAlarmCustomVoicePage(deviceId: deviceId);
+      })).then((isConfigCustomSuccess) {
+        ///配置自定义语音成功
+        if (isConfigCustomSuccess == true) {
+          _onSetAlarmBell(selectBeepVoiceEnum, selectBeepStr, false);
+        }
+      });
+
+      return;
+    }
+    beepStr = selectBeepStr;
+    _configDeviceSetItemMoleList();
+    Map tempMap = Map.from(motionDataSource);
+    tempMap[moveMotionName]['EventHandler']['VoiceType'] = beepVoiceEnum;
+    _onSetMoveMotion(tempMap, bShowLoading: true);
   }
 }

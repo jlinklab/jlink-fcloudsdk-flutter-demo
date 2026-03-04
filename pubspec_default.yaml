@@ -68,6 +68,15 @@ dependencies:
   #网络日志打印
   pretty_dio_logger:
   dio: 5.3.3
+  #语音文件播放
+  audioplayers: 6.1.0
+  #录音
+  record: 6.0.0
+  device_info_plus:
+    git:
+      url: "https://gitcode.com/openharmony-sig/flutter_plus_plugins.git"
+      ref: "br_device_info_plus-v11.1.0_ohos"
+      path: "packages/device_info_plus/device_info_plus"
 dev_dependencies:
   flutter_test:
     sdk: flutter

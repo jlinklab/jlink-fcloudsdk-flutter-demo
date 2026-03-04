@@ -19,6 +19,9 @@ enum DeviceAbilityType {
   /// 是否支持 《隐藏》 左右翻转
   bOtherFunctionSupportHidePictureMirror,
 
+  ///是否支持警戒提示音选择
+  bOtherFunctionSupportAlarmVoiceTipsType,
+
   ///AlarmFunction ************************************************************
 
   ///是否支持人形检测, 如果支持, 则要展示 [智能警戒]
@@ -91,6 +94,14 @@ class DeviceAbilityManager {
             abilityMap['OtherFunction']!['SupportHidePictureMirror'] != null) {
           isSupport =
               abilityMap['OtherFunction']!['SupportHidePictureMirror']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionSupportAlarmVoiceTipsType:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['SupportAlarmVoiceTipsType'] != null) {
+          isSupport = abilityMap['OtherFunction']!['SupportAlarmVoiceTipsType']!
+              as bool;
         }
         break;
 
