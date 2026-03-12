@@ -1,4 +1,7 @@
 # 快速集成
+
+## 当前项目支持Flutter SDK 版本 3.22.1-ohos-1.0.0 https://gitcode.com/openharmony-tpc/flutter_flutter/tree/3.22.1-ohos-1.0.0
+
 ## 1. Android端快速集成
 ### 1.1 在/android/build.gradle中修改成自己的签名配置
 ```
