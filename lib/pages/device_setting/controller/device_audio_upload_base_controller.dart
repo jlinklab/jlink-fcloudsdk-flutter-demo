@@ -468,6 +468,46 @@ abstract class DeviceAudioUploadBaseController with ChangeNotifier {
     }
   }
 
+  ///获取文件列表
+  Future<void> getDeviceFileList() async {
+    try {
+      var command = {'Action': 'ListFiles', 'Path': '/mnt/mtd/NetFile'};
+
+      String commendJson = jsonEncode(command);
+
+      final result = await JFApi.xcDevice.xcDevSetSysConfigWithPData(
+          deviceId: deviceId,
+          command: 3500,
+          commandName: 'OPFile',
+          config: commendJson,
+          configLen: commendJson.length,
+          timeout: 15000);
+      debugPrint(result.toString());
+    } catch (e) {
+      KToast.show(status: KErrorMsg(e));
+    }
+  }
+
+  ///删除指定文件
+  void deleteDeviceFileAction() async {
+    var command = {'Action': 'Remove', 'FileName': 'customAlarmVoice.pcm'};
+    String commendJson = jsonEncode(command);
+    try {
+      await JFApi.xcDevice.xcDevSetSysConfig(
+          deviceId: deviceId,
+          commandName: 'OPFile',
+          config: commendJson,
+          configLen: commendJson.length,
+          command: 3500,
+          timeout: 1500);
+      KToast.show(status: '删除成功');
+
+      deleteDirectoryFiles();
+    } catch (e) {
+      KToast.show(status: KErrorMsg(e));
+    }
+  }
+
   @override
   void dispose() {
     recorderTimer?.cancel();
