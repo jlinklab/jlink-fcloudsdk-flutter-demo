@@ -102,7 +102,7 @@ class CloudRecordController extends ChangeNotifier {
     await JFApi.xcDevice
         .xcFindAllCloudRecordFile(
             param: CloudRecordByTime(
-                msg: 'video_query_user',
+                msg: 'video_query',
                 userId: UserInfo.instance.userId,
                 sn: devId,
                 startTime: DateUtil.startOfDay(currentDateTime),
