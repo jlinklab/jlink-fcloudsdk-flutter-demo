@@ -36,4 +36,13 @@ class AddDevicePermissionUsecase {
     }
     return isPermissionLocation && enable;
   }
+
+  checkOnlyWifi({bool onlyStatus = false}) async {
+    isPermissionLocation = await PermissionUtils.checkPermission(
+        permission: XPermission.location, onlyStatus: onlyStatus);
+    isPermissionWifiService = await PermissionUtils.checkPermission(
+        permission: XPermission.wifiSwitch, onlyStatus: onlyStatus);
+    isPermissionLocalNet = await PermissionUtils.checkPermission(
+        permission: XPermission.localNet, onlyStatus: onlyStatus);
+  }
 }

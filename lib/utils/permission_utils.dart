@@ -3,6 +3,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -92,6 +94,9 @@ enum XPermission {
 
   ///本地网络
   localNet,
+
+  ///wifi开关
+  wifiSwitch,
 }
 
 abstract class PermissionHandler with WidgetsBindingObserver {
@@ -389,4 +394,60 @@ class LocalNetPermissionHandler extends PermissionHandler {
 class MicrophonePermissionHandler extends PermissionHandler {
   @override
   Future<Permission> get permission => Future.value(Permission.microphone);
+}
+
+///wifi开关
+class WifiSwitchPermissionHandler extends PermissionHandler {
+  @override
+  Future<Permission> get permission => Future.value(Permission.unknown);
+
+  @override
+  Future<bool> checkPermission({bool onlyStatus = false}) async {
+    //检查wifi是否打开
+    bool serviceEnabled = await Future.value(false);
+
+    if (Platform.isAndroid) {
+      final connectivityResult = await Connectivity().checkConnectivity();
+      serviceEnabled = connectivityResult == ConnectivityResult.wifi;
+      if (onlyStatus) {
+        return serviceEnabled;
+      }
+      if (serviceEnabled == true) {
+        return true;
+      }
+      return requestPermissionWithPreDialog();
+    } else if (Platform.operatingSystem == 'ohos') {
+      serviceEnabled = await JFApi.xcNet.xcWifiEnabled();
+    } else {
+      final wifiName = await NetAPI.instance.xcWifiGetSSID();
+      serviceEnabled = wifiName.isNotEmpty;
+    }
+
+    return serviceEnabled;
+  }
+
+  @override
+  Future<bool> requestPermission() async {
+    return openSetting();
+  }
+
+  @override
+  Future<bool> openSetting() {
+    if (Platform.operatingSystem == 'ohos') {
+      JFApi.xcNet.xcOpenWifi();
+    } else {
+      AppSettings.openAppSettings(type: AppSettingsType.wifi);
+    }
+
+    _hasOpenSettings = true;
+    return checker.future;
+  }
+
+  @override
+  void _recheckFromSettings() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    bool isEnable =
+        await Connectivity().checkConnectivity() == ConnectivityResult.wifi;
+    checker.complete(isEnable);
+  }
 }

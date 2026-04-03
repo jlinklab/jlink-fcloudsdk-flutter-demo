@@ -9,6 +9,7 @@ import 'package:xcloudsdk_flutter/device/wifi_config_controller.dart';
 import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
 import 'package:xcloudsdk_flutter_example/pages/add_device/add_device_fill_device_name_page.dart';
+import 'package:xcloudsdk_flutter_example/pages/add_device/manager/add_device_permission_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/add_device/models/add_device_center.dart';
 import 'package:xcloudsdk_flutter_example/pages/add_device/reset_device_random_loginName_password_page.dart';
 import 'package:xcloudsdk_flutter_example/views/animations/ripples.dart';
@@ -38,6 +39,7 @@ class _WIFIConfigPageState extends State<WIFIConfigPage>
 
   @override
   void initState() {
+    checkPermission();
     wifiConfigController.addListener(() {
       //log.add(wifiConfigController.value.toString());
 
@@ -91,6 +93,13 @@ class _WIFIConfigPageState extends State<WIFIConfigPage>
     //   wifiConfigController.setWifiPwd(textEditingController.text);
     // });
     super.initState();
+  }
+
+  checkPermission() async {
+    ///新的权限类
+    await AddDevicePermissionUsecase.instance.checkOnlyWifi(onlyStatus: false);
+    wifiName = await wifiConfigController.getSSID();
+    setState(() {});
   }
 
   _startAddDevice(String deviceJsonData) {
