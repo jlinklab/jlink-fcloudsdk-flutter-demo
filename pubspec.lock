@@ -1461,10 +1461,11 @@ packages:
   xcloudsdk_flutter:
     dependency: "direct main"
     description:
-      path: "../xcloudsdk_flutter"
-      relative: true
-    source: path
-    version: "2.0.0"
+      name: xcloudsdk_flutter
+      sha256: "162671bd47ac0ede41a0802e8835ad9bedd34559256cb64547c66b5e9f09538f"
+      url: "http://139.9.235.221:8000"
+    source: hosted
+    version: "3.0.0"
   xdg_directories:
     dependency: transitive
     description:

@@ -1,5 +1,4 @@
 import { FlutterEngine, Log } from '@ohos/flutter_ohos';
-import XCloudFlutterPlugin from 'xcloudsdk_flutter';
 import AudioplayersPlugin from 'audioplayers_ohos';
 import PathProviderPlugin from 'path_provider_ohos';
 import SharedPreferencesPlugin from 'shared_preferences_ohos';
@@ -11,6 +10,7 @@ import SharePlusOhosPlugin from 'share_plus';
 import GeolocatorOhosPlugin from 'flutter_geolocator_ohos';
 import RecordOhosPlugin from 'record_ohos';
 import VideoThumbnaiOhosPlugin from 'video_thumbnail';
+import XCloudFlutterPlugin from 'xcloudsdk_flutter';
 
 /**
  * Generated file. Do not edit.
@@ -24,7 +24,6 @@ export class GeneratedPluginRegistrant {
 
   static registerWith(flutterEngine: FlutterEngine) {
     try {
-      flutterEngine.getPlugins()?.add(new XCloudFlutterPlugin());
       flutterEngine.getPlugins()?.add(new AudioplayersPlugin());
       flutterEngine.getPlugins()?.add(new PathProviderPlugin());
       flutterEngine.getPlugins()?.add(new SharedPreferencesPlugin());
@@ -36,6 +35,7 @@ export class GeneratedPluginRegistrant {
       flutterEngine.getPlugins()?.add(new GeolocatorOhosPlugin());
       flutterEngine.getPlugins()?.add(new RecordOhosPlugin());
       flutterEngine.getPlugins()?.add(new VideoThumbnaiOhosPlugin());
+      flutterEngine.getPlugins()?.add(new XCloudFlutterPlugin());
     } catch (e) {
       Log.e(
         TAG,

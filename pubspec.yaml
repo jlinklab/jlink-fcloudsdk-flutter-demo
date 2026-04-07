@@ -17,10 +17,10 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 2.0.0+1
 
 environment:
-  sdk: '>=2.19.6 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -32,9 +32,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # xcloudsdk_flutter:
-  #   path: ../xcloudsdk_flutter
-  xcloudsdk_flutter: ^2.0.0
+  xcloudsdk_flutter:
+    hosted: http://139.9.235.221:8000/
+    version: 3.0.0
 
   flutter_localizations:
     sdk: flutter
@@ -58,15 +58,15 @@ dependencies:
       url: "https://gitee.com/openharmony-sig/flutter_permission_handler.git"
       path: "permission_handler"
   cached_network_image: 3.4.1
-#  sqflite:
-#    git:
-#      url: "https://gitee.com/openharmony-sig/flutter_sqflite.git"
-#      path: "sqflite"
-#  qr_code_scanner:  todo
   #二维码扫描
-  qr_code_scanner_ohos: 1.0.0
-    #视频缩略图生成
-  video_thumbnail_ohos: ^1.0.0
+  qr_code_scanner:
+    git:
+      url: https://gitcode.com/openharmony-sig/fluttertpc_qr_code_scanner
+  #视频缩略图生成
+  video_thumbnail:
+    git:
+      url: https://gitcode.com/openharmony-sig/fluttertpc_video_thumbnail.git
+      ref: "br_0.5.6_ohos"
   open_file: ^3.3.1
   qr_flutter: 4.1.0
 #  video_thumbnail:
@@ -109,6 +109,12 @@ dependencies:
       url: "https://gitcode.com/openharmony-sig/flutter_plus_plugins.git"
       ref: "br_device_info_plus-v11.1.0_ohos"
       path: "packages/device_info_plus/device_info_plus"
+  #网络连接检测
+  connectivity_plus:
+    git:
+      url: "https://gitcode.com/openharmony-sig/flutter_plus_plugins.git"
+      ref: "br_connectivity_plus-v6.1.0_ohos"
+      path: "packages/connectivity_plus/connectivity_plus"
 
 dependency_overrides:
   http: 0.13.6
@@ -130,7 +136,7 @@ dependency_overrides:
       git:
         url: "https://gitee.com/openharmony-sig/flutter_plus_plugins"
         path: "packages/package_info_plus/package_info_plus"
-  analyzer: 6.5.0 
+  analyzer: 7.4.1 
   dart_style: 2.3.8  
   build_runner: 2.4.11 
 
