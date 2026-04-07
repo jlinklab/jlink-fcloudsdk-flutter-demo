@@ -1,6 +1,6 @@
 # 快速集成
 
-## 当前项目支持Flutter SDK 版本 3.22.1-ohos-1.0.0 https://gitcode.com/openharmony-tpc/flutter_flutter/tree/3.22.1-ohos-1.0.0
+## 当前项目支持Flutter SDK 版本 3.27.5-ohos-1.0.1 https://gitcode.com/openharmony-tpc/flutter_flutter/tree/3.27.5-ohos-1.0.1
 
 ## 1. Android端快速集成
 ### 1.1 在/android/build.gradle中修改成自己的签名配置
@@ -32,21 +32,7 @@
 ### 4.1 在开放平台账号获取到appkey等信息后，在项目/lib/utils/app_config.dart中修改对应平台等相关信息
 https://aops.jftech.com/#/product
 
-## 5. Ohos 切 iOS/Android 环境（项目目前环境是鸿蒙的）
-
-### 5.1 修改 .vscode/中的 setting.json (替换成对应环境的flutter SDK路径)
-```
-    "dart.flutterSdkPath": "/Users/xxx/flutter_sdk/flutter_ohos/bin",
-    "dart.env": {
-     "PUB_CACHE": "/Users/xxx/ohflutter_cache"`
-    }
-```
-### 5.2 执行脚本
-#### 5.2.1 鸿蒙 
-`dart run flutter_import_update.dart ohos`
-#### 5.2.2 iOS/Android 
-`dart run flutter_import_update.dart default`
-#### 5.2.3 
+ ## 5. 获取 Flutter 项目的依赖包
 ```
 flutter clean
 flutter pub get

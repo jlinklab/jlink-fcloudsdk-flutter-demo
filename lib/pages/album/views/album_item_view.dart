@@ -1,8 +1,9 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/adapter/video_thumbnail/video_thumbnail_adapter.dart';
 import 'package:xcloudsdk_flutter_example/pages/album/models/album_model.dart';
 import 'package:xcloudsdk_flutter_example/pages/album/views/album_image_detail_view.dart';
 
@@ -34,8 +35,11 @@ class _AlbumItemViewState extends State<AlbumItemView> {
   _load() async {
     if (widget.album.type == '1') {
       try {
-        _thumbnailPath = await VideoThumbnailAdapter.instance
-            .generateThumbnail(widget.album.path);
+        _thumbnailPath = await VideoThumbnail.thumbnailFile(
+            video: widget.album.path,
+            imageFormat: ImageFormat.PNG,
+            maxWidth: 128,
+            quality: 25);
 
         //这里的生成的Path是这样的 //var/mobile/Containers/Data/Application/20E0CE6C-2DB2-4222-AC29-725131A1FDCF/Documents/jf_videos/jf_video%202023-05-25%2022_29_31%20631.png
         //后面会出现%20，其实是空格，可能VideoThumbnail内部替换掉了所以要处理下

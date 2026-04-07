@@ -57,35 +57,6 @@ Future<void> _sdkInit() async {
       configPath: '/${directory.path}/');
   await XCloudSDK.init(sdkInit);
 
-  /// 配置SDK日志信息
-  final File file = File.fromUri(Uri(path: '${directory.path}/XCloudSDK.ini'));
-  String text = await file.readAsString();
-  List list = text.split(',');
-  final pList = [];
-  for (String item in list) {
-    if (item.contains('NetEnbale')) {
-      const i = "\n        \"NetEn"
-          "bale\":	1";
-      pList.add(i);
-    } else if (item.contains('ServerIP')) {
-      const i = "\n        \"ServerIP\":	\"10.10.22.97\"";
-      pList.add(i);
-    } else if (item.contains('Port')) {
-      const i = "\n        \"Port\": 9004";
-      pList.add(i);
-    } else if (item.contains('FileEnbale')) {
-      const i = "\n        \"FileEnbale\":	1";
-      pList.add(i);
-    } else if (item.contains('LogLevel')) {
-      const i = "\n        \"LogLevel\":	1";
-      pList.add(i);
-    } else {
-      pList.add(item);
-    }
-  }
-  text = pList.join(',');
-  await file.writeAsString(text);
-  debugPrint(text);
   return Future.value();
 }
 

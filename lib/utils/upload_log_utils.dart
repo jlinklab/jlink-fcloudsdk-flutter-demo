@@ -45,10 +45,10 @@ class UploadLogUtil {
           ArchiveFile('log_XCloudSDK.log', fileContent.length, fileContent));
     }
 
-    final logsDir = Directory('$sourcePath/logs');
+    final logsDir = Directory('$sourcePath/log');
 
     if (logsDir.existsSync()) {
-      // 遍历 logs 文件夹中的所有文件
+      // 遍历 log 文件夹中的所有文件
       final logFiles = logsDir.listSync(recursive: true).whereType<File>();
 
       for (final file in logFiles) {

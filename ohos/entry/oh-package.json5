@@ -18,6 +18,8 @@
     "device_info_plus": "file:../har/device_info_plus.har",
     "share_plus": "file:../har/share_plus.har",
     "record_ohos": "file:../har/record_ohos.har",
-    "audioplayers_ohos": "file:../har/audioplayers_ohos.har"
+    "audioplayers_ohos": "file:../har/audioplayers_ohos.har",
+    "video_thumbnail": "file:../har/video_thumbnail.har",
+    "connectivity_plus": "file:../har/connectivity_plus.har"
   }
 }

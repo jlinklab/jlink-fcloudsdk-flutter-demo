@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-import 'package:qr_code_scanner_ohos/qr_code_scanner_ohos.dart';
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
 
 typedef ScanCallBack = void Function(String deviceSn);
