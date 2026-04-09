@@ -120,8 +120,13 @@ class _DeviceTabPageState extends State<DeviceTabPage> {
                               children: [
                                 const SizedBox(width: 16),
                                 ElevatedButton(
-                                    onPressed: () {
-                                      context.pushNamed('preview',
+                                    onPressed: () async {
+                                      // context.pushNamed('preview',
+                                      //     pathParameters: {
+                                      //       'devId': device.uuid
+                                      //     });
+                                      //默认多目
+                                      context.pushNamed('preview_multi',
                                           pathParameters: {
                                             'devId': device.uuid
                                           });
@@ -164,9 +169,9 @@ class _DeviceTabPageState extends State<DeviceTabPage> {
         builder: (context) {
           return AlertDialog(
             title: const Text("警告"),
-            content: SingleChildScrollView(
+            content: const SingleChildScrollView(
               child: ListBody(
-                children: const [
+                children: [
                   Text("确定要删除设备嘛"),
                 ],
               ),

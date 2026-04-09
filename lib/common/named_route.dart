@@ -7,6 +7,7 @@ import 'package:xcloudsdk_flutter_example/pages/add_device/add_device_page.dart'
 import 'package:xcloudsdk_flutter_example/pages/device_setting/device_config_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/add_device/wifi_config_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/login/login_page.dart';
+import 'package:xcloudsdk_flutter_example/pages/media_realplay/media_multi_play_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/media_realplay/media_realplay_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/play_back/play_back_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/record/record_list_page.dart';
@@ -68,6 +69,14 @@ final GoRouter goRouter = GoRouter(
       name: 'card_record',
       path: '/card_record/:devId',
       builder: (context, state) => RecordListPage(
+        deviceId: state.pathParameters['devId'] ?? '',
+      ),
+    ),
+
+    GoRoute(
+      name: 'preview_multi',
+      path: '/preview_multi/:devId',
+      builder: (context, state) => MediaMultiPlayPage(
         deviceId: state.pathParameters['devId'] ?? '',
       ),
     ),
