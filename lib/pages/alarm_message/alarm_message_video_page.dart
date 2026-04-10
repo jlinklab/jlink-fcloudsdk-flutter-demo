@@ -13,6 +13,7 @@ import 'package:xcloudsdk_flutter_example/pages/record/alarmplaytoolbar/alarmpla
 import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
 
 import '../../views/play_control_view.dart';
+import '../download_manage/model/record_file.dart';
 import '../record/model/model.dart';
 
 // ignore: must_be_immutable
@@ -111,7 +112,7 @@ class _AlarmMsgVideoState extends State<AlarmMsgVideo>
       if (kDebugMode) {
         print('rate:$position');
       }
-      DateTime startTime = DateUtil.fromDateString(_record!.st!);
+      DateTime startTime = _record!.beginTime!;
       currentTime = position.difference(startTime).inSeconds.toDouble();
       setState(() {
         if (currentTime <= 0 && timeError == 0) {
@@ -170,8 +171,8 @@ class _AlarmMsgVideoState extends State<AlarmMsgVideo>
         CloudRecordResult result = CloudRecordResult.fromJson(list.first);
         records.addAll(result.records ?? []);
         _record = records.first;
-        DateTime startTime = DateUtil.fromDateString(_record!.st!);
-        DateTime endTime = DateUtil.fromDateString(_record!.et!);
+        DateTime startTime = _record!.beginTime!;
+        DateTime endTime = _record!.endTime!;
 
         videoLength = endTime.difference(startTime).inSeconds.toDouble();
 

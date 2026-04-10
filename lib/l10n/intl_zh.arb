@@ -147,6 +147,6 @@
   "TR_Text_To_Voice": "文字转语音",
   "TR_Record_Prompt": "录制提示音",
   "tr_settings_alarm_beep": "设备警铃",
-  "tr_settings_alarm_bell_select": "设备警铃选择"
-  
+  "tr_settings_alarm_bell_select": "设备警铃选择",
+  "tr_common_download_management": "下载管理"
 }

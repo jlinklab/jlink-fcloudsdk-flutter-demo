@@ -164,9 +164,9 @@ class _DeviceTabPageState extends State<DeviceTabPage> {
         builder: (context) {
           return AlertDialog(
             title: const Text("警告"),
-            content: SingleChildScrollView(
+            content: const SingleChildScrollView(
               child: ListBody(
-                children: const [
+                children: [
                   Text("确定要删除设备嘛"),
                 ],
               ),

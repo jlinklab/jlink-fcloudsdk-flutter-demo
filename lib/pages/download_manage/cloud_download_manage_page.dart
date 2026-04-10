@@ -51,7 +51,7 @@ class _DownloadManagerPageState extends State<CloudDownloadManagerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return const Scaffold();
     // return Scaffold(
     //   appBar: AppBar(
     //     title: Text(TR.current.cloudDownload),

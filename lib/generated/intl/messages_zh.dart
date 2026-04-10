@@ -202,6 +202,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "stopScan": MessageLookupByLibrary.simpleMessage("停止搜索"),
     "storageManagement": MessageLookupByLibrary.simpleMessage("存储管理"),
     "toolsFeedbackLog": MessageLookupByLibrary.simpleMessage("反馈日志"),
+    "tr_common_download_management": MessageLookupByLibrary.simpleMessage(
+      "下载管理",
+    ),
     "tr_pet_function_record_start": MessageLookupByLibrary.simpleMessage(
       "点击开始录音",
     ),

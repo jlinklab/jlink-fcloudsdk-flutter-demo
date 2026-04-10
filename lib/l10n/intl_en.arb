@@ -276,5 +276,6 @@
   "TR_Text_To_Voice": "Text to speech",
   "TR_Record_Prompt": "Record a beep",
   "tr_settings_alarm_beep": "Device alarm beep",
-  "tr_settings_alarm_bell_select": "Device bell selection"
+  "tr_settings_alarm_bell_select": "Device bell selection",
+   "tr_common_download_management": "Download management"
 }

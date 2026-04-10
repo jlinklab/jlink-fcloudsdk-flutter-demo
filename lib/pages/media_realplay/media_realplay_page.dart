@@ -14,6 +14,8 @@ import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
 import 'package:xcloudsdk_flutter_example/common/common_path.dart';
 import 'package:xcloudsdk_flutter_example/common/named_route.dart';
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
+import 'package:xcloudsdk_flutter_example/pages/cloud/device_cloud_service_manager.dart';
+import 'package:xcloudsdk_flutter_example/pages/cloud/model/device_cloud.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_pwd_setting/device_pwd_find_back_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/media_realplay/views/dev_pre_set_view.dart';
 import 'package:xcloudsdk_flutter_example/views/play_control_view.dart';
@@ -628,7 +630,15 @@ class MediaRealPlayToolView extends StatelessWidget {
             child: const Text("回放")),
         TextButton(
             onPressed: () {
+              //判断是否支持云服务再进入云回放页
+              // DeviceCloudService? cloudService = DeviceCloudServiceManager
+              //     .instance
+              //     .getCloudService(deviceId: devId);
+              // if (cloudService?.cloudServerStatus == CloudServerStatus.active) {
               onCloudPlayback();
+              // } else {
+              //   KToast.show(status: '云服务过期或未购买');
+              // }
             },
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.all(

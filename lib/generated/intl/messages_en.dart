@@ -242,6 +242,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "storage management",
     ),
     "toolsFeedbackLog": MessageLookupByLibrary.simpleMessage("Feedback Log"),
+    "tr_common_download_management": MessageLookupByLibrary.simpleMessage(
+      "Download management",
+    ),
     "tr_pet_function_record_start": MessageLookupByLibrary.simpleMessage(
       "Click to Start Recording",
     ),

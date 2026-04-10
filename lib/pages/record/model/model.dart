@@ -1,5 +1,6 @@
-
 import 'package:xcloudsdk_flutter/utils/date_util.dart';
+
+import '../../download_manage/model/record_file.dart';
 
 class CloudRecordResult {
   String? msg;
@@ -19,50 +20,37 @@ class CloudRecordResult {
   }
 }
 
-class CloudRecord {
-  String? st;
-  String? indx;
-  String? et;
-  int? picfg;
-  String? bucket;
-  int? vidsz;
+class CloudRecord extends RecordFile {
   String? url;
-  bool select = false;
+  String indexFile = '';
 
-  CloudRecord(
-      {this.st,
-      this.indx,
-      this.et,
-      this.picfg,
-      this.bucket,
-      this.vidsz,
-      this.url});
+  CloudRecord({
+    super.beginTime,
+    super.endTime,
+    super.fileLength,
+    super.playing = false,
+    super.thumbnail,
+    super.channel,
+    this.indexFile = '',
+    this.url,
+  });
 
   CloudRecord.fromJson(Map<String, dynamic> json) {
-    st = json['st'];
-    indx = json['indx'];
-    et = json['et'];
-    picfg = json['picfg'];
-    bucket = json['bucket'];
-    vidsz = json['vidsz'];
+    beginTime = DateUtil.fromDateString(json['st']);
+    endTime = DateUtil.fromDateString(json['et']);
+    fileLength = json['vidsz'];
     url = json['vidUrl'];
+    thumbnail = json['picUrl'];
+    indexFile = json['indx'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['st'] = st;
-    data['indx'] = indx;
-    data['et'] = et;
-    data['picfg'] = picfg;
-    data['bucket'] = bucket;
-    data['vidsz'] = vidsz;
-    data['vidUrl'] = url;
     return data;
   }
 
-  DateTime get beginTime => DateUtil.fromDateString(st!);
-
-  DateTime get endTime => DateUtil.fromDateString(et!);
+  @override
+  String get key => "${indexFile}_${channel ?? 0}";
 }
 
 class CloudTimelineResult {

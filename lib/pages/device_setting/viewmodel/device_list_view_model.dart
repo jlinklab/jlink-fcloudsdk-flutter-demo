@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter_example/common/local_device_cache.dart';
 import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
+import 'package:xcloudsdk_flutter_example/pages/cloud/device_cloud_service_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
 
 class DevListViewModel extends ChangeNotifier {
@@ -23,8 +24,9 @@ class DevListViewModel extends ChangeNotifier {
     onRefresh();
 
     AccountAPI.instance.deviceStateStream.listen((event) {
-      mineDevs.firstWhere((element) => element.uuid == event.uuid).state =
-          event.state;
+      (mineDevs + shareDevs)
+          .firstWhere((element) => element.uuid == event.uuid)
+          .state = event.state;
       notifyListeners();
     });
   }
@@ -57,12 +59,18 @@ class DevListViewModel extends ChangeNotifier {
     }
 
     getDevState();
+    getCloudState();
     notifyListeners();
   }
 
+  getCloudState() {
+    DeviceCloudServiceManager.instance
+        .refreshCloudServicesStatus(devices: mineDevs + shareDevs);
+  }
+
   void getDevState() async {
-    AccountAPI.instance
-        .xcGetDevicesState(uuids: mineDevs.map((e) => e.uuid).toList());
+    AccountAPI.instance.xcGetDevicesState(
+        uuids: (mineDevs + shareDevs).map((e) => e.uuid).toList());
 
     ///更新用户的设备数据
     List<Device> tempList = [];

@@ -8,19 +8,22 @@ import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter/media/media_player.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/common/common_path.dart';
-import 'package:xcloudsdk_flutter_example/common/named_route.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
-import 'package:xcloudsdk_flutter_example/pages/download_manage/cloud_download_manage_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/record/record_list_page.dart';
-import 'package:xcloudsdk_flutter_example/views/calendar/rf_calendar.dart';
-import 'package:xcloudsdk_flutter_example/views/play_control_view.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
 
+import '../../common/code_prase.dart';
+import '../../common/common_path.dart';
+import '../../common/named_route.dart';
+import '../../generated/l10n.dart';
+import '../../models/user_instance.dart';
+import '../../views/calendar/rf_calendar.dart';
+import '../../views/play_control_view.dart';
+import '../../views/toast/toast.dart';
+import '../download_manage/cloud_download_manage_page.dart';
+
+import '../download_manage/model/record_file.dart';
 import 'controller/clould_record_controller.dart';
 import 'model/model.dart';
+import 'record_download_manager_page.dart';
+import 'record_list_page.dart';
 
 ///云回放列表
 class CloudRecordListPage extends StatefulWidget {
@@ -113,8 +116,8 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
             CloudRecord record = _controller.records[i];
 
             ///时间晚于录像开始时间，早于录像结束时间说明在当前录像段播放
-            if (position.isAfter(record.beginTime) &&
-                position.isBefore(record.endTime)) {
+            if (position.isAfter(record.beginTime ?? DateTime.now()) &&
+                position.isBefore(record.endTime ?? DateTime.now())) {
               index = i;
               break;
             }
@@ -320,7 +323,7 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
                                                           top: 5),
                                                   child: ListTile(
                                                     title: Text(
-                                                        '${record.st ?? ''} - ${record.et ?? ''}'),
+                                                        '${record.beginTime ?? ''} - ${record.endTime ?? ''}'),
                                                     subtitle: Text(
                                                       record.url ?? '',
                                                     ),
@@ -380,28 +383,26 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
   //下载
   _onDownload(BuildContext context, CloudRecord record) async {
     //var/mobile/Containers/Data/Application/9AE07893-DF4E-44C8-982F-83352518E370/Documents/jf_images/jf_image34234234234234ds23d 2023-05-25 21_16_34 175.jpg
-    const channel = 0;
-
-    ///预留Channel接口
-    ///获取本地存储路径
-    String directoryPath = await kDirectoryPathVideos();
     String deviceId = widget.deviceId;
-    String channelStr = 'channel$channel'; //预留通道位置
-    String timeStr = '${record.st!.replaceAll(':', '_')} 000';
-    String saveFileName =
-        '/$directoryPath/$kPrefixVideo$deviceId $timeStr $channelStr.mp4';
-    // JFApi.xcCloudVideoDownloadController.xcDownload(
-    //     deviceId: deviceId,
-    //     channel: channel,
-    //     url: record.url!,
-    //     urlExInfo: '',
-    //     fileName: saveFileName);
 
     ///推出下载管理页面
     final pContext = _context;
     // ignore: use_build_context_synchronously
     Navigator.of(pContext).push(MaterialPageRoute(builder: (context) {
-      return const CloudDownloadManagerPage();
+      return RecordDownloadManagerPage(
+        deviceId: deviceId,
+        records: [
+          CloudRecord(
+              beginTime: record.beginTime,
+              endTime: record.endTime,
+              url: record.url,
+              channel: record.channel,
+              indexFile: record.indexFile,
+              thumbnail: record.thumbnail,
+              fileLength: record.fileLength)
+        ],
+        copyToLocal: false,
+      );
     })).then((_) => {}); //返回时重新播放
   }
 
@@ -463,7 +464,11 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
         {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (BuildContext context) {
-            return const CloudDownloadManagerPage();
+            return RecordDownloadManagerPage(
+              deviceId: controller.devId,
+              records: const [],
+              copyToLocal: false,
+            );
           }));
         }
         break;

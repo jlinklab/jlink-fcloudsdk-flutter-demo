@@ -989,6 +989,16 @@ class TR {
       args: [],
     );
   }
+
+  /// `下载管理`
+  String get tr_common_download_management {
+    return Intl.message(
+      '下载管理',
+      name: 'tr_common_download_management',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

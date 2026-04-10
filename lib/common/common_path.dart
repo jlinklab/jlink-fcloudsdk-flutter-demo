@@ -174,3 +174,8 @@ Future<List<File>> kGetLocalVideos() async {
 Future<String> kDirectoryPresetImagePath() async {
   return kGenLocalDirectoryPath(dirName: 'preset_image');
 }
+
+/// 回放视频的文件夹,没有的话就会创建
+Future<String> kDirectoryVideoRecordPath() async {
+  return kGenLocalDirectoryPath(dirName: 'jf_videorecord');
+}
