@@ -54,29 +54,29 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/audioplayers"
-      ref: "br_audioplayers-v6.1.0_ohos"
-      resolved-ref: "5bf688110b7bb27a0bff325abb5cdef0ae0d8fa3"
+      ref: "br_v6.5.1_ohos_dev"
+      resolved-ref: "5c0687f90f4660fe74d1255b80e38f372131a998"
       url: "https://gitcode.com/openharmony-sig/flutter_audioplayers.git"
     source: git
-    version: "6.1.0"
+    version: "6.5.1"
   audioplayers_android:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: "packages/audioplayers_android"
-      ref: HEAD
-      resolved-ref: e566d678531badc1437ada9fcca87c23d6355ba4
+      ref: "br_v6.5.1_ohos_dev"
+      resolved-ref: "5c0687f90f4660fe74d1255b80e38f372131a998"
       url: "https://gitcode.com/openharmony-sig/flutter_audioplayers.git"
     source: git
-    version: "3.0.2"
+    version: "5.2.1"
   audioplayers_darwin:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: "packages/audioplayers_darwin"
-      ref: HEAD
-      resolved-ref: e566d678531badc1437ada9fcca87c23d6355ba4
+      ref: "br_v6.5.1_ohos_dev"
+      resolved-ref: "5c0687f90f4660fe74d1255b80e38f372131a998"
       url: "https://gitcode.com/openharmony-sig/flutter_audioplayers.git"
     source: git
-    version: "4.1.0"
+    version: "6.3.0"
   audioplayers_linux:
     dependency: transitive
     description:
@@ -87,23 +87,23 @@ packages:
     source: git
     version: "2.1.0"
   audioplayers_ohos:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: "packages/audioplayers_ohos"
-      ref: HEAD
-      resolved-ref: e566d678531badc1437ada9fcca87c23d6355ba4
+      ref: "br_v6.5.1_ohos_dev"
+      resolved-ref: "5c0687f90f4660fe74d1255b80e38f372131a998"
       url: "https://gitcode.com/openharmony-sig/flutter_audioplayers.git"
     source: git
-    version: "3.0.2"
+    version: "5.2.1"
   audioplayers_platform_interface:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: "packages/audioplayers_platform_interface"
-      ref: HEAD
-      resolved-ref: e566d678531badc1437ada9fcca87c23d6355ba4
+      ref: "br_v6.5.1_ohos_dev"
+      resolved-ref: "5c0687f90f4660fe74d1255b80e38f372131a998"
       url: "https://gitcode.com/openharmony-sig/flutter_audioplayers.git"
     source: git
-    version: "5.0.1"
+    version: "7.1.1"
   audioplayers_web:
     dependency: transitive
     description:
@@ -1486,10 +1486,10 @@ packages:
     dependency: "direct main"
     description:
       name: xcloudsdk_flutter
-      sha256: "162671bd47ac0ede41a0802e8835ad9bedd34559256cb64547c66b5e9f09538f"
+      sha256: "48f03bc825df26229f686ec93c94c38f3f0667ffcd6b1ee5e9d99f3ede4c390b"
       url: "http://139.9.235.221:8000"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.2"
   xdg_directories:
     dependency: transitive
     description:

@@ -3,6 +3,7 @@ PODS:
     - Flutter
   - audioplayers_darwin (0.0.1):
     - Flutter
+    - FlutterMacOS
   - connectivity_plus (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -54,7 +55,7 @@ PODS:
 
 DEPENDENCIES:
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
-  - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
+  - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/darwin`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/darwin`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
@@ -80,7 +81,7 @@ EXTERNAL SOURCES:
   app_settings:
     :path: ".symlinks/plugins/app_settings/ios"
   audioplayers_darwin:
-    :path: ".symlinks/plugins/audioplayers_darwin/ios"
+    :path: ".symlinks/plugins/audioplayers_darwin/darwin"
   connectivity_plus:
     :path: ".symlinks/plugins/connectivity_plus/darwin"
   device_info_plus:
@@ -114,7 +115,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   app_settings: 2ef6fd7feddb190c36589bd471a02136e4f99641
-  audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
+  audioplayers_darwin: 4027b33a8f471d996c13f71cb77f0b1583b5d923
   connectivity_plus: 4c41c08fc6d7c91f63bc7aec70ffe3730b04f563
   device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
@@ -133,6 +134,6 @@ SPEC CHECKSUMS:
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
   xcloudsdk_flutter: 8411203da5f1d8ae48932dc0f8cc02005f3d894a
 
-PODFILE CHECKSUM: ef9300660aab5fc215d60724c621e8c8eeb776b4
+PODFILE CHECKSUM: 37031954db91038b38f8df0a4027b03500251508
 
 COCOAPODS: 1.15.2

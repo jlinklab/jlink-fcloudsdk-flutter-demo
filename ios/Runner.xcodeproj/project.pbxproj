@@ -437,7 +437,6 @@
 					"-l\"permission_handler_apple\"",
 					"-l\"resolv\"",
 					"-l\"shared_preferences_foundation\"",
-					"-l\"sqflite\"",
 					"-l\"sqlite3\"",
 					"-l\"xcloudsdk_flutter\"",
 					"-l\"z\"",
@@ -476,6 +475,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.JF.FlutterDemo.development;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Profile;
@@ -636,7 +636,6 @@
 					"-l\"permission_handler_apple\"",
 					"-l\"resolv\"",
 					"-l\"shared_preferences_foundation\"",
-					"-l\"sqflite\"",
 					"-l\"sqlite3\"",
 					"-l\"xcloudsdk_flutter\"",
 					"-l\"z\"",
@@ -675,6 +674,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.JF.FlutterDemo.development;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -732,7 +732,6 @@
 					"-l\"permission_handler_apple\"",
 					"-l\"resolv\"",
 					"-l\"shared_preferences_foundation\"",
-					"-l\"sqflite\"",
 					"-l\"sqlite3\"",
 					"-l\"xcloudsdk_flutter\"",
 					"-l\"z\"",
@@ -772,6 +771,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = flutterDemoDistribution;
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
