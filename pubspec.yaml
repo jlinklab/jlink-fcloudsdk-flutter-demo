@@ -35,7 +35,7 @@ dependencies:
   xcloudsdk_flutter:
     # path: ../xcloudsdk_flutter
     hosted: http://139.9.235.221:8000/
-    version: 3.0.2
+    version: 3.0.3
 
   flutter_localizations:
     sdk: flutter

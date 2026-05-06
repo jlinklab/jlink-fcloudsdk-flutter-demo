@@ -237,6 +237,7 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
       int audio = await AudioPlayerPlatform.instance
           .startTalk(widget.deviceId, StartTalk(), 1);
       audioHandle = audio;
+      await AudioPlayerPlatform.instance.setVolume(audio, 100);
     } catch (error) {
       print(error);
     }
