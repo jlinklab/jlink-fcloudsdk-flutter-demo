@@ -246,9 +246,8 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
   }
 
   void onStopTalk() async {
-    int audio = await AudioPlayerPlatform.instance
-        .stopTalkPlay(audioHandle, mediaType: 1);
-    audioHandle = audio;
+    await AudioPlayerPlatform.instance.stopTalkPlay(audioHandle, mediaType: 1);
+    audioHandle = -1;
   }
 
   void onSnap() async {
