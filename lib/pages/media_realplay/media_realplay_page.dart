@@ -18,6 +18,7 @@ import 'package:xcloudsdk_flutter_example/pages/cloud/device_cloud_service_manag
 import 'package:xcloudsdk_flutter_example/pages/cloud/model/device_cloud.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_pwd_setting/device_pwd_find_back_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/media_realplay/views/dev_pre_set_view.dart';
+import 'package:xcloudsdk_flutter_example/utils/permission_utils.dart';
 import 'package:xcloudsdk_flutter_example/views/play_control_view.dart';
 import 'package:xcloudsdk_flutter_example/views/toast/device_pwd_input.dart';
 import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
@@ -229,6 +230,7 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
   int audioHandle = -1;
 
   void onTalk() async {
+    await PermissionUtils.checkPermission(permission: XPermission.microphone);
     if (audioHandle != -1) {
       return;
     }
