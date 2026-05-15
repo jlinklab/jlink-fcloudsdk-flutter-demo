@@ -8,15 +8,17 @@ class User {
 
   int? passUpdateTime;
 
+  String? nickname;
+
   User(
       {this.id,
-        this.userId,
-        this.username,
-        this.mail,
-        this.phone,
-        this.authorizes,
-        this.passUpdateTime});
-
+      this.userId,
+      this.username,
+      this.mail,
+      this.phone,
+      this.authorizes,
+      this.passUpdateTime,
+      this.nickname});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -28,6 +30,7 @@ class User {
         ? Authorizes.fromJson(json['authorizes'])
         : null;
     passUpdateTime = json['passUpdateTime'];
+    nickname = json['nickname'];
   }
 
   Map<String, dynamic> toJson() {
@@ -41,6 +44,7 @@ class User {
       data['authorizes'] = authorizes!.toJson();
     }
     data['passUpdateTime'] = passUpdateTime;
+    data['nickname'] = nickname;
     return data;
   }
 }

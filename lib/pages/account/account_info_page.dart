@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
 import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
 import 'package:xcloudsdk_flutter_example/pages/account/model/model.dart';
@@ -80,26 +81,33 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
                   itemBuilder: (BuildContext context, int index) {
                     final item = dataList[index];
                     return Container(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      height: 60,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item[0],
-                            style: const TextStyle(
-                              color: Colors.blueAccent,
-                            ),
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        height: 60,
+                        child: InkWell(
+                          onTap: () async {
+                            if (item[0] == 'nickname') {
+                              await JFApi.xcAccount
+                                  .xcModifyAccountNickName(nickname: 'aaaaa');
+                            }
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item[0],
+                                style: const TextStyle(
+                                  color: Colors.blueAccent,
+                                ),
+                              ),
+                              Text(item[1]),
+                              const Divider(
+                                thickness: 1,
+                                color: Colors.blueAccent,
+                              ),
+                            ],
                           ),
-                          Text(item[1]),
-                          const Divider(
-                            thickness: 1,
-                            color: Colors.blueAccent,
-                          ),
-                        ],
-                      ),
-                    );
+                        ));
                   },
                   itemCount: dataList.length,
                   // shrinkWrap: true,

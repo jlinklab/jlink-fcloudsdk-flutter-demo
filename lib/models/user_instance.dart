@@ -36,6 +36,7 @@ class UserInfo extends ChangeNotifier {
   String _userName = '';
   String _userPwd = '';
   String _phoneNum = '';
+  final String _nickname = '';
   User _userDetail = User();
 
   String get userId => _userId;
@@ -49,6 +50,8 @@ class UserInfo extends ChangeNotifier {
   String get userPwd => _userPwd;
 
   User get userDetail => _userDetail;
+
+  String get nickname => _nickname;
 
   ///设备信息. 主要缓存 设备 账号和密码
   /// {'device_id':{'name':'xx','pwd':'xxx'}}
@@ -91,6 +94,7 @@ class UserInfo extends ChangeNotifier {
     } else if (_loginType == LoginType.phone) {
       _phoneNum = phoneNum!;
     }
+
     ///获取token
     final String token = await JFApi.xcAccount.xcGetAccessToken();
     final preference = await SharedPreferences.getInstance();
@@ -139,7 +143,9 @@ class UserInfo extends ChangeNotifier {
 
       ///拿着token去自动登录
       KToast.show();
-      JFApi.xcAccount.xcLoginAndGetDeviceList(userName: token, pwd: '').then((value) {
+      JFApi.xcAccount
+          .xcLoginAndGetDeviceList(userName: token, pwd: '')
+          .then((value) {
         final json = value;
         login(userId: json['userId'], loginType: LoginType.token);
       }).catchError((error) {
@@ -195,8 +201,7 @@ class UserInfo extends ChangeNotifier {
   ///更新用户信息
   void updateUserInfoDetail() async {
     try {
-      final Map<String, dynamic> result =
-          await JFApi.xcAccount.xcGetUserInfo();
+      final Map<String, dynamic> result = await JFApi.xcAccount.xcGetUserInfo();
       _userDetail = User.fromJson(result);
       notifyListeners();
     } catch (error) {
