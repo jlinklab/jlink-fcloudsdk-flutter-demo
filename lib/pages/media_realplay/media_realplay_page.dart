@@ -2,9 +2,10 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter/media/audio_player.dart';
 import 'package:xcloudsdk_flutter/media/media_player.dart';
@@ -14,15 +15,13 @@ import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
 import 'package:xcloudsdk_flutter_example/common/common_path.dart';
 import 'package:xcloudsdk_flutter_example/common/named_route.dart';
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/cloud/device_cloud_service_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/cloud/model/device_cloud.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_pwd_setting/device_pwd_find_back_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/media_realplay/views/dev_pre_set_view.dart';
 import 'package:xcloudsdk_flutter_example/utils/permission_utils.dart';
 import 'package:xcloudsdk_flutter_example/views/play_control_view.dart';
 import 'package:xcloudsdk_flutter_example/views/toast/device_pwd_input.dart';
 import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
-import 'package:intl/intl.dart';
+
 import '../../models/user_instance.dart';
 import '../record/cloud_record_list_page.dart';
 
