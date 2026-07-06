@@ -73,7 +73,7 @@ DEPENDENCIES:
   - xcloudsdk_flutter (from `.symlinks/plugins/xcloudsdk_flutter/ios`)
 
 SPEC REPOS:
-  https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - libwebp
     - MTBBarcodeScanner
 
@@ -114,26 +114,26 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/xcloudsdk_flutter/ios"
 
 SPEC CHECKSUMS:
-  app_settings: 2ef6fd7feddb190c36589bd471a02136e4f99641
-  audioplayers_darwin: 4027b33a8f471d996c13f71cb77f0b1583b5d923
-  connectivity_plus: 4c41c08fc6d7c91f63bc7aec70ffe3730b04f563
-  device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
+  app_settings: c8026d12f9fdbfa7f0ed1a79dc09e12cc6117829
+  audioplayers_darwin: 4f9ca89d92d3d21cec7ec580e78ca888e5fb68bd
+  connectivity_plus: b21496ab28d1324eb59885d888a4d83b98531f01
+  device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
+  geolocator_apple: 1d9e8e718b0aee61b8573d2d531eff76d00f383b
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
-  open_file_ios: ece9c5358aec7b7ed7dc12fcb0f926ef6d6650f1
-  package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
-  qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
-  record_ios: 26294aaa39e4bb7665b0fef78bdc23d723b432f2
-  share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
-  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
-  sqflite_darwin: 5a7236e3b501866c1c9befc6771dfd73ffb8702d
-  video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
-  xcloudsdk_flutter: 8411203da5f1d8ae48932dc0f8cc02005f3d894a
+  open_file_ios: 46184d802ee7959203f6392abcfa0dd49fdb5be0
+  package_info_plus: 566e1b7a2f3900e4b0020914ad3fc051dcc95596
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  permission_handler_apple: 3787117e48f80715ff04a3830ca039283d6a4f29
+  qr_code_scanner: d77f94ecc9abf96d9b9b8fc04ef13f611e5a147a
+  record_ios: 412daca2350b228e698fffcd08f1f94ceb1e3844
+  share_plus: de6030e33b4e106470e09322d87cf2a4258d2d1d
+  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
+  video_thumbnail: b637e0ad5f588ca9945f6e2c927f73a69a661140
+  xcloudsdk_flutter: 305118cece2aade68054b83c794d66fbd1e1ae32
 
-PODFILE CHECKSUM: 37031954db91038b38f8df0a4027b03500251508
+PODFILE CHECKSUM: 186919bfa5714bb4587713bbc580dcc417c64be9
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
