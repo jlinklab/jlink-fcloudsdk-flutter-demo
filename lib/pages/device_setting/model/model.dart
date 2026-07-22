@@ -1,3 +1,6 @@
+import '../../cloud/device_cloud_service_manager.dart';
+import '../../cloud/model/device_cloud.dart';
+
 ///
 /// {
 // 			"css":	"aaaaaaaa204122295a",
@@ -31,12 +34,27 @@ class Device {
   ///额外添加
   int state = 0;
 
+  ///设备密码
+  String password = '';
+
+  ///整个云服务状态
+  DeviceCloudService? cloudService({int? channel}) =>
+      DeviceCloudServiceManager.instance
+          .getCloudService(deviceId: uuid, channel: channel);
+
+  ///获取云服务状态
+  CloudServerStatus? cloudServerStatus({int? channel}) =>
+      DeviceCloudServiceManager.instance
+          .getCloudService(deviceId: uuid, channel: channel)
+          ?.cloudServerStatus;
+
   Device({
     required this.uuid,
     this.nickname,
     this.userName,
     this.type,
     this.state = 0,
+    this.password = '',
   });
 
   factory Device.formJson(Map<String, dynamic> json) {
@@ -45,7 +63,8 @@ class Device {
         nickname: json['nickname'] ?? '',
         userName: json['userName'] ?? '',
         type: json['type'] ?? '',
-        state: json['state'] ?? 0);
+        state: json['state'] ?? 0,
+        password: json['password'] ?? '');
 
     // final uuid = json['uuid'];
     // if (json['nickname'] != null) {
@@ -76,6 +95,7 @@ class Device {
       map['type'] = type;
     }
     map['state'] = state;
+    map['password'] = password;
     return map;
   }
 
@@ -84,14 +104,15 @@ class Device {
       String? nickname,
       String? userName,
       String? type,
-      int? state}) {
+      int? state,
+      String? password}) {
     return Device(
-      uuid: uuid,
-      nickname: nickname ?? this.nickname,
-      userName: userName ?? this.userName,
-      type: type ?? this.type,
-      state: state ?? this.state,
-    );
+        uuid: uuid,
+        nickname: nickname ?? this.nickname,
+        userName: userName ?? this.userName,
+        type: type ?? this.type,
+        state: state ?? this.state,
+        password: password ?? this.password);
   }
 }
 
