@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:xcloudsdk_flutter/api/api_center.dart';
+import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
+import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_ability/device_ability_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_pwd_setting/device_pwd_reset_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/device_alarm_page.dart';
@@ -25,6 +30,7 @@ class DeviceConfigPage extends StatefulWidget {
     (context) => TR.current.recordSetting,
     (context) => TR.current.alarm,
     (context) => TR.current.devInfo,
+    (context) => TR.current.deviceRestart,
   ];
 
   @override
@@ -107,6 +113,61 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
         return DeviceBasicPage(
             deviceId: widget.deviceId, channel: widget.channel);
       }));
+    } else if (title == "设备重启" || title == "Device Restart") {
+      _showRebootConfirmDialog(context);
+    }
+  }
+
+  _showRebootConfirmDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(TR.current.deviceRestartTip),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                    _executeDeviceReboot();
+                  },
+                  child: Text(TR.current.confirmBtn),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(TR.current.cancelBtn),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _executeDeviceReboot() async {
+    KToast.show();
+    try {
+      final config = jsonEncode({
+        "Name": "OPMachine",
+        "SessionID": "0x01",
+        "OPMachine": {"Action": "Reboot"}
+      });
+      await JFApi.xcDevice.xcDevSetSysConfig(
+        deviceId: widget.deviceId,
+        commandName: "OPMachine",
+        config: config,
+        configLen: config.length,
+        command: 1450,
+        timeout: 15000,
+      );
+      KToast.show(status: TR.current.rebootSuccess);
+    } catch (e) {
+      KToast.show(status: KErrorMsg(e));
     }
   }
 

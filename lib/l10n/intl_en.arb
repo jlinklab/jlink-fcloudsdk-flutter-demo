@@ -277,5 +277,13 @@
   "TR_Record_Prompt": "Record a beep",
   "tr_settings_alarm_beep": "Device alarm beep",
   "tr_settings_alarm_bell_select": "Device bell selection",
-   "tr_common_download_management": "Download management"
+  "tr_common_download_management": "Download management",
+  "deviceRestart": "Device Restart",
+  "deviceReset": "Device Reset",
+  "deviceFirmwareUpgrade": "Device Firmware Upgrade",
+  "deviceRestartTip": "Are you sure you want to restart the device?",
+  "cancelBtn": "Cancel",
+  "confirmBtn": "Confirm",
+  "rebootSuccess": "Device restarting...",
+  "rebootFailed": "Restart failed"
 }

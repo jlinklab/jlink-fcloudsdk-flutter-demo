@@ -148,5 +148,13 @@
   "TR_Record_Prompt": "录制提示音",
   "tr_settings_alarm_beep": "设备警铃",
   "tr_settings_alarm_bell_select": "设备警铃选择",
-  "tr_common_download_management": "下载管理"
+  "tr_common_download_management": "下载管理",
+  "deviceRestart": "设备重启",
+  "deviceReset": "设备重置",
+  "deviceFirmwareUpgrade": "设备固件升级",
+  "deviceRestartTip": "是否要重启设备？",
+  "cancelBtn": "取消",
+  "confirmBtn": "确定",
+  "rebootSuccess": "设备重启中...",
+  "rebootFailed": "重启失败"
 }
