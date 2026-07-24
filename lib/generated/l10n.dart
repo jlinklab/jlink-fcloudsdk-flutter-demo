@@ -1264,6 +1264,56 @@ class TR {
       args: [],
     );
   }
+
+  /// `设备重启`
+  String get deviceRestart {
+    return Intl.message('设备重启', name: 'deviceRestart', desc: '', args: []);
+  }
+
+  /// `设备重置`
+  String get deviceReset {
+    return Intl.message('设备重置', name: 'deviceReset', desc: '', args: []);
+  }
+
+  /// `设备固件升级`
+  String get deviceFirmwareUpgrade {
+    return Intl.message(
+      '设备固件升级',
+      name: 'deviceFirmwareUpgrade',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `是否要重启设备？`
+  String get deviceRestartTip {
+    return Intl.message(
+      '是否要重启设备？',
+      name: 'deviceRestartTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `取消`
+  String get cancelBtn {
+    return Intl.message('取消', name: 'cancelBtn', desc: '', args: []);
+  }
+
+  /// `确定`
+  String get confirmBtn {
+    return Intl.message('确定', name: 'confirmBtn', desc: '', args: []);
+  }
+
+  /// `设备重启中...`
+  String get rebootSuccess {
+    return Intl.message('设备重启中...', name: 'rebootSuccess', desc: '', args: []);
+  }
+
+  /// `重启失败`
+  String get rebootFailed {
+    return Intl.message('重启失败', name: 'rebootFailed', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

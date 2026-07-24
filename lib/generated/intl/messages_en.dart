@@ -99,6 +99,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "bluetooth": MessageLookupByLibrary.simpleMessage("add via BT"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "cancelBtn": MessageLookupByLibrary.simpleMessage("Cancel"),
     "cancelShare": MessageLookupByLibrary.simpleMessage("Cancel Share"),
     "cancelShareContent": m0,
     "cancelShareFailed": MessageLookupByLibrary.simpleMessage(
@@ -115,6 +116,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cloudList": MessageLookupByLibrary.simpleMessage("Cloud Playback"),
     "cloudVideo": MessageLookupByLibrary.simpleMessage("Cloud Short Video"),
     "codeHint": MessageLookupByLibrary.simpleMessage("verification code"),
+    "confirmBtn": MessageLookupByLibrary.simpleMessage("Confirm"),
     "confirmShare": MessageLookupByLibrary.simpleMessage("Confirm Share"),
     "confirmShareContent": m1,
     "countDown": m2,
@@ -148,9 +150,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "deviceBluetoothCantConnect": MessageLookupByLibrary.simpleMessage(
       "Cannot connect to Bluetooth",
     ),
+    "deviceFirmwareUpgrade": MessageLookupByLibrary.simpleMessage(
+      "Device Firmware Upgrade",
+    ),
     "deviceList": MessageLookupByLibrary.simpleMessage("Device List"),
     "deviceNoMemoryCard": MessageLookupByLibrary.simpleMessage(
       "The device does not have a storage card",
+    ),
+    "deviceReset": MessageLookupByLibrary.simpleMessage("Device Reset"),
+    "deviceRestart": MessageLookupByLibrary.simpleMessage("Device Restart"),
+    "deviceRestartTip": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to restart the device?",
     ),
     "deviceShare": MessageLookupByLibrary.simpleMessage("Device Share"),
     "download": MessageLookupByLibrary.simpleMessage("Download Management"),
@@ -253,6 +263,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "qrCodeShare": MessageLookupByLibrary.simpleMessage("QR Code Share"),
     "qrScan": MessageLookupByLibrary.simpleMessage("Align The QR Code"),
+    "rebootFailed": MessageLookupByLibrary.simpleMessage("Restart failed"),
+    "rebootSuccess": MessageLookupByLibrary.simpleMessage(
+      "Device restarting...",
+    ),
     "recordAudio": MessageLookupByLibrary.simpleMessage("Audio Recording"),
     "recordClip": MessageLookupByLibrary.simpleMessage("Video Segment"),
     "recordList": m6,

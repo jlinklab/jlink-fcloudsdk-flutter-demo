@@ -377,5 +377,13 @@
   "labelDevSN": "Device SN",
   "@labelDevSN": {},
   "TR_QR_Code_Has_Been_Used_Generate_Again": "QR code has been used, please contact the device owner to regenerate",
-  "@TR_QR_Code_Has_Been_Used_Generate_Again": {}
+  "@TR_QR_Code_Has_Been_Used_Generate_Again": {},
+  "deviceRestart": "Device Restart",
+  "deviceReset": "Device Reset",
+  "deviceFirmwareUpgrade": "Device Firmware Upgrade",
+  "deviceRestartTip": "Are you sure you want to restart the device?",
+  "cancelBtn": "Cancel",
+  "confirmBtn": "Confirm",
+  "rebootSuccess": "Device restarting...",
+  "rebootFailed": "Restart failed"
 }
