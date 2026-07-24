@@ -385,5 +385,8 @@
   "cancelBtn": "Cancel",
   "confirmBtn": "Confirm",
   "rebootSuccess": "Device restarting...",
-  "rebootFailed": "Restart failed"
+  "rebootFailed": "Restart failed",
+  "saveSuccess": "Saved successfully",
+  "saveFailed": "Save failed",
+  "saving": "Saving..."
 }

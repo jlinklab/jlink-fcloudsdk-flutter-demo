@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class AlarmPlayToolBar extends StatefulWidget {
-  AlarmPlayToolBar({Key? key, required this.videoLength, this.currentTime = 0}) : super(key: key);
+  AlarmPlayToolBar({Key? key, required this.videoLength, this.currentTime = 0})
+      : super(key: key);
 
   ///视频总的长度
   double videoLength;
@@ -19,10 +22,11 @@ class _AlarmPlayToolBarState extends State<AlarmPlayToolBar> {
   void initState() {
     super.initState();
 
-    if(widget.videoLength <= 0){
-        widget.videoLength = 1;
+    if (widget.videoLength <= 0) {
+      widget.videoLength = 1;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -30,9 +34,9 @@ class _AlarmPlayToolBarState extends State<AlarmPlayToolBar> {
         Expanded(
           child: Slider(
             min: 0,
-            max: widget.videoLength,
+            max: max(widget.videoLength, widget.currentTime),
             value: widget.currentTime,
-            onChanged: (value){},
+            onChanged: (value) {},
           ),
         ),
         Text('${widget.videoLength}s'),

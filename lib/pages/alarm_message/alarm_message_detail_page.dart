@@ -1,17 +1,26 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:xcloudsdk_flutter_example/common/common_path.dart';
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
+import 'package:xcloudsdk_flutter_example/pages/album/album_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/alarm_message/model/model.dart';
 import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
 import '../../common/base_const.dart';
 
 class AlarmMessageDetailPage extends StatefulWidget {
   final AlarmMessage message;
-  const AlarmMessageDetailPage({Key? key, required this.message})
-      : super(key: key);
+  final String deviceId;
+  const AlarmMessageDetailPage({
+    Key? key,
+    required this.message,
+    required this.deviceId,
+  }) : super(key: key);
 
   @override
   State<AlarmMessageDetailPage> createState() => _AlarmMessageListPageState();
@@ -101,10 +110,73 @@ class _AlarmMessageListPageState extends State<AlarmMessageDetailPage> {
                   _localImageFile,
                   width: kScreenWidth,
                   height: kScreenWidth * 9 / 16,
-                )
+                ),
+              if (_isHasFile)
+                Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: TextButton(
+                      onPressed: _isSaving ? null : _saveImageToGallery,
+                      child: Text(
+                        _isSaving
+                            ? TR.current.saving
+                            : TR.current.save,
+                      ),
+                    ))
             ],
           ),
         ));
+  }
+
+  
+
+  bool _isSaving = false;
+
+  /// 将报警图片保存到系统相册 + app相册
+  Future<void> _saveImageToGallery() async {
+    if (_isSaving) return;
+    setState(() => _isSaving = true);
+    try {
+      final Uint8List bytes = await _localImageFile.readAsBytes();
+      // 保存到系统相册
+      final result = await ImageGallerySaver.saveImage(
+        bytes,
+        quality: 80,
+        name: DateTime.now().millisecondsSinceEpoch.toString(),
+      );
+      // 同步保存到app相册
+      await _saveToAppAlbum(bytes);
+      if (result != null && result['isSuccess'] == true) {
+        KToast.show(status: TR.current.saveSuccess);
+      } else {
+        KToast.show(status: TR.current.saveFailed);
+      }
+    } catch (e) {
+      KToast.show(status: TR.current.saveFailed);
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
+    }
+  }
+
+  /// 保存到app相册（jf_images目录）
+  Future<void> _saveToAppAlbum(Uint8List bytes) async {
+    try {
+      final directoryPath = await kDirectoryPathImages();
+      final timeStr = DateFormat('yyyy-MM-dd HH_mm_ss SSS').format(DateTime.now());
+      final channel = 'channel${_message.ch ?? '0'}';
+      final savePath =
+          '/$directoryPath/$kPrefixImage${widget.deviceId} $timeStr $channel.jpg';
+      final appFile = File(savePath);
+      if (!await appFile.parent.exists()) {
+        await appFile.parent.create(recursive: true);
+      }
+      await appFile.writeAsBytes(bytes);
+      // 刷新相册页
+      AlbumPage.update();
+    } catch (e) {
+      debugPrint('保存到app相册失败: $e');
+    }
   }
 
   @override

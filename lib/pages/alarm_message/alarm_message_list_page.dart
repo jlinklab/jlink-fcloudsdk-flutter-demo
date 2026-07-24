@@ -140,13 +140,13 @@ class _AlarmMessageListPageState extends State<AlarmMessageListPage> {
   Widget _hasMoreTipView() {
     // 如果还有数据
     if (_hasMore) {
-      return Center(
+      return const Center(
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
+            children: [
               Text(
                 '加载中',
                 style: TextStyle(fontSize: 16.0),
@@ -214,7 +214,7 @@ class _AlarmMessageListPageState extends State<AlarmMessageListPage> {
       ///显示图片
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (BuildContext context) {
-        return AlarmMessageDetailPage(message: msg);
+        return AlarmMessageDetailPage(message: msg, deviceId: widget.deviceId);
       }));
     } else {
       ///播放视频

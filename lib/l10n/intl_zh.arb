@@ -200,5 +200,8 @@
   "cancelBtn": "取消",
   "confirmBtn": "确定",
   "rebootSuccess": "设备重启中...",
-  "rebootFailed": "重启失败"
+  "rebootFailed": "重启失败",
+  "saveSuccess": "保存成功",
+  "saveFailed": "保存失败",
+  "saving": "保存中..."
 }

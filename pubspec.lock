@@ -583,6 +583,15 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.1.2"
+  image_gallery_saver:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "21fa908159e3762ba4583e996af9f05c80c55954"
+      url: "https://gitcode.com/openharmony-sig/flutter_image_gallery_saver.git"
+    source: git
+    version: "2.0.3"
   image_picker:
     dependency: "direct main"
     description:

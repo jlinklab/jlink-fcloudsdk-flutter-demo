@@ -294,6 +294,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "restartScan": MessageLookupByLibrary.simpleMessage("restart scan"),
     "routeSetting": MessageLookupByLibrary.simpleMessage("Route Setting"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
+    "saveFailed": MessageLookupByLibrary.simpleMessage("Save failed"),
+    "saveSuccess": MessageLookupByLibrary.simpleMessage("Saved successfully"),
+    "saving": MessageLookupByLibrary.simpleMessage("Saving..."),
     "scanShareDevice": MessageLookupByLibrary.simpleMessage(
       "Scan to add shared device",
     ),

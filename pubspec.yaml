@@ -130,6 +130,10 @@ dependencies:
       url: "http://10.2.5.201/FlutterPlugin/hos_flutter_packages.git"
       ref: '16c6aa327ac88463dfd3acfc4104091dd4a87f6d'
       path: "scan"
+  #保存图片/视频到系统相册
+  image_gallery_saver:
+    git:
+      url: "https://gitcode.com/openharmony-sig/flutter_image_gallery_saver.git"
 
 dependency_overrides:
   http: 0.13.6
