@@ -32,7 +32,7 @@ class LocalDeviceCache {
 
       // Convert each item in the JSON list to a Follow object and return the list.
       List<Device> deviceList =
-          jsonList.map((item) => Device.formJson(item)).toList();
+          jsonList.map((item) => Device.fromJson(item)).toList();
       return deviceList;
     } catch (e) {
       return []; // catching exception upon failing to parse json
