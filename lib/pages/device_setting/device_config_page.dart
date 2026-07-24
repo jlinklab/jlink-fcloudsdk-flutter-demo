@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
+import 'package:xcloudsdk_flutter_example/common/event.dart';
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
 import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_ability/device_ability_manager.dart';
@@ -12,16 +13,18 @@ import 'package:xcloudsdk_flutter_example/pages/device_setting/device_basic_page
 import 'package:xcloudsdk_flutter_example/pages/device_setting/device_info_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/device_record_set_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/device_storage_manage_page.dart';
+import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
 
 typedef GetTitle = String Function(BuildContext context);
 
 // ignore: must_be_immutable
 class DeviceConfigPage extends StatefulWidget {
-  DeviceConfigPage({Key? key, required this.deviceId, required this.channel})
+  DeviceConfigPage({Key? key, required this.deviceId, required this.channel, required this.type})
       : super(key: key);
 
   final String deviceId;
   final int channel;
+  final int type;
 
   List<GetTitle> dataSource = [
     (context) => TR.current.basicSetting,
@@ -31,6 +34,7 @@ class DeviceConfigPage extends StatefulWidget {
     (context) => TR.current.alarm,
     (context) => TR.current.devInfo,
     (context) => TR.current.deviceRestart,
+    (context) => TR.current.deviceReset,
   ];
 
   @override
@@ -115,6 +119,8 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
       }));
     } else if (title == "设备重启" || title == "Device Restart") {
       _showRebootConfirmDialog(context);
+    } else if (title == "设备重置" || title == "Device Reset") {
+      _showResetConfirmDialog(context);
     }
   }
 
@@ -169,6 +175,92 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
     } catch (e) {
       KToast.show(status: KErrorMsg(e));
     }
+  }
+
+  /// 设备恢复出厂设置确认弹窗
+  /// 提供两个选项：仅恢复出厂设置 / 恢复出厂设置并删除设备
+  _showResetConfirmDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(TR.current.deviceResetTip),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text(TR.current.onlyFactoryReset),
+                onTap: () {
+                  Navigator.of(dialogContext).pop();
+                  _executeDeviceReset(deleteDevice: false);
+                },
+              ),
+              const Divider(),
+              ListTile(
+                title: Text(TR.current.factoryResetAndDeleteDev),
+                onTap: () {
+                  Navigator.of(dialogContext).pop();
+                  _executeDeviceReset(deleteDevice: true);
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: Text(TR.current.cancelBtn),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// 执行设备恢复出厂设置
+  /// 通过 OPMachine 命令发送 Action: "Reset" 到设备
+  /// [deleteDevice] 为 true 时，恢复出厂后从本地设备列表中删除设备
+  _executeDeviceReset({required bool deleteDevice}) async {
+    KToast.show();
+    try {
+      final config = jsonEncode({
+        "Name": "OPMachine",
+        "SessionID": "0x01",
+        "OPMachine": {"Action": "Reset"}
+      });
+      await JFApi.xcDevice.xcDevSetSysConfig(
+        deviceId: widget.deviceId,
+        commandName: "OPMachine",
+        config: config,
+        configLen: config.length,
+        command: 1450,
+        timeout: 15000,
+      );
+      // 如果选择恢复出厂并删除设备，从本地设备列表中移除
+      if (deleteDevice) {
+        await JFApi.xcAccount.xcRemoveDevice(widget.deviceId).then((value) {
+          eventBus.fire(RemoveDeviceUpdateEvent(type: widget.type));
+          DeviceManager.instance.removeDevice(deviceId: widget.deviceId, type: widget.type);
+        }).catchError((error) {
+          KToast.show(status: KErrorMsg(error));
+        });
+      }
+      // 恢复出厂设置后设备会重启，延迟返回首页
+      Future.delayed(const Duration(seconds: 2), () {
+        KToast.show(status: TR.current.resetSuccess);
+        if (mounted) {
+          Navigator.popUntil(context, (route) => route.isFirst);
+        }
+      });
+    } catch (e) {
+      KToast.show(status: TR.current.resetFailed);
+    }
+  }
+
+  _toDelete(String deviceID) {
+    KToast.show();
+
   }
 
   _DeviceConfigPageState();

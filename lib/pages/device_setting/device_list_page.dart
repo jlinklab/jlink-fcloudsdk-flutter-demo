@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
@@ -10,6 +12,7 @@ import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart'
 import 'package:xcloudsdk_flutter_example/pages/device_setting/viewmodel/device_list_view_model.dart';
 import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
 import '../../common/code_prase.dart';
+import '../../common/event.dart';
 
 class DeviceListPage extends StatefulWidget {
   const DeviceListPage({Key? key}) : super(key: key);
@@ -25,9 +28,15 @@ class _DeviceListPageState extends State<DeviceListPage>
     _tabController = TabController(length: 2, vsync: this);
     context.read<DevListViewModel>().onRefresh();
     super.initState();
+    _subscription = eventBus.on<RemoveDeviceUpdateEvent>().listen((_) {
+      if (mounted) {
+        context.read<DevListViewModel>().onRefresh();
+      }
+    });
   }
 
   late TabController _tabController;
+  late StreamSubscription _subscription;
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +77,7 @@ class _DeviceListPageState extends State<DeviceListPage>
   @override
   void dispose() {
     _tabController.dispose();
+    _subscription.cancel();
     super.dispose();
   }
 }
@@ -123,7 +133,8 @@ class _DeviceTabPageState extends State<DeviceTabPage> {
                                     onPressed: () {
                                       context.pushNamed('preview',
                                           pathParameters: {
-                                            'devId': device.uuid
+                                            'devId': device.uuid,
+                                            'type': widget.type.toString(),
                                           });
                                     },
                                     child: Text(TR.current.preview)),
