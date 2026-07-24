@@ -212,7 +212,7 @@ class _DeviceInfoPageState extends State<DeviceInfoPage> {
         });
       }
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
 
     return Future.value();

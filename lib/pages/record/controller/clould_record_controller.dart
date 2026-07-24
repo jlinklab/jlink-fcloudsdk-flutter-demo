@@ -125,7 +125,7 @@ class CloudRecordController extends ChangeNotifier {
         KToast.show(status: '暂无录像');
       }
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 

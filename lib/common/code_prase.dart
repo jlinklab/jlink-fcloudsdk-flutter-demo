@@ -1,7 +1,14 @@
 // ignore: non_constant_identifier_names
-String? KErrorMsg(dynamic code) {
-  if (code.runtimeType == int) {
-    String pCode = code.toString();
+import 'package:xcloudsdk_flutter/api/api_center.dart';
+
+import '../api/core/dio_config.dart';
+import '../generated/l10n.dart';
+
+String? kErrorMsg(dynamic code) {
+  if (code is BusinessError) {
+    return code.errorMessage;
+  } else if (code is XCloudAPIException) {
+    String pCode = code.code.toString();
     if (_errorCodeMapNet[pCode] != null) {
       return _errorCodeMapNet[pCode];
     }
@@ -14,9 +21,9 @@ String? KErrorMsg(dynamic code) {
     if (_errorCodeMapGeneral[pCode] != null) {
       return _errorCodeMapGeneral[pCode];
     }
-    if (_errorCodeMapExcloud[pCode] != null){
+    if (_errorCodeMapExcloud[pCode] != null) {
       return _errorCodeMapExcloud[pCode];
-    }else {
+    } else {
       return '错误码:$pCode';
     }
   } else if (code.runtimeType == String) {
@@ -50,7 +57,7 @@ const _errorCodeMapNet = {
 };
 
 /// 错误码--账户
-const _errorCodeMapAccount = {
+final _errorCodeMapAccount = {
   '-603000': 'FunSDK证书合法性验证校验失败*不合法UUID或者AppKey不允许使用',
   '-603001': 'json数据格式校验失败',
   '-603002': '登录用户名或密码为空',
@@ -153,6 +160,7 @@ const _errorCodeMapAccount = {
   '-605012': 'token无权限',
   '-605013': '不支持',
   '-605017': '数据过期',
+  '-619021': TR.current.TR_QR_Code_Has_Been_Used_Generate_Again,
   '-66000': '无效登录方式？',
   '-661427': '新密码格式不正确',
   '-661412': '用户名不存在',
@@ -260,6 +268,6 @@ const _errorCodeMapGeneral = {
 
 /// 云存储最新协议错误吗
 const _errorCodeMapExcloud = {
-  '-225517' : '未获取到此用户可查询的时间区域',
-  '-225518' : 'json数据格式校验失败',
+  '-225517': '未获取到此用户可查询的时间区域',
+  '-225518': 'json数据格式校验失败',
 };

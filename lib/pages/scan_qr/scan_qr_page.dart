@@ -1,8 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:scan/scan.dart';
 
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
+import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+
+import '../../utils/permission_utils.dart';
 
 typedef ScanCallBack = void Function(String deviceSn);
 
@@ -76,6 +82,28 @@ class _ScanQrPageState extends State<ScanQrPage> with TickerProviderStateMixin {
       appBar: AppBar(
         title: Text(TR.current.qrScan),
         centerTitle: true,
+        actions: [
+          TextButton(
+            onPressed: () async {
+              bool hasPermission = await PermissionUtils.checkPermission(
+                  permission: XPermission.storage);
+              if (hasPermission) {
+                String? qrCode = await scanFromImage();
+                if (qrCode == 'INVALID_QR') {
+                  // 选了图片但没有二维码
+                  KToast.show(status: 'INVALID_QR');
+                  return;
+                }
+                Navigator.of(context).pop();
+                widget.callBack(qrCode ?? '');
+              }
+            },
+            child: Text(
+              TR.current.album,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -117,6 +145,25 @@ class _ScanQrPageState extends State<ScanQrPage> with TickerProviderStateMixin {
         ],
       ),
     );
+  }
+
+  Future<String?> scanFromImage() async {
+    try {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        // 用户选了图片
+        String? result = await Scan.parse(pickedFile.path);
+        HapticFeedback.vibrate();
+        // result 有值 → 返回二维码内容
+        // result 为 null → 图片里没有二维码，返回特殊标识
+        return result ?? 'INVALID_QR';
+      }
+      // 用户取消 → 返回 null
+    } catch (e) {
+      //
+    }
+    return null;
   }
 
   @override

@@ -28,7 +28,7 @@ class _ResetPwdByEmailState extends State<ResetPwdByEmail> {
       KToast.show(status: '请查看邮件');
       _checkUserIsActivated(userId);
     } catch (error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     }
   }
 
@@ -39,9 +39,10 @@ class _ResetPwdByEmailState extends State<ResetPwdByEmail> {
     }
 
     timer = Timer.periodic(const Duration(seconds: 2), (timer) async {
-      try{
+      try {
         KToast.show();
-        int result = await JFApi.xcAccount.checkResetPwdIsActivated(userId: userId);
+        int result =
+            await JFApi.xcAccount.checkResetPwdIsActivated(userId: userId);
         if (result >= 0) {
           KToast.show(status: '密码重置成功');
           timer.cancel();
@@ -49,15 +50,14 @@ class _ResetPwdByEmailState extends State<ResetPwdByEmail> {
           // ignore: use_build_context_synchronously
           Navigator.of(context).popUntil((route) => route.isFirst);
         }
-        
-      }catch(error){
+      } catch (error) {
         error as XCloudAPIException;
-        if(error.code == -604065){
+        if (error.code == -604065) {
           ///表示未激活,继续循环检测
-        }else{
+        } else {
           KToast.dismiss();
           timer.cancel();
-          KToast.show(status: KErrorMsg(error.code));
+          KToast.show(status: kErrorMsg(error.code));
         }
       }
     });

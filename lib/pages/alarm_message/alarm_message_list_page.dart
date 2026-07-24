@@ -92,7 +92,7 @@ class _AlarmMessageListPageState extends State<AlarmMessageListPage> {
       }
     }).catchError((error) {
       _isLoading = false;
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 
@@ -120,7 +120,7 @@ class _AlarmMessageListPageState extends State<AlarmMessageListPage> {
                   });
                 }).catchError((error) {
                   _isLoading = false;
-                  KToast.show(status: KErrorMsg(error));
+                  KToast.show(status: kErrorMsg(error));
                 });
               },
             ),

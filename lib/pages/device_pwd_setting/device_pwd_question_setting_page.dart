@@ -431,7 +431,7 @@ class _DevicePwdQuestionSettingPageState
       _question2 = _questionList[2]; // 1
       setState(() {});
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 
@@ -457,7 +457,7 @@ class _DevicePwdQuestionSettingPageState
       }
       setState(() {});
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 
@@ -479,7 +479,7 @@ class _DevicePwdQuestionSettingPageState
 
       ///设置设备语言
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 
@@ -493,7 +493,7 @@ class _DevicePwdQuestionSettingPageState
       KToast.dismiss();
       _queryQuestionList();
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 
@@ -531,7 +531,7 @@ class _DevicePwdQuestionSettingPageState
         .then((value) {
       KToast.show(status: '保存成功');
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 }

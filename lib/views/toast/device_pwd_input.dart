@@ -62,7 +62,7 @@ class _DevicePwdInputState extends State<DevicePwdInput> {
       });
     }).catchError((error) {
       ///获取失败不做提示
-      // KToast.show(status: KErrorMsg(error));
+      // KToast.show(status: kErrorMsg(error));
     });
   }
 

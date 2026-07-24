@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
+import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/account/model/model.dart';
 import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
 
@@ -149,7 +150,7 @@ class UserInfo extends ChangeNotifier {
         final json = value;
         login(userId: json['userId'], loginType: LoginType.token);
       }).catchError((error) {
-        KToast.show(status: KErrorMsg(error));
+        KToast.show(status: kErrorMsg(error));
       });
     }
   }
@@ -194,6 +195,8 @@ class UserInfo extends ChangeNotifier {
 
     ///调SDK内部的登出方法
     await JFApi.xcAccount.xcLoginOut();
+    // 清空设备管理器中的设备数据
+    DeviceManager.instance.dispose();
     notifyListeners();
     return Future.value();
   }
@@ -207,7 +210,7 @@ class UserInfo extends ChangeNotifier {
     } catch (error) {
       // String errorMsg = '获取用户信息错误';
       // if (error.runtimeType == int) {
-      //   errorMsg = KErrorMsg(error as int)!;
+      //   errorMsg = kErrorMsg(error as int)!;
       // }
     }
   }

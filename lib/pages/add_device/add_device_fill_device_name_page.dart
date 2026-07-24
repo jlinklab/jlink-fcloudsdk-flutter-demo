@@ -39,7 +39,7 @@ class _AddDeviceFillDeviceNamePageState
       ///返回首页
       Navigator.popUntil(context, (route) => route.isFirst);
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 

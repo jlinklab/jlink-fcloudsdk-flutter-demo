@@ -13,12 +13,24 @@
       "value": "Flycam"
     },
     {
+      "name": "wifi_reason",
+      "value": "用于获取WiFi网络信息，进行设备配网"
+    },
+    {
+      "name": "use_microphone_reason",
+      "value": "用于对讲等功能"
+    },
+    {
       "name": "camera_reason",
       "value": "用于扫描二维码等功能"
     },
     {
       "name": "blue_tooth_reason",
       "value": "用于查找附近的蓝牙设备，进行配网和连接等功能"
+    },
+    {
+      "name": "album_reason",
+      "value": "Used to access photos and videos in the system album"
     }
   ]
 }

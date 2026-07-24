@@ -173,7 +173,7 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
       );
       KToast.show(status: TR.current.rebootSuccess);
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
   }
 
@@ -243,7 +243,7 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
           eventBus.fire(RemoveDeviceUpdateEvent(type: widget.type));
           DeviceManager.instance.removeDevice(deviceId: widget.deviceId, type: widget.type);
         }).catchError((error) {
-          KToast.show(status: KErrorMsg(error));
+          KToast.show(status: kErrorMsg(error));
         });
       }
       // 恢复出厂设置后设备会重启，延迟返回首页

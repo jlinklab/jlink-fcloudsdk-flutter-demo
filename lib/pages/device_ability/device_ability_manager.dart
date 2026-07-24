@@ -44,7 +44,7 @@ class DeviceAbilityManager {
         debugPrint(jsonEncode(systemFunctionMap));
       }
     } catch (e) {
-      debugPrint('能力级请求失败：${KErrorMsg(e)}');
+      debugPrint('能力级请求失败：${kErrorMsg(e)}');
       rethrow;
     }
   }

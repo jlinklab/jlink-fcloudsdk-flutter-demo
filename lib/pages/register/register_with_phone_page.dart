@@ -49,7 +49,7 @@ class _RegisterWithPhonePageState extends State<RegisterWithPhonePage> {
           .then((value) {
         KToast.show(status: '验证码请求成功');
       }).catchError((error) {
-        KToast.show(status: KErrorMsg(error));
+        KToast.show(status: kErrorMsg(error));
       });
     } else {
       KToast.show();
@@ -60,7 +60,7 @@ class _RegisterWithPhonePageState extends State<RegisterWithPhonePage> {
           .then((value) {
         KToast.show(status: '验证码请求成功');
       }).catchError((error) {
-        KToast.show(status: KErrorMsg(error));
+        KToast.show(status: kErrorMsg(error));
       });
     }
   }
@@ -123,7 +123,7 @@ class _RegisterWithPhonePageState extends State<RegisterWithPhonePage> {
         context.pop();
       }
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 

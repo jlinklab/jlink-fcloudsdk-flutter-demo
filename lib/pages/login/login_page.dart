@@ -293,7 +293,7 @@ class _LoginPageState extends State<LoginPage> {
           userName: loginName,
           pwd: loginPwd);
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 

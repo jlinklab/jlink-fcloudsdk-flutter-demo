@@ -654,7 +654,7 @@ class DeviceAddCenter {
         .then((value) {
       onComplete(true, jsonDecode(value), '');
     }).catchError((error) {
-      // onComplete(false, {},KErrorMsg(error)!);
+      // onComplete(false, {},kErrorMsg(error)!);
     });
   }
 

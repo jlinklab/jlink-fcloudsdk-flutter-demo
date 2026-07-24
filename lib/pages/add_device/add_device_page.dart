@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
+import 'package:xcloudsdk_flutter_example/api/share_api.dart';
 import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
+import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/add_device/add_device_fill_device_name_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/add_device/models/add_device_center.dart';
 import 'package:xcloudsdk_flutter_example/pages/add_device/reset_device_random_loginName_password_page.dart';
@@ -213,7 +217,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
                               //   if (error == '-605017') {
                               //     KToast.show(status: '二维码已经过期');
                               //   } else {
-                              //     KToast.show(status: KErrorMsg(error));
+                              //     KToast.show(status: kErrorMsg(error));
                               //   }
                               // });
                             } else {
@@ -236,7 +240,6 @@ class _AddDevicePageState extends State<AddDevicePage> {
                   addDeviceWithDevSN(context);
                 },
                 child: Text(TR.current.add)),
-
             ElevatedButton(
                 onPressed: () {
                   Navigator.of(context)
@@ -259,68 +262,131 @@ class _AddDevicePageState extends State<AddDevicePage> {
                   }));
                 },
                 child: const Text('填写设备名称')),
-
-            // const Spacer(),
-            // SizedBox(
-            //   width: 200,
-            //   child: ElevatedButton(
-            //       onPressed: () {
-            //         context.pushNamed('wifi_config').then((value) {
-            //           if (value == null) {
-            //             return;
-            //           }
-            //           List<String> list = value as List<String>;
-            //           final sn = list[0];
-            //           setState(() {
-            //             devSNController.text = sn;
-            //             Navigator.of(context);
-            //           });
-            //         });
-            //       },
-            //       child: const Text("快速wifi配网")),
-            // ),
-            // SizedBox(
-            //   width: 200,
-            //   child: ElevatedButton(
-            //       onPressed: () {
-            //         Navigator.of(context)
-            //             .push(MaterialPageRoute(builder: (context) {
-            //           return BlueToothSearchDevicePage(
-            //             callback: (BlueToothConnectedDevice device) {
-            //               if (device.sn != null && device.sn!.isNotEmpty) {
-            //                 _device = device;
-            //                 setState(() {
-            //                   nameController.text = '';
-            //                   devSNController.text = _device!.sn ?? '';
-            //                 });
-            //               }
-            //             },
-            //           );
-            //         }));
-            //       },
-            //       child: const Text("蓝牙配网")),
-            // ),
-            // SizedBox(
-            //   child: ElevatedButton(
-            //     onPressed: () async {
-            //       final result = await Navigator.of(context)
-            //           .push(MaterialPageRoute(builder: (context) {
-            //         return const BleScanPage();
-            //       }));
-            //       if (result != null) {
-            //         setState(() {
-            //           nameController.text = '';
-            //           devSNController.text = result['sn'] ?? '';
-            //         });
-            //       }
-            //     },
-            //     child: const Text('蓝牙配网2.0'),
-            //   ),
-            // )
+            ElevatedButton(
+                onPressed: () {
+                  _scanAndAcceptShareDevice();
+                },
+                child: Text(TR.current.scanShareDevice)),
           ],
         ),
       ),
     );
+  }
+
+  /// 扫码添加分享设备
+  void _scanAndAcceptShareDevice() async {
+    String? qrCode;
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) {
+        return ScanQrPage(callBack: (String code) {
+          qrCode = code;
+        });
+      }),
+    );
+    if (qrCode == null || qrCode!.isEmpty || !mounted) return;
+
+    // 解析二维码 URL，提取 shareKey
+    Map<String, dynamic> infoMap;
+    try {
+      final Uri uri = Uri.parse(qrCode!);
+      final String? shareKey = uri.queryParameters['shareKey'];
+      if (shareKey == null || shareKey.isEmpty) {
+        KToast.show(status: TR.current.invalidShareQR);
+        return;
+      }
+
+      // 服务器解密
+      KToast.show();
+      String value =
+          await AccountAPI.instance.xcDecodeInfo(encodeStr: shareKey);
+      KToast.dismiss();
+
+      if (value.isEmpty) {
+        KToast.show(status: TR.current.invalidShareQR);
+        return;
+      }
+
+      // 判断是否需要再次解密
+      if (value.contains(':')) {
+        infoMap = jsonDecode(value);
+      } else {
+        String decrypted = await JFApi.xcUtil.xcDecryptDevInfo(value);
+        infoMap = jsonDecode(decrypted);
+      }
+    } catch (e) {
+      KToast.dismiss();
+      KToast.show(status: kErrorMsg(e));
+      return;
+    }
+
+    if (infoMap.isEmpty || !mounted) return;
+
+    // 提取分享设备信息
+    final String devId = (infoMap['devId'] ?? '').toString().toLowerCase();
+    final String devName = infoMap['devName'] ?? '';
+    final String shareUserId = infoMap['userId'] ?? '';
+    final String permissions = infoMap['permissions'] ?? '';
+    final String shareChannels = infoMap['shareChannels'] ?? '';
+    final int expireTime = infoMap['expireTime'] ?? 0;
+    final String shareUserName = infoMap['username'] ?? '';
+
+    if (devId.isEmpty) {
+      KToast.show(status: TR.current.invalidShareQR);
+      return;
+    }
+
+    // 弹出确认对话框
+    final accepted = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(TR.current.acceptShareDevice),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${TR.current.labelDeviceName}: $devName'),
+            const SizedBox(height: 4),
+            Text('${TR.current.labelDevSN}: $devId'),
+            const SizedBox(height: 4),
+            Text('${TR.current.shareFrom}: $shareUserName'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(TR.current.refuseShare),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(TR.current.acceptShare),
+          ),
+        ],
+      ),
+    );
+
+    if (accepted != true || !mounted) return;
+
+    // 调用 API 接受分享
+    try {
+      KToast.show();
+      await shareAPI.addDeviceBySharedWithUserId(
+        devId,
+        shareUserId,
+        '',
+        permissions,
+        shareChannels.isEmpty ? null : shareChannels,
+        devName,
+        expireTime == 0 ? null : expireTime,
+      );
+      KToast.dismiss();
+      KToast.show(status: TR.current.acceptSuccess);
+      // 刷新设备列表
+      await DeviceManager.instance.refreshDeviceList();
+      if (mounted) Navigator.of(context).pop();
+    } catch (e) {
+      KToast.dismiss();
+      KToast.show(status: kErrorMsg(e));
+    }
   }
 
   void addDeviceWithDevSN(BuildContext context) async {
@@ -342,7 +408,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
       KToast.dismiss();
       Navigator.of(context).pop();
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 

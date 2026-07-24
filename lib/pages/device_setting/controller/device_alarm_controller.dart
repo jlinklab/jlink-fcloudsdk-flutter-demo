@@ -94,7 +94,7 @@ class DeviceAlarmController extends ChangeNotifier {
         beepVoiceEnum = jsonMap['EventHandler']['VoiceType'];
       }
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
   }
 
@@ -231,7 +231,7 @@ class DeviceAlarmController extends ChangeNotifier {
       }
       _configDeviceSetItemMoleList();
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
   }
 
@@ -254,7 +254,7 @@ class DeviceAlarmController extends ChangeNotifier {
         KToast.dismiss();
       }
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
   }
 
@@ -393,7 +393,7 @@ class DeviceAlarmController extends ChangeNotifier {
         debugPrint('设备语言设置成功: ${TR.current.local}');
       }
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
       if (bShowLoading == false && context.mounted) {
         context.pop();
       }
@@ -431,7 +431,7 @@ class DeviceAlarmController extends ChangeNotifier {
         }
       }
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
       if (bShowLoading == false && context.mounted) {
         context.pop();
       }

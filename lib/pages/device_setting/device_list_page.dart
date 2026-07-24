@@ -10,7 +10,10 @@ import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
 import 'package:xcloudsdk_flutter_example/pages/alarm_message/alarm_message_list_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/viewmodel/device_list_view_model.dart';
+import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
 import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:xcloudsdk_flutter_example/pages/share/device_share_page.dart';
+import '../../api/share_api.dart';
 import '../../common/code_prase.dart';
 import '../../common/event.dart';
 
@@ -26,13 +29,109 @@ class _DeviceListPageState extends State<DeviceListPage>
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
-    context.read<DevListViewModel>().onRefresh();
+    context.read<DevListViewModel>().onRefresh().then((_) {
+      _checkPendingShares();
+    });
     super.initState();
     _subscription = eventBus.on<RemoveDeviceUpdateEvent>().listen((_) {
       if (mounted) {
         context.read<DevListViewModel>().onRefresh();
       }
     });
+  }
+
+  /// 检查是否有待接受的分享设备，弹出弹窗
+  void _checkPendingShares() {
+    final pendingList = DeviceManager.instance.sharedNotAgreeDeviceList;
+    if (pendingList.isEmpty || !mounted) return;
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setState) => SizedBox(
+          width: 400,
+          child: AlertDialog(
+            title: Text(TR.current.pendingShareDevices),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: pendingList.isEmpty
+                  ? const SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: Center(child: Text("无待接受设备")),
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: pendingList.length,
+                      itemBuilder: (context, index) {
+                        final device = pendingList[index];
+                        return ListTile(
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 5),
+                          title: Text(
+                            device.nickname ?? device.uuid,
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                          subtitle: Text(
+                            device.uuid,
+                            style: const TextStyle(fontSize: 11),
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextButton(
+                                onPressed: () async {
+                                  try {
+                                    await context
+                                        .read<DevListViewModel>()
+                                        .acceptShare(device);
+                                    setState(() {
+                                      pendingList.remove(device);
+                                    });
+                                    KToast.show(
+                                        status: TR.current.acceptSuccess);
+                                  } catch (e) {
+                                    KToast.show(
+                                        status:
+                                            '${TR.current.acceptFailed}: $e');
+                                  }
+                                },
+                                child: Text(TR.current.acceptShare),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  try {
+                                    await context
+                                        .read<DevListViewModel>()
+                                        .refuseShare(device);
+                                    setState(() {
+                                      pendingList.remove(device);
+                                    });
+                                    KToast.show(
+                                        status: TR.current.refuseSuccess);
+                                  } catch (e) {
+                                    KToast.show(
+                                        status:
+                                            '${TR.current.refuseFailed}: $e');
+                                  }
+                                },
+                                child: Text(TR.current.refuseShare),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: Text(TR.current.cancel),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   late TabController _tabController;
@@ -150,8 +249,20 @@ class _DeviceTabPageState extends State<DeviceTabPage> {
                                     },
                                     child: Text(TR.current.message)),
                                 const SizedBox(width: 16),
+                                if (!device.fromShare)
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(builder:
+                                                (BuildContext context) {
+                                          return DeviceSharePage(
+                                              device: device);
+                                        }));
+                                      },
+                                      child: Text(TR.current.share)),
+                                const SizedBox(width: 16),
                               ],
-                            )
+                            ),
                           ],
                         );
                       },
@@ -211,7 +322,7 @@ class _DeviceTabPageState extends State<DeviceTabPage> {
       String token = response['token'];
       _onCancelAlarmSubscribe(deviceID, token);
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
       //失败也要删除
       _toDelete(deviceID);
     });
@@ -230,20 +341,33 @@ class _DeviceTabPageState extends State<DeviceTabPage> {
       KToast.dismiss();
       _toDelete(deviceID);
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
       //取消失败也要删除
       _toDelete(deviceID);
     });
   }
 
-  _toDelete(String deviceID) {
+  _toDelete(String deviceID) async {
+    final Device? device = DeviceManager.instance.getDevice(deviceId: deviceID);
+    if (device == null) {
+      KToast.show(status: '设备不存在');
+      return;
+    }
     KToast.show();
-    JFApi.xcAccount.xcRemoveDevice(deviceID).then((value) {
-      KToast.dismiss();
+    try {
+      if (device.fromShare) {
+        await shareAPI.refuseSharedDevice((device as SharedDevice).shareId);
+      } else {
+        await JFApi.xcAccount.xcRemoveDevice(deviceID);
+      }
       Navigator.of(context).pop();
-      context.read<DevListViewModel>().deleteDev(deviceID, widget.type);
-    }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
-    });
+      DeviceManager.instance
+          .removeDevice(deviceId: deviceID, type: widget.type);
+      await DeviceManager.instance.refreshDeviceList();
+      setState(() {});
+      KToast.dismiss();
+    } catch (error) {
+      KToast.show(status: kErrorMsg(error));
+    }
   }
 }

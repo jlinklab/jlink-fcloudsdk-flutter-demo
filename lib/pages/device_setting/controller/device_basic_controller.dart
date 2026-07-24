@@ -127,7 +127,7 @@ class DeviceBasicController extends ChangeNotifier {
           _configDeviceSetItemMoleList();
         }
       } else {
-        KToast.show(status: KErrorMsg(result.code));
+        KToast.show(status: kErrorMsg(result.code));
         if (bShowLoading == false && context.mounted) {
           context.pop();
         }
@@ -152,7 +152,7 @@ class DeviceBasicController extends ChangeNotifier {
       KToast.dismiss();
       _queryCameraInfo(bShowLoading: true);
     }).catchError((e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     });
   }
 }

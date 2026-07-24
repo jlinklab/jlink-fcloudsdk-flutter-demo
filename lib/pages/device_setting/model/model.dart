@@ -162,16 +162,18 @@ class Device {
 
 class Devices {
   List<Device> mine = [];
-  List<Device> share = [];
+  List<SharedDevice> share = [];
 
-  Devices({this.mine = const <Device>[], this.share = const <Device>[]});
+  Devices({this.mine = const <Device>[], this.share = const <SharedDevice>[]});
 
   Devices.fromJson(Map<String, dynamic> json) {
     if (json['mine'] != null && json['mine'].isNotEmpty) {
       mine = json['mine'].map<Device>((e) => Device.fromJson(e)).toList();
     }
     if (json['share'] != null && json['share'].isNotEmpty) {
-      share = json['share'].map<Device>((e) => Device.fromJson(e)).toList();
+      share = json['share']
+          .map<SharedDevice>((e) => SharedDevice.fromJson(e))
+          .toList();
     }
   }
 }

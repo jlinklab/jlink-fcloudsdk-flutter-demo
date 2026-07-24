@@ -52,7 +52,7 @@ class _SettingPageState extends State<SettingPage> {
 
       setState(() {});
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
   }
 

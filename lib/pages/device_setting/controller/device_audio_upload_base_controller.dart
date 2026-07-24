@@ -199,7 +199,7 @@ abstract class DeviceAudioUploadBaseController with ChangeNotifier {
         context.pop(true);
       }
     } catch (error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     } finally {
       _lastSucText = null;
     }
@@ -484,7 +484,7 @@ abstract class DeviceAudioUploadBaseController with ChangeNotifier {
           timeout: 15000);
       debugPrint(result.toString());
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
   }
 
@@ -504,7 +504,7 @@ abstract class DeviceAudioUploadBaseController with ChangeNotifier {
 
       deleteDirectoryFiles();
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
   }
 

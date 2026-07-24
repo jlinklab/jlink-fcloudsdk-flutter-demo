@@ -1,3 +1,5 @@
+import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
+
 class SharedUser {
   String? id;
   String? account;
@@ -18,15 +20,13 @@ class SharedUser {
 }
 
 class DevicePermissionUI {
-  final String name;
-  final String path;
-  final String type;
+  final String nameKey;
+  final DevicePermission permission;
   bool checked = false;
 
   DevicePermissionUI(
-      {required this.name,
-      required this.path,
-      required this.type,
+      {required this.nameKey,
+      required this.permission,
       this.checked = false});
 }
 

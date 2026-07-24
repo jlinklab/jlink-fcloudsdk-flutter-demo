@@ -38,7 +38,7 @@ class _RegisterWithPhoneGetAreaCodePageState
         _dataList = value.map((e) => AreaCodeModel.fromJson(e)).toList();
       });
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 

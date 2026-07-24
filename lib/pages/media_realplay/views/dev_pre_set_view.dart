@@ -62,7 +62,7 @@ class _DevPresetViewState extends State<DevPresetView> {
       if (e is int) {
         //特殊兼容.某些设备恢复出厂设置之后,查询预置点,会报这两个code
         if (e != -70607 && e != -70102) {
-          KToast.show(status: KErrorMsg(e));
+          KToast.show(status: kErrorMsg(e));
         }
       }
     }
@@ -266,7 +266,7 @@ class _DevPresetViewState extends State<DevPresetView> {
           timeout: 1500);
       _loadTours();
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
   }
 
@@ -291,7 +291,7 @@ class _DevPresetViewState extends State<DevPresetView> {
 
       _loadTours();
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
   }
 
@@ -358,7 +358,7 @@ class _DevPresetViewState extends State<DevPresetView> {
       }
     } catch (e) {
       if (e is int && e < 0) {
-        KToast.show(status: KErrorMsg(e));
+        KToast.show(status: kErrorMsg(e));
       }
     }
   }
