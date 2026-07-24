@@ -236,31 +236,29 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
         configLen: config.length,
         command: 1450,
         timeout: 15000,
-      );
-      // 如果选择恢复出厂并删除设备，从本地设备列表中移除
-      if (deleteDevice) {
-        await JFApi.xcAccount.xcRemoveDevice(widget.deviceId).then((value) {
-          eventBus.fire(RemoveDeviceUpdateEvent(type: widget.type));
-          DeviceManager.instance.removeDevice(deviceId: widget.deviceId, type: widget.type);
-        }).catchError((error) {
-          KToast.show(status: kErrorMsg(error));
-        });
-      }
-      // 恢复出厂设置后设备会重启，延迟返回首页
-      Future.delayed(const Duration(seconds: 2), () {
+      ).then((value) {
         KToast.show(status: TR.current.resetSuccess);
-        if (mounted) {
-          Navigator.popUntil(context, (route) => route.isFirst);
+        try {
+          // 如果选择恢复出厂并删除设备，从本地设备列表中移除
+          if (deleteDevice) {
+            JFApi.xcAccount.xcRemoveDevice(widget.deviceId).then((value) {
+              DeviceManager.instance.removeDevice(deviceId: widget.deviceId, type: widget.type);
+              eventBus.fire(RemoveDeviceUpdateEvent(type: widget.type));
+            });
+          }
+          // 恢复出厂设置后设备会重启，延迟返回首页
+          Future.delayed(const Duration(seconds: 2), () {
+            if (mounted) {
+              Navigator.popUntil(context, (route) => route.isFirst);
+            }
+          });
+        } catch(e) {
+          KToast.show(status: kErrorMsg(e));
         }
       });
     } catch (e) {
       KToast.show(status: TR.current.resetFailed);
     }
-  }
-
-  _toDelete(String deviceID) {
-    KToast.show();
-
   }
 
   _DeviceConfigPageState();
