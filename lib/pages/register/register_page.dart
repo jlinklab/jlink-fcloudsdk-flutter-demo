@@ -146,7 +146,7 @@ class _RegisterPageState extends State<RegisterPage> {
       }
       checkUserIsActivated(userId);
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 

@@ -15,7 +15,9 @@ import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
 import 'package:xcloudsdk_flutter_example/common/common_path.dart';
 import 'package:xcloudsdk_flutter_example/common/named_route.dart';
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
+import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_pwd_setting/device_pwd_find_back_page.dart';
+import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
 import 'package:xcloudsdk_flutter_example/pages/media_realplay/views/dev_pre_set_view.dart';
 import 'package:xcloudsdk_flutter_example/utils/permission_utils.dart';
 import 'package:xcloudsdk_flutter_example/views/play_control_view.dart';
@@ -35,6 +37,14 @@ class MediaRealPlayPage extends StatefulWidget {
 }
 
 class _MediaRealPlayPageState extends State<MediaRealPlayPage> {
+  late Device? device;
+
+  @override
+  void initState() {
+    super.initState();
+    device = DeviceManager.instance.getDevice(deviceId: widget.deviceId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(builder: (context, orientation) {
@@ -44,16 +54,19 @@ class _MediaRealPlayPageState extends State<MediaRealPlayPage> {
                 title: Text(TR.current.preview),
                 centerTitle: true,
                 actions: [
-                  IconButton(
-                      onPressed: () {
-                        context.pushNamed('device_config', pathParameters: {
-                          'devId': widget.deviceId,
-                          'channel': (-1).toString()
-                        });
-                        // Navigator.of(context).pushNamed('/device_config',
-                        //     arguments: {'deviceId': widget.deviceId, 'channel': -1});
-                      },
-                      icon: const Icon(Icons.settings)),
+                  if ((device?.hasPermission(
+                          permission: DevicePermission.DP_ModifyConfig)) ??
+                      false)
+                    IconButton(
+                        onPressed: () {
+                          context.pushNamed('device_config', pathParameters: {
+                            'devId': widget.deviceId,
+                            'channel': (-1).toString()
+                          });
+                          // Navigator.of(context).pushNamed('/device_config',
+                          //     arguments: {'deviceId': widget.deviceId, 'channel': -1});
+                        },
+                        icon: const Icon(Icons.settings)),
                 ],
               )
             : null,
@@ -63,11 +76,6 @@ class _MediaRealPlayPageState extends State<MediaRealPlayPage> {
         ),
       );
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -102,6 +110,8 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
 
   StreamSubscription? _snapshotSub;
 
+  Device? device;
+
   @override
   void initState() {
     super.initState();
@@ -111,6 +121,7 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
         duration: const Duration(milliseconds: 500), vsync: this);
     initMediaPlay();
     startPlay();
+    device = DeviceManager.instance.getDevice(deviceId: widget.deviceId);
   }
 
   void startPlay() async {
@@ -190,7 +201,7 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
           });
     } else {
       //其他的直接显示错误码
-      KToast.show(status: KErrorMsg(code));
+      KToast.show(status: kErrorMsg(code));
     }
   }
 
@@ -374,20 +385,19 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
               ),
               Expanded(
                   child: MediaRealPlayToolView(
-                onSound: onSound,
-                onTalk: onTalk,
-                onStopTalk: onStopTalk,
-                onSnap: onSnap,
-                onStarRecord: onStartRecord,
-                onStopRecord: onStopRecord,
-                onPTZControl: onPTZControl,
-                onPictureFlip: onPictureFlip,
-                onPlayback: onPlayback,
-                onCloudPlayback: onCloudPlayback,
-                onChangeStreamType: onChangeStreamType,
-                previewController: controller,
-                devId: widget.deviceId,
-              )),
+                      onSound: onSound,
+                      onTalk: onTalk,
+                      onStopTalk: onStopTalk,
+                      onSnap: onSnap,
+                      onStarRecord: onStartRecord,
+                      onStopRecord: onStopRecord,
+                      onPTZControl: onPTZControl,
+                      onPictureFlip: onPictureFlip,
+                      onPlayback: onPlayback,
+                      onCloudPlayback: onCloudPlayback,
+                      onChangeStreamType: onChangeStreamType,
+                      previewController: controller,
+                      device: device!)),
             ],
     ]);
   }
@@ -448,12 +458,12 @@ class MediaRealPlayToolView extends StatelessWidget {
     required this.onPlayback,
     required this.onCloudPlayback,
     required this.previewController,
-    required this.devId,
     required this.onChangeStreamType,
+    required this.device,
   });
 
   final PreviewMediaController previewController;
-  final String devId;
+  final Device device;
   ValueChanged<int> onSound;
   PTZControlCallback onPTZControl;
 
@@ -578,20 +588,22 @@ class MediaRealPlayToolView extends StatelessWidget {
                   Theme.of(context).colorScheme.inversePrimary),
             ),
             child: const Text("静音")),
-        TextButton(
-            onPressed: onTalk,
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(
-                  Theme.of(context).colorScheme.inversePrimary),
-            ),
-            child: const Text("对讲")),
-        TextButton(
-            onPressed: onStopTalk,
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(
-                  Theme.of(context).colorScheme.inversePrimary),
-            ),
-            child: const Text("关闭对讲")),
+        if (device.hasPermission(permission: DevicePermission.DP_Intercom))
+          TextButton(
+              onPressed: onTalk,
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.inversePrimary),
+              ),
+              child: const Text("对讲")),
+        if (device.hasPermission(permission: DevicePermission.DP_Intercom))
+          TextButton(
+              onPressed: onStopTalk,
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.inversePrimary),
+              ),
+              child: const Text("关闭对讲")),
         TextButton(
             onPressed: onSnap,
             style: ButtonStyle(
@@ -620,15 +632,16 @@ class MediaRealPlayToolView extends StatelessWidget {
                   Theme.of(context).colorScheme.inversePrimary),
             ),
             child: const Text("图像上下翻转")),
-        TextButton(
-            onPressed: () {
-              onPlayback();
-            },
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(
-                  Theme.of(context).colorScheme.inversePrimary),
-            ),
-            child: const Text("回放")),
+        if (device.hasPermission(permission: DevicePermission.DP_LocalStorage))
+          TextButton(
+              onPressed: () {
+                onPlayback();
+              },
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.inversePrimary),
+              ),
+              child: const Text("回放")),
         TextButton(
             onPressed: () {
               //判断是否支持云服务再进入云回放页
@@ -654,7 +667,7 @@ class MediaRealPlayToolView extends StatelessWidget {
                   builder: (context) {
                     return DevPresetView(
                       previewController: previewController,
-                      devId: devId,
+                      devId: device.uuid,
                     );
                   });
             },

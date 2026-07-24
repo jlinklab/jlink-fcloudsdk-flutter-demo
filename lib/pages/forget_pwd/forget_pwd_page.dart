@@ -35,7 +35,7 @@ class _ForgetPwdPageState extends State<ForgetPwdPage> {
         .then((value) {
       KToast.show(status: '验证码请求成功');
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 
@@ -68,7 +68,7 @@ class _ForgetPwdPageState extends State<ForgetPwdPage> {
       //退到首页
       Navigator.popUntil(context, (route) => route.isFirst);
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 

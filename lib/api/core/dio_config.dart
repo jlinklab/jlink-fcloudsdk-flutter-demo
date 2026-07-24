@@ -126,13 +126,7 @@ class SecurityInterceptor extends Interceptor {
       super.onResponse(response, handler);
       return;
     }
-    // 分享列表暂时走v1, 不走解密
-    if (response.requestOptions.path.contains(mdsharemylist) ||
-        response.requestOptions.path.contains(mdsharelist)) {
-      response.data = Uri.decodeFull(response.data);
-      return super.onResponse(response, handler);
-    }
-
+    // 分享列表走正常解密流程
     bool needDecrypt = response.requestOptions.headers['decrypt'] ?? true;
     if (response.data is String && key.isNotEmpty && needDecrypt) {
       final encryptedData = response.data;

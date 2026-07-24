@@ -178,7 +178,7 @@ class _AlarmMsgVideoState extends State<AlarmMsgVideo>
 
         controller.startCloudPlayByUrl(url: _record!.url!);
       }).catchError((error) {
-        KToast.show(status: KErrorMsg(error));
+        KToast.show(status: kErrorMsg(error));
       });
     }
   }

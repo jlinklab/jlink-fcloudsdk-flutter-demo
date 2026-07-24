@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
+import 'package:xcloudsdk_flutter_example/api/share_api.dart';
 import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
 
@@ -45,10 +46,22 @@ class DevListViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// 接受分享设备
+  Future<void> acceptShare(SharedDevice device) async {
+    await shareAPI.acceptSharedDevice(device.shareId, device.nickname ?? '');
+    await onRefresh();
+  }
+
+  /// 拒绝分享设备
+  Future<void> refuseShare(SharedDevice device) async {
+    await shareAPI.refuseSharedDevice(device.shareId);
+    await onRefresh();
+  }
+
   /// 删除设备
-  void deleteDev(String devId, int type) {
+  Future<void> deleteDev(String devId, int type) async {
     DeviceManager.instance.removeDevice(deviceId: devId, type: type);
-    notifyListeners();
+    await onRefresh();
   }
 
   @override

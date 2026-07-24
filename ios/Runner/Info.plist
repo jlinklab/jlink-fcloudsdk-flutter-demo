@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>在APP相册中保存图片到手机相册时需要开启相册权限，在扫码添加设备页面时也可以通过扫描手机相册中的二维码来添加设备，如果相册权限不开启，以上功能将无法使用</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>在APP相册中保存图片到手机相册时需要开启相册权限，在扫码添加设备页面时也可以通过扫描手机相册中的二维码来添加设备，如果相册权限不开启，以上功能将无法使用</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

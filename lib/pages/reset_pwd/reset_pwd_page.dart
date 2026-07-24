@@ -42,7 +42,7 @@ class _ResetPwdPageState extends State<ResetPwdPage> {
       UserInfo.instance.quit(false);
       KToast.dismiss();
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 

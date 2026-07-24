@@ -14,7 +14,7 @@ abstract class AddDeviceAPI {
 
   ///获取单个设备类型详情。eg:设备图片
   ///pid：有pid传pid，没有pid传deviceType
-  @POST('/deviceType/getDeviceType')
+  @POST('/v3/deviceType/getDeviceType$uselessSegmentBase')
   @Headers({'host': jvss})
   Future<DeviceDetailTypeModel> queryDeviceTypeDetailInfo({
     @Field('pid') required String pid,

@@ -37,6 +37,11 @@ dependencies:
     hosted: http://139.9.235.221:8000/
     version: 3.0.5
 
+  #二维码扫描
+  qr_code_scanner:
+    hosted: http://139.9.235.221:8000/
+    version: 0.7.0
+
   flutter_localizations:
     sdk: flutter
 
@@ -59,10 +64,6 @@ dependencies:
       url: "https://gitee.com/openharmony-sig/flutter_permission_handler.git"
       path: "permission_handler"
   cached_network_image: 3.4.1
-  #二维码扫描
-  qr_code_scanner:
-    git:
-      url: https://gitcode.com/openharmony-sig/fluttertpc_qr_code_scanner
   #视频缩略图生成
   video_thumbnail:
     git:
@@ -117,6 +118,19 @@ dependencies:
       ref: "br_connectivity_plus-v6.1.0_ohos"
       path: "packages/connectivity_plus/connectivity_plus"
 
+  #图片选择
+  image_picker:
+    git:
+      url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+      path: "packages/image_picker/image_picker"
+  
+  #扫描本地图片
+  scan:
+    git:
+      url: "http://10.2.5.201/FlutterPlugin/hos_flutter_packages.git"
+      ref: '16c6aa327ac88463dfd3acfc4104091dd4a87f6d'
+      path: "scan"
+
 dependency_overrides:
   http: 0.13.6
   uuid: 4.1.0
@@ -169,7 +183,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner:
-  retrofit_generator: 9.0.0
+  retrofit_generator: 9.3.0
+  source_gen: 2.0.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

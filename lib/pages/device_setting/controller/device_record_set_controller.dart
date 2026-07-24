@@ -100,7 +100,7 @@ class DeviceRecordSetController extends ChangeNotifier {
           timeout: 8000);
       handleStorageData();
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
   }
 
@@ -190,7 +190,7 @@ class DeviceRecordSetController extends ChangeNotifier {
         }
       }
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
       if (bShowLoading == false) {
         context.pop();
       }
@@ -249,7 +249,7 @@ class DeviceRecordSetController extends ChangeNotifier {
       }
       configDeviceSetItemMoleList();
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
     return Future.value();
   }
@@ -329,7 +329,7 @@ class DeviceRecordSetController extends ChangeNotifier {
       }
     } catch (e) {
       bSupportEncode = false;
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
       if (bShowLoading) {
         configDeviceSetItemMoleList();
       }
@@ -365,7 +365,7 @@ class DeviceRecordSetController extends ChangeNotifier {
       }
       _queryEncodeConfig(bShowLoading: true);
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
     return Future.value();
   }

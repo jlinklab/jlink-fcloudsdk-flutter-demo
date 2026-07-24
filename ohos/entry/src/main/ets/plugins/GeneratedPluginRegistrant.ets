@@ -2,6 +2,7 @@ import { FlutterEngine, Log } from '@ohos/flutter_ohos';
 import AudioplayersPlugin from 'audioplayers_ohos';
 import PathProviderPlugin from 'path_provider_ohos';
 import SharedPreferencesPlugin from 'shared_preferences_ohos';
+import ImagePickerPlugin from 'image_picker_ohos';
 import PermissionHandlerPlugin from 'permission_handler_ohos';
 import ConnectivityPlugin from 'connectivity_plus';
 import SharePlusOhosPlugin from 'share_plus';
@@ -10,6 +11,8 @@ import DeviceInfoPlusPlugin from 'device_info_plus';
 import GeolocatorOhosPlugin from 'flutter_geolocator_ohos';
 import RecordOhosPlugin from 'record_ohos';
 import VideoThumbnaiOhosPlugin from 'video_thumbnail';
+import ScanPlugin from 'scan';
+import QrCodeScannerOhosPlugin from 'qr_code_scanner';
 import XCloudFlutterPlugin from 'xcloudsdk_flutter';
 
 /**
@@ -27,6 +30,7 @@ export class GeneratedPluginRegistrant {
       flutterEngine.getPlugins()?.add(new AudioplayersPlugin());
       flutterEngine.getPlugins()?.add(new PathProviderPlugin());
       flutterEngine.getPlugins()?.add(new SharedPreferencesPlugin());
+      flutterEngine.getPlugins()?.add(new ImagePickerPlugin());
       flutterEngine.getPlugins()?.add(new PermissionHandlerPlugin());
       flutterEngine.getPlugins()?.add(new ConnectivityPlugin());
       flutterEngine.getPlugins()?.add(new SharePlusOhosPlugin());
@@ -35,6 +39,8 @@ export class GeneratedPluginRegistrant {
       flutterEngine.getPlugins()?.add(new GeolocatorOhosPlugin());
       flutterEngine.getPlugins()?.add(new RecordOhosPlugin());
       flutterEngine.getPlugins()?.add(new VideoThumbnaiOhosPlugin());
+      flutterEngine.getPlugins()?.add(new ScanPlugin());
+      flutterEngine.getPlugins()?.add(new QrCodeScannerOhosPlugin());
       flutterEngine.getPlugins()?.add(new XCloudFlutterPlugin());
     } catch (e) {
       Log.e(

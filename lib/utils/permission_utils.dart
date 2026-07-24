@@ -55,6 +55,9 @@ class PermissionUtils {
       case XPermission.microphone:
         handler = MicrophonePermissionHandler();
         break;
+      case XPermission.storage:
+        handler = StoragePermissionHandler();
+        break;
       default:
         break;
     }
@@ -449,5 +452,25 @@ class WifiSwitchPermissionHandler extends PermissionHandler {
     bool isEnable =
         await Connectivity().checkConnectivity() == ConnectivityResult.wifi;
     checker.complete(isEnable);
+  }
+}
+
+///存储权限
+class StoragePermissionHandler extends PermissionHandler {
+  @override
+  Future<Permission> get permission async {
+    if (Platform.isIOS) {
+      return Permission.photos;
+    }
+    if (Platform.operatingSystem == 'ohos') {
+      return Permission.photos;
+    }
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    int sdkInt = androidInfo.version.sdkInt;
+    if (sdkInt >= 33) {
+      return Permission.photos;
+    }
+    return Permission.storage;
   }
 }

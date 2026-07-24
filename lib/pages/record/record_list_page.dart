@@ -146,7 +146,7 @@ class _RecordListPageState extends State<RecordListPage>
       }
     });
     controller.addErrorListener((code) {
-      KToast.show(status: KErrorMsg(code));
+      KToast.show(status: kErrorMsg(code));
     });
 
     controller.addProgressListener((position, start, end, extraInfo) {
@@ -215,7 +215,7 @@ class _RecordListPageState extends State<RecordListPage>
       }
     } catch (error) {
       if (error is XCloudAPIException) {
-        KToast.show(status: KErrorMsg(error.code));
+        KToast.show(status: kErrorMsg(error.code));
       }
       _isLoading = false;
       records = [];

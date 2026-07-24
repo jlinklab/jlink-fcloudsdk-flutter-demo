@@ -300,9 +300,9 @@ class TR {
     return Intl.message('全选', name: 'selectAll', desc: '', args: []);
   }
 
-  /// `取消全选`
+  /// `取消`
   String get cancel {
-    return Intl.message('取消全选', name: 'cancel', desc: '', args: []);
+    return Intl.message('取消', name: 'cancel', desc: '', args: []);
   }
 
   /// `媒体类型`
@@ -995,6 +995,271 @@ class TR {
     return Intl.message(
       '下载管理',
       name: 'tr_common_download_management',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `分享权限`
+  String get sharePermission {
+    return Intl.message('分享权限', name: 'sharePermission', desc: '', args: []);
+  }
+
+  /// `分享给`
+  String get shareTo {
+    return Intl.message('分享给', name: 'shareTo', desc: '', args: []);
+  }
+
+  /// `输入用户名/手机号/邮箱`
+  String get inputAccountHint {
+    return Intl.message(
+      '输入用户名/手机号/邮箱',
+      name: 'inputAccountHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `搜索`
+  String get search {
+    return Intl.message('搜索', name: 'search', desc: '', args: []);
+  }
+
+  /// `用户不存在`
+  String get userNotFound {
+    return Intl.message('用户不存在', name: 'userNotFound', desc: '', args: []);
+  }
+
+  /// `搜索失败`
+  String get searchFailed {
+    return Intl.message('搜索失败', name: 'searchFailed', desc: '', args: []);
+  }
+
+  /// `确认分享`
+  String get confirmShare {
+    return Intl.message('确认分享', name: 'confirmShare', desc: '', args: []);
+  }
+
+  /// `确定将设备分享给 {account}？`
+  String confirmShareContent(Object account) {
+    return Intl.message(
+      '确定将设备分享给 $account？',
+      name: 'confirmShareContent',
+      desc: '',
+      args: [account],
+    );
+  }
+
+  /// `点击分享`
+  String get clickToShare {
+    return Intl.message('点击分享', name: 'clickToShare', desc: '', args: []);
+  }
+
+  /// `分享成功`
+  String get shareSuccess {
+    return Intl.message('分享成功', name: 'shareSuccess', desc: '', args: []);
+  }
+
+  /// `分享失败`
+  String get shareFailed {
+    return Intl.message('分享失败', name: 'shareFailed', desc: '', args: []);
+  }
+
+  /// `对讲`
+  String get permIntercom {
+    return Intl.message('对讲', name: 'permIntercom', desc: '', args: []);
+  }
+
+  /// `SD卡录像`
+  String get permSdRecord {
+    return Intl.message('SD卡录像', name: 'permSdRecord', desc: '', args: []);
+  }
+
+  /// `设备配置`
+  String get permDeviceConfig {
+    return Intl.message('设备配置', name: 'permDeviceConfig', desc: '', args: []);
+  }
+
+  /// `报警推送`
+  String get permAlarmPush {
+    return Intl.message('报警推送', name: 'permAlarmPush', desc: '', args: []);
+  }
+
+  /// `二维码分享`
+  String get qrCodeShare {
+    return Intl.message('二维码分享', name: 'qrCodeShare', desc: '', args: []);
+  }
+
+  /// `分享二维码`
+  String get shareQRCode {
+    return Intl.message('分享二维码', name: 'shareQRCode', desc: '', args: []);
+  }
+
+  /// `扫描二维码添加设备分享`
+  String get shareQRTips {
+    return Intl.message('扫描二维码添加设备分享', name: 'shareQRTips', desc: '', args: []);
+  }
+
+  /// `设备分享`
+  String get deviceShare {
+    return Intl.message('设备分享', name: 'deviceShare', desc: '', args: []);
+  }
+
+  /// `已分享账号`
+  String get sharedAccounts {
+    return Intl.message('已分享账号', name: 'sharedAccounts', desc: '', args: []);
+  }
+
+  /// `暂无已分享账号`
+  String get noSharedAccount {
+    return Intl.message('暂无已分享账号', name: 'noSharedAccount', desc: '', args: []);
+  }
+
+  /// `已接受`
+  String get shareAccepted {
+    return Intl.message('已接受', name: 'shareAccepted', desc: '', args: []);
+  }
+
+  /// `待接受`
+  String get sharePending {
+    return Intl.message('待接受', name: 'sharePending', desc: '', args: []);
+  }
+
+  /// `已拒绝`
+  String get shareRejected {
+    return Intl.message('已拒绝', name: 'shareRejected', desc: '', args: []);
+  }
+
+  /// `已过期`
+  String get shareExpired {
+    return Intl.message('已过期', name: 'shareExpired', desc: '', args: []);
+  }
+
+  /// `取消分享`
+  String get cancelShare {
+    return Intl.message('取消分享', name: 'cancelShare', desc: '', args: []);
+  }
+
+  /// `确定取消分享给 {account}？`
+  String cancelShareContent(Object account) {
+    return Intl.message(
+      '确定取消分享给 $account？',
+      name: 'cancelShareContent',
+      desc: '',
+      args: [account],
+    );
+  }
+
+  /// `取消分享成功`
+  String get cancelShareSuccess {
+    return Intl.message(
+      '取消分享成功',
+      name: 'cancelShareSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `取消分享失败`
+  String get cancelShareFailed {
+    return Intl.message(
+      '取消分享失败',
+      name: 'cancelShareFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `待接受的分享设备`
+  String get pendingShareDevices {
+    return Intl.message(
+      '待接受的分享设备',
+      name: 'pendingShareDevices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `接受`
+  String get acceptShare {
+    return Intl.message('接受', name: 'acceptShare', desc: '', args: []);
+  }
+
+  /// `拒绝`
+  String get refuseShare {
+    return Intl.message('拒绝', name: 'refuseShare', desc: '', args: []);
+  }
+
+  /// `接受分享成功`
+  String get acceptSuccess {
+    return Intl.message('接受分享成功', name: 'acceptSuccess', desc: '', args: []);
+  }
+
+  /// `接受分享失败`
+  String get acceptFailed {
+    return Intl.message('接受分享失败', name: 'acceptFailed', desc: '', args: []);
+  }
+
+  /// `拒绝分享成功`
+  String get refuseSuccess {
+    return Intl.message('拒绝分享成功', name: 'refuseSuccess', desc: '', args: []);
+  }
+
+  /// `拒绝分享失败`
+  String get refuseFailed {
+    return Intl.message('拒绝分享失败', name: 'refuseFailed', desc: '', args: []);
+  }
+
+  /// `暂无权限`
+  String get noPermissionTip {
+    return Intl.message('暂无权限', name: 'noPermissionTip', desc: '', args: []);
+  }
+
+  /// `扫码添加分享设备`
+  String get scanShareDevice {
+    return Intl.message(
+      '扫码添加分享设备',
+      name: 'scanShareDevice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `无效的分享二维码`
+  String get invalidShareQR {
+    return Intl.message('无效的分享二维码', name: 'invalidShareQR', desc: '', args: []);
+  }
+
+  /// `接受设备分享`
+  String get acceptShareDevice {
+    return Intl.message(
+      '接受设备分享',
+      name: 'acceptShareDevice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `分享来自`
+  String get shareFrom {
+    return Intl.message('分享来自', name: 'shareFrom', desc: '', args: []);
+  }
+
+  /// `设备名称`
+  String get labelDeviceName {
+    return Intl.message('设备名称', name: 'labelDeviceName', desc: '', args: []);
+  }
+
+  /// `设备序列号`
+  String get labelDevSN {
+    return Intl.message('设备序列号', name: 'labelDevSN', desc: '', args: []);
+  }
+
+  /// `二维码已被使用，请联系设备主账号再次生成`
+  String get TR_QR_Code_Has_Been_Used_Generate_Again {
+    return Intl.message(
+      '二维码已被使用，请联系设备主账号再次生成',
+      name: 'TR_QR_Code_Has_Been_Used_Generate_Again',
       desc: '',
       args: [],
     );

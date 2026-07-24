@@ -68,8 +68,8 @@ class _WIFIConfigPageState extends State<WIFIConfigPage>
       }
       if (wifiConfigController.value.errorCode != null) {
         print(wifiConfigController.value.errorCode);
-        KToast.show(status: KErrorMsg(wifiConfigController.value.errorCode!));
-        log.add(KErrorMsg(wifiConfigController.value.errorCode!) ?? '');
+        KToast.show(status: kErrorMsg(wifiConfigController.value.errorCode!));
+        log.add(kErrorMsg(wifiConfigController.value.errorCode!) ?? '');
         Future.delayed(const Duration(seconds: 1), () {
           Navigator.pop(context);
         });

@@ -447,7 +447,7 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
       }
       return Future.value(hasDataDateMap);
     } catch (error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     }
     return {};
   }

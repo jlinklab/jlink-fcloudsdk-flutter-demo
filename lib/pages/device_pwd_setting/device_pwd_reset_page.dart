@@ -209,7 +209,7 @@ class _DevicePwdResetPageState extends State<DevicePwdResetPage>
         KToast.show(status: '旧密码验证错误');
       }
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 
@@ -231,7 +231,7 @@ class _DevicePwdResetPageState extends State<DevicePwdResetPage>
           userName: _textEditingControllerDeviceLoginName.text,
           pwd: _textEditingControllerPwdNew.text);
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 

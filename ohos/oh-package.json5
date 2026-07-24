@@ -28,6 +28,9 @@
     "record_ohos": "file:./har/record_ohos.har",
     "audioplayers_ohos": "file:./har/audioplayers_ohos.har",
     "video_thumbnail": "file:./har/video_thumbnail.har",
-    "connectivity_plus": "file:./har/connectivity_plus.har"
+    "connectivity_plus": "file:./har/connectivity_plus.har",
+    "image_picker_ohos": "file:./har/image_picker_ohos.har",
+    "scan": "file:./har/scan.har",
+    "qr_code_scanner": "file:./har/qr_code_scanner.har"
   }
 }

@@ -118,7 +118,7 @@ class _RecordFilePicturePageState extends State<RecordFilePicturePage> {
           path);
     } catch (error) {
       KToast.show(
-          status: KErrorMsg(error), duration: const Duration(seconds: 2));
+          status: kErrorMsg(error), duration: const Duration(seconds: 2));
       dataSource.clear();
     }
     setState(() {});

@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter/utils/extensions.dart';
 
-import '../common/local_device_cache.dart';
 import '../models/user_instance.dart';
 import '../pages/cloud/device_cloud_service_manager.dart';
 import '../pages/device_setting/model/model.dart';
@@ -21,13 +20,19 @@ class DeviceManager {
   List<Device> mineDeviceList = [];
 
   /// 分享的设备列表
-  List<Device> shareDeviceList = [];
+  List<SharedDevice> shareDeviceList = [];
+
+  ///分享的待接受的列表
+  List<SharedDevice> sharedNotAgreeDeviceList = [];
 
   /// 所有设备（我的 + 分享）
   List<Device> get allDevices => [...mineDeviceList, ...shareDeviceList];
 
   /// 设备状态流订阅
   StreamSubscription<DeviceState>? _deviceStateSubscription;
+
+  /// 设备状态变更回调（由 UI 层注册）
+  VoidCallback? _onDeviceStateChanged;
 
   /// 根据设备序列号获取设备对象
   Device? getDevice({required String deviceId}) {
@@ -52,51 +57,63 @@ class DeviceManager {
     final devicesJson = await JFApi.xcAccount.xcQueryDeviceList();
     final devices = Devices.fromJson(devicesJson);
     mineDeviceList = devices.mine;
-    shareDeviceList = devices.share;
-
-    // 根据本地缓存先展示设备状态
-    Map deviceMap = await LocalDeviceCache.fetchDevicesDataMap(
-        userId: UserInfo.instance.userId);
-    for (Device device in allDevices) {
-      if (deviceMap.containsKey(device.uuid)) {
-        device.state = deviceMap[device.uuid]!.state;
+    // 来自分享的设备，根据 ret 值分流处理
+    final List<Device> rawShareDevices = devices.share;
+    shareDeviceList.clear();
+    sharedNotAgreeDeviceList.clear();
+    for (var device in rawShareDevices) {
+      if (device is SharedDevice) {
+        final SharedDevice sharedDevice = device;
+        if (sharedDevice.ret == 1) {
+          // 已接受分享的设备，加入分享设备列表
+          shareDeviceList.add(sharedDevice);
+        } else if (sharedDevice.ret != 4) {
+          // ret ！= 4,未接受分享放在sharedNotAgreeDeviceList列表等同意
+          sharedNotAgreeDeviceList.add(sharedDevice);
+        }
       }
     }
 
+    // 确保监听已启动
+    _ensureStateListener();
     // 异步更新设备在线状态
     _updateDevState();
     // 刷新云服务状态
     DeviceCloudServiceManager.instance
         .refreshCloudServicesStatus(devices: allDevices);
-
-    // 保存到本地缓存
-    LocalDeviceCache.saveDevicesState(
-        userId: UserInfo.instance.userId, deviceList: allDevices);
   }
 
   /// 从服务器批量更新设备在线状态
   void _updateDevState() async {
     try {
-      await AccountAPI.instance.xcGetDevicesState(
-          uuids: allDevices.map((e) => e.uuid).toList());
-      LocalDeviceCache.saveDevicesState(
-          userId: UserInfo.instance.userId, deviceList: allDevices);
+      await AccountAPI.instance
+          .xcGetDevicesState(uuids: allDevices.map((e) => e.uuid).toList());
     } catch (e) {
       debugPrint('更新设备状态失败: $e');
     }
   }
 
-  /// 开始监听设备状态变更
+  /// 确保设备状态监听已启动
+  void _ensureStateListener() {
+    if (_deviceStateSubscription == null && _onDeviceStateChanged != null) {
+      _deviceStateSubscription =
+          AccountAPI.instance.deviceStateStream.listen((event) {
+        final device = allDevices.firstWhereOrNull((e) => e.uuid == event.uuid);
+        if (device != null) {
+          debugPrint('${device.uuid} 拿到设备状态 ${event.state}');
+          device.state = event.state;
+          _onDeviceStateChanged?.call();
+        }
+      });
+    }
+  }
+
+  /// 开始监听设备状态变更，并注册回调
   void startDeviceStateListener({VoidCallback? onStateChanged}) {
+    _onDeviceStateChanged = onStateChanged;
     _deviceStateSubscription?.cancel();
-    _deviceStateSubscription =
-        AccountAPI.instance.deviceStateStream.listen((event) {
-      final device = allDevices.firstWhereOrNull((e) => e.uuid == event.uuid);
-      if (device != null) {
-        device.state = event.state;
-        onStateChanged?.call();
-      }
-    });
+    _deviceStateSubscription = null;
+    _ensureStateListener();
   }
 
   /// 停止监听设备状态变更
@@ -116,8 +133,8 @@ class DeviceManager {
 
   /// 释放资源
   void dispose() {
-    stopDeviceStateListener();
     mineDeviceList.clear();
     shareDeviceList.clear();
+    sharedNotAgreeDeviceList.clear();
   }
 }

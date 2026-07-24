@@ -49,7 +49,7 @@ class _DevicePwdFindBackPageState extends State<DevicePwdFindBackPage> {
         _question2 = _pwdQuestionHadSet.getSafetyQuestion!.question![1];
       });
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 
@@ -179,7 +179,7 @@ class _DevicePwdFindBackPageState extends State<DevicePwdFindBackPage> {
         KToast.show(status: '验证出错');
       }
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 
@@ -210,7 +210,7 @@ class _DevicePwdFindBackPageState extends State<DevicePwdFindBackPage> {
         KToast.show(status: '密码设置出错');
       }
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 }

@@ -20,16 +20,20 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(count) => "resend after ${count} seconds";
+  static String m0(account) => "Are you sure to cancel share to ${account}?";
 
-  static String m1(mail) => "will send verification code to ${mail}";
+  static String m1(account) => "Are you sure to share device to ${account}?";
 
-  static String m2(mail, phone) =>
+  static String m2(count) => "resend after ${count} seconds";
+
+  static String m3(mail) => "will send verification code to ${mail}";
+
+  static String m4(mail, phone) =>
       "you can choose either ${phone} or ${mail}, verification code will be sent to";
 
-  static String m3(phone) => "will send verification code to ${phone}";
+  static String m5(phone) => "will send verification code to ${phone}";
 
-  static String m4(deviceId) => "${deviceId} Record List";
+  static String m6(deviceId) => "${deviceId} Record List";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -46,6 +50,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "TR_Press_To_Record": MessageLookupByLibrary.simpleMessage(
       "Start recording after pressing",
     ),
+    "TR_QR_Code_Has_Been_Used_Generate_Again":
+        MessageLookupByLibrary.simpleMessage(
+          "QR code has been used, please contact the device owner to regenerate",
+        ),
     "TR_Record_Prompt": MessageLookupByLibrary.simpleMessage("Record a beep"),
     "TR_Sex_Female": MessageLookupByLibrary.simpleMessage("female"),
     "TR_Sex_Male": MessageLookupByLibrary.simpleMessage("male"),
@@ -55,6 +63,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "Upload_F": MessageLookupByLibrary.simpleMessage("Uploading failed"),
     "Upload_S": MessageLookupByLibrary.simpleMessage("Uploaded successfully"),
+    "acceptFailed": MessageLookupByLibrary.simpleMessage("Accept share failed"),
+    "acceptShare": MessageLookupByLibrary.simpleMessage("Accept"),
+    "acceptShareDevice": MessageLookupByLibrary.simpleMessage(
+      "Accept device share",
+    ),
+    "acceptSuccess": MessageLookupByLibrary.simpleMessage(
+      "Accept share success",
+    ),
     "accountCancel": MessageLookupByLibrary.simpleMessage(
       "Account Cancellation",
     ),
@@ -82,15 +98,26 @@ class MessageLookup extends MessageLookupByLibrary {
       "Without the permission to scan nearby Bluetooth devices, you cannot perform network configuration, search, or other operations using Bluetooth.",
     ),
     "bluetooth": MessageLookupByLibrary.simpleMessage("add via BT"),
-    "cancel": MessageLookupByLibrary.simpleMessage("CancelAll"),
+    "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "cancelShare": MessageLookupByLibrary.simpleMessage("Cancel Share"),
+    "cancelShareContent": m0,
+    "cancelShareFailed": MessageLookupByLibrary.simpleMessage(
+      "Cancel share failed",
+    ),
+    "cancelShareSuccess": MessageLookupByLibrary.simpleMessage(
+      "Cancel share success",
+    ),
     "check": MessageLookupByLibrary.simpleMessage("confirm"),
+    "clickToShare": MessageLookupByLibrary.simpleMessage("Tap to share"),
     "cloudDownload": MessageLookupByLibrary.simpleMessage(
       "Cloud Storage Download",
     ),
     "cloudList": MessageLookupByLibrary.simpleMessage("Cloud Playback"),
     "cloudVideo": MessageLookupByLibrary.simpleMessage("Cloud Short Video"),
     "codeHint": MessageLookupByLibrary.simpleMessage("verification code"),
-    "countDown": m0,
+    "confirmShare": MessageLookupByLibrary.simpleMessage("Confirm Share"),
+    "confirmShareContent": m1,
+    "countDown": m2,
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "dev": MessageLookupByLibrary.simpleMessage("Device"),
     "devInfo": MessageLookupByLibrary.simpleMessage("device info"),
@@ -125,6 +152,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "deviceNoMemoryCard": MessageLookupByLibrary.simpleMessage(
       "The device does not have a storage card",
     ),
+    "deviceShare": MessageLookupByLibrary.simpleMessage("Device Share"),
     "download": MessageLookupByLibrary.simpleMessage("Download Management"),
     "forgotPwd": MessageLookupByLibrary.simpleMessage("Forgot password"),
     "getCode": MessageLookupByLibrary.simpleMessage("GET CODE"),
@@ -146,6 +174,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "Flip the image up and down",
     ),
     "info": MessageLookupByLibrary.simpleMessage("User Info"),
+    "inputAccountHint": MessageLookupByLibrary.simpleMessage(
+      "Enter username/phone/email",
+    ),
+    "invalidShareQR": MessageLookupByLibrary.simpleMessage(
+      "Invalid share QR code",
+    ),
+    "labelDevSN": MessageLookupByLibrary.simpleMessage("Device SN"),
+    "labelDeviceName": MessageLookupByLibrary.simpleMessage("Device name"),
     "lanSearch": MessageLookupByLibrary.simpleMessage("add via lan"),
     "local": MessageLookupByLibrary.simpleMessage("en"),
     "login": MessageLookupByLibrary.simpleMessage("Login"),
@@ -153,7 +189,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mailHint": MessageLookupByLibrary.simpleMessage("mail"),
     "mailPhone": MessageLookupByLibrary.simpleMessage("mail/phone"),
     "mailRegister": MessageLookupByLibrary.simpleMessage("Mail Register"),
-    "mailTip": m1,
+    "mailTip": m3,
     "mediaType": MessageLookupByLibrary.simpleMessage("media type"),
     "memoryCardError": MessageLookupByLibrary.simpleMessage(
       "Abnormal storage card",
@@ -171,24 +207,35 @@ class MessageLookup extends MessageLookupByLibrary {
     "newPwd": MessageLookupByLibrary.simpleMessage("new password"),
     "noDevice": MessageLookupByLibrary.simpleMessage("No Device Available"),
     "noFound": MessageLookupByLibrary.simpleMessage("No Device Search"),
+    "noPermissionTip": MessageLookupByLibrary.simpleMessage("No permission"),
     "noPhoneMailTip": MessageLookupByLibrary.simpleMessage(
       "Your account is not bound to any email or phone number. Clicking the button will directly cancel the account",
     ),
     "noSDCardTips": MessageLookupByLibrary.simpleMessage(
       "No SD card detected, can\'t record 24 hours recording.",
     ),
+    "noSharedAccount": MessageLookupByLibrary.simpleMessage(
+      "No shared accounts",
+    ),
     "normalAlarm": MessageLookupByLibrary.simpleMessage("Normal Alarm"),
     "nothing": MessageLookupByLibrary.simpleMessage("Nothing!"),
     "on": MessageLookupByLibrary.simpleMessage("open"),
     "operator_failed": MessageLookupByLibrary.simpleMessage("Operation failed"),
     "other": MessageLookupByLibrary.simpleMessage("other setting"),
+    "pendingShareDevices": MessageLookupByLibrary.simpleMessage(
+      "Pending Share Devices",
+    ),
+    "permAlarmPush": MessageLookupByLibrary.simpleMessage("Alarm Push"),
+    "permDeviceConfig": MessageLookupByLibrary.simpleMessage("Device Config"),
+    "permIntercom": MessageLookupByLibrary.simpleMessage("Intercom"),
+    "permSdRecord": MessageLookupByLibrary.simpleMessage("SD Card Record"),
     "phone": MessageLookupByLibrary.simpleMessage("phone no"),
-    "phoneMailTip": m2,
+    "phoneMailTip": m4,
     "phoneRegister": MessageLookupByLibrary.simpleMessage("Phone Register"),
     "phoneRule": MessageLookupByLibrary.simpleMessage(
       "Overseas mobile phone numbers need to add area code. eg:+1:80998098979",
     ),
-    "phoneTip": m3,
+    "phoneTip": m5,
     "preview": MessageLookupByLibrary.simpleMessage("preview"),
     "privacyPermissionBluetooth": MessageLookupByLibrary.simpleMessage(
       "Bluetooth Access Permission",
@@ -204,10 +251,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "pwdRule": MessageLookupByLibrary.simpleMessage(
       "The password must be 8~64 characters, including uppercase/lowercase letters, numbers and special characters. Allow symbols: \'!@#%^&*()_[]{}?/.<>, \'\' ; : -\'",
     ),
+    "qrCodeShare": MessageLookupByLibrary.simpleMessage("QR Code Share"),
     "qrScan": MessageLookupByLibrary.simpleMessage("Align The QR Code"),
     "recordAudio": MessageLookupByLibrary.simpleMessage("Audio Recording"),
     "recordClip": MessageLookupByLibrary.simpleMessage("Video Segment"),
-    "recordList": m4,
+    "recordList": m6,
     "recordMode": MessageLookupByLibrary.simpleMessage("REC Button"),
     "recordQuality": MessageLookupByLibrary.simpleMessage("Recording Quality"),
     "recordQualityBad": MessageLookupByLibrary.simpleMessage("Relatively Poor"),
@@ -219,6 +267,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "recordSetting": MessageLookupByLibrary.simpleMessage(
       "Video recording settings",
     ),
+    "refuseFailed": MessageLookupByLibrary.simpleMessage("Refuse share failed"),
+    "refuseShare": MessageLookupByLibrary.simpleMessage("Refuse"),
+    "refuseSuccess": MessageLookupByLibrary.simpleMessage(
+      "Refuse share success",
+    ),
     "reset": MessageLookupByLibrary.simpleMessage("Reset"),
     "resetDevPwd": MessageLookupByLibrary.simpleMessage(
       "reset device password",
@@ -227,13 +280,32 @@ class MessageLookup extends MessageLookupByLibrary {
     "restartScan": MessageLookupByLibrary.simpleMessage("restart scan"),
     "routeSetting": MessageLookupByLibrary.simpleMessage("Route Setting"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
+    "scanShareDevice": MessageLookupByLibrary.simpleMessage(
+      "Scan to add shared device",
+    ),
     "sd": MessageLookupByLibrary.simpleMessage("SD"),
     "sdList": MessageLookupByLibrary.simpleMessage("Card Storage Album"),
     "sdkVersion": MessageLookupByLibrary.simpleMessage("Current SDK version"),
+    "search": MessageLookupByLibrary.simpleMessage("Search"),
+    "searchFailed": MessageLookupByLibrary.simpleMessage("Search failed"),
     "selectAll": MessageLookupByLibrary.simpleMessage("SelectAll"),
     "setting": MessageLookupByLibrary.simpleMessage("Setting"),
     "share": MessageLookupByLibrary.simpleMessage("Share"),
+    "shareAccepted": MessageLookupByLibrary.simpleMessage("Accepted"),
     "shareDevice": MessageLookupByLibrary.simpleMessage("Share"),
+    "shareExpired": MessageLookupByLibrary.simpleMessage("Expired"),
+    "shareFailed": MessageLookupByLibrary.simpleMessage("Share failed"),
+    "shareFrom": MessageLookupByLibrary.simpleMessage("Shared from"),
+    "sharePending": MessageLookupByLibrary.simpleMessage("Pending"),
+    "sharePermission": MessageLookupByLibrary.simpleMessage("Share Permission"),
+    "shareQRCode": MessageLookupByLibrary.simpleMessage("Share QR Code"),
+    "shareQRTips": MessageLookupByLibrary.simpleMessage(
+      "Scan QR code to add device share",
+    ),
+    "shareRejected": MessageLookupByLibrary.simpleMessage("Rejected"),
+    "shareSuccess": MessageLookupByLibrary.simpleMessage("Share success"),
+    "shareTo": MessageLookupByLibrary.simpleMessage("Share to"),
+    "sharedAccounts": MessageLookupByLibrary.simpleMessage("Shared Accounts"),
     "smsLogin": MessageLookupByLibrary.simpleMessage("SmsLogin"),
     "startAdd": MessageLookupByLibrary.simpleMessage("start distribute"),
     "startScan": MessageLookupByLibrary.simpleMessage("start scan"),
@@ -263,6 +335,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "tr_settings_alarm_bell_select": MessageLookupByLibrary.simpleMessage(
       "Device bell selection",
     ),
+    "userNotFound": MessageLookupByLibrary.simpleMessage("User not found"),
     "verCodeLogin": MessageLookupByLibrary.simpleMessage(
       "Verification code login",
     ),

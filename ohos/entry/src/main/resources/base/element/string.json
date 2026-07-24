@@ -13,12 +13,28 @@
       "value": "Flycam"
     },
     {
+      "name": "wifi_reason",
+      "value": "Used to obtain WiFi network information for device network configuration"
+    },
+    {
+      "name": "camera_reason",
+      "value": "Used to scan QR codes"
+    },
+    {
+      "name": "use_microphone_reason",
+      "value": "Used for intercom and other features"
+    },
+    {
       "name": "blue_tooth_reason",
       "value": "用于查找附近的蓝牙设备，进行配网和连接等功能"
     },
     {
       "name": "read_pasteboard_reason",
       "value": "Used for reading passwords from the clipboard, accepting device sharing and home sharing passwords, and other functions"
+    },
+    {
+      "name": "album_reason",
+      "value": "Used to access photos and videos in the system album"
     }
   ]
 }

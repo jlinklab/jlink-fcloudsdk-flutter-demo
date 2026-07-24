@@ -66,7 +66,7 @@ class DeviceStorageManageController extends ChangeNotifier {
           timeout: 8000);
       handleStorageData();
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
   }
 
@@ -207,7 +207,7 @@ class DeviceStorageManageController extends ChangeNotifier {
         }
       }
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
     _configDeviceSetItemMoleList();
     return Future.value();
@@ -234,7 +234,7 @@ class DeviceStorageManageController extends ChangeNotifier {
       recordFullType = type;
       _configDeviceSetItemMoleList();
     }).catchError((e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     });
   }
 
@@ -307,7 +307,7 @@ class DeviceStorageManageController extends ChangeNotifier {
         .then((value) {
       dfsFormatter(willClearMapList);
     }).catchError((e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     });
   }
 }

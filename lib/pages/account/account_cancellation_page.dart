@@ -50,7 +50,7 @@ class _AccountCancellationPageState extends State<AccountCancellationPage> {
       KToast.show(status: '账号注销成功');
       _loginOut();
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 
@@ -73,7 +73,7 @@ class _AccountCancellationPageState extends State<AccountCancellationPage> {
       KToast.show(status: '账号注销成功');
       _loginOut();
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 
@@ -88,7 +88,7 @@ class _AccountCancellationPageState extends State<AccountCancellationPage> {
           onCount: () => setState(() {}), onEnd: () => setState(() {}));
       KToast.show(status: '已发送验证码');
     }).catchError((error) {
-      KToast.show(status: KErrorMsg(error));
+      KToast.show(status: kErrorMsg(error));
     });
   }
 

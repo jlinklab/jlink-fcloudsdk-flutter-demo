@@ -150,7 +150,7 @@ class _SmsLoginPageState extends State<SmsLoginPage> {
     JFApi.xcAccount
         .xcSmsLoginToGetCode(phone: phone)
         .then((value) => KToast.show(status: "验证码发送成功"))
-        .catchError((error) => KToast.show(status: KErrorMsg(error)));
+        .catchError((error) => KToast.show(status: kErrorMsg(error)));
   }
 
   _login() async {
@@ -164,6 +164,6 @@ class _SmsLoginPageState extends State<SmsLoginPage> {
       final json = value;
       context.read<UserInfo>().login(
           userId: json['userId'], loginType: LoginType.phone, phoneNum: phone);
-    }).catchError((error) => KToast.show(status: KErrorMsg(error)));
+    }).catchError((error) => KToast.show(status: kErrorMsg(error)));
   }
 }
