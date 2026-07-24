@@ -285,5 +285,10 @@
   "cancelBtn": "Cancel",
   "confirmBtn": "Confirm",
   "rebootSuccess": "Device restarting...",
-  "rebootFailed": "Restart failed"
+  "rebootFailed": "Restart failed",
+  "deviceResetTip": "Are you sure you want to factory reset the device?",
+  "factoryResetAndDeleteDev": "Factory reset and delete device",
+  "onlyFactoryReset": "Factory reset only",
+  "resetSuccess": "Factory reset successful, restarting...",
+  "resetFailed": "Factory reset failed"
 }
