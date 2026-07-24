@@ -31,7 +31,6 @@ String? kErrorMsg(dynamic code) {
   } else {
     return '未知错误:${code.toString()}';
   }
-  return null;
 }
 
 /// 错误码--网络
@@ -58,7 +57,7 @@ const _errorCodeMapNet = {
 };
 
 /// 错误码--账户
-var _errorCodeMapAccount = {
+final _errorCodeMapAccount = {
   '-603000': 'FunSDK证书合法性验证校验失败*不合法UUID或者AppKey不允许使用',
   '-603001': 'json数据格式校验失败',
   '-603002': '登录用户名或密码为空',

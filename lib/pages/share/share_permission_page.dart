@@ -231,12 +231,14 @@ class _SharePermissionPageState extends State<SharePermissionPage> {
         }
       });
     } catch (e) {
-      if (e is BusinessError) {
-        setState(() {
-          _isSearching = false;
+      setState(() {
+        _isSearching = false;
+        if (e is BusinessError) {
           _errorText = '${TR.current.searchFailed}: ${e.errorMessage}';
-        });
-      }
+        } else {
+          _errorText = '${TR.current.searchFailed}: $e';
+        }
+      });
     }
   }
 
@@ -278,9 +280,14 @@ class _SharePermissionPageState extends State<SharePermissionPage> {
           .map((e) => e.permission.name)
           .join(',');
 
+      final targetId = _searchResult.first.id;
+      if (targetId == null) {
+        KToast.show(status: TR.current.userNotFound);
+        return;
+      }
       await shareAPI.shareToAccount(
         widget.device.uuid,
-        _searchResult.first.id!,
+        targetId,
         jsonEncode(
             {'devInfo': await UtilAPI.instance.xcEncryptDevInfo(devInfo)}),
         permissionsStr,

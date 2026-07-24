@@ -337,7 +337,11 @@ class _DeviceTabPageState extends State<DeviceTabPage> {
   }
 
   _toDelete(String deviceID) async {
-    Device device = DeviceManager.instance.getDevice(deviceId: deviceID)!;
+    final Device? device = DeviceManager.instance.getDevice(deviceId: deviceID);
+    if (device == null) {
+      KToast.show(status: '设备不存在');
+      return;
+    }
     KToast.show();
     try {
       if (device.fromShare) {
@@ -345,9 +349,12 @@ class _DeviceTabPageState extends State<DeviceTabPage> {
       } else {
         await JFApi.xcAccount.xcRemoveDevice(deviceID);
       }
-      KToast.dismiss();
       Navigator.of(context).pop();
-      context.read<DevListViewModel>().deleteDev(deviceID, widget.type);
+      DeviceManager.instance
+          .removeDevice(deviceId: deviceID, type: widget.type);
+      await DeviceManager.instance.refreshDeviceList();
+      setState(() {});
+      KToast.dismiss();
     } catch (error) {
       KToast.show(status: kErrorMsg(error));
     }

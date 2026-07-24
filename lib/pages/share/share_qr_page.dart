@@ -6,7 +6,6 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
@@ -74,10 +73,10 @@ class _ShareQRPageState extends State<ShareQRPage> {
       };
 
       debugPrint('加密前二维码数据 ==> ${jsonEncode(info)}');
-      info =
-          await AccountAPI.instance.xcEncodeInfo(encodeStr: jsonEncode(info));
-      debugPrint('加密后二维码数据 ==> $info');
-
+      String encodeInfo =
+          await UtilAPI.instance.xcEncryptDevInfo(jsonEncode(info));
+      debugPrint('加密后二维码数据 ==> $encodeInfo');
+      info = await AccountAPI.instance.xcEncodeInfo(encodeStr: encodeInfo);
       if (mounted) {
         setState(() {
           _qrData = 'https://d.xmeye.net/fcloudsdkdemo?shareKey=${info['key']}';
@@ -211,7 +210,8 @@ class _ShareQRPageState extends State<ShareQRPage> {
         final Directory tempDir = await getTemporaryDirectory();
         final String filePath =
             '${tempDir.path}/${UserInfo.instance.userId}_${widget.device.uuid}_share.png';
-        final File file = await File(filePath).writeAsBytes(byteData.buffer.asUint8List());
+        final File file =
+            await File(filePath).writeAsBytes(byteData.buffer.asUint8List());
         ShareResult result = await Share.shareXFiles([XFile(file.path)]);
         if (result.status == ShareResultStatus.success) {
           KToast.show(status: '成功');
