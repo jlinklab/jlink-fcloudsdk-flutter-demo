@@ -222,12 +222,13 @@ class _AlarmMsgVideoState extends State<AlarmMsgVideo>
   Future<void> _downloadVideo() async {
     if (_isDownloading || _record?.url == null) return;
     setState(() => _isDownloading = true);
+    CloudVideoDownloadController? downloadController;
     try {
       KToast.show(status: '开始下载...');
       final tempDir = await getTemporaryDirectory();
       final tempPath =
           '${tempDir.path}/alarm_video_${DateTime.now().millisecondsSinceEpoch}.mp4';
-      final downloadController = CloudVideoDownloadController(
+      downloadController = CloudVideoDownloadController(
         url: _record!.url!,
         fileName: tempPath,
       );
@@ -261,6 +262,7 @@ class _AlarmMsgVideoState extends State<AlarmMsgVideo>
     } catch (e) {
       KToast.show(status: TR.current.saveFailed);
     } finally {
+      downloadController?.dispose();
       if (mounted) {
         setState(() => _isDownloading = false);
       }
