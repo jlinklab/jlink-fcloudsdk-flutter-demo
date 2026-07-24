@@ -167,7 +167,7 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
       );
       KToast.show(status: TR.current.rebootSuccess);
     } catch (e) {
-      KToast.show(status: KErrorMsg(e));
+      KToast.show(status: kErrorMsg(e));
     }
   }
 
