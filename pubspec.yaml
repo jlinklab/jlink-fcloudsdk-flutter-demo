@@ -127,9 +127,7 @@ dependencies:
   #扫描本地图片
   scan:
     git:
-      url: "http://10.2.5.201/FlutterPlugin/hos_flutter_packages.git"
-      ref: '16c6aa327ac88463dfd3acfc4104091dd4a87f6d'
-      path: "scan"
+      url: "https://gitcode.com/CPF-Flutter/fluttertpc_scan.git"
 
 dependency_overrides:
   http: 0.13.6
