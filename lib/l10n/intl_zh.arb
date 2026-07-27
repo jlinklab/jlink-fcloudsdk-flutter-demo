@@ -203,5 +203,10 @@
   "rebootFailed": "重启失败",
   "saveSuccess": "保存成功",
   "saveFailed": "保存失败",
-  "saving": "保存中..."
+  "saving": "保存中...",
+  "deviceResetTip": "确定要恢复出厂设置吗？",
+  "factoryResetAndDeleteDev": "恢复出厂设置并删除设备",
+  "onlyFactoryReset": "仅恢复出厂设置",
+  "resetSuccess": "恢复出厂设置成功，重启中...",
+  "resetFailed": "恢复出厂设置失败"
 }

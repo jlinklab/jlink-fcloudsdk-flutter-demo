@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
@@ -13,6 +15,7 @@ import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
 import 'package:xcloudsdk_flutter_example/pages/share/device_share_page.dart';
 import '../../api/share_api.dart';
 import '../../common/code_prase.dart';
+import '../../common/event.dart';
 
 class DeviceListPage extends StatefulWidget {
   const DeviceListPage({Key? key}) : super(key: key);
@@ -30,6 +33,11 @@ class _DeviceListPageState extends State<DeviceListPage>
       _checkPendingShares();
     });
     super.initState();
+    _subscription = eventBus.on<RemoveDeviceUpdateEvent>().listen((_) {
+      if (mounted) {
+        context.read<DevListViewModel>().onRefresh();
+      }
+    });
   }
 
   /// 检查是否有待接受的分享设备，弹出弹窗
@@ -127,6 +135,7 @@ class _DeviceListPageState extends State<DeviceListPage>
   }
 
   late TabController _tabController;
+  late StreamSubscription _subscription;
 
   @override
   Widget build(BuildContext context) {
@@ -167,6 +176,7 @@ class _DeviceListPageState extends State<DeviceListPage>
   @override
   void dispose() {
     _tabController.dispose();
+    _subscription.cancel();
     super.dispose();
   }
 }
@@ -222,7 +232,8 @@ class _DeviceTabPageState extends State<DeviceTabPage> {
                                     onPressed: () {
                                       context.pushNamed('preview',
                                           pathParameters: {
-                                            'devId': device.uuid
+                                            'devId': device.uuid,
+                                            'type': widget.type.toString(),
                                           });
                                     },
                                     child: Text(TR.current.preview)),
