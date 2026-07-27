@@ -200,5 +200,10 @@
   "cancelBtn": "取消",
   "confirmBtn": "确定",
   "rebootSuccess": "设备重启中...",
-  "rebootFailed": "重启失败"
+  "rebootFailed": "重启失败",
+  "deviceResetTip": "确定要恢复出厂设置吗？",
+  "factoryResetAndDeleteDev": "恢复出厂设置并删除设备",
+  "onlyFactoryReset": "仅恢复出厂设置",
+  "resetSuccess": "恢复出厂设置成功，重启中...",
+  "resetFailed": "恢复出厂设置失败"
 }

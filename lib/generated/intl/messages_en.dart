@@ -158,12 +158,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "The device does not have a storage card",
     ),
     "deviceReset": MessageLookupByLibrary.simpleMessage("Device Reset"),
+    "deviceResetTip": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to factory reset the device?",
+    ),
     "deviceRestart": MessageLookupByLibrary.simpleMessage("Device Restart"),
     "deviceRestartTip": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to restart the device?",
     ),
     "deviceShare": MessageLookupByLibrary.simpleMessage("Device Share"),
     "download": MessageLookupByLibrary.simpleMessage("Download Management"),
+    "factoryResetAndDeleteDev": MessageLookupByLibrary.simpleMessage(
+      "Factory reset and delete device",
+    ),
     "forgotPwd": MessageLookupByLibrary.simpleMessage("Forgot password"),
     "getCode": MessageLookupByLibrary.simpleMessage("GET CODE"),
     "goLogin": MessageLookupByLibrary.simpleMessage(
@@ -230,6 +236,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "normalAlarm": MessageLookupByLibrary.simpleMessage("Normal Alarm"),
     "nothing": MessageLookupByLibrary.simpleMessage("Nothing!"),
     "on": MessageLookupByLibrary.simpleMessage("open"),
+    "onlyFactoryReset": MessageLookupByLibrary.simpleMessage(
+      "Factory reset only",
+    ),
     "operator_failed": MessageLookupByLibrary.simpleMessage("Operation failed"),
     "other": MessageLookupByLibrary.simpleMessage("other setting"),
     "pendingShareDevices": MessageLookupByLibrary.simpleMessage(
@@ -290,7 +299,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetDevPwd": MessageLookupByLibrary.simpleMessage(
       "reset device password",
     ),
+    "resetFailed": MessageLookupByLibrary.simpleMessage("Factory reset failed"),
     "resetPwd": MessageLookupByLibrary.simpleMessage("Reset Password"),
+    "resetSuccess": MessageLookupByLibrary.simpleMessage(
+      "Factory reset successful, restarting...",
+    ),
     "restartScan": MessageLookupByLibrary.simpleMessage("restart scan"),
     "routeSetting": MessageLookupByLibrary.simpleMessage("Route Setting"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
