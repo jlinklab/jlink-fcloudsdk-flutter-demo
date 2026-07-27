@@ -256,6 +256,7 @@
   "privacyPermissionBluetooth": "Bluetooth Access Permission",
   "blueToothPermissionCancelTips": "Without the permission to scan nearby Bluetooth devices, you cannot perform network configuration, search, or other operations using Bluetooth.",
   "toolsFeedbackLog": "Feedback Log",
+  "customerServiceCenter": "Customer Service Center",
   "Upload_F": "Uploading failed",
   "Upload_S": "Uploaded successfully",
   "audio_ability_unsupport": "Microphone permission is not enabled",

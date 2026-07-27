@@ -126,6 +126,7 @@
   "privacyPermissionBluetooth": "访问蓝牙权限",
   "blueToothPermissionCancelTips": "未获取到附近蓝牙设备扫描权限，将无法进行蓝牙配网、搜索等操作",
   "toolsFeedbackLog": "反馈日志",
+  "customerServiceCenter": "客服中心",
   "Upload_F": "上传失败",
   "Upload_S": "上传成功",
   "audio_ability_unsupport": "麦克风权限未开启",

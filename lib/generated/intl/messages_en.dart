@@ -37,399 +37,340 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-    "TR_Audition": MessageLookupByLibrary.simpleMessage("Audition"),
-    "TR_File_Size_Exceed_Max_Size": MessageLookupByLibrary.simpleMessage(
-      "The File size exceeds the maximum limit",
-    ),
-    "TR_Please_Enter_Alarm_Tips": MessageLookupByLibrary.simpleMessage(
-      "Please fill the warning message",
-    ),
-    "TR_Press_To_End_Record": MessageLookupByLibrary.simpleMessage(
-      "Press to end recording",
-    ),
-    "TR_Press_To_Record": MessageLookupByLibrary.simpleMessage(
-      "Start recording after pressing",
-    ),
-    "TR_QR_Code_Has_Been_Used_Generate_Again":
-        MessageLookupByLibrary.simpleMessage(
-          "QR code has been used, please contact the device owner to regenerate",
-        ),
-    "TR_Record_Prompt": MessageLookupByLibrary.simpleMessage("Record a beep"),
-    "TR_Sex_Female": MessageLookupByLibrary.simpleMessage("female"),
-    "TR_Sex_Male": MessageLookupByLibrary.simpleMessage("male"),
-    "TR_Text_To_Voice": MessageLookupByLibrary.simpleMessage("Text to speech"),
-    "TR_Upload_Prompt_Voice": MessageLookupByLibrary.simpleMessage(
-      "Upload prompt tone",
-    ),
-    "Upload_F": MessageLookupByLibrary.simpleMessage("Uploading failed"),
-    "Upload_S": MessageLookupByLibrary.simpleMessage("Uploaded successfully"),
-    "acceptFailed": MessageLookupByLibrary.simpleMessage("Accept share failed"),
-    "acceptShare": MessageLookupByLibrary.simpleMessage("Accept"),
-    "acceptShareDevice": MessageLookupByLibrary.simpleMessage(
-      "Accept device share",
-    ),
-    "acceptSuccess": MessageLookupByLibrary.simpleMessage(
-      "Accept share success",
-    ),
-    "accountCancel": MessageLookupByLibrary.simpleMessage(
-      "Account Cancellation",
-    ),
-    "add": MessageLookupByLibrary.simpleMessage("ADD"),
-    "addConnectDevFailed": MessageLookupByLibrary.simpleMessage(
-      "Distribution network failure",
-    ),
-    "addDevice": MessageLookupByLibrary.simpleMessage("Add Device"),
-    "alarm": MessageLookupByLibrary.simpleMessage("alarm"),
-    "alarmRecording": MessageLookupByLibrary.simpleMessage("Alarm recording"),
-    "alarmScreenshot": MessageLookupByLibrary.simpleMessage("Alarm screenshot"),
-    "alarmSubscription": MessageLookupByLibrary.simpleMessage(
-      "Alarm subscription",
-    ),
-    "album": MessageLookupByLibrary.simpleMessage("Album"),
-    "areaCode": MessageLookupByLibrary.simpleMessage("Choose Area Code"),
-    "audio_ability_unsupport": MessageLookupByLibrary.simpleMessage(
-      "Microphone permission is not enabled",
-    ),
-    "baseStationHumanDetectionSwitch": MessageLookupByLibrary.simpleMessage(
-      "Humanoid detection switch",
-    ),
-    "basicSetting": MessageLookupByLibrary.simpleMessage("Basic Settings"),
-    "blueToothPermissionCancelTips": MessageLookupByLibrary.simpleMessage(
-      "Without the permission to scan nearby Bluetooth devices, you cannot perform network configuration, search, or other operations using Bluetooth.",
-    ),
-    "bluetooth": MessageLookupByLibrary.simpleMessage("add via BT"),
-    "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
-    "cancelBtn": MessageLookupByLibrary.simpleMessage("Cancel"),
-    "cancelShare": MessageLookupByLibrary.simpleMessage("Cancel Share"),
-    "cancelShareContent": m0,
-    "cancelShareFailed": MessageLookupByLibrary.simpleMessage(
-      "Cancel share failed",
-    ),
-    "cancelShareSuccess": MessageLookupByLibrary.simpleMessage(
-      "Cancel share success",
-    ),
-    "check": MessageLookupByLibrary.simpleMessage("confirm"),
-    "clickToShare": MessageLookupByLibrary.simpleMessage("Tap to share"),
-    "cloudDownload": MessageLookupByLibrary.simpleMessage(
-      "Cloud Storage Download",
-    ),
-    "cloudList": MessageLookupByLibrary.simpleMessage("Cloud Playback"),
-    "cloudVideo": MessageLookupByLibrary.simpleMessage("Cloud Short Video"),
-    "codeHint": MessageLookupByLibrary.simpleMessage("verification code"),
-    "confirmBtn": MessageLookupByLibrary.simpleMessage("Confirm"),
-    "confirmShare": MessageLookupByLibrary.simpleMessage("Confirm Share"),
-    "confirmShareContent": m1,
-    "countDown": m2,
-    "delete": MessageLookupByLibrary.simpleMessage("Delete"),
-    "dev": MessageLookupByLibrary.simpleMessage("Device"),
-    "devInfo": MessageLookupByLibrary.simpleMessage("device info"),
-    "devName": MessageLookupByLibrary.simpleMessage("device name"),
-    "devSN": MessageLookupByLibrary.simpleMessage("device serial No"),
-    "device": MessageLookupByLibrary.simpleMessage("Device"),
-    "deviceAddConnectBleSuccess": MessageLookupByLibrary.simpleMessage(
-      "Connect Bluetooth device successfully!",
-    ),
-    "deviceAddConnectBleTip1": MessageLookupByLibrary.simpleMessage(
-      "1.Connect Bluetooth device successfully!",
-    ),
-    "deviceAddConnectBleTip2": MessageLookupByLibrary.simpleMessage(
-      "2.Start sending information to the device...",
-    ),
-    "deviceAddConnectBleTip3": MessageLookupByLibrary.simpleMessage(
-      "2.Received the information successfully!",
-    ),
-    "deviceAddConnectBleTip4": MessageLookupByLibrary.simpleMessage(
-      "3.Waiting for devices to connect to the router...",
-    ),
-    "deviceAddConnectBleTip5": MessageLookupByLibrary.simpleMessage(
-      "3.The distribution network is successful!",
-    ),
-    "deviceAddConnectBledDisconnected": MessageLookupByLibrary.simpleMessage(
-      "Bluetooth Disconnected",
-    ),
-    "deviceBluetoothCantConnect": MessageLookupByLibrary.simpleMessage(
-      "Cannot connect to Bluetooth",
-    ),
-    "deviceFirmwareUpgrade": MessageLookupByLibrary.simpleMessage(
-      "Device Firmware Upgrade",
-    ),
-    "deviceList": MessageLookupByLibrary.simpleMessage("Device List"),
-    "deviceNoMemoryCard": MessageLookupByLibrary.simpleMessage(
-      "The device does not have a storage card",
-    ),
-    "deviceReset": MessageLookupByLibrary.simpleMessage("Device Reset"),
-    "deviceResetTip": MessageLookupByLibrary.simpleMessage(
-      "Are you sure you want to factory reset the device?",
-    ),
-    "deviceRestart": MessageLookupByLibrary.simpleMessage("Device Restart"),
-    "deviceRestartTip": MessageLookupByLibrary.simpleMessage(
-      "Are you sure you want to restart the device?",
-    ),
-    "deviceShare": MessageLookupByLibrary.simpleMessage("Device Share"),
-    "download": MessageLookupByLibrary.simpleMessage("Download Management"),
-    "factoryResetAndDeleteDev": MessageLookupByLibrary.simpleMessage(
-      "Factory reset and delete device",
-    ),
-    "firmwareCheckUpdate": MessageLookupByLibrary.simpleMessage(
-      "Check for Updates",
-    ),
-    "firmwareChecking": MessageLookupByLibrary.simpleMessage("Checking..."),
-    "firmwareCurrentVersion": MessageLookupByLibrary.simpleMessage(
-      "Current Version",
-    ),
-    "firmwareDownloadFailed": MessageLookupByLibrary.simpleMessage(
-      "Firmware download failed",
-    ),
-    "firmwareDownloadFile": MessageLookupByLibrary.simpleMessage(
-      "Downloading firmware",
-    ),
-    "firmwareDownloadSuccess": MessageLookupByLibrary.simpleMessage(
-      "Firmware download complete",
-    ),
-    "firmwareDownloadingToFirmware": MessageLookupByLibrary.simpleMessage(
-      "Downloading firmware file to local",
-    ),
-    "firmwareLatest": MessageLookupByLibrary.simpleMessage(
-      "Already up to date",
-    ),
-    "firmwareLocalUpgrade": MessageLookupByLibrary.simpleMessage(
-      "Local Upgrade",
-    ),
-    "firmwareNewVersion": MessageLookupByLibrary.simpleMessage("New Version"),
-    "firmwareNoLocalFile": MessageLookupByLibrary.simpleMessage(
-      "No local firmware file found",
-    ),
-    "firmwareOnlineUpgrade": MessageLookupByLibrary.simpleMessage(
-      "Online Upgrade",
-    ),
-    "firmwarePidFail": MessageLookupByLibrary.simpleMessage(
-      "Failed to get PID, unable to check for updates",
-    ),
-    "firmwareSelectLocalFile": MessageLookupByLibrary.simpleMessage(
-      "Select Local Firmware File",
-    ),
-    "firmwareSendFile": MessageLookupByLibrary.simpleMessage(
-      "Sending firmware to device",
-    ),
-    "firmwareUpgradeAvailable": MessageLookupByLibrary.simpleMessage(
-      "New version available",
-    ),
-    "firmwareUpgradeConfirm": MessageLookupByLibrary.simpleMessage(
-      "Are you sure to upgrade the device firmware?",
-    ),
-    "firmwareUpgradeFailed": MessageLookupByLibrary.simpleMessage(
-      "Upgrade failed",
-    ),
-    "firmwareUpgradeNow": MessageLookupByLibrary.simpleMessage("Upgrade Now"),
-    "firmwareUpgradeSuccess": MessageLookupByLibrary.simpleMessage(
-      "Upgrade successful, restarting...",
-    ),
-    "firmwareUpgradeTip": MessageLookupByLibrary.simpleMessage(
-      "Do not disconnect device power during upgrade",
-    ),
-    "firmwareUpgrading": MessageLookupByLibrary.simpleMessage("Upgrading"),
-    "firmwareVersionCheckFailed": MessageLookupByLibrary.simpleMessage(
-      "Version check failed",
-    ),
-    "forgotPwd": MessageLookupByLibrary.simpleMessage("Forgot password"),
-    "getCode": MessageLookupByLibrary.simpleMessage("GET CODE"),
-    "goLogin": MessageLookupByLibrary.simpleMessage(
-      "has account yet, go to login page",
-    ),
-    "goPhoneRegister": MessageLookupByLibrary.simpleMessage(
-      "try phone register",
-    ),
-    "goRegister": MessageLookupByLibrary.simpleMessage(
-      "do not have an account, register new one",
-    ),
-    "hd": MessageLookupByLibrary.simpleMessage("HD"),
-    "image": MessageLookupByLibrary.simpleMessage("image"),
-    "imageFlipLeftRight": MessageLookupByLibrary.simpleMessage(
-      "Flip the image left and right",
-    ),
-    "imageFlipUpDown": MessageLookupByLibrary.simpleMessage(
-      "Flip the image up and down",
-    ),
-    "info": MessageLookupByLibrary.simpleMessage("User Info"),
-    "inputAccountHint": MessageLookupByLibrary.simpleMessage(
-      "Enter username/phone/email",
-    ),
-    "invalidShareQR": MessageLookupByLibrary.simpleMessage(
-      "Invalid share QR code",
-    ),
-    "labelDevSN": MessageLookupByLibrary.simpleMessage("Device SN"),
-    "labelDeviceName": MessageLookupByLibrary.simpleMessage("Device name"),
-    "lanSearch": MessageLookupByLibrary.simpleMessage("add via lan"),
-    "local": MessageLookupByLibrary.simpleMessage("en"),
-    "login": MessageLookupByLibrary.simpleMessage("Login"),
-    "logout": MessageLookupByLibrary.simpleMessage("Logout"),
-    "mailHint": MessageLookupByLibrary.simpleMessage("mail"),
-    "mailPhone": MessageLookupByLibrary.simpleMessage("mail/phone"),
-    "mailRegister": MessageLookupByLibrary.simpleMessage("Mail Register"),
-    "mailTip": m3,
-    "mediaType": MessageLookupByLibrary.simpleMessage("media type"),
-    "memoryCardError": MessageLookupByLibrary.simpleMessage(
-      "Abnormal storage card",
-    ),
-    "message": MessageLookupByLibrary.simpleMessage("message"),
-    "messageDetail": MessageLookupByLibrary.simpleMessage("Message Detail"),
-    "messageList": MessageLookupByLibrary.simpleMessage("Message List"),
-    "messageReporting": MessageLookupByLibrary.simpleMessage(
-      "Message reporting",
-    ),
-    "mine": MessageLookupByLibrary.simpleMessage("Mine"),
-    "myDevice": MessageLookupByLibrary.simpleMessage("Mine"),
-    "name": MessageLookupByLibrary.simpleMessage("username"),
-    "nameHint": MessageLookupByLibrary.simpleMessage("username/email/phone"),
-    "newPwd": MessageLookupByLibrary.simpleMessage("new password"),
-    "noDevice": MessageLookupByLibrary.simpleMessage("No Device Available"),
-    "noFound": MessageLookupByLibrary.simpleMessage("No Device Search"),
-    "noPermissionTip": MessageLookupByLibrary.simpleMessage("No permission"),
-    "noPhoneMailTip": MessageLookupByLibrary.simpleMessage(
-      "Your account is not bound to any email or phone number. Clicking the button will directly cancel the account",
-    ),
-    "noSDCardTips": MessageLookupByLibrary.simpleMessage(
-      "No SD card detected, can\'t record 24 hours recording.",
-    ),
-    "noSharedAccount": MessageLookupByLibrary.simpleMessage(
-      "No shared accounts",
-    ),
-    "normalAlarm": MessageLookupByLibrary.simpleMessage("Normal Alarm"),
-    "nothing": MessageLookupByLibrary.simpleMessage("Nothing!"),
-    "on": MessageLookupByLibrary.simpleMessage("open"),
-    "onlyFactoryReset": MessageLookupByLibrary.simpleMessage(
-      "Factory reset only",
-    ),
-    "operator_failed": MessageLookupByLibrary.simpleMessage("Operation failed"),
-    "other": MessageLookupByLibrary.simpleMessage("other setting"),
-    "pendingShareDevices": MessageLookupByLibrary.simpleMessage(
-      "Pending Share Devices",
-    ),
-    "permAlarmPush": MessageLookupByLibrary.simpleMessage("Alarm Push"),
-    "permDeviceConfig": MessageLookupByLibrary.simpleMessage("Device Config"),
-    "permIntercom": MessageLookupByLibrary.simpleMessage("Intercom"),
-    "permSdRecord": MessageLookupByLibrary.simpleMessage("SD Card Record"),
-    "phone": MessageLookupByLibrary.simpleMessage("phone no"),
-    "phoneMailTip": m4,
-    "phoneRegister": MessageLookupByLibrary.simpleMessage("Phone Register"),
-    "phoneRule": MessageLookupByLibrary.simpleMessage(
-      "Overseas mobile phone numbers need to add area code. eg:+1:80998098979",
-    ),
-    "phoneTip": m5,
-    "preview": MessageLookupByLibrary.simpleMessage("preview"),
-    "privacyPermissionBluetooth": MessageLookupByLibrary.simpleMessage(
-      "Bluetooth Access Permission",
-    ),
-    "privacyPermissionDevNearbyContent": MessageLookupByLibrary.simpleMessage(
-      "Used to search for nearby Bluetooth devices or other devices",
-    ),
-    "pwdFindBack": MessageLookupByLibrary.simpleMessage("find back password"),
-    "pwdHint": MessageLookupByLibrary.simpleMessage("password"),
-    "pwdQuestion": MessageLookupByLibrary.simpleMessage(
-      "set security question",
-    ),
-    "pwdRule": MessageLookupByLibrary.simpleMessage(
-      "The password must be 8~64 characters, including uppercase/lowercase letters, numbers and special characters. Allow symbols: \'!@#%^&*()_[]{}?/.<>, \'\' ; : -\'",
-    ),
-    "qrCodeShare": MessageLookupByLibrary.simpleMessage("QR Code Share"),
-    "qrScan": MessageLookupByLibrary.simpleMessage("Align The QR Code"),
-    "rebootFailed": MessageLookupByLibrary.simpleMessage("Restart failed"),
-    "rebootSuccess": MessageLookupByLibrary.simpleMessage(
-      "Device restarting...",
-    ),
-    "recordAudio": MessageLookupByLibrary.simpleMessage("Audio Recording"),
-    "recordClip": MessageLookupByLibrary.simpleMessage("Video Segment"),
-    "recordList": m6,
-    "recordMode": MessageLookupByLibrary.simpleMessage("REC Button"),
-    "recordQuality": MessageLookupByLibrary.simpleMessage("Recording Quality"),
-    "recordQualityBad": MessageLookupByLibrary.simpleMessage("Relatively Poor"),
-    "recordQualityBestGood": MessageLookupByLibrary.simpleMessage("Best"),
-    "recordQualityGood": MessageLookupByLibrary.simpleMessage("Good"),
-    "recordQualityNormal": MessageLookupByLibrary.simpleMessage("General"),
-    "recordQualityVeryBad": MessageLookupByLibrary.simpleMessage("Poor"),
-    "recordQualityVeryGood": MessageLookupByLibrary.simpleMessage("Better"),
-    "recordSetting": MessageLookupByLibrary.simpleMessage(
-      "Video recording settings",
-    ),
-    "refuseFailed": MessageLookupByLibrary.simpleMessage("Refuse share failed"),
-    "refuseShare": MessageLookupByLibrary.simpleMessage("Refuse"),
-    "refuseSuccess": MessageLookupByLibrary.simpleMessage(
-      "Refuse share success",
-    ),
-    "reset": MessageLookupByLibrary.simpleMessage("Reset"),
-    "resetDevPwd": MessageLookupByLibrary.simpleMessage(
-      "reset device password",
-    ),
-    "resetFailed": MessageLookupByLibrary.simpleMessage("Factory reset failed"),
-    "resetPwd": MessageLookupByLibrary.simpleMessage("Reset Password"),
-    "resetSuccess": MessageLookupByLibrary.simpleMessage(
-      "Factory reset successful, restarting...",
-    ),
-    "restartScan": MessageLookupByLibrary.simpleMessage("restart scan"),
-    "routeSetting": MessageLookupByLibrary.simpleMessage("Route Setting"),
-    "save": MessageLookupByLibrary.simpleMessage("Save"),
-    "scanShareDevice": MessageLookupByLibrary.simpleMessage(
-      "Scan to add shared device",
-    ),
-    "sd": MessageLookupByLibrary.simpleMessage("SD"),
-    "sdList": MessageLookupByLibrary.simpleMessage("Card Storage Album"),
-    "sdkVersion": MessageLookupByLibrary.simpleMessage("Current SDK version"),
-    "search": MessageLookupByLibrary.simpleMessage("Search"),
-    "searchFailed": MessageLookupByLibrary.simpleMessage("Search failed"),
-    "selectAll": MessageLookupByLibrary.simpleMessage("SelectAll"),
-    "setting": MessageLookupByLibrary.simpleMessage("Setting"),
-    "share": MessageLookupByLibrary.simpleMessage("Share"),
-    "shareAccepted": MessageLookupByLibrary.simpleMessage("Accepted"),
-    "shareDevice": MessageLookupByLibrary.simpleMessage("Share"),
-    "shareExpired": MessageLookupByLibrary.simpleMessage("Expired"),
-    "shareFailed": MessageLookupByLibrary.simpleMessage("Share failed"),
-    "shareFrom": MessageLookupByLibrary.simpleMessage("Shared from"),
-    "sharePending": MessageLookupByLibrary.simpleMessage("Pending"),
-    "sharePermission": MessageLookupByLibrary.simpleMessage("Share Permission"),
-    "shareQRCode": MessageLookupByLibrary.simpleMessage("Share QR Code"),
-    "shareQRTips": MessageLookupByLibrary.simpleMessage(
-      "Scan QR code to add device share",
-    ),
-    "shareRejected": MessageLookupByLibrary.simpleMessage("Rejected"),
-    "shareSuccess": MessageLookupByLibrary.simpleMessage("Share success"),
-    "shareTo": MessageLookupByLibrary.simpleMessage("Share to"),
-    "sharedAccounts": MessageLookupByLibrary.simpleMessage("Shared Accounts"),
-    "smsLogin": MessageLookupByLibrary.simpleMessage("SmsLogin"),
-    "startAdd": MessageLookupByLibrary.simpleMessage("start distribute"),
-    "startScan": MessageLookupByLibrary.simpleMessage("start scan"),
-    "stopScan": MessageLookupByLibrary.simpleMessage("stop scan"),
-    "storageManagement": MessageLookupByLibrary.simpleMessage(
-      "storage management",
-    ),
-    "toolsFeedbackLog": MessageLookupByLibrary.simpleMessage("Feedback Log"),
-    "tr_common_download_management": MessageLookupByLibrary.simpleMessage(
-      "Download management",
-    ),
-    "tr_pet_function_record_start": MessageLookupByLibrary.simpleMessage(
-      "Click to Start Recording",
-    ),
-    "tr_pet_function_recording_state": MessageLookupByLibrary.simpleMessage(
-      "Recording in progress. Click again to stop recording.",
-    ),
-    "tr_pet_setting_sound_record_function":
-        MessageLookupByLibrary.simpleMessage("Record summoning sound"),
-    "tr_recording": MessageLookupByLibrary.simpleMessage("Recording..."),
-    "tr_settings_alarm_beep": MessageLookupByLibrary.simpleMessage(
-      "Device alarm beep",
-    ),
-    "tr_settings_alarm_bell_customize": MessageLookupByLibrary.simpleMessage(
-      "Custom voice",
-    ),
-    "tr_settings_alarm_bell_select": MessageLookupByLibrary.simpleMessage(
-      "Device bell selection",
-    ),
-    "userNotFound": MessageLookupByLibrary.simpleMessage("User not found"),
-    "verCodeLogin": MessageLookupByLibrary.simpleMessage(
-      "Verification code login",
-    ),
-    "version": MessageLookupByLibrary.simpleMessage("Version"),
-    "video": MessageLookupByLibrary.simpleMessage("record"),
-    "wifi": MessageLookupByLibrary.simpleMessage("add via wifi"),
-    "wifiPwdHint": MessageLookupByLibrary.simpleMessage("Wifi Password"),
-  };
+        "TR_Audition": MessageLookupByLibrary.simpleMessage("Audition"),
+        "TR_File_Size_Exceed_Max_Size": MessageLookupByLibrary.simpleMessage(
+            "The File size exceeds the maximum limit"),
+        "TR_Please_Enter_Alarm_Tips": MessageLookupByLibrary.simpleMessage(
+            "Please fill the warning message"),
+        "TR_Press_To_End_Record":
+            MessageLookupByLibrary.simpleMessage("Press to end recording"),
+        "TR_Press_To_Record": MessageLookupByLibrary.simpleMessage(
+            "Start recording after pressing"),
+        "TR_QR_Code_Has_Been_Used_Generate_Again":
+            MessageLookupByLibrary.simpleMessage(
+                "QR code has been used, please contact the device owner to regenerate"),
+        "TR_Record_Prompt":
+            MessageLookupByLibrary.simpleMessage("Record a beep"),
+        "TR_Sex_Female": MessageLookupByLibrary.simpleMessage("female"),
+        "TR_Sex_Male": MessageLookupByLibrary.simpleMessage("male"),
+        "TR_Text_To_Voice":
+            MessageLookupByLibrary.simpleMessage("Text to speech"),
+        "TR_Upload_Prompt_Voice":
+            MessageLookupByLibrary.simpleMessage("Upload prompt tone"),
+        "Upload_F": MessageLookupByLibrary.simpleMessage("Uploading failed"),
+        "Upload_S":
+            MessageLookupByLibrary.simpleMessage("Uploaded successfully"),
+        "acceptFailed":
+            MessageLookupByLibrary.simpleMessage("Accept share failed"),
+        "acceptShare": MessageLookupByLibrary.simpleMessage("Accept"),
+        "acceptShareDevice":
+            MessageLookupByLibrary.simpleMessage("Accept device share"),
+        "acceptSuccess":
+            MessageLookupByLibrary.simpleMessage("Accept share success"),
+        "accountCancel":
+            MessageLookupByLibrary.simpleMessage("Account Cancellation"),
+        "add": MessageLookupByLibrary.simpleMessage("ADD"),
+        "addConnectDevFailed": MessageLookupByLibrary.simpleMessage(
+            "Distribution network failure"),
+        "addDevice": MessageLookupByLibrary.simpleMessage("Add Device"),
+        "alarm": MessageLookupByLibrary.simpleMessage("alarm"),
+        "alarmRecording":
+            MessageLookupByLibrary.simpleMessage("Alarm recording"),
+        "alarmScreenshot":
+            MessageLookupByLibrary.simpleMessage("Alarm screenshot"),
+        "alarmSubscription":
+            MessageLookupByLibrary.simpleMessage("Alarm subscription"),
+        "album": MessageLookupByLibrary.simpleMessage("Album"),
+        "areaCode": MessageLookupByLibrary.simpleMessage("Choose Area Code"),
+        "audio_ability_unsupport": MessageLookupByLibrary.simpleMessage(
+            "Microphone permission is not enabled"),
+        "baseStationHumanDetectionSwitch":
+            MessageLookupByLibrary.simpleMessage("Humanoid detection switch"),
+        "basicSetting": MessageLookupByLibrary.simpleMessage("Basic Settings"),
+        "blueToothPermissionCancelTips": MessageLookupByLibrary.simpleMessage(
+            "Without the permission to scan nearby Bluetooth devices, you cannot perform network configuration, search, or other operations using Bluetooth."),
+        "bluetooth": MessageLookupByLibrary.simpleMessage("add via BT"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "cancelBtn": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "cancelShare": MessageLookupByLibrary.simpleMessage("Cancel Share"),
+        "cancelShareContent": m0,
+        "cancelShareFailed":
+            MessageLookupByLibrary.simpleMessage("Cancel share failed"),
+        "cancelShareSuccess":
+            MessageLookupByLibrary.simpleMessage("Cancel share success"),
+        "check": MessageLookupByLibrary.simpleMessage("confirm"),
+        "clickToShare": MessageLookupByLibrary.simpleMessage("Tap to share"),
+        "cloudDownload":
+            MessageLookupByLibrary.simpleMessage("Cloud Storage Download"),
+        "cloudList": MessageLookupByLibrary.simpleMessage("Cloud Playback"),
+        "cloudVideo": MessageLookupByLibrary.simpleMessage("Cloud Short Video"),
+        "codeHint": MessageLookupByLibrary.simpleMessage("verification code"),
+        "confirmBtn": MessageLookupByLibrary.simpleMessage("Confirm"),
+        "confirmShare": MessageLookupByLibrary.simpleMessage("Confirm Share"),
+        "confirmShareContent": m1,
+        "countDown": m2,
+        "customerServiceCenter":
+            MessageLookupByLibrary.simpleMessage("Customer Service Center"),
+        "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "dev": MessageLookupByLibrary.simpleMessage("Device"),
+        "devInfo": MessageLookupByLibrary.simpleMessage("device info"),
+        "devName": MessageLookupByLibrary.simpleMessage("device name"),
+        "devSN": MessageLookupByLibrary.simpleMessage("device serial No"),
+        "device": MessageLookupByLibrary.simpleMessage("Device"),
+        "deviceAddConnectBleSuccess": MessageLookupByLibrary.simpleMessage(
+            "Connect Bluetooth device successfully!"),
+        "deviceAddConnectBleTip1": MessageLookupByLibrary.simpleMessage(
+            "1.Connect Bluetooth device successfully!"),
+        "deviceAddConnectBleTip2": MessageLookupByLibrary.simpleMessage(
+            "2.Start sending information to the device..."),
+        "deviceAddConnectBleTip3": MessageLookupByLibrary.simpleMessage(
+            "2.Received the information successfully!"),
+        "deviceAddConnectBleTip4": MessageLookupByLibrary.simpleMessage(
+            "3.Waiting for devices to connect to the router..."),
+        "deviceAddConnectBleTip5": MessageLookupByLibrary.simpleMessage(
+            "3.The distribution network is successful!"),
+        "deviceAddConnectBledDisconnected":
+            MessageLookupByLibrary.simpleMessage("Bluetooth Disconnected"),
+        "deviceBluetoothCantConnect":
+            MessageLookupByLibrary.simpleMessage("Cannot connect to Bluetooth"),
+        "deviceFirmwareUpgrade":
+            MessageLookupByLibrary.simpleMessage("Device Firmware Upgrade"),
+        "deviceList": MessageLookupByLibrary.simpleMessage("Device List"),
+        "deviceNoMemoryCard": MessageLookupByLibrary.simpleMessage(
+            "The device does not have a storage card"),
+        "deviceReset": MessageLookupByLibrary.simpleMessage("Device Reset"),
+        "deviceResetTip": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to factory reset the device?"),
+        "deviceRestart": MessageLookupByLibrary.simpleMessage("Device Restart"),
+        "deviceRestartTip": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to restart the device?"),
+        "deviceShare": MessageLookupByLibrary.simpleMessage("Device Share"),
+        "download": MessageLookupByLibrary.simpleMessage("Download Management"),
+        "factoryResetAndDeleteDev": MessageLookupByLibrary.simpleMessage(
+            "Factory reset and delete device"),
+        "firmwareCheckUpdate":
+            MessageLookupByLibrary.simpleMessage("Check for Updates"),
+        "firmwareChecking": MessageLookupByLibrary.simpleMessage("Checking..."),
+        "firmwareCurrentVersion":
+            MessageLookupByLibrary.simpleMessage("Current Version"),
+        "firmwareDownloadFailed":
+            MessageLookupByLibrary.simpleMessage("Firmware download failed"),
+        "firmwareDownloadFile":
+            MessageLookupByLibrary.simpleMessage("Downloading firmware"),
+        "firmwareDownloadSuccess":
+            MessageLookupByLibrary.simpleMessage("Firmware download complete"),
+        "firmwareDownloadingToFirmware": MessageLookupByLibrary.simpleMessage(
+            "Downloading firmware file to local"),
+        "firmwareLatest":
+            MessageLookupByLibrary.simpleMessage("Already up to date"),
+        "firmwareLocalUpgrade":
+            MessageLookupByLibrary.simpleMessage("Local Upgrade"),
+        "firmwareNewVersion":
+            MessageLookupByLibrary.simpleMessage("New Version"),
+        "firmwareNoLocalFile": MessageLookupByLibrary.simpleMessage(
+            "No local firmware file found"),
+        "firmwareOnlineUpgrade":
+            MessageLookupByLibrary.simpleMessage("Online Upgrade"),
+        "firmwarePidFail": MessageLookupByLibrary.simpleMessage(
+            "Failed to get PID, unable to check for updates"),
+        "firmwareSelectLocalFile":
+            MessageLookupByLibrary.simpleMessage("Select Local Firmware File"),
+        "firmwareSendFile":
+            MessageLookupByLibrary.simpleMessage("Sending firmware to device"),
+        "firmwareUpgradeAvailable":
+            MessageLookupByLibrary.simpleMessage("New version available"),
+        "firmwareUpgradeConfirm": MessageLookupByLibrary.simpleMessage(
+            "Are you sure to upgrade the device firmware?"),
+        "firmwareUpgradeFailed":
+            MessageLookupByLibrary.simpleMessage("Upgrade failed"),
+        "firmwareUpgradeNow":
+            MessageLookupByLibrary.simpleMessage("Upgrade Now"),
+        "firmwareUpgradeSuccess": MessageLookupByLibrary.simpleMessage(
+            "Upgrade successful, restarting..."),
+        "firmwareUpgradeTip": MessageLookupByLibrary.simpleMessage(
+            "Do not disconnect device power during upgrade"),
+        "firmwareUpgrading": MessageLookupByLibrary.simpleMessage("Upgrading"),
+        "firmwareVersionCheckFailed":
+            MessageLookupByLibrary.simpleMessage("Version check failed"),
+        "forgotPwd": MessageLookupByLibrary.simpleMessage("Forgot password"),
+        "getCode": MessageLookupByLibrary.simpleMessage("GET CODE"),
+        "goLogin": MessageLookupByLibrary.simpleMessage(
+            "has account yet, go to login page"),
+        "goPhoneRegister":
+            MessageLookupByLibrary.simpleMessage("try phone register"),
+        "goRegister": MessageLookupByLibrary.simpleMessage(
+            "do not have an account, register new one"),
+        "hd": MessageLookupByLibrary.simpleMessage("HD"),
+        "image": MessageLookupByLibrary.simpleMessage("image"),
+        "imageFlipLeftRight": MessageLookupByLibrary.simpleMessage(
+            "Flip the image left and right"),
+        "imageFlipUpDown":
+            MessageLookupByLibrary.simpleMessage("Flip the image up and down"),
+        "info": MessageLookupByLibrary.simpleMessage("User Info"),
+        "inputAccountHint":
+            MessageLookupByLibrary.simpleMessage("Enter username/phone/email"),
+        "invalidShareQR":
+            MessageLookupByLibrary.simpleMessage("Invalid share QR code"),
+        "labelDevSN": MessageLookupByLibrary.simpleMessage("Device SN"),
+        "labelDeviceName": MessageLookupByLibrary.simpleMessage("Device name"),
+        "lanSearch": MessageLookupByLibrary.simpleMessage("add via lan"),
+        "local": MessageLookupByLibrary.simpleMessage("en"),
+        "login": MessageLookupByLibrary.simpleMessage("Login"),
+        "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+        "mailHint": MessageLookupByLibrary.simpleMessage("mail"),
+        "mailPhone": MessageLookupByLibrary.simpleMessage("mail/phone"),
+        "mailRegister": MessageLookupByLibrary.simpleMessage("Mail Register"),
+        "mailTip": m3,
+        "mediaType": MessageLookupByLibrary.simpleMessage("media type"),
+        "memoryCardError":
+            MessageLookupByLibrary.simpleMessage("Abnormal storage card"),
+        "message": MessageLookupByLibrary.simpleMessage("message"),
+        "messageDetail": MessageLookupByLibrary.simpleMessage("Message Detail"),
+        "messageList": MessageLookupByLibrary.simpleMessage("Message List"),
+        "messageReporting":
+            MessageLookupByLibrary.simpleMessage("Message reporting"),
+        "mine": MessageLookupByLibrary.simpleMessage("Mine"),
+        "myDevice": MessageLookupByLibrary.simpleMessage("Mine"),
+        "name": MessageLookupByLibrary.simpleMessage("username"),
+        "nameHint":
+            MessageLookupByLibrary.simpleMessage("username/email/phone"),
+        "newPwd": MessageLookupByLibrary.simpleMessage("new password"),
+        "noDevice": MessageLookupByLibrary.simpleMessage("No Device Available"),
+        "noFound": MessageLookupByLibrary.simpleMessage("No Device Search"),
+        "noPermissionTip":
+            MessageLookupByLibrary.simpleMessage("No permission"),
+        "noPhoneMailTip": MessageLookupByLibrary.simpleMessage(
+            "Your account is not bound to any email or phone number. Clicking the button will directly cancel the account"),
+        "noSDCardTips": MessageLookupByLibrary.simpleMessage(
+            "No SD card detected, can\'t record 24 hours recording."),
+        "noSharedAccount":
+            MessageLookupByLibrary.simpleMessage("No shared accounts"),
+        "normalAlarm": MessageLookupByLibrary.simpleMessage("Normal Alarm"),
+        "nothing": MessageLookupByLibrary.simpleMessage("Nothing!"),
+        "on": MessageLookupByLibrary.simpleMessage("open"),
+        "onlyFactoryReset":
+            MessageLookupByLibrary.simpleMessage("Factory reset only"),
+        "operator_failed":
+            MessageLookupByLibrary.simpleMessage("Operation failed"),
+        "other": MessageLookupByLibrary.simpleMessage("other setting"),
+        "pendingShareDevices":
+            MessageLookupByLibrary.simpleMessage("Pending Share Devices"),
+        "permAlarmPush": MessageLookupByLibrary.simpleMessage("Alarm Push"),
+        "permDeviceConfig":
+            MessageLookupByLibrary.simpleMessage("Device Config"),
+        "permIntercom": MessageLookupByLibrary.simpleMessage("Intercom"),
+        "permSdRecord": MessageLookupByLibrary.simpleMessage("SD Card Record"),
+        "phone": MessageLookupByLibrary.simpleMessage("phone no"),
+        "phoneMailTip": m4,
+        "phoneRegister": MessageLookupByLibrary.simpleMessage("Phone Register"),
+        "phoneRule": MessageLookupByLibrary.simpleMessage(
+            "Overseas mobile phone numbers need to add area code. eg:+1:80998098979"),
+        "phoneTip": m5,
+        "preview": MessageLookupByLibrary.simpleMessage("preview"),
+        "privacyPermissionBluetooth":
+            MessageLookupByLibrary.simpleMessage("Bluetooth Access Permission"),
+        "privacyPermissionDevNearbyContent":
+            MessageLookupByLibrary.simpleMessage(
+                "Used to search for nearby Bluetooth devices or other devices"),
+        "pwdFindBack":
+            MessageLookupByLibrary.simpleMessage("find back password"),
+        "pwdHint": MessageLookupByLibrary.simpleMessage("password"),
+        "pwdQuestion":
+            MessageLookupByLibrary.simpleMessage("set security question"),
+        "pwdRule": MessageLookupByLibrary.simpleMessage(
+            "The password must be 8~64 characters, including uppercase/lowercase letters, numbers and special characters. Allow symbols: \'!@#%^&*()_[]{}?/.<>, \'\' ; : -\'"),
+        "qrCodeShare": MessageLookupByLibrary.simpleMessage("QR Code Share"),
+        "qrScan": MessageLookupByLibrary.simpleMessage("Align The QR Code"),
+        "rebootFailed": MessageLookupByLibrary.simpleMessage("Restart failed"),
+        "rebootSuccess":
+            MessageLookupByLibrary.simpleMessage("Device restarting..."),
+        "recordAudio": MessageLookupByLibrary.simpleMessage("Audio Recording"),
+        "recordClip": MessageLookupByLibrary.simpleMessage("Video Segment"),
+        "recordList": m6,
+        "recordMode": MessageLookupByLibrary.simpleMessage("REC Button"),
+        "recordQuality":
+            MessageLookupByLibrary.simpleMessage("Recording Quality"),
+        "recordQualityBad":
+            MessageLookupByLibrary.simpleMessage("Relatively Poor"),
+        "recordQualityBestGood": MessageLookupByLibrary.simpleMessage("Best"),
+        "recordQualityGood": MessageLookupByLibrary.simpleMessage("Good"),
+        "recordQualityNormal": MessageLookupByLibrary.simpleMessage("General"),
+        "recordQualityVeryBad": MessageLookupByLibrary.simpleMessage("Poor"),
+        "recordQualityVeryGood": MessageLookupByLibrary.simpleMessage("Better"),
+        "recordSetting":
+            MessageLookupByLibrary.simpleMessage("Video recording settings"),
+        "refuseFailed":
+            MessageLookupByLibrary.simpleMessage("Refuse share failed"),
+        "refuseShare": MessageLookupByLibrary.simpleMessage("Refuse"),
+        "refuseSuccess":
+            MessageLookupByLibrary.simpleMessage("Refuse share success"),
+        "reset": MessageLookupByLibrary.simpleMessage("Reset"),
+        "resetDevPwd":
+            MessageLookupByLibrary.simpleMessage("reset device password"),
+        "resetFailed":
+            MessageLookupByLibrary.simpleMessage("Factory reset failed"),
+        "resetPwd": MessageLookupByLibrary.simpleMessage("Reset Password"),
+        "resetSuccess": MessageLookupByLibrary.simpleMessage(
+            "Factory reset successful, restarting..."),
+        "restartScan": MessageLookupByLibrary.simpleMessage("restart scan"),
+        "routeSetting": MessageLookupByLibrary.simpleMessage("Route Setting"),
+        "save": MessageLookupByLibrary.simpleMessage("Save"),
+        "scanShareDevice":
+            MessageLookupByLibrary.simpleMessage("Scan to add shared device"),
+        "sd": MessageLookupByLibrary.simpleMessage("SD"),
+        "sdList": MessageLookupByLibrary.simpleMessage("Card Storage Album"),
+        "sdkVersion":
+            MessageLookupByLibrary.simpleMessage("Current SDK version"),
+        "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "searchFailed": MessageLookupByLibrary.simpleMessage("Search failed"),
+        "selectAll": MessageLookupByLibrary.simpleMessage("SelectAll"),
+        "setting": MessageLookupByLibrary.simpleMessage("Setting"),
+        "share": MessageLookupByLibrary.simpleMessage("Share"),
+        "shareAccepted": MessageLookupByLibrary.simpleMessage("Accepted"),
+        "shareDevice": MessageLookupByLibrary.simpleMessage("Share"),
+        "shareExpired": MessageLookupByLibrary.simpleMessage("Expired"),
+        "shareFailed": MessageLookupByLibrary.simpleMessage("Share failed"),
+        "shareFrom": MessageLookupByLibrary.simpleMessage("Shared from"),
+        "sharePending": MessageLookupByLibrary.simpleMessage("Pending"),
+        "sharePermission":
+            MessageLookupByLibrary.simpleMessage("Share Permission"),
+        "shareQRCode": MessageLookupByLibrary.simpleMessage("Share QR Code"),
+        "shareQRTips": MessageLookupByLibrary.simpleMessage(
+            "Scan QR code to add device share"),
+        "shareRejected": MessageLookupByLibrary.simpleMessage("Rejected"),
+        "shareSuccess": MessageLookupByLibrary.simpleMessage("Share success"),
+        "shareTo": MessageLookupByLibrary.simpleMessage("Share to"),
+        "sharedAccounts":
+            MessageLookupByLibrary.simpleMessage("Shared Accounts"),
+        "smsLogin": MessageLookupByLibrary.simpleMessage("SmsLogin"),
+        "startAdd": MessageLookupByLibrary.simpleMessage("start distribute"),
+        "startScan": MessageLookupByLibrary.simpleMessage("start scan"),
+        "stopScan": MessageLookupByLibrary.simpleMessage("stop scan"),
+        "storageManagement":
+            MessageLookupByLibrary.simpleMessage("storage management"),
+        "toolsFeedbackLog":
+            MessageLookupByLibrary.simpleMessage("Feedback Log"),
+        "tr_common_download_management":
+            MessageLookupByLibrary.simpleMessage("Download management"),
+        "tr_pet_function_record_start":
+            MessageLookupByLibrary.simpleMessage("Click to Start Recording"),
+        "tr_pet_function_recording_state": MessageLookupByLibrary.simpleMessage(
+            "Recording in progress. Click again to stop recording."),
+        "tr_pet_setting_sound_record_function":
+            MessageLookupByLibrary.simpleMessage("Record summoning sound"),
+        "tr_recording": MessageLookupByLibrary.simpleMessage("Recording..."),
+        "tr_settings_alarm_beep":
+            MessageLookupByLibrary.simpleMessage("Device alarm beep"),
+        "tr_settings_alarm_bell_customize":
+            MessageLookupByLibrary.simpleMessage("Custom voice"),
+        "tr_settings_alarm_bell_select":
+            MessageLookupByLibrary.simpleMessage("Device bell selection"),
+        "userNotFound": MessageLookupByLibrary.simpleMessage("User not found"),
+        "verCodeLogin":
+            MessageLookupByLibrary.simpleMessage("Verification code login"),
+        "version": MessageLookupByLibrary.simpleMessage("Version"),
+        "video": MessageLookupByLibrary.simpleMessage("record"),
+        "wifi": MessageLookupByLibrary.simpleMessage("add via wifi"),
+        "wifiPwdHint": MessageLookupByLibrary.simpleMessage("Wifi Password")
+      };
 }

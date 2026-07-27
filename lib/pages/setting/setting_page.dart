@@ -26,6 +26,7 @@ class _SettingPageState extends State<SettingPage> {
     (context) => TR.current.accountCancel,
     (context) => TR.current.version,
     (context) => TR.current.toolsFeedbackLog,
+    // (context) => TR.current.customerServiceCenter,
   ];
 
   String _versionInfo = '';
@@ -130,6 +131,11 @@ class _SettingPageState extends State<SettingPage> {
           return;
         }
         Share.shareXFiles([XFile(zipFilePath)]);
+        break;
+
+      case "客服中心":
+      case "Customer Service Center":
+        // TODO: 跳转客服中心
         break;
     }
   }
