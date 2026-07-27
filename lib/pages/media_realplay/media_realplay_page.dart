@@ -28,10 +28,11 @@ import '../../models/user_instance.dart';
 import '../record/cloud_record_list_page.dart';
 
 class MediaRealPlayPage extends StatefulWidget {
-  const MediaRealPlayPage({Key? key, required this.deviceId, required this.type}) : super(key: key);
+  const MediaRealPlayPage({Key? key, required this.deviceId, required this.type, required this.pid}) : super(key: key);
 
   final String deviceId;
   final int type;
+  final String pid;
 
   @override
   State<MediaRealPlayPage> createState() => _MediaRealPlayPageState();
@@ -63,7 +64,8 @@ class _MediaRealPlayPageState extends State<MediaRealPlayPage> {
                           context.pushNamed('device_config', pathParameters: {
                             'devId': widget.deviceId,
                             'channel': (-1).toString(),
-                            'type': widget.type.toString()
+                            'type': widget.type.toString(),
+                            'pid': widget.pid,
                           });
                           // Navigator.of(context).pushNamed('/device_config',
                           //     arguments: {'deviceId': widget.deviceId, 'channel': -1});

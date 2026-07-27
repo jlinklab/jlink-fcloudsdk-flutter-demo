@@ -234,6 +234,7 @@ class _DeviceTabPageState extends State<DeviceTabPage> {
                                           pathParameters: {
                                             'devId': device.uuid,
                                             'type': widget.type.toString(),
+                                            'pid': device.pid.isNotEmpty ? device.pid : '-1',
                                           });
                                     },
                                     child: Text(TR.current.preview)),

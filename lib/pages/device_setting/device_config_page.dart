@@ -14,17 +14,19 @@ import 'package:xcloudsdk_flutter_example/pages/device_setting/device_info_page.
 import 'package:xcloudsdk_flutter_example/pages/device_setting/device_record_set_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/device_storage_manage_page.dart';
 import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
+import 'package:xcloudsdk_flutter_example/pages/device_setting/device_firmware_upgrade_page.dart';
 
 typedef GetTitle = String Function(BuildContext context);
 
 // ignore: must_be_immutable
 class DeviceConfigPage extends StatefulWidget {
-  DeviceConfigPage({Key? key, required this.deviceId, required this.channel, required this.type})
+  DeviceConfigPage({Key? key, required this.deviceId, required this.channel, required this.type, required this.pid})
       : super(key: key);
 
   final String deviceId;
   final int channel;
   final int type;
+  final String pid;
 
   List<GetTitle> dataSource = [
     (context) => TR.current.basicSetting,
@@ -35,6 +37,7 @@ class DeviceConfigPage extends StatefulWidget {
     (context) => TR.current.devInfo,
     (context) => TR.current.deviceRestart,
     (context) => TR.current.deviceReset,
+    (context) => TR.current.deviceFirmwareUpgrade,
   ];
 
   @override
@@ -117,10 +120,22 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
         return DeviceBasicPage(
             deviceId: widget.deviceId, channel: widget.channel);
       }));
-    } else if (title == "设备重启" || title == "Device Restart") {
+    } else if (title == TR.current.deviceRestart) {
       _showRebootConfirmDialog(context);
-    } else if (title == "设备重置" || title == "Device Reset") {
+    } else if (title == TR.current.deviceReset) {
       _showResetConfirmDialog(context);
+    } else if (title == TR.current.deviceFirmwareUpgrade) {
+      if (widget.pid == '-1') {
+        KToast.show(status: TR.current.firmwarePidFail);
+        return;
+      }
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (BuildContext context) {
+        return DeviceFirmwareUpgradePage(
+          deviceId: widget.deviceId,
+          pid: widget.pid != '-1' ? widget.pid : '',
+        );
+      }));
     }
   }
 
