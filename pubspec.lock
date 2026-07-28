@@ -1625,10 +1625,10 @@ packages:
     dependency: "direct main"
     description:
       name: xcloudsdk_flutter
-      sha256: ae730ae921a2a43d5ba29a48db87616876b39bcf71b137fa3b601dd063f7eaa6
+      sha256: "2fcdd440a4dc5bff2d808f28f7c3134b56fda757a2042addfe8f64f5d9032ba6"
       url: "http://139.9.235.221:8000"
     source: hosted
-    version: "3.0.5"
+    version: "3.0.6"
   xdg_directories:
     dependency: transitive
     description:

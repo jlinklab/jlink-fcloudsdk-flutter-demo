@@ -1,25 +1,21 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter/media/media_player.dart';
 
 import '../../common/code_prase.dart';
-import '../../common/common_path.dart';
 import '../../common/named_route.dart';
 import '../../generated/l10n.dart';
 import '../../models/user_instance.dart';
 import '../../views/calendar/rf_calendar.dart';
 import '../../views/play_control_view.dart';
 import '../../views/toast/toast.dart';
-import '../download_manage/cloud_download_manage_page.dart';
-
-import '../download_manage/model/record_file.dart';
 import 'controller/clould_record_controller.dart';
 import 'model/model.dart';
 import 'record_download_manager_page.dart';
