@@ -480,21 +480,6 @@ class TR {
     return Intl.message('保存', name: 'save', desc: '', args: []);
   }
 
-  /// `保存失败`
-  String get saveFailed {
-    return Intl.message('保存失败', name: 'saveFailed', desc: '', args: []);
-  }
-
-  /// `保存成功`
-  String get saveSuccess {
-    return Intl.message('保存成功', name: 'saveSuccess', desc: '', args: []);
-  }
-
-  /// `保存中...`
-  String get saving {
-    return Intl.message('保存中...', name: 'saving', desc: '', args: []);
-  }
-
   /// `找回设备密码`
   String get pwdFindBack {
     return Intl.message('找回设备密码', name: 'pwdFindBack', desc: '', args: []);
@@ -1328,6 +1313,66 @@ class TR {
   /// `重启失败`
   String get rebootFailed {
     return Intl.message('重启失败', name: 'rebootFailed', desc: '', args: []);
+  }
+
+  /// `保存成功`
+  String get saveSuccess {
+    return Intl.message('保存成功', name: 'saveSuccess', desc: '', args: []);
+  }
+
+  /// `保存失败`
+  String get saveFailed {
+    return Intl.message('保存失败', name: 'saveFailed', desc: '', args: []);
+  }
+
+  /// `保存中...`
+  String get saving {
+    return Intl.message('保存中...', name: 'saving', desc: '', args: []);
+  }
+
+  /// `确定要恢复出厂设置吗？`
+  String get deviceResetTip {
+    return Intl.message(
+      '确定要恢复出厂设置吗？',
+      name: 'deviceResetTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `恢复出厂设置并删除设备`
+  String get factoryResetAndDeleteDev {
+    return Intl.message(
+      '恢复出厂设置并删除设备',
+      name: 'factoryResetAndDeleteDev',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `仅恢复出厂设置`
+  String get onlyFactoryReset {
+    return Intl.message(
+      '仅恢复出厂设置',
+      name: 'onlyFactoryReset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `恢复出厂设置成功，重启中...`
+  String get resetSuccess {
+    return Intl.message(
+      '恢复出厂设置成功，重启中...',
+      name: 'resetSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `恢复出厂设置失败`
+  String get resetFailed {
+    return Intl.message('恢复出厂设置失败', name: 'resetFailed', desc: '', args: []);
   }
 }
 

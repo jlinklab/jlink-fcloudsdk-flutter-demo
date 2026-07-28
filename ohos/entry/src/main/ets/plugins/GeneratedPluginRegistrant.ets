@@ -11,8 +11,8 @@ import PackageInfoPlugin from 'package_info_plus';
 import DeviceInfoPlusPlugin from 'device_info_plus';
 import GeolocatorOhosPlugin from 'flutter_geolocator_ohos';
 import RecordOhosPlugin from 'record_ohos';
-import VideoThumbnaiOhosPlugin from 'video_thumbnail';
 import ScanPlugin from 'scan';
+import VideoThumbnaiOhosPlugin from 'video_thumbnail';
 import QrCodeScannerOhosPlugin from 'qr_code_scanner';
 import XCloudFlutterPlugin from 'xcloudsdk_flutter';
 
@@ -40,8 +40,8 @@ export class GeneratedPluginRegistrant {
       flutterEngine.getPlugins()?.add(new DeviceInfoPlusPlugin());
       flutterEngine.getPlugins()?.add(new GeolocatorOhosPlugin());
       flutterEngine.getPlugins()?.add(new RecordOhosPlugin());
-      flutterEngine.getPlugins()?.add(new VideoThumbnaiOhosPlugin());
       flutterEngine.getPlugins()?.add(new ScanPlugin());
+      flutterEngine.getPlugins()?.add(new VideoThumbnaiOhosPlugin());
       flutterEngine.getPlugins()?.add(new QrCodeScannerOhosPlugin());
       flutterEngine.getPlugins()?.add(new XCloudFlutterPlugin());
     } catch (e) {

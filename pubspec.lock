@@ -356,6 +356,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "5.3.3"
+  event_bus:
+    dependency: "direct main"
+    description:
+      name: event_bus
+      sha256: "1a55e97923769c286d295240048fc180e7b0768902c3c2e869fe059aafa15304"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -1229,10 +1237,10 @@ packages:
   scan:
     dependency: "direct main"
     description:
-      path: scan
-      ref: "16c6aa327ac88463dfd3acfc4104091dd4a87f6d"
-      resolved-ref: "16c6aa327ac88463dfd3acfc4104091dd4a87f6d"
-      url: "http://10.2.5.201/FlutterPlugin/hos_flutter_packages.git"
+      path: "."
+      ref: HEAD
+      resolved-ref: "03def2616e6c8579b889e99a5da5c72b74764006"
+      url: "https://gitcode.com/CPF-Flutter/fluttertpc_scan.git"
     source: git
     version: "1.6.0"
   scrollable_positioned_list:
