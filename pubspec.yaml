@@ -37,11 +37,6 @@ dependencies:
     hosted: http://139.9.235.221:8000/
     version: 3.0.6
 
-  #二维码扫描
-  qr_code_scanner:
-    hosted: http://139.9.235.221:8000/
-    version: 0.7.0
-
   flutter_localizations:
     sdk: flutter
 
@@ -134,6 +129,11 @@ dependencies:
   image_gallery_saver:
     git:
       url: "https://gitcode.com/openharmony-sig/flutter_image_gallery_saver.git"
+
+  #二维码扫描
+  qr_code_scanner:
+    git:
+      url: "https://gitcode.com/CPF-Flutter/fluttertpc_qr_code_scanner.git"
 
 dependency_overrides:
   http: 0.13.6
