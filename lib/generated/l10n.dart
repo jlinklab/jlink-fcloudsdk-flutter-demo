@@ -480,21 +480,6 @@ class TR {
     return Intl.message('保存', name: 'save', desc: '', args: []);
   }
 
-  /// `保存失败`
-  String get saveFailed {
-    return Intl.message('保存失败', name: 'saveFailed', desc: '', args: []);
-  }
-
-  /// `保存成功`
-  String get saveSuccess {
-    return Intl.message('保存成功', name: 'saveSuccess', desc: '', args: []);
-  }
-
-  /// `保存中...`
-  String get saving {
-    return Intl.message('保存中...', name: 'saving', desc: '', args: []);
-  }
-
   /// `找回设备密码`
   String get pwdFindBack {
     return Intl.message('找回设备密码', name: 'pwdFindBack', desc: '', args: []);
@@ -1328,6 +1313,21 @@ class TR {
   /// `重启失败`
   String get rebootFailed {
     return Intl.message('重启失败', name: 'rebootFailed', desc: '', args: []);
+  }
+
+  /// `保存成功`
+  String get saveSuccess {
+    return Intl.message('保存成功', name: 'saveSuccess', desc: '', args: []);
+  }
+
+  /// `保存失败`
+  String get saveFailed {
+    return Intl.message('保存失败', name: 'saveFailed', desc: '', args: []);
+  }
+
+  /// `保存中...`
+  String get saving {
+    return Intl.message('保存中...', name: 'saving', desc: '', args: []);
   }
 
   /// `确定要恢复出厂设置吗？`

@@ -1123,10 +1123,11 @@ packages:
   qr_code_scanner:
     dependency: "direct main"
     description:
-      name: qr_code_scanner
-      sha256: "639606c0dde79d02968dec712fcc3973694ffcbc91c7fe13759639c49f3c2b04"
-      url: "http://139.9.235.221:8000"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: fb9104513a3e7fadc3aacb5ab6a7c9805ac6a2fc
+      url: "https://gitcode.com/CPF-Flutter/fluttertpc_qr_code_scanner.git"
+    source: git
     version: "0.7.0"
   qr_flutter:
     dependency: "direct main"
@@ -1625,10 +1626,10 @@ packages:
     dependency: "direct main"
     description:
       name: xcloudsdk_flutter
-      sha256: ae730ae921a2a43d5ba29a48db87616876b39bcf71b137fa3b601dd063f7eaa6
-      url: "http://139.9.235.221:8000"
+      sha256: "40976f368dbaaec36beaf7d2955749f42458641265cb70ea7f590180235a020c"
+      url: "https://repo.jftechsoft.com/pub/"
     source: hosted
-    version: "3.0.5"
+    version: "3.0.7"
   xdg_directories:
     dependency: transitive
     description:
