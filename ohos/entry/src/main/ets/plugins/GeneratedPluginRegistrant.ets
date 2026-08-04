@@ -13,7 +13,6 @@ import GeolocatorOhosPlugin from 'flutter_geolocator_ohos';
 import RecordOhosPlugin from 'record_ohos';
 import ScanPlugin from 'scan';
 import VideoThumbnaiOhosPlugin from 'video_thumbnail';
-import QrCodeScannerOhosPlugin from 'qr_code_scanner';
 import XCloudFlutterPlugin from 'xcloudsdk_flutter';
 
 /**
@@ -42,7 +41,6 @@ export class GeneratedPluginRegistrant {
       flutterEngine.getPlugins()?.add(new RecordOhosPlugin());
       flutterEngine.getPlugins()?.add(new ScanPlugin());
       flutterEngine.getPlugins()?.add(new VideoThumbnaiOhosPlugin());
-      flutterEngine.getPlugins()?.add(new QrCodeScannerOhosPlugin());
       flutterEngine.getPlugins()?.add(new XCloudFlutterPlugin());
     } catch (e) {
       Log.e(

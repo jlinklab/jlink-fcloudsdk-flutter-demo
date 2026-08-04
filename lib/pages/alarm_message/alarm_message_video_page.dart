@@ -108,6 +108,8 @@ class _AlarmMsgVideoState extends State<AlarmMsgVideo>
                     AlarmPlayToolBar(
                       videoLength: videoLength,
                       currentTime: currentTime,
+                      onDragStart: () {},
+                      onDragEnd: (double value) {},
                     ),
                   ]
           ],
