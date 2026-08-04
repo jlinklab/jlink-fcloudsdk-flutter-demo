@@ -252,11 +252,11 @@ class CloudRecordController extends ChangeNotifier {
   }
 
   ///切换时间
-  void selectDateTime(DateTime dateTime) {
+  Future<void> selectDateTime(DateTime dateTime) async {
     if (dateTime.isAtSameDayAs(currentDateTime)) {
       return;
     }
-    mediaController.stop();
+    await mediaController.stop();
     currentDateTime = dateTime;
     currentPlayRecord = null;
     getCloudRecords();
@@ -293,9 +293,5 @@ class CloudRecordController extends ChangeNotifier {
     //   startCloudRecordByUrl(record: records[minIndex]);
     // }
     mediaController.seekTo(dateTime);
-  }
-
-  void seekTo(DateTime time) {
-    mediaController.seekTo(time);
   }
 }

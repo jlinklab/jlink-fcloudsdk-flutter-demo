@@ -9,8 +9,8 @@ class AlarmPlayToolBar extends StatefulWidget {
     required this.videoLength,
     this.currentTime = 0,
     this.needShowVideoLength = true,
-    required this.onDragStart,
-    required this.onDragEnd,
+    this.onDragStart,
+    this.onDragEnd,
   }) : super(key: key);
 
   ///视频总的长度
@@ -21,8 +21,8 @@ class AlarmPlayToolBar extends StatefulWidget {
 
   bool needShowVideoLength;
 
-  final VoidCallback onDragStart;
-  final ValueChanged<double> onDragEnd;
+  final VoidCallback? onDragStart;
+  final ValueChanged<double>? onDragEnd;
 
   @override
   State<AlarmPlayToolBar> createState() => _AlarmPlayToolBarState();
@@ -51,11 +51,11 @@ class _AlarmPlayToolBarState extends State<AlarmPlayToolBar> {
             value: widget.currentTime,
             onChangeStart: (_) {
               dragging = true;
-              widget.onDragStart.call();
+              widget.onDragStart?.call();
             },
             onChangeEnd: (value) {
               dragging = false;
-              widget.onDragEnd.call(value);
+              widget.onDragEnd?.call(value);
             },
             onChanged: (value) {},
           ),

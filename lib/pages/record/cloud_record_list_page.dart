@@ -246,7 +246,7 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
                                                   .beginTime!
                                                   .millisecondsSinceEpoch +
                                               value.toInt() * 1000);
-                                  controller.seekTo(time);
+                                  controller.mediaController.seekTo(time);
                                 },
                               ),
                             )),
