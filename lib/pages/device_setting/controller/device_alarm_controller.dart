@@ -3,11 +3,16 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter/api/mobile_systeminfo/MobileSystemInfo_api.dart';
 import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
+import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
+import 'package:xcloudsdk_flutter_example/manager/push_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/device_alarm_custom_voice_page.dart';
+import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
 import 'package:xcloudsdk_flutter_example/views/x_single_selector.dart';
 
 import '../../../models/user_instance.dart';
@@ -100,10 +105,9 @@ class DeviceAlarmController extends ChangeNotifier {
 
   _queryAlarmSubscribe() async {
     //获取订阅状态
-    Map<String, dynamic> response =
-        await JFApi.xcAlarmMessage.xcGetPhoneToken();
+    String jfPushToken = await PushManager.instance.getJfPushToken();
     List<String> tokenList = [];
-    tokenList.add(response['token']);
+    tokenList.add(jfPushToken);
     AlarmSubscribebaseBody sn = AlarmSubscribebaseBody(sn: deviceId);
     List<AlarmSubscribebaseBody> snList = [];
     snList.add(sn);
@@ -188,43 +192,16 @@ class DeviceAlarmController extends ChangeNotifier {
     return;
   }
 
+  ///demo只支持杰峰推送，不支持厂商推送
   _onSetAlarmSubscribe({bool bShowLoading = false}) async {
     if (bShowLoading) {
       KToast.show();
     }
     try {
-      //获取订阅状态
-      Map<String, dynamic> response =
-          await JFApi.xcAlarmMessage.xcGetPhoneToken();
-      String token = response['token'];
       if (!isAlarmSubscribe) {
-        AlarmSubscribebaseBody body = AlarmSubscribebaseBody(sn: deviceId);
-        List<AlarmSubscribebaseBody> bodyList = [];
-        bodyList.add(body);
-        TokenListbaseElement element = TokenListbaseElement(token: token);
-        List<TokenListbaseElement> tokenList = [];
-        tokenList.add(element);
-        AlarmUnsubscribe model =
-            AlarmUnsubscribe(snlist: bodyList, tklist: tokenList);
-        await JFApi.xcAlarmMessage.xcUnsubscribeDevicesAlarmMessages(model);
+        await PushManager.instance.unsubscribe(deviceId);
       } else {
-        AlarmSubscribeBody body = AlarmSubscribeBody(sn: deviceId);
-        List<AlarmSubscribeBody> bodyList = [];
-        bodyList.add(body);
-
-        final package = await PackageInfo.fromPlatform();
-        String bundleId = package.packageName;
-
-        TokenListElement element = TokenListElement(
-            token: token, tokenType: response['tokenType'], bundleId: bundleId);
-        List<TokenListElement> tokenList = [];
-        tokenList.add(element);
-        AlarmSubscribe model = AlarmSubscribe(
-            snlist: bodyList,
-            tklist: tokenList,
-            userId: UserInfo.instance.userId);
-
-        await JFApi.xcAlarmMessage.xcSubscribeDeviceAlarmMessages(model);
+        await PushManager.instance.subscribe(deviceId);
       }
       if (bShowLoading) {
         KToast.dismiss();

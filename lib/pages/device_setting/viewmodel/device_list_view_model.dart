@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter_example/api/share_api.dart';
 import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
+import 'package:xcloudsdk_flutter_example/manager/push_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
-
-import '../../../models/user_instance.dart';
+import 'package:xcloudsdk_flutter_example/utils/push_notification.dart';
 
 /// 设备列表 UI 状态管理
 /// 仅负责驱动 UI 刷新，实际数据操作委托给 [DeviceManager] 单例
@@ -22,15 +22,23 @@ class DevListViewModel extends ChangeNotifier {
   List<Device> get shareDevs => DeviceManager.instance.shareDeviceList;
 
   /// 初始化报警服务
-  void _initAlarm() {
+  Future<void> _initAlarm() async {
+    // 下面的参数目前版本的XCloudSDK都不再校验了，传空即可，报警初始化也可以提前不需要等拿到账号密码
+    // {
+    //     "user": "",
+    //     "pwd": "",
+    //     "language": "",
+    //     "tk": "",
+    //     "userid": ""
+    // }
     AlarmMessageInitModel model = AlarmMessageInitModel(
       language: 'Chinese',
-      user: UserInfo.instance.userName,
-      pwd: UserInfo.instance.userPwd,
+      user: '',
+      pwd: '',
       tk: '',
       userid: '',
     );
-    JFApi.xcAlarmMessage.xcAlarmInit(model);
+    await JFApi.xcAlarmMessage.xcAlarmInit(model);
   }
 
   /// 开始监听设备状态变更
@@ -38,6 +46,11 @@ class DevListViewModel extends ChangeNotifier {
     DeviceManager.instance.startDeviceStateListener(
       onStateChanged: () => notifyListeners(),
     );
+
+    ///杰峰推送监听
+    AlarmMessageAPI().jfpushStream.listen((event) {
+      showNotificationFromJson(event);
+    });
   }
 
   /// 刷新设备列表

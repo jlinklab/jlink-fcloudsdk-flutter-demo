@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
 import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
+import 'package:xcloudsdk_flutter_example/manager/push_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/account/model/model.dart';
 import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
 
@@ -168,6 +169,10 @@ class UserInfo extends ChangeNotifier {
     if (UserInfo.instance.isLogin == false) {
       return;
     }
+    //取消报警订阅
+    PushManager.instance.unsubscribeBatch(
+        deviceIdList:
+            DeviceManager.instance.allDevices.map((e) => e.uuid).toList());
 
     if (isCancel) {
       await SharedPreferences.getInstance().then((preference) {
