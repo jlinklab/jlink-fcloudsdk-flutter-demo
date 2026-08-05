@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter_example/api/share_api.dart';
 import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
-import 'package:xcloudsdk_flutter_example/manager/push_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
 import 'package:xcloudsdk_flutter_example/utils/push_notification.dart';
 
