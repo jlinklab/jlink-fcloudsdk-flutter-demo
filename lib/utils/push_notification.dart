@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:xcloudsdk_flutter_example/utils/log_util.dart';
 
+import 'log_util.dart';
 import 'permission_utils.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
