@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-import 'package:xcloudsdk_flutter/api/alarm_message/model.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 
 import '../models/user_instance.dart';
@@ -36,7 +35,8 @@ class PushManager {
   ///单个订阅设备（只支持杰峰推送）
   Future<void> subscribe(String deviceId, {String? deviceName}) async {
     String jfPushToken = await getJfPushToken();
-    Device device = DeviceManager.instance.getDevice(deviceId: deviceId)!;
+    Device? device = DeviceManager.instance.getDevice(deviceId: deviceId);
+    if (device == null) return;
     AlarmSubscribeBody body =
         AlarmSubscribeBody(sn: deviceId, devName: device.nickname ?? deviceId);
     List<AlarmSubscribeBody> bodyList = [];

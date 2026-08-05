@@ -67,13 +67,13 @@ Future<void> showPushNotification({
     title,
     content,
     payload: payload,
-    NotificationDetails(
+    const NotificationDetails(
         android: AndroidNotificationDetails(
-          id,
-          title,
+          _channelId,
+          _channelName,
         ),
-        iOS: const DarwinNotificationDetails(),
-        ohos: const OhosNotificationDetails(
+        iOS: DarwinNotificationDetails(),
+        ohos: OhosNotificationDetails(
             OhosNotificationSlotType.SOCIAL_COMMUNICATION)),
   );
 }

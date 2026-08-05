@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter_example/api/share_api.dart';
@@ -9,6 +11,8 @@ import 'package:xcloudsdk_flutter_example/utils/push_notification.dart';
 /// 仅负责驱动 UI 刷新，实际数据操作委托给 [DeviceManager] 单例
 /// 外部类需要获取设备数据时，请直接使用 [DeviceManager.instance]
 class DevListViewModel extends ChangeNotifier {
+  StreamSubscription<String>? _pushSubscription;
+
   DevListViewModel() {
     _initAlarm();
     _startListening();
@@ -47,7 +51,7 @@ class DevListViewModel extends ChangeNotifier {
     );
 
     ///杰峰推送监听
-    AlarmMessageAPI().jfpushStream.listen((event) {
+    _pushSubscription = AlarmMessageAPI().jfpushStream.listen((event) {
       showNotificationFromJson(event);
     });
   }
@@ -78,6 +82,7 @@ class DevListViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    _pushSubscription?.cancel();
     DeviceManager.instance.stopDeviceStateListener();
     super.dispose();
   }
