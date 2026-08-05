@@ -239,7 +239,6 @@ class _RecordDownloadManagerPageState extends State<RecordDownloadManagerPage> {
     downloadHistoryListen = () {
       setState(() {});
     };
-    DownloadHistory.instance.getVideoRecordPath();
     DownloadHistory.instance.addListener(downloadHistoryListen);
     _records = DownloadHistory.instance
         .addToHistory(widget.deviceId, List.from(widget.records));
