@@ -31,6 +31,7 @@
     "connectivity_plus": "file:./har/connectivity_plus.har",
     "image_picker_ohos": "file:./har/image_picker_ohos.har",
     "scan": "file:./har/scan.har",
-    "qr_code_scanner": "file:./har/qr_code_scanner.har"
+    "qr_code_scanner": "file:./har/qr_code_scanner.har",
+    "image_gallery_saver": "file:./har/image_gallery_saver.har"
   }
 }

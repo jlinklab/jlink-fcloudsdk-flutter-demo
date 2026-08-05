@@ -42,6 +42,8 @@ class CloudRecordController extends ChangeNotifier {
 
   DateTime get position => _position;
 
+  CloudRecord? currentPlayRecord;
+
   set position(DateTime dateTime) {
     _position = dateTime;
 
@@ -120,7 +122,8 @@ class CloudRecordController extends ChangeNotifier {
       if (records.isNotEmpty) {
         // startCloudRecordByUrl(record: records[0]);
 
-        mediaController.startCloudPlayByTime();
+        mediaController.startCloudPlayByTime(
+            beginTime: records[0].beginTime, endTime: records[0].endTime);
       } else {
         KToast.show(status: '暂无录像');
       }
@@ -249,11 +252,13 @@ class CloudRecordController extends ChangeNotifier {
   }
 
   ///切换时间
-  void selectDateTime(DateTime dateTime) {
+  Future<void> selectDateTime(DateTime dateTime) async {
     if (dateTime.isAtSameDayAs(currentDateTime)) {
       return;
     }
+    await mediaController.stop();
     currentDateTime = dateTime;
+    currentPlayRecord = null;
     getCloudRecords();
     getRecordTimeline();
     notifyListeners();
@@ -261,6 +266,7 @@ class CloudRecordController extends ChangeNotifier {
 
   ///时间轴切换时间.查找最近文件进行播放
   void timelineChanged(DateTime dateTime) async {
+    currentPlayRecord = null;
     //判断当前时间是否有录像,若是存在录像,直接seek
     // CloudRecord? record = records.firstWhereOrNull((element) =>
     //     dateTime.millisecondsSinceEpoch <=
