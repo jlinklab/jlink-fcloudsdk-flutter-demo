@@ -35,6 +35,7 @@ class PushManager {
   ///单个订阅设备（只支持杰峰推送）
   Future<void> subscribe(String deviceId, {String? deviceName}) async {
     String jfPushToken = await getJfPushToken();
+    if (jfPushToken.isEmpty) return;
     Device? device = DeviceManager.instance.getDevice(deviceId: deviceId);
     if (device == null) return;
     AlarmSubscribeBody body =
@@ -55,6 +56,7 @@ class PushManager {
   ///单个取消订阅设备
   Future<void> unsubscribe(String deviceId) async {
     String jfPushToken = await getJfPushToken();
+    if (jfPushToken.isEmpty) return;
     AlarmSubscribebaseBody body = AlarmSubscribebaseBody(sn: deviceId);
     List<AlarmSubscribebaseBody> bodyList = [];
     bodyList.add(body);
@@ -79,11 +81,10 @@ class PushManager {
     List<TokenListElement> tokenList = [];
 
     String jfPushToken = await getJfPushToken();
-    if (jfPushToken.isNotEmpty) {
-      var elementJf = TokenListElement(
-          token: jfPushToken, tokenType: 'Android', bundleId: '');
-      tokenList.add(elementJf);
-    }
+    if (jfPushToken.isEmpty) return;
+    var elementJf = TokenListElement(
+        token: jfPushToken, tokenType: 'Android', bundleId: '');
+    tokenList.add(elementJf);
     try {
       var alarmSubscribe = AlarmSubscribe(
           snlist: bodyList,
@@ -93,7 +94,7 @@ class PushManager {
 
       await JFApi.xcAlarmMessage.xcSubscribeDeviceAlarmMessages(alarmSubscribe);
     } catch (e) {
-      //
+      debugPrint('批量订阅失败: $e');
     }
   }
 

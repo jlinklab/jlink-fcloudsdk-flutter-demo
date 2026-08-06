@@ -51,7 +51,7 @@ class DevListViewModel extends ChangeNotifier {
     );
 
     ///杰峰推送监听
-    _pushSubscription = AlarmMessageAPI().jfpushStream.listen((event) {
+    _pushSubscription = AlarmMessageAPI.instance.jfpushStream.listen((event) {
       showNotificationFromJson(event);
     });
   }

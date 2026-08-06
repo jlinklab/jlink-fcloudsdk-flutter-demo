@@ -39,7 +39,9 @@ class _ResetPwdPageState extends State<ResetPwdPage> {
         .then((value) {
       KToast.show(status: '账户密码重置成功,请重新登陆');
       //退出 重新登录
-      UserInfo.instance.quit(false);
+      UserInfo.instance.quit(false).catchError((error) {
+        KToast.show(status: '退出失败，请重试');
+      });
       KToast.dismiss();
     }).catchError((error) {
       KToast.show(status: kErrorMsg(error));

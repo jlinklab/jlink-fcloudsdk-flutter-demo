@@ -106,6 +106,7 @@ class DeviceAlarmController extends ChangeNotifier {
   _queryAlarmSubscribe() async {
     //获取订阅状态
     String jfPushToken = await PushManager.instance.getJfPushToken();
+    if (jfPushToken.isEmpty) return;
     List<String> tokenList = [];
     tokenList.add(jfPushToken);
     AlarmSubscribebaseBody sn = AlarmSubscribebaseBody(sn: deviceId);

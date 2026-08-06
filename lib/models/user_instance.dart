@@ -170,9 +170,14 @@ class UserInfo extends ChangeNotifier {
       return;
     }
     //取消报警订阅
-    PushManager.instance.unsubscribeBatch(
-        deviceIdList:
-            DeviceManager.instance.allDevices.map((e) => e.uuid).toList());
+    try {
+      await PushManager.instance.unsubscribeBatch(
+          deviceIdList:
+              DeviceManager.instance.allDevices.map((e) => e.uuid).toList());
+    } catch (e) {
+      debugPrint('退出登录取消订阅失败: $e， 不允许登出');
+      rethrow;
+    }
 
     if (isCancel) {
       await SharedPreferences.getInstance().then((preference) {
