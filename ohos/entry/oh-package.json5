@@ -24,6 +24,7 @@
     "image_picker_ohos": "file:../har/image_picker_ohos.har",
     "scan": "file:../har/scan.har",
     "qr_code_scanner": "file:../har/qr_code_scanner.har",
-    "image_gallery_saver": "file:../har/image_gallery_saver.har"
+    "image_gallery_saver": "file:../har/image_gallery_saver.har",
+    "flutter_local_notifications": "file:../har/flutter_local_notifications.har"
   }
 }

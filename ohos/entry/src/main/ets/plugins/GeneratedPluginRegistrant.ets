@@ -9,6 +9,7 @@ import ConnectivityPlugin from 'connectivity_plus';
 import SharePlusOhosPlugin from 'share_plus';
 import PackageInfoPlugin from 'package_info_plus';
 import DeviceInfoPlusPlugin from 'device_info_plus';
+import FlutterLocalNotificationsPlugin from 'flutter_local_notifications';
 import GeolocatorOhosPlugin from 'flutter_geolocator_ohos';
 import RecordOhosPlugin from 'record_ohos';
 import ScanPlugin from 'scan';
@@ -37,6 +38,7 @@ export class GeneratedPluginRegistrant {
       flutterEngine.getPlugins()?.add(new SharePlusOhosPlugin());
       flutterEngine.getPlugins()?.add(new PackageInfoPlugin());
       flutterEngine.getPlugins()?.add(new DeviceInfoPlusPlugin());
+      flutterEngine.getPlugins()?.add(new FlutterLocalNotificationsPlugin());
       flutterEngine.getPlugins()?.add(new GeolocatorOhosPlugin());
       flutterEngine.getPlugins()?.add(new RecordOhosPlugin());
       flutterEngine.getPlugins()?.add(new ScanPlugin());

@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
 import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
+import 'package:xcloudsdk_flutter_example/manager/push_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/account/model/model.dart';
 import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
 
@@ -167,6 +168,15 @@ class UserInfo extends ChangeNotifier {
   Future<void> quit(bool isCancel) async {
     if (UserInfo.instance.isLogin == false) {
       return;
+    }
+    //取消报警订阅
+    try {
+      await PushManager.instance.unsubscribeBatch(
+          deviceIdList:
+              DeviceManager.instance.allDevices.map((e) => e.uuid).toList());
+    } catch (e) {
+      debugPrint('退出登录取消订阅失败: $e， 不允许登出');
+      rethrow;
     }
 
     if (isCancel) {

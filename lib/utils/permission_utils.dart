@@ -58,6 +58,9 @@ class PermissionUtils {
       case XPermission.storage:
         handler = StoragePermissionHandler();
         break;
+      case XPermission.notification:
+        handler = NotificationPermissionHandler();
+        break;
       default:
         break;
     }
@@ -473,4 +476,10 @@ class StoragePermissionHandler extends PermissionHandler {
     }
     return Permission.storage;
   }
+}
+
+///推送通知权限
+class NotificationPermissionHandler extends PermissionHandler {
+  @override
+  Future<Permission> get permission => Future.value(Permission.notification);
 }

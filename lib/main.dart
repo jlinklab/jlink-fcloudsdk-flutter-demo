@@ -13,6 +13,7 @@ import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
 
 import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
 import 'package:xcloudsdk_flutter_example/utils/app_config.dart';
+import 'package:xcloudsdk_flutter_example/utils/push_notification.dart';
 import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
 
 import 'common/named_route.dart';
@@ -22,6 +23,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   UserInfo.instance.init();
   await _sdkInit();
+  // 初始化推送通知
+  await initPushNotification();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
@@ -31,7 +34,6 @@ void main() async {
 }
 
 ///SDK 初始化
-///app 鉴权信息用的是funsdk demo
 ///请将开放平台获取到的appkey等信息填写
 Future<void> _sdkInit() async {
   Directory? directory;

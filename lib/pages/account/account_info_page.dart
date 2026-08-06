@@ -125,6 +125,8 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
                 ///延迟2秒,模拟接口请求 后期可以删掉
                 UserInfo.instance.quit(false).then((value) {
                   KToast.show(status: '已登出');
+                }).catchError((error) {
+                  KToast.show(status: '退出失败，请重试');
                 });
               });
             },

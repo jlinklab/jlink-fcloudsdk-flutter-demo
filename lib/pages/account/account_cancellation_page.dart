@@ -94,11 +94,9 @@ class _AccountCancellationPageState extends State<AccountCancellationPage> {
 
   ///退出登录
   _loginOut() async {
-    UserInfo.instance.quit(true);
-    // UserInfo.instance.quit(true).then((value) {
-    //   //返回到首页
-    //   Navigator.popUntil(context, (route) => route.isFirst);
-    // });
+    UserInfo.instance.quit(true).catchError((error) {
+      KToast.show(status: '退出失败，请重试');
+    });
   }
 
   String _getTips() {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter/utils/extensions.dart';
+import 'package:xcloudsdk_flutter_example/manager/push_manager.dart';
 
 import '../models/user_instance.dart';
 import '../pages/cloud/device_cloud_service_manager.dart';
@@ -44,6 +45,11 @@ class DeviceManager {
     return allDevices.firstWhereOrNull((e) => e.uuid == deviceId) != null;
   }
 
+  ///根据设备序列号获取设备名字
+  String? getDeviceName({required String deviceId}) {
+    return mineDeviceList.firstWhereOrNull((e) => e.uuid == deviceId)?.nickname;
+  }
+
   /// 同步设备列表（APP 的设备列表不一定从 SDK 获取，主动同步到 DeviceManager）
   Future<void> setMineDeviceList({required List<Device> deviceList}) async {
     mineDeviceList.clear();
@@ -81,6 +87,7 @@ class DeviceManager {
     // 刷新云服务状态
     DeviceCloudServiceManager.instance
         .refreshCloudServicesStatus(devices: allDevices);
+    subscribeAllDevice();
   }
 
   /// 从服务器批量更新设备在线状态
@@ -129,6 +136,17 @@ class DeviceManager {
     } else if (type == 1) {
       shareDeviceList.removeWhere((e) => e.uuid == deviceId);
     }
+  }
+
+  ///订阅设备列表
+  Future<void> subscribeAllDevice() async {
+    var needs = DeviceManager.instance.mineDeviceList
+        .where((e) =>
+            e.hasPermission(permission: DevicePermission.DP_ModifyConfig) ||
+            e.hasPermission(permission: DevicePermission.DP_AlarmPush))
+        .map((e) => e.uuid)
+        .toList();
+    await PushManager.instance.subscribeBatch(deviceIdList: needs);
   }
 
   /// 释放资源

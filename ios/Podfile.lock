@@ -10,6 +10,8 @@ PODS:
   - device_info_plus (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - flutter_local_notifications (0.0.1):
+    - Flutter
   - geolocator_apple (1.2.0):
     - Flutter
   - image_gallery_saver (2.0.2):
@@ -65,6 +67,7 @@ DEPENDENCIES:
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/darwin`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - image_gallery_saver (from `.symlinks/plugins/image_gallery_saver/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
@@ -97,6 +100,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/device_info_plus/ios"
   Flutter:
     :path: Flutter
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
   image_gallery_saver:
@@ -134,6 +139,7 @@ SPEC CHECKSUMS:
   connectivity_plus: b21496ab28d1324eb59885d888a4d83b98531f01
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_local_notifications: ad39620c743ea4c15127860f4b5641649a988100
   geolocator_apple: 1d9e8e718b0aee61b8573d2d531eff76d00f383b
   image_gallery_saver: 14711d79da40581063e8842a11acf1969d781ed7
   image_picker_ios: 7fe1ff8e34c1790d6fff70a32484959f563a928a

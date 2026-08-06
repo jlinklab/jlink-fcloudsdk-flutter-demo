@@ -35,7 +35,7 @@ dependencies:
   xcloudsdk_flutter:
     # path: ../xcloudsdk_flutter
     hosted: https://repo.jftechsoft.com/pub/
-    version: 3.0.7
+    version: 3.0.8
 
   flutter_localizations:
     sdk: flutter
@@ -129,10 +129,27 @@ dependencies:
     git:
       url: "https://gitcode.com/openharmony-sig/flutter_image_gallery_saver.git"
 
-  #二维码扫描
+  #二维码扫描（Android/iOS）
   qr_code_scanner:
     git:
       url: "https://gitcode.com/CPF-Flutter/fluttertpc_qr_code_scanner.git"
+
+#鸿蒙请使用（鸿蒙这个库没有很好的适配3端）
+  # qr_code_scanner_ohos:
+  #   git:
+  #     url: https://gitcode.com/CPF-Flutter/fluttertpc_qr_code_scanner
+  #     # ref: 0.7.0-ohos-1.0.1
+  #     ref: 0.7.0-ohos-1.0.1
+  #     path: ohos
+
+  uuid: 4.1.0
+
+  #本地推送通知
+  flutter_local_notifications:
+    git:
+      url: "https://gitcode.com/openharmony-sig/fluttertpc_flutter_local_notifications.git"
+      ref: "br_flutter_local_notifications-v17.2.4_ohos"
+      path: "flutter_local_notifications"
 
 dependency_overrides:
   http: 0.13.6
