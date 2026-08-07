@@ -38,8 +38,8 @@ class PushManager {
     if (jfPushToken.isEmpty) return;
     Device? device = DeviceManager.instance.getDevice(deviceId: deviceId);
     if (device == null) return;
-    AlarmSubscribeBody body =
-        AlarmSubscribeBody(sn: deviceId, devName: device.nickname ?? deviceId);
+    AlarmSubscribeBody body = AlarmSubscribeBody(
+        sn: deviceId, devName: deviceName ?? device.nickname ?? deviceId);
     List<AlarmSubscribeBody> bodyList = [];
     bodyList.add(body);
 

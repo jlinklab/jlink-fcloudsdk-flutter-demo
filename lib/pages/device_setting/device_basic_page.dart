@@ -18,11 +18,6 @@ class DeviceBasicPage extends StatefulWidget {
 
 class _DeviceBasicPageState extends State<DeviceBasicPage> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
         create: (context) =>
@@ -34,20 +29,39 @@ class _DeviceBasicPageState extends State<DeviceBasicPage> {
                 appBar: AppBar(
                   title: Text(TR.current.basicSetting),
                 ),
-                body: ListView.separated(
-                    itemBuilder: (BuildContext context, int index) {
-                      return controller.dataSource[index];
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const Divider(
-                        color: Colors.blueGrey,
-                      );
-                    },
-                    itemCount: controller.dataSource.length),
+                body: ListView(
+                  children: [
+                    // 通用配置分组
+                    if (controller.commonConfigItems.isNotEmpty) ...[
+                      _buildSectionHeader(TR.current.commonConfig),
+                      ...controller.commonConfigItems,
+                    ],
+                    const Divider(height: 32),
+                    // 图像配置分组
+                    if (controller.imageConfigItems.isNotEmpty) ...[
+                      _buildSectionHeader(TR.current.imageConfig),
+                      ...controller.imageConfigItems,
+                    ],
+                  ],
+                ),
               );
             },
           );
         });
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      ),
+    );
   }
 
   @override

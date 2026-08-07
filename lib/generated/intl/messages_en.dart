@@ -116,10 +116,29 @@ class MessageLookup extends MessageLookupByLibrary {
     "cloudList": MessageLookupByLibrary.simpleMessage("Cloud Playback"),
     "cloudVideo": MessageLookupByLibrary.simpleMessage("Cloud Short Video"),
     "codeHint": MessageLookupByLibrary.simpleMessage("verification code"),
+    "commonConfig": MessageLookupByLibrary.simpleMessage("Common Settings"),
     "confirmBtn": MessageLookupByLibrary.simpleMessage("Confirm"),
     "confirmShare": MessageLookupByLibrary.simpleMessage("Confirm Share"),
     "confirmShareContent": m1,
     "countDown": m2,
+    "dayNightAuto": MessageLookupByLibrary.simpleMessage("Auto Switch"),
+    "dayNightAutoTip": MessageLookupByLibrary.simpleMessage(
+      "Auto switch day/night mode by ambient light",
+    ),
+    "dayNightDay": MessageLookupByLibrary.simpleMessage("Force Day"),
+    "dayNightDayTip": MessageLookupByLibrary.simpleMessage(
+      "Force switch to day mode",
+    ),
+    "dayNightMode": MessageLookupByLibrary.simpleMessage("Day/Night Switch"),
+    "dayNightNight": MessageLookupByLibrary.simpleMessage("Force Night"),
+    "dayNightNightTip": MessageLookupByLibrary.simpleMessage(
+      "Force switch to night mode",
+    ),
+    "dayNightSensitivity": MessageLookupByLibrary.simpleMessage("Sensitivity"),
+    "dayNightTiming": MessageLookupByLibrary.simpleMessage("Timing Switch"),
+    "dayNightTimingTip": MessageLookupByLibrary.simpleMessage(
+      "Switch by scheduled time period",
+    ),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "dev": MessageLookupByLibrary.simpleMessage("Device"),
     "devInfo": MessageLookupByLibrary.simpleMessage("device info"),
@@ -153,6 +172,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "deviceFirmwareUpgrade": MessageLookupByLibrary.simpleMessage(
       "Device Firmware Upgrade",
     ),
+    "deviceLanguage": MessageLookupByLibrary.simpleMessage("Device Language"),
     "deviceList": MessageLookupByLibrary.simpleMessage("Device List"),
     "deviceNoMemoryCard": MessageLookupByLibrary.simpleMessage(
       "The device does not have a storage card",
@@ -167,10 +187,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "deviceShare": MessageLookupByLibrary.simpleMessage("Device Share"),
     "download": MessageLookupByLibrary.simpleMessage("Download Management"),
+    "endTime": MessageLookupByLibrary.simpleMessage("End Time"),
     "factoryResetAndDeleteDev": MessageLookupByLibrary.simpleMessage(
       "Factory reset and delete device",
     ),
     "forgotPwd": MessageLookupByLibrary.simpleMessage("Forgot password"),
+    "fullDuplexIntercom": MessageLookupByLibrary.simpleMessage(
+      "Full-duplex Intercom",
+    ),
     "getCode": MessageLookupByLibrary.simpleMessage("GET CODE"),
     "goLogin": MessageLookupByLibrary.simpleMessage(
       "has account yet, go to login page",
@@ -183,6 +207,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "hd": MessageLookupByLibrary.simpleMessage("HD"),
     "image": MessageLookupByLibrary.simpleMessage("image"),
+    "imageConfig": MessageLookupByLibrary.simpleMessage("Image Settings"),
     "imageFlipLeftRight": MessageLookupByLibrary.simpleMessage(
       "Flip the image left and right",
     ),
@@ -192,6 +217,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "info": MessageLookupByLibrary.simpleMessage("User Info"),
     "inputAccountHint": MessageLookupByLibrary.simpleMessage(
       "Enter username/phone/email",
+    ),
+    "inputDeviceNameHint": MessageLookupByLibrary.simpleMessage(
+      "Please enter device name",
     ),
     "invalidShareQR": MessageLookupByLibrary.simpleMessage(
       "Invalid share QR code",
@@ -216,6 +244,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageReporting": MessageLookupByLibrary.simpleMessage(
       "Message reporting",
     ),
+    "micVolume": MessageLookupByLibrary.simpleMessage("Microphone Volume"),
     "mine": MessageLookupByLibrary.simpleMessage("Mine"),
     "myDevice": MessageLookupByLibrary.simpleMessage("Mine"),
     "name": MessageLookupByLibrary.simpleMessage("username"),
@@ -319,6 +348,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search": MessageLookupByLibrary.simpleMessage("Search"),
     "searchFailed": MessageLookupByLibrary.simpleMessage("Search failed"),
     "selectAll": MessageLookupByLibrary.simpleMessage("SelectAll"),
+    "setDeviceName": MessageLookupByLibrary.simpleMessage("Set Device Name"),
     "setting": MessageLookupByLibrary.simpleMessage("Setting"),
     "share": MessageLookupByLibrary.simpleMessage("Share"),
     "shareAccepted": MessageLookupByLibrary.simpleMessage("Accepted"),
@@ -337,8 +367,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "shareTo": MessageLookupByLibrary.simpleMessage("Share to"),
     "sharedAccounts": MessageLookupByLibrary.simpleMessage("Shared Accounts"),
     "smsLogin": MessageLookupByLibrary.simpleMessage("SmsLogin"),
+    "speakerVolume": MessageLookupByLibrary.simpleMessage("Speaker Volume"),
     "startAdd": MessageLookupByLibrary.simpleMessage("start distribute"),
     "startScan": MessageLookupByLibrary.simpleMessage("start scan"),
+    "startTime": MessageLookupByLibrary.simpleMessage("Start Time"),
+    "statusLightSwitch": MessageLookupByLibrary.simpleMessage("Status Light"),
     "stopScan": MessageLookupByLibrary.simpleMessage("stop scan"),
     "storageManagement": MessageLookupByLibrary.simpleMessage(
       "storage management",
@@ -371,6 +404,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "version": MessageLookupByLibrary.simpleMessage("Version"),
     "video": MessageLookupByLibrary.simpleMessage("record"),
+    "voiceTipSwitch": MessageLookupByLibrary.simpleMessage("Voice Prompt"),
     "wifi": MessageLookupByLibrary.simpleMessage("add via wifi"),
     "wifiPwdHint": MessageLookupByLibrary.simpleMessage("Wifi Password"),
   };

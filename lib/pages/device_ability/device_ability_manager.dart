@@ -22,6 +22,21 @@ enum DeviceAbilityType {
   ///是否支持警戒提示音选择
   bOtherFunctionSupportAlarmVoiceTipsType,
 
+  ///是否支持状态灯
+  bOtherFunctionSupportStatusLed,
+
+  ///是否支持提示音开关
+  bOtherFunctionSupportCloseVoiceTip,
+
+  ///是否支持日夜切换灵敏度
+  bOtherFunctionSupportDNChangeByImage,
+
+  ///是否支持全双工对讲
+  bOtherFunctionSupportTwoWayVoiceTalk,
+
+  /// 是否AOV设备
+  bOtherFunctionSupportAovMode,
+
   ///AlarmFunction ************************************************************
 
   ///是否支持人形检测, 如果支持, 则要展示 [智能警戒]
@@ -105,6 +120,44 @@ class DeviceAbilityManager {
         }
         break;
 
+      case DeviceAbilityType.bOtherFunctionSupportStatusLed:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['SupportStatusLed'] != null) {
+          isSupport = abilityMap['OtherFunction']!['SupportStatusLed']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionSupportCloseVoiceTip:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['SupportCloseVoiceTip'] != null) {
+          isSupport =
+              abilityMap['OtherFunction']!['SupportCloseVoiceTip']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionSupportDNChangeByImage:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['SupportDNChangeByImage'] != null) {
+          isSupport =
+              abilityMap['OtherFunction']!['SupportDNChangeByImage']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionSupportTwoWayVoiceTalk:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['SupportTwoWayVoiceTalk'] != null) {
+          isSupport =
+              abilityMap['OtherFunction']!['SupportTwoWayVoiceTalk']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionSupportAovMode:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['AovMode'] != null) {
+          isSupport = abilityMap['OtherFunction']!['AovMode']! as bool;
+        }
+        break;
+
       ///AlarmFunction ********************
       case DeviceAbilityType.bAlarmFunctionPEAInHumanPed:
         if (abilityMap['AlarmFunction'] != null &&
@@ -116,6 +169,19 @@ class DeviceAbilityManager {
         isSupport = false;
         return false;
     }
+    return isSupport;
+  }
+
+  ///只走缓存
+  static bool getLocalAbilityEnable(
+      {required String deviceId, required DeviceAbilityType type}) {
+    if (DeviceAbilityManager.instance.allDataAbilityMap[deviceId] == null) {
+      return false;
+    }
+    bool isSupport = false;
+    final Map abilityMap =
+        DeviceAbilityManager.instance.allDataAbilityMap[deviceId]!;
+    isSupport = getAbilityEnable(abilityMap, type);
     return isSupport;
   }
 }

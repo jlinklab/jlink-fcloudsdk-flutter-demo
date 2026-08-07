@@ -30,10 +30,10 @@ packages:
     dependency: transitive
     description:
       name: archive
-      sha256: a96e8b390886ee8abb49b7bd3ac8df6f451c621619f52a26e815fdcf568959ff
+      sha256: cb6a278ef2dbb298455e1a713bda08524a175630ec643a242c399c932a0a1f7d
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "4.0.9"
+    version: "3.6.1"
   args:
     dependency: transitive
     description:
@@ -616,6 +616,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.1.2"
+  image:
+    dependency: "direct main"
+    description:
+      name: image
+      sha256: a72242c9a0ffb65d03de1b7113bc4e189686fc07c7147b8b41811d0dd0e0d9bf
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "4.0.17"
   image_gallery_saver:
     dependency: "direct main"
     description:
@@ -1089,14 +1097,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.5.2"
-  posix:
-    dependency: transitive
-    description:
-      name: posix
-      sha256: "185ef7606574f789b40f289c233efa52e96dead518aed988e040a10737febb07"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "6.5.0"
   pretty_dio_logger:
     dependency: "direct main"
     description:
@@ -1269,6 +1269,14 @@ packages:
       url: "https://gitcode.com/CPF-Flutter/fluttertpc_scan.git"
     source: git
     version: "1.6.0"
+  screenshot:
+    dependency: "direct main"
+    description:
+      name: screenshot
+      sha256: "63817697a7835e6ce82add4228e15d233b74d42975c143ad8cfe07009fab866b"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.0.0"
   scrollable_positioned_list:
     dependency: "direct main"
     description:
@@ -1659,10 +1667,10 @@ packages:
     dependency: "direct main"
     description:
       name: xcloudsdk_flutter
-      sha256: c2bcbe20406458c57d5c136a669fb03fe02a1a1b273021d43ae00c2f4447e7dc
+      sha256: "51617a29056b76f6efa76a2c6bf594492991179472f0571edc8c5da6249a5872"
       url: "https://repo.jftechsoft.com/pub/"
     source: hosted
-    version: "3.0.8"
+    version: "3.0.9"
   xdg_directories:
     dependency: transitive
     description:
