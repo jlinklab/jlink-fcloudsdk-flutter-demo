@@ -34,6 +34,12 @@ enum DeviceAbilityType {
   ///是否支持全双工对讲
   bOtherFunctionSupportTwoWayVoiceTalk,
 
+  ///是否支持音量调节(喇叭)
+  bOtherFunctionSupportSetVolume,
+
+  ///是否支持音量调节(麦克风)
+  bOtherFunctionSupportSetInVolume,
+
   /// 是否AOV设备
   bOtherFunctionSupportAovMode,
 
@@ -148,6 +154,22 @@ class DeviceAbilityManager {
             abilityMap['OtherFunction']!['SupportTwoWayVoiceTalk'] != null) {
           isSupport =
               abilityMap['OtherFunction']!['SupportTwoWayVoiceTalk']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionSupportSetVolume:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['SupportSetVolume'] != null) {
+          isSupport =
+              abilityMap['OtherFunction']!['SupportSetVolume']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionSupportSetInVolume:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['SupportSetInVolume'] != null) {
+          isSupport =
+              abilityMap['OtherFunction']!['SupportSetInVolume']! as bool;
         }
         break;
 

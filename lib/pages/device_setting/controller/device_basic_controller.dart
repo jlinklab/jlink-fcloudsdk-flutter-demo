@@ -501,6 +501,10 @@ class DeviceBasicController extends ChangeNotifier {
   Map _mapVolumeOutput = {};
 
   Future<void> _querySpeakerVolume() async {
+    final supportSetVolume = await DeviceAbilityManager.queryAbility(
+        deviceId: deviceId,
+        type: DeviceAbilityType.bOtherFunctionSupportSetVolume);
+    if (!supportSetVolume) return;
     try {
       final result = await DeviceConfigManager.getConfigToObject<Map<String, dynamic>>(
         deviceId: deviceId,
@@ -540,6 +544,10 @@ class DeviceBasicController extends ChangeNotifier {
   Map _mapVolumeInput = {};
 
   Future<void> _queryMicVolume() async {
+    final supportSetInVolume = await DeviceAbilityManager.queryAbility(
+        deviceId: deviceId,
+        type: DeviceAbilityType.bOtherFunctionSupportSetInVolume);
+    if (!supportSetInVolume) return;
     try {
       final result = await DeviceConfigManager.getConfigToObject<Map<String, dynamic>>(
         deviceId: deviceId,
