@@ -35,7 +35,7 @@ dependencies:
   xcloudsdk_flutter:
     # path: ../xcloudsdk_flutter
     hosted: https://repo.jftechsoft.com/pub/
-    version: 3.0.8
+    version: 3.0.9
 
   flutter_localizations:
     sdk: flutter
@@ -151,6 +151,9 @@ dependencies:
       url: "https://gitcode.com/openharmony-sig/fluttertpc_flutter_local_notifications.git"
       ref: "br_flutter_local_notifications-v17.2.4_ohos"
       path: "flutter_local_notifications"
+
+  screenshot: 3.0.0
+  image: 4.0.17
 
 dependency_overrides:
   http: 0.13.6

@@ -1425,9 +1425,29 @@ class TR {
     return Intl.message('自动切换', name: 'dayNightAuto', desc: '', args: []);
   }
 
+  /// `根据环境光线自动切换日夜模式`
+  String get dayNightAutoTip {
+    return Intl.message(
+      '根据环境光线自动切换日夜模式',
+      name: 'dayNightAutoTip',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `强制白天`
   String get dayNightDay {
     return Intl.message('强制白天', name: 'dayNightDay', desc: '', args: []);
+  }
+
+  /// `强制切换为白天模式`
+  String get dayNightDayTip {
+    return Intl.message(
+      '强制切换为白天模式',
+      name: 'dayNightDayTip',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `强制黑夜`
@@ -1435,34 +1455,39 @@ class TR {
     return Intl.message('强制黑夜', name: 'dayNightNight', desc: '', args: []);
   }
 
+  /// `强制切换为黑夜模式`
+  String get dayNightNightTip {
+    return Intl.message(
+      '强制切换为黑夜模式',
+      name: 'dayNightNightTip',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `定时切换`
   String get dayNightTiming {
     return Intl.message('定时切换', name: 'dayNightTiming', desc: '', args: []);
   }
 
-  /// `根据环境光线自动切换日夜模式`
-  String get dayNightAutoTip {
-    return Intl.message('根据环境光线自动切换日夜模式', name: 'dayNightAutoTip', desc: '', args: []);
-  }
-
-  /// `强制切换为白天模式`
-  String get dayNightDayTip {
-    return Intl.message('强制切换为白天模式', name: 'dayNightDayTip', desc: '', args: []);
-  }
-
-  /// `强制切换为黑夜模式`
-  String get dayNightNightTip {
-    return Intl.message('强制切换为黑夜模式', name: 'dayNightNightTip', desc: '', args: []);
-  }
-
   /// `按设定时间段定时切换`
   String get dayNightTimingTip {
-    return Intl.message('按设定时间段定时切换', name: 'dayNightTimingTip', desc: '', args: []);
+    return Intl.message(
+      '按设定时间段定时切换',
+      name: 'dayNightTimingTip',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `日夜切换灵敏度`
   String get dayNightSensitivity {
-    return Intl.message('日夜切换灵敏度', name: 'dayNightSensitivity', desc: '', args: []);
+    return Intl.message(
+      '日夜切换灵敏度',
+      name: 'dayNightSensitivity',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `开始时间`
@@ -1477,7 +1502,12 @@ class TR {
 
   /// `全双工对讲`
   String get fullDuplexIntercom {
-    return Intl.message('全双工对讲', name: 'fullDuplexIntercom', desc: '', args: []);
+    return Intl.message(
+      '全双工对讲',
+      name: 'fullDuplexIntercom',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `喇叭音量`
