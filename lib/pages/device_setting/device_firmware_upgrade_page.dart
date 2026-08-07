@@ -73,10 +73,12 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
   /// 1. 获取设备 SystemInfo
   /// 2. 使用 DeviceVersionCheck.forCommon 发起版本检测
   Future<void> _checkVersion() async {
-    setState(() {
-      _status = _UpgradeStatus.checking;
-      _errorMsg = null;
-    });
+    if (mounted) {
+      setState(() {
+        _status = _UpgradeStatus.checking;
+        _errorMsg = null;
+      });
+    }
 
     try {
       // 获取设备系统信息
@@ -136,10 +138,12 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
         });
       }
     } catch (e) {
-      setState(() {
-        _status = _UpgradeStatus.error;
-        _errorMsg = kErrorMsg(e);
-      });
+      if (mounted) {
+        setState(() {
+          _status = _UpgradeStatus.error;
+          _errorMsg = kErrorMsg(e);
+        });
+      }
     }
   }
 
@@ -199,10 +203,12 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
         bodyJson: bodyJson,
       );
     } catch (e) {
-      setState(() {
-        _status = _UpgradeStatus.error;
-        _errorMsg = kErrorMsg(e);
-      });
+      if (mounted) {
+        setState(() {
+          _status = _UpgradeStatus.error;
+          _errorMsg = kErrorMsg(e);
+        });
+      }
       _upgradeSubscription?.cancel();
     }
   }
