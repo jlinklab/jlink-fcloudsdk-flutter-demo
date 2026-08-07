@@ -14,6 +14,7 @@ import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
 import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
 import 'package:xcloudsdk_flutter_example/utils/app_config.dart';
 import 'package:xcloudsdk_flutter_example/utils/push_notification.dart';
+import 'package:xcloudsdk_flutter_example/utils/sp_utils.dart';
 import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
 
 import 'common/named_route.dart';
@@ -22,6 +23,7 @@ import 'pages/device_setting/viewmodel/device_list_view_model.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   UserInfo.instance.init();
+  await SPUtils.init();
   await _sdkInit();
   // 初始化推送通知
   await initPushNotification();

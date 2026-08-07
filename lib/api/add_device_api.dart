@@ -20,6 +20,18 @@ abstract class AddDeviceAPI {
     @Field('pid') required String pid,
     @Field('styleKey') String styleKey = "iCSee",
   });
+
+  ///根据pid查询设备支持的能力
+  @POST(
+      '/v3/deviceTypeProp/getDeviceTypePropListByPageForApp$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> getDevicePropList({
+    @Field('pid') required String pid,
+    @Field('isCondition') String isCondition = '',
+    @Field('styleKey') String styleKey = "iCSee",
+    @Field('page') int page = 1,
+    @Field('limit') int limit = 999,
+  });
 }
 
 AddDeviceAPI addDeviceAPI = AddDeviceAPI(DioConfig.getDio());

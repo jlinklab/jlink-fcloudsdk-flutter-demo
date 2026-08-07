@@ -16,6 +16,7 @@ import 'package:xcloudsdk_flutter_example/common/common_path.dart';
 import 'package:xcloudsdk_flutter_example/common/named_route.dart';
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
 import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
+import 'package:xcloudsdk_flutter_example/manager/device_property_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_pwd_setting/device_pwd_find_back_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
 import 'package:xcloudsdk_flutter_example/pages/media_realplay/views/dev_pre_set_view.dart';
@@ -28,7 +29,9 @@ import '../../models/user_instance.dart';
 import '../record/cloud_record_list_page.dart';
 
 class MediaRealPlayPage extends StatefulWidget {
-  const MediaRealPlayPage({Key? key, required this.deviceId, required this.type}) : super(key: key);
+  const MediaRealPlayPage(
+      {Key? key, required this.deviceId, required this.type})
+      : super(key: key);
 
   final String deviceId;
   final int type;
@@ -248,8 +251,10 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
     }
     try {
       //
+      bool support =
+          DevicePropertyManager.instance.getIdrTalkMode(deviceId: device!.uuid);
       int audio = await AudioPlayerPlatform.instance
-          .startTalk(widget.deviceId, StartTalk(), 1);
+          .startTalk(widget.deviceId, StartTalk(), support ? 1 : 0);
       audioHandle = audio;
       await AudioPlayerPlatform.instance.setVolume(audio, 100);
     } catch (error) {

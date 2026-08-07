@@ -94,7 +94,7 @@ class UploadLogUtil {
     final zipFile = File(targetPath);
     final zipData = ZipEncoder().encode(archive);
 
-    await zipFile.writeAsBytes(zipData);
+    await zipFile.writeAsBytes(zipData ?? []);
 
     debugPrint("ZIP file created at $targetPath");
     return targetPath;

@@ -1374,6 +1374,121 @@ class TR {
   String get resetFailed {
     return Intl.message('恢复出厂设置失败', name: 'resetFailed', desc: '', args: []);
   }
+
+  /// `通用配置`
+  String get commonConfig {
+    return Intl.message('通用配置', name: 'commonConfig', desc: '', args: []);
+  }
+
+  /// `图像配置`
+  String get imageConfig {
+    return Intl.message('图像配置', name: 'imageConfig', desc: '', args: []);
+  }
+
+  /// `设置设备名称`
+  String get setDeviceName {
+    return Intl.message('设置设备名称', name: 'setDeviceName', desc: '', args: []);
+  }
+
+  /// `请输入设备名称`
+  String get inputDeviceNameHint {
+    return Intl.message(
+      '请输入设备名称',
+      name: 'inputDeviceNameHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `提示音`
+  String get voiceTipSwitch {
+    return Intl.message('提示音', name: 'voiceTipSwitch', desc: '', args: []);
+  }
+
+  /// `指示灯`
+  String get statusLightSwitch {
+    return Intl.message('指示灯', name: 'statusLightSwitch', desc: '', args: []);
+  }
+
+  /// `设备语言`
+  String get deviceLanguage {
+    return Intl.message('设备语言', name: 'deviceLanguage', desc: '', args: []);
+  }
+
+  /// `日夜切换`
+  String get dayNightMode {
+    return Intl.message('日夜切换', name: 'dayNightMode', desc: '', args: []);
+  }
+
+  /// `自动切换`
+  String get dayNightAuto {
+    return Intl.message('自动切换', name: 'dayNightAuto', desc: '', args: []);
+  }
+
+  /// `强制白天`
+  String get dayNightDay {
+    return Intl.message('强制白天', name: 'dayNightDay', desc: '', args: []);
+  }
+
+  /// `强制黑夜`
+  String get dayNightNight {
+    return Intl.message('强制黑夜', name: 'dayNightNight', desc: '', args: []);
+  }
+
+  /// `定时切换`
+  String get dayNightTiming {
+    return Intl.message('定时切换', name: 'dayNightTiming', desc: '', args: []);
+  }
+
+  /// `根据环境光线自动切换日夜模式`
+  String get dayNightAutoTip {
+    return Intl.message('根据环境光线自动切换日夜模式', name: 'dayNightAutoTip', desc: '', args: []);
+  }
+
+  /// `强制切换为白天模式`
+  String get dayNightDayTip {
+    return Intl.message('强制切换为白天模式', name: 'dayNightDayTip', desc: '', args: []);
+  }
+
+  /// `强制切换为黑夜模式`
+  String get dayNightNightTip {
+    return Intl.message('强制切换为黑夜模式', name: 'dayNightNightTip', desc: '', args: []);
+  }
+
+  /// `按设定时间段定时切换`
+  String get dayNightTimingTip {
+    return Intl.message('按设定时间段定时切换', name: 'dayNightTimingTip', desc: '', args: []);
+  }
+
+  /// `日夜切换灵敏度`
+  String get dayNightSensitivity {
+    return Intl.message('日夜切换灵敏度', name: 'dayNightSensitivity', desc: '', args: []);
+  }
+
+  /// `开始时间`
+  String get startTime {
+    return Intl.message('开始时间', name: 'startTime', desc: '', args: []);
+  }
+
+  /// `结束时间`
+  String get endTime {
+    return Intl.message('结束时间', name: 'endTime', desc: '', args: []);
+  }
+
+  /// `全双工对讲`
+  String get fullDuplexIntercom {
+    return Intl.message('全双工对讲', name: 'fullDuplexIntercom', desc: '', args: []);
+  }
+
+  /// `喇叭音量`
+  String get speakerVolume {
+    return Intl.message('喇叭音量', name: 'speakerVolume', desc: '', args: []);
+  }
+
+  /// `麦克风音量`
+  String get micVolume {
+    return Intl.message('麦克风音量', name: 'micVolume', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

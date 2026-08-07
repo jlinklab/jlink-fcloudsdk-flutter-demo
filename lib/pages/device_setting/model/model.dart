@@ -79,6 +79,9 @@ class Device {
     return null;
   }
 
+  /// 是否为低功耗类型
+  bool get isLowPowerType => (deviceType == 21 || deviceType == 285409282);
+
   Device({
     required this.uuid,
     this.nickname,

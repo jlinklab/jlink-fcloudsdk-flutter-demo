@@ -149,6 +149,38 @@ class DeviceManager {
     await PushManager.instance.subscribeBatch(deviceIdList: needs);
   }
 
+  ///更新设备信息
+  Future<void> updateDevice(
+      {required String deviceId,
+      int? state,
+      String? nickname,
+      String? adminToken,
+      String? username,
+      String? password,
+      List<Map<String, dynamic>>? propList}) async {
+    Device? device = mineDeviceList.firstWhereOrNull((e) => e.uuid == deviceId);
+
+    if (device == null) {
+      return;
+    }
+    if (state != null) {
+      device.state = state;
+    }
+    if (username != null) {
+      device.userName = username;
+    }
+    if (password != null) {
+      device.password = password;
+    }
+    if (adminToken != null) {
+      device.adminToken = adminToken;
+    }
+    if (nickname != null) {
+      device.nickname = nickname;
+    }
+    device.propList = propList ?? device.propList;
+  }
+
   /// 释放资源
   void dispose() {
     mineDeviceList.clear();
