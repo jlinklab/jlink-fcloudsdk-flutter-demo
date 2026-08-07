@@ -63,6 +63,46 @@ class _AddDeviceAPI implements AddDeviceAPI {
     return _value;
   }
 
+  @override
+  Future<dynamic> getDevicePropList({
+    required String pid,
+    String isCondition = '',
+    String styleKey = "iCSee",
+    int page = 1,
+    int limit = 999,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {
+      'pid': pid,
+      'isCondition': isCondition,
+      'styleKey': styleKey,
+      'page': page,
+      'limit': limit,
+    };
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/deviceTypeProp/getDeviceTypePropListByPageForApp/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

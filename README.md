@@ -2,6 +2,17 @@
 
 ## 当前项目支持Flutter SDK 版本 3.27.5-ohos-1.0.1 https://gitcode.com/openharmony-tpc/flutter_flutter/tree/3.27.5-ohos-1.0.1
 
+## 扫码库依赖说明
+
+`qr_code_scanner` 的鸿蒙适配版本（openharmony-sig/fluttertpc_qr_code_scanner）存在以下限制：
+
+- 指定 `path: ohos` 时，仅鸿蒙平台可用，Android/iOS 无法使用
+- 不指定 `path` 时，鸿蒙端运行会抛出 `Unsupported operation` 异常
+
+因此，**该库无法通过单一 pubspec 配置同时支持三端**。
+
+如果需要适配3端需要将鸿蒙实现代码整合至Android/iOS内，实现三端统一依赖：
+
 ## 1. Android端快速集成
 ### 1.1 在/android/build.gradle中修改成自己的签名配置
 ```

@@ -7,11 +7,11 @@
         "material": {
           "certpath": "/Users/feimy/.ohos/config/default_ohos_UfN7H7T83jxDA-0K3ABllcdo9OQ0jJagXza5VkqDZBU=.cer",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001BE3EE2D5A363339E13EBD4B874A3E0584248F6ACD30761A00C24765023D8A59A44B56A28E6C37F5",
+          "keyPassword": "0000001B7992170479132A5B0A027FEF73319749E08044F34636EEBFF3F7FBEA19D15A01D61FE215B1F158",
           "profile": "/Users/feimy/.ohos/config/default_ohos_UfN7H7T83jxDA-0K3ABllcdo9OQ0jJagXza5VkqDZBU=.p7b",
           "signAlg": "SHA256withECDSA",
           "storeFile": "/Users/feimy/.ohos/config/default_ohos_UfN7H7T83jxDA-0K3ABllcdo9OQ0jJagXza5VkqDZBU=.p12",
-          "storePassword": "0000001BD3A1A259ADC91D18DF2DE02B045DC24A41992D69358F35F92202DFE852ACB89330EFEFFE790B29"
+          "storePassword": "0000001B3C54586A36306A330A2E7EE40D1F4297951257DA421614244633AB2FAA640AB3BFF0F67942D254"
         }
       }
     ],

@@ -1,25 +1,22 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter/media/media_player.dart';
+import 'package:xcloudsdk_flutter_example/pages/record/alarmplaytoolbar/alarmplaytoolbar.dart';
 
 import '../../common/code_prase.dart';
-import '../../common/common_path.dart';
 import '../../common/named_route.dart';
 import '../../generated/l10n.dart';
 import '../../models/user_instance.dart';
 import '../../views/calendar/rf_calendar.dart';
 import '../../views/play_control_view.dart';
 import '../../views/toast/toast.dart';
-import '../download_manage/cloud_download_manage_page.dart';
-
-import '../download_manage/model/record_file.dart';
 import 'controller/clould_record_controller.dart';
 import 'model/model.dart';
 import 'record_download_manager_page.dart';
@@ -111,7 +108,7 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
         ..getRecordTimeline()
         ..addProgressListener((position, start, end, extraInfo) {
           _controller.position = position;
-          int index = lastIndex;
+          int? index;
           for (int i = _controller.records.length - 1; i >= 0; i--) {
             CloudRecord record = _controller.records[i];
 
@@ -123,14 +120,23 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
             }
           }
 
-          if (fileScrollController.isAttached &&
-              _scrolling == false &&
-              index < _controller.records.length) {
-            lastIndex = index;
-            //滑动到对应位置
-            fileScrollController.scrollTo(
-                index: index, duration: const Duration(milliseconds: 50));
-          }
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            for (var r in _controller.records) {
+              r.playing = false;
+            }
+            if (index != null && index < _controller.records.length) {
+              _controller.records[index].playing = true;
+              _controller.currentPlayRecord = _controller.records[index];
+            }
+            if (index != null &&
+                fileScrollController.isAttached &&
+                !_scrolling &&
+                index < _controller.records.length) {
+              lastIndex = index;
+              fileScrollController.scrollTo(
+                  index: index, duration: const Duration(milliseconds: 50));
+            }
+          });
         }),
       builder: (context, child) {
         return Consumer<CloudRecordController>(
@@ -207,6 +213,43 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
                             },
                           ),
                         ),
+                        Positioned(
+                            bottom: 5,
+                            left: 0,
+                            right: 25,
+                            child: Offstage(
+                              offstage: controller.currentPlayRecord == null,
+                              child: AlarmPlayToolBar(
+                                needShowVideoLength: false,
+                                videoLength: controller.currentPlayRecord !=
+                                        null
+                                    ? (controller.currentPlayRecord!.endTime!
+                                        .difference(controller
+                                            .currentPlayRecord!.beginTime!)
+                                        .inSeconds
+                                        .toDouble())
+                                    : 0.0,
+                                currentTime:
+                                    controller.currentPlayRecord != null
+                                        ? controller.position
+                                            .difference(controller
+                                                .currentPlayRecord!.beginTime!)
+                                            .inSeconds
+                                            .toDouble()
+                                        : 0.0,
+                                onDragStart: () {},
+                                onDragEnd: (double value) {
+                                  DateTime time =
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          controller
+                                                  .currentPlayRecord!
+                                                  .beginTime!
+                                                  .millisecondsSinceEpoch +
+                                              value.toInt() * 1000);
+                                  controller.mediaController.seekTo(time);
+                                },
+                              ),
+                            )),
                       ],
                     ),
                     ...orientation == Orientation.landscape
@@ -216,7 +259,7 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
                             )
                           ]
                         : [
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 10),
                             SizedBox(
                               height: 50,
                               child: Visibility(
@@ -294,6 +337,7 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
                                             return;
                                           }
                                           lastIndex = index;
+                                          controller.currentPlayRecord = null;
                                           controller.mediaController
                                               .startCloudPlayByTime(
                                                   beginTime: record.beginTime);
@@ -384,6 +428,7 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
   _onDownload(BuildContext context, CloudRecord record) async {
     //var/mobile/Containers/Data/Application/9AE07893-DF4E-44C8-982F-83352518E370/Documents/jf_images/jf_image34234234234234ds23d 2023-05-25 21_16_34 175.jpg
     String deviceId = widget.deviceId;
+    await DownloadHistory.instance.getVideoRecordPath();
 
     ///推出下载管理页面
     final pContext = _context;

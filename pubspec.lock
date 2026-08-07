@@ -30,10 +30,10 @@ packages:
     dependency: transitive
     description:
       name: archive
-      sha256: a96e8b390886ee8abb49b7bd3ac8df6f451c621619f52a26e815fdcf568959ff
+      sha256: cb6a278ef2dbb298455e1a713bda08524a175630ec643a242c399c932a0a1f7d
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "4.0.9"
+    version: "3.6.1"
   args:
     dependency: transitive
     description:
@@ -356,6 +356,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "5.3.3"
+  event_bus:
+    dependency: "direct main"
+    description:
+      name: event_bus
+      sha256: "1a55e97923769c286d295240048fc180e7b0768902c3c2e869fe059aafa15304"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -450,6 +458,31 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.3"
+  flutter_local_notifications:
+    dependency: "direct main"
+    description:
+      path: flutter_local_notifications
+      ref: "br_flutter_local_notifications-v17.2.4_ohos"
+      resolved-ref: d51f540074ecd9bf0a989d8606077c677eeecf70
+      url: "https://gitcode.com/openharmony-sig/fluttertpc_flutter_local_notifications.git"
+    source: git
+    version: "17.2.4"
+  flutter_local_notifications_linux:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications_linux
+      sha256: c49bd06165cad9beeb79090b18cd1eb0296f4bf4b23b84426e37dd7c027fc3af
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "4.0.1"
+  flutter_local_notifications_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications_platform_interface
+      sha256: "85f8d07fe708c1bdcf45037f2c0109753b26ae077e9d9e899d55971711a4ea66"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "7.2.0"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -583,6 +616,23 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.1.2"
+  image:
+    dependency: "direct main"
+    description:
+      name: image
+      sha256: a72242c9a0ffb65d03de1b7113bc4e189686fc07c7147b8b41811d0dd0e0d9bf
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "4.0.17"
+  image_gallery_saver:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "21fa908159e3762ba4583e996af9f05c80c55954"
+      url: "https://gitcode.com/openharmony-sig/flutter_image_gallery_saver.git"
+    source: git
+    version: "2.0.3"
   image_picker:
     dependency: "direct main"
     description:
@@ -1047,14 +1097,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.5.2"
-  posix:
-    dependency: transitive
-    description:
-      name: posix
-      sha256: "185ef7606574f789b40f289c233efa52e96dead518aed988e040a10737febb07"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "6.5.0"
   pretty_dio_logger:
     dependency: "direct main"
     description:
@@ -1106,10 +1148,11 @@ packages:
   qr_code_scanner:
     dependency: "direct main"
     description:
-      name: qr_code_scanner
-      sha256: "639606c0dde79d02968dec712fcc3973694ffcbc91c7fe13759639c49f3c2b04"
-      url: "http://139.9.235.221:8000"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: fb9104513a3e7fadc3aacb5ab6a7c9805ac6a2fc
+      url: "https://gitcode.com/CPF-Flutter/fluttertpc_qr_code_scanner.git"
+    source: git
     version: "0.7.0"
   qr_flutter:
     dependency: "direct main"
@@ -1220,12 +1263,20 @@ packages:
   scan:
     dependency: "direct main"
     description:
-      path: scan
-      ref: "16c6aa327ac88463dfd3acfc4104091dd4a87f6d"
-      resolved-ref: "16c6aa327ac88463dfd3acfc4104091dd4a87f6d"
-      url: "http://10.2.5.201/FlutterPlugin/hos_flutter_packages.git"
+      path: "."
+      ref: HEAD
+      resolved-ref: "03def2616e6c8579b889e99a5da5c72b74764006"
+      url: "https://gitcode.com/CPF-Flutter/fluttertpc_scan.git"
     source: git
     version: "1.6.0"
+  screenshot:
+    dependency: "direct main"
+    description:
+      name: screenshot
+      sha256: "63817697a7835e6ce82add4228e15d233b74d42975c143ad8cfe07009fab866b"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.0.0"
   scrollable_positioned_list:
     dependency: "direct main"
     description:
@@ -1467,6 +1518,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.3"
+  timezone:
+    dependency: transitive
+    description:
+      name: timezone
+      sha256: "2236ec079a174ce07434e89fcd3fcda430025eb7692244139a9cf54fdcf1fc7d"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.9.4"
   timing:
     dependency: transitive
     description:
@@ -1516,7 +1575,7 @@ packages:
     source: hosted
     version: "3.1.4"
   uuid:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       name: uuid
       sha256: b715b8d3858b6fa9f68f87d20d98830283628014750c2b09b6f516c1da4af2a7
@@ -1608,10 +1667,10 @@ packages:
     dependency: "direct main"
     description:
       name: xcloudsdk_flutter
-      sha256: ae730ae921a2a43d5ba29a48db87616876b39bcf71b137fa3b601dd063f7eaa6
-      url: "http://139.9.235.221:8000"
+      sha256: "51617a29056b76f6efa76a2c6bf594492991179472f0571edc8c5da6249a5872"
+      url: "https://repo.jftechsoft.com/pub/"
     source: hosted
-    version: "3.0.5"
+    version: "3.0.9"
   xdg_directories:
     dependency: transitive
     description:

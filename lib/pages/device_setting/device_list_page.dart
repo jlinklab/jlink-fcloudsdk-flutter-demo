@@ -5,17 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
-import 'package:xcloudsdk_flutter_example/pages/alarm_message/alarm_message_list_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/viewmodel/device_list_view_model.dart';
-import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
-import 'package:xcloudsdk_flutter_example/pages/share/device_share_page.dart';
 import '../../api/share_api.dart';
 import '../../common/code_prase.dart';
 import '../../common/event.dart';
+import '../../generated/l10n.dart';
+import '../../manager/device_manager.dart';
+import '../../manager/push_manager.dart';
+import '../../models/user_instance.dart';
+import '../../views/toast/toast.dart';
+import '../alarm_message/alarm_message_list_page.dart';
+import '../share/device_share_page.dart';
+import 'model/model.dart';
+import 'viewmodel/device_list_view_model.dart';
 
 class DeviceListPage extends StatefulWidget {
   const DeviceListPage({Key? key}) : super(key: key);
@@ -361,6 +362,7 @@ class _DeviceTabPageState extends State<DeviceTabPage> {
       } else {
         await JFApi.xcAccount.xcRemoveDevice(deviceID);
       }
+      await PushManager.instance.unsubscribe(deviceID);
       Navigator.of(context).pop();
       DeviceManager.instance
           .removeDevice(deviceId: deviceID, type: widget.type);
