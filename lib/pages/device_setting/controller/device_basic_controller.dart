@@ -221,12 +221,12 @@ class DeviceBasicController extends ChangeNotifier {
           deviceId: deviceId, commandName: DeviceJsonName.aVEncVideoWidget);
       Map<String, dynamic>? chanelTitle =
           videoWidget.firstWhereOrNull((e) => e.containsKey('ChannelTitle'));
-      if (chanelTitle != null) {
+      if (chanelTitle != null && chanelTitle['ChannelTitle'] != null) {
         chanelTitle['ChannelTitle']['Name'] = editName;
       }
       Map<String, dynamic>? chanelTitleAttr = videoWidget
           .firstWhereOrNull((e) => e.containsKey('ChannelTitleAttribute'));
-      if (chanelTitleAttr != null) {
+      if (chanelTitleAttr != null && chanelTitleAttr['ChannelTitleAttribute'] != null) {
         chanelTitleAttr['ChannelTitleAttribute']['EncodeBlend'] = true;
         chanelTitleAttr['ChannelTitleAttribute']['PreviewBlend'] = true;
       }
