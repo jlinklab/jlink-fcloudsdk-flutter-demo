@@ -85,7 +85,7 @@ class DeviceManager {
     // 异步更新设备在线状态
     _updateDevState();
     // 刷新云服务状态
-    DeviceCloudServiceManager.instance
+    await DeviceCloudServiceManager.instance
         .refreshCloudServicesStatus(devices: allDevices);
     subscribeAllDevice();
   }
