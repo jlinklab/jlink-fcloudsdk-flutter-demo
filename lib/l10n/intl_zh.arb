@@ -230,6 +230,5 @@
   "endTime": "结束时间",
   "fullDuplexIntercom": "全双工对讲",
   "speakerVolume": "喇叭音量",
-  "micVolume": "麦克风音量",
-  "tr_CloudServer": "云服务"
+  "micVolume": "麦克风音量"
 }

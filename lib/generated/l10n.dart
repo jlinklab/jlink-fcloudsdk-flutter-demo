@@ -1519,11 +1519,6 @@ class TR {
   String get micVolume {
     return Intl.message('麦克风音量', name: 'micVolume', desc: '', args: []);
   }
-
-  /// `云服务`
-  String get tr_CloudServer {
-    return Intl.message('云服务', name: 'tr_CloudServer', desc: '', args: []);
-  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

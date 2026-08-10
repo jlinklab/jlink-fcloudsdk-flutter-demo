@@ -415,6 +415,5 @@
   "endTime": "End Time",
   "fullDuplexIntercom": "Full-duplex Intercom",
   "speakerVolume": "Speaker Volume",
-  "micVolume": "Microphone Volume",
-  "tr_CloudServer": "Cloud Service"
+  "micVolume": "Microphone Volume"
 }

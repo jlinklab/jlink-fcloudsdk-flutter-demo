@@ -377,7 +377,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "storage management",
     ),
     "toolsFeedbackLog": MessageLookupByLibrary.simpleMessage("Feedback Log"),
-    "tr_CloudServer": MessageLookupByLibrary.simpleMessage("Cloud Service"),
     "tr_common_download_management": MessageLookupByLibrary.simpleMessage(
       "Download management",
     ),

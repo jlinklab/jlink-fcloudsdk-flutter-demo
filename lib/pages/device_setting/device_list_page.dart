@@ -195,34 +195,6 @@ class DeviceTabPage extends StatefulWidget {
 
 class _DeviceTabPageState extends State<DeviceTabPage> {
   @override
-  void initState() {
-    super.initState();
-    _loadCloudStatus();
-  }
-
-  void _loadCloudStatus({bool forceRefresh = false}) {
-    final devices = widget.type == 0
-        ? context.read<DevListViewModel>().mineDevs
-        : context.read<DevListViewModel>().shareDevs;
-    if (devices.isEmpty) return;
-
-    if (forceRefresh) {
-      DeviceCloudServiceManager.instance
-          .refreshCloudServicesStatus(devices: devices);
-      return;
-    }
-
-    // 检查是否已有缓存，没有才请求
-    final hasCache = devices.every((d) =>
-        DeviceCloudServiceManager.instance.getCloudService(deviceId: d.uuid) !=
-        null);
-    if (!hasCache) {
-      DeviceCloudServiceManager.instance
-          .refreshCloudServicesStatus(devices: devices);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Selector<DevListViewModel, List<Device>>(
       shouldRebuild: (pre, curr) => true,
@@ -253,106 +225,10 @@ class _DeviceTabPageState extends State<DeviceTabPage> {
                   },
                   itemCount: devices.length,
                 ),
-          onRefresh: () async {
-            await context.read<DevListViewModel>().onRefresh();
-            _loadCloudStatus(forceRefresh: true);
-          },
+          onRefresh: () => context.read<DevListViewModel>().onRefresh(),
         );
       },
     );
-  }
-
-  void onDelete(String uuid, BuildContext context) {
-    showDialog(
-        useRootNavigator: false,
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("警告"),
-            content: const SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  Text("确定要删除设备嘛"),
-                ],
-              ),
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        _onGetPhoneToken(uuid);
-                      },
-                      child: const Text("确定")),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("取消")),
-                ],
-              )
-            ],
-          );
-        });
-  }
-
-  _onGetPhoneToken(String deviceID) {
-    KToast.show();
-    JFApi.xcAlarmMessage.xcGetPhoneToken().then((value) {
-      KToast.dismiss();
-      Map<String, dynamic> response = value;
-      String token = response['token'];
-      _onCancelAlarmSubscribe(deviceID, token);
-    }).catchError((error) {
-      KToast.show(status: kErrorMsg(error));
-      //失败也要删除
-      _toDelete(deviceID);
-    });
-  }
-
-  _onCancelAlarmSubscribe(String deviceID, String token) {
-    KToast.show();
-    AlarmSubscribebaseBody body = AlarmSubscribebaseBody(sn: deviceID);
-    List<AlarmSubscribebaseBody> bodyList = [];
-    bodyList.add(body);
-
-    String userId = context.read<UserInfo>().userId;
-    AlarmUnsubscribe model =
-        AlarmUnsubscribe.byUserId(snlist: bodyList, userId: userId);
-    JFApi.xcAlarmMessage.xcUnsubscribeDevicesAlarmMessages(model).then((value) {
-      KToast.dismiss();
-      _toDelete(deviceID);
-    }).catchError((error) {
-      KToast.show(status: kErrorMsg(error));
-      //取消失败也要删除
-      _toDelete(deviceID);
-    });
-  }
-
-  _toDelete(String deviceID) async {
-    final Device? device = DeviceManager.instance.getDevice(deviceId: deviceID);
-    if (device == null) {
-      KToast.show(status: '设备不存在');
-      return;
-    }
-    KToast.show();
-    try {
-      if (device.fromShare) {
-        await shareAPI.refuseSharedDevice((device as SharedDevice).shareId);
-      } else {
-        await JFApi.xcAccount.xcRemoveDevice(deviceID);
-      }
-      await PushManager.instance.unsubscribe(deviceID);
-      Navigator.of(context).pop();
-      DeviceManager.instance
-          .removeDevice(deviceId: deviceID, type: widget.type);
-      await DeviceManager.instance.refreshDeviceList();
-      setState(() {});
-      KToast.dismiss();
-    } catch (error) {
-      KToast.show(status: kErrorMsg(error));
-    }
   }
 }
 
@@ -460,7 +336,7 @@ class _DeviceCard extends StatelessWidget {
                     icon: Icons.delete_outline,
                     label: TR.current.delete,
                     isDestructive: true,
-                    onTap: () => _onDelete(context),
+                    onTap: () => onDeleteDialog(context),
                   ),
                 ],
               ),
@@ -511,7 +387,7 @@ class _DeviceCard extends StatelessWidget {
     );
   }
 
-  void _onDelete(BuildContext context) {
+  void onDeleteDialog(BuildContext context) {
     showDialog(
       useRootNavigator: false,
       context: context,
@@ -531,7 +407,8 @@ class _DeviceCard extends StatelessWidget {
               children: [
                 TextButton(
                     onPressed: () {
-                      _onGetPhoneToken(context);
+                      Navigator.of(context).pop();
+                      _toDelete(context);
                     },
                     child: const Text("确定")),
                 TextButton(
@@ -547,43 +424,13 @@ class _DeviceCard extends StatelessWidget {
     );
   }
 
-  _onGetPhoneToken(BuildContext context) {
-    KToast.show();
-    JFApi.xcAlarmMessage.xcGetPhoneToken().then((value) {
-      KToast.dismiss();
-      Map<String, dynamic> response = value;
-      String token = response['token'];
-      _onCancelAlarmSubscribe(context, token);
-    }).catchError((error) {
-      KToast.show(status: kErrorMsg(error));
-      _toDelete(context);
-    });
-  }
-
-  _onCancelAlarmSubscribe(BuildContext context, String token) {
-    KToast.show();
-    AlarmSubscribebaseBody body = AlarmSubscribebaseBody(sn: device.uuid);
-    List<AlarmSubscribebaseBody> bodyList = [];
-    bodyList.add(body);
-
-    String userId = context.read<UserInfo>().userId;
-    AlarmUnsubscribe model =
-        AlarmUnsubscribe.byUserId(snlist: bodyList, userId: userId);
-    JFApi.xcAlarmMessage.xcUnsubscribeDevicesAlarmMessages(model).then((value) {
-      KToast.dismiss();
-      _toDelete(context);
-    }).catchError((error) {
-      KToast.show(status: kErrorMsg(error));
-      _toDelete(context);
-    });
-  }
-
   _toDelete(BuildContext context) async {
     final Device? dev = DeviceManager.instance.getDevice(deviceId: device.uuid);
     if (dev == null) {
       KToast.show(status: '设备不存在');
       return;
     }
+    final viewModel = context.read<DevListViewModel>();
     KToast.show();
     try {
       if (dev.fromShare) {
@@ -592,9 +439,7 @@ class _DeviceCard extends StatelessWidget {
         await JFApi.xcAccount.xcRemoveDevice(device.uuid);
       }
       await PushManager.instance.unsubscribe(device.uuid);
-      Navigator.of(context).pop();
-      DeviceManager.instance.removeDevice(deviceId: device.uuid, type: type);
-      await DeviceManager.instance.refreshDeviceList();
+      await viewModel.deleteDev(device.uuid, type);
       KToast.dismiss();
     } catch (error) {
       KToast.show(status: kErrorMsg(error));
