@@ -1,6 +1,6 @@
 {
   "app": {
-    "bundleName": "com.example.ohos_example",
+    "bundleName": "com.jf.flycam",
     "vendor": "example",
     "versionCode": 3,
     "versionName": "2.0.0",

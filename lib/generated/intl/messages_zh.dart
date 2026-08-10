@@ -289,6 +289,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "stopScan": MessageLookupByLibrary.simpleMessage("停止搜索"),
     "storageManagement": MessageLookupByLibrary.simpleMessage("存储管理"),
     "toolsFeedbackLog": MessageLookupByLibrary.simpleMessage("反馈日志"),
+    "tr_CloudServer": MessageLookupByLibrary.simpleMessage("云服务"),
     "tr_common_download_management": MessageLookupByLibrary.simpleMessage(
       "下载管理",
     ),
