@@ -253,8 +253,11 @@ class _DeviceCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () {
-          context.pushNamed('preview',
-              pathParameters: {'devId': device.uuid, 'type': type.toString()});
+          context.pushNamed('preview', pathParameters: {
+            'devId': device.uuid,
+            'type': type.toString(),
+            'pid': device.pid.isNotEmpty ? device.pid : '-1'
+          });
         },
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -307,6 +310,7 @@ class _DeviceCard extends StatelessWidget {
                       context.pushNamed('preview', pathParameters: {
                         'devId': device.uuid,
                         'type': type.toString(),
+                        'pid': device.pid.isNotEmpty ? device.pid : '-1',
                       });
                     },
                   ),
