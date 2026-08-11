@@ -18,7 +18,6 @@
     "permission_handler_ohos": "file:./har/permission_handler_ohos.har",
     "package_info_plus": "file:./har/package_info_plus.har",
     "flutter_geolocator_ohos": "file:./har/flutter_geolocator_ohos.har",
-    "qr_code_scanner_ohos": "file:./har/qr_code_scanner_ohos.har",
     "video_thumbnail_ohos": "file:./har/video_thumbnail_ohos.har",
     "xcloudsdk_flutter": "file:./har/xcloudsdk_flutter.har",
     "@ohos/flutter_module": "file:./entry",
@@ -31,7 +30,6 @@
     "connectivity_plus": "file:./har/connectivity_plus.har",
     "image_picker_ohos": "file:./har/image_picker_ohos.har",
     "scan": "file:./har/scan.har",
-    "qr_code_scanner": "file:./har/qr_code_scanner.har",
     "image_gallery_saver": "file:./har/image_gallery_saver.har",
     "flutter_local_notifications": "file:./har/flutter_local_notifications.har",
     "mobile_scanner": "file:./har/mobile_scanner.har"

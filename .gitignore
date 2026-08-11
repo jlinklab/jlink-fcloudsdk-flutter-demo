@@ -44,6 +44,7 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 /android/app/build
+/android/app/debug1.jks
 
 unused_assets_report.txt
 
