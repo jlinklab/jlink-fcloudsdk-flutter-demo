@@ -129,19 +129,6 @@ dependencies:
     git:
       url: "https://gitcode.com/openharmony-sig/flutter_image_gallery_saver.git"
 
-  #二维码扫描（Android/iOS）
-  qr_code_scanner:
-    git:
-      url: "https://gitcode.com/CPF-Flutter/fluttertpc_qr_code_scanner.git"
-
-#鸿蒙请使用（鸿蒙这个库没有很好的适配3端）
-  # qr_code_scanner_ohos:
-  #   git:
-  #     url: https://gitcode.com/CPF-Flutter/fluttertpc_qr_code_scanner
-  #     # ref: 0.7.0-ohos-1.0.1
-  #     ref: 0.7.0-ohos-1.0.1
-  #     path: ohos
-
   uuid: 4.1.0
 
   #本地推送通知
@@ -153,6 +140,13 @@ dependencies:
 
   screenshot: 3.0.0
   image: 4.0.17
+  #二维码扫描
+  #不可升级，因为6.x版本iOS最低要求15，7.x iOS最低要求改回12了，但是flutter sdk需要3.29
+  #当前版本也有问题，鸿蒙进扫码页会有上次扫码的残留帧
+  mobile_scanner: 
+    git:
+      url: "https://gitcode.com/openharmony-sig/fluttertpc_mobile_scanner.git"
+      ref: "master"
 
 dependency_overrides:
   http: 0.13.6

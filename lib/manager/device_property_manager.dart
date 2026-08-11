@@ -1,9 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter/utils/extensions.dart';
 import 'package:xcloudsdk_flutter_example/api/add_device_api.dart';
 import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';

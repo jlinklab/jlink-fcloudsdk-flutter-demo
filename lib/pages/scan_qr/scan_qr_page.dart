@@ -1,8 +1,7 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:scan/scan.dart';
 
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
@@ -21,9 +20,8 @@ class ScanQrPage extends StatefulWidget {
 }
 
 class _ScanQrPageState extends State<ScanQrPage> with TickerProviderStateMixin {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  Barcode? result;
-  QRViewController? _qrController;
+  final MobileScannerController _qrController = MobileScannerController();
+  bool _isHandled = false;
 
   late Animation<double> _animation;
   late AnimationController _controller;
@@ -52,27 +50,13 @@ class _ScanQrPageState extends State<ScanQrPage> with TickerProviderStateMixin {
     super.initState();
   }
 
-  // In order to get hot reload to work we need to pause the camera if the platform
-  // is android, or resume the camera if the platform is iOS.
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid || Platform.operatingSystem == 'ohos') {
-      _qrController!.pauseCamera();
-    } else if (Platform.isIOS) {
-      _qrController!.resumeCamera();
-    }
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    _qrController = controller;
-    controller.scannedDataStream.listen((Barcode scanData) {
-      if (scanData.code != null && scanData.code!.isNotEmpty) {
-        controller.dispose();
-        Navigator.of(context).pop();
-        widget.callBack(scanData.code!);
-      }
-    });
+  /// 扫描结果处理，防止重复触发
+  void _handleScanResult(String code) {
+    if (_isHandled) return;
+    _isHandled = true;
+    _qrController.stop();
+    Navigator.of(context).pop();
+    widget.callBack(code);
   }
 
   @override
@@ -117,9 +101,14 @@ class _ScanQrPageState extends State<ScanQrPage> with TickerProviderStateMixin {
               return SizedBox(
                 width: constraints.maxWidth,
                 height: constraints.maxHeight,
-                child: QRView(
-                  key: qrKey,
-                  onQRViewCreated: _onQRViewCreated,
+                child: MobileScanner(
+                  controller: _qrController,
+                  onDetect: (BarcodeCapture capture) {
+                    final String? code = capture.barcodes.firstOrNull?.rawValue;
+                    if (code != null && code.isNotEmpty) {
+                      _handleScanResult(code);
+                    }
+                  },
                 ),
               );
             }),
@@ -168,7 +157,7 @@ class _ScanQrPageState extends State<ScanQrPage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _qrController?.dispose();
+    _qrController.dispose();
     _controller.dispose();
     super.dispose();
   }

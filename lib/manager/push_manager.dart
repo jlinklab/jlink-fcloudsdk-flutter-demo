@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
+import 'package:xcloudsdk_flutter_example/utils/log_util.dart';
 
 import '../models/user_instance.dart';
 import '../pages/device_setting/model/model.dart';
@@ -92,7 +93,9 @@ class PushManager {
           userId: UserInfo.instance.userId,
           language: 'zh');
 
-      await JFApi.xcAlarmMessage.xcSubscribeDeviceAlarmMessages(alarmSubscribe);
+      int res = await JFApi.xcAlarmMessage
+          .xcSubscribeDeviceAlarmMessages(alarmSubscribe);
+      LogUtils.push.log('批量订阅设备成功 $res');
     } catch (e) {
       debugPrint('批量订阅失败: $e');
     }

@@ -11,6 +11,7 @@ import PackageInfoPlugin from 'package_info_plus';
 import DeviceInfoPlusPlugin from 'device_info_plus';
 import FlutterLocalNotificationsPlugin from 'flutter_local_notifications';
 import GeolocatorOhosPlugin from 'flutter_geolocator_ohos';
+import MobileScannerPlugin from 'mobile_scanner';
 import RecordOhosPlugin from 'record_ohos';
 import ScanPlugin from 'scan';
 import VideoThumbnaiOhosPlugin from 'video_thumbnail';
@@ -40,6 +41,7 @@ export class GeneratedPluginRegistrant {
       flutterEngine.getPlugins()?.add(new DeviceInfoPlusPlugin());
       flutterEngine.getPlugins()?.add(new FlutterLocalNotificationsPlugin());
       flutterEngine.getPlugins()?.add(new GeolocatorOhosPlugin());
+      flutterEngine.getPlugins()?.add(new MobileScannerPlugin());
       flutterEngine.getPlugins()?.add(new RecordOhosPlugin());
       flutterEngine.getPlugins()?.add(new ScanPlugin());
       flutterEngine.getPlugins()?.add(new VideoThumbnaiOhosPlugin());

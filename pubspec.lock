@@ -819,6 +819,15 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.6"
+  mobile_scanner:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "1fdcbc7b5aa35ce82c09ba460c822249cf5dbdc9"
+      url: "https://gitcode.com/openharmony-sig/fluttertpc_mobile_scanner.git"
+    source: git
+    version: "3.5.6"
   nested:
     dependency: transitive
     description:
@@ -1145,15 +1154,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.2"
-  qr_code_scanner:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: fb9104513a3e7fadc3aacb5ab6a7c9805ac6a2fc
-      url: "https://gitcode.com/CPF-Flutter/fluttertpc_qr_code_scanner.git"
-    source: git
-    version: "0.7.0"
   qr_flutter:
     dependency: "direct main"
     description:
