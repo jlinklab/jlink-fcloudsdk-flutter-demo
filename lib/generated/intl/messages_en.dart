@@ -121,6 +121,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirmShare": MessageLookupByLibrary.simpleMessage("Confirm Share"),
     "confirmShareContent": m1,
     "countDown": m2,
+    "customerServiceCenter": MessageLookupByLibrary.simpleMessage(
+      "Customer Service Center",
+    ),
     "dayNightAuto": MessageLookupByLibrary.simpleMessage("Auto Switch"),
     "dayNightAutoTip": MessageLookupByLibrary.simpleMessage(
       "Auto switch day/night mode by ambient light",
@@ -190,6 +193,67 @@ class MessageLookup extends MessageLookupByLibrary {
     "endTime": MessageLookupByLibrary.simpleMessage("End Time"),
     "factoryResetAndDeleteDev": MessageLookupByLibrary.simpleMessage(
       "Factory reset and delete device",
+    ),
+    "firmwareCheckUpdate": MessageLookupByLibrary.simpleMessage(
+      "Check for Updates",
+    ),
+    "firmwareChecking": MessageLookupByLibrary.simpleMessage("Checking..."),
+    "firmwareCurrentVersion": MessageLookupByLibrary.simpleMessage(
+      "Current Version",
+    ),
+    "firmwareDownloadFailed": MessageLookupByLibrary.simpleMessage(
+      "Firmware download failed",
+    ),
+    "firmwareDownloadFile": MessageLookupByLibrary.simpleMessage(
+      "Downloading firmware",
+    ),
+    "firmwareDownloadSuccess": MessageLookupByLibrary.simpleMessage(
+      "Firmware download complete",
+    ),
+    "firmwareDownloadingToFirmware": MessageLookupByLibrary.simpleMessage(
+      "Downloading firmware file to local",
+    ),
+    "firmwareLatest": MessageLookupByLibrary.simpleMessage(
+      "Already up to date",
+    ),
+    "firmwareLocalUpgrade": MessageLookupByLibrary.simpleMessage(
+      "Local Upgrade",
+    ),
+    "firmwareNewVersion": MessageLookupByLibrary.simpleMessage("New Version"),
+    "firmwareNoLocalFile": MessageLookupByLibrary.simpleMessage(
+      "No local firmware file found",
+    ),
+    "firmwareOnlineUpgrade": MessageLookupByLibrary.simpleMessage(
+      "Online Upgrade",
+    ),
+    "firmwarePidFail": MessageLookupByLibrary.simpleMessage(
+      "Failed to get PID, unable to check for updates",
+    ),
+    "firmwareSelectLocalFile": MessageLookupByLibrary.simpleMessage(
+      "Select Local Firmware File",
+    ),
+    "firmwareSendFile": MessageLookupByLibrary.simpleMessage(
+      "Sending firmware to device",
+    ),
+    "firmwareUpgradeAvailable": MessageLookupByLibrary.simpleMessage(
+      "New version available",
+    ),
+    "firmwareUpgradeConfirm": MessageLookupByLibrary.simpleMessage(
+      "Are you sure to upgrade the device firmware?",
+    ),
+    "firmwareUpgradeFailed": MessageLookupByLibrary.simpleMessage(
+      "Upgrade failed",
+    ),
+    "firmwareUpgradeNow": MessageLookupByLibrary.simpleMessage("Upgrade Now"),
+    "firmwareUpgradeSuccess": MessageLookupByLibrary.simpleMessage(
+      "Upgrade successful, restarting...",
+    ),
+    "firmwareUpgradeTip": MessageLookupByLibrary.simpleMessage(
+      "Do not disconnect device power during upgrade",
+    ),
+    "firmwareUpgrading": MessageLookupByLibrary.simpleMessage("Upgrading"),
+    "firmwareVersionCheckFailed": MessageLookupByLibrary.simpleMessage(
+      "Version check failed",
     ),
     "forgotPwd": MessageLookupByLibrary.simpleMessage("Forgot password"),
     "fullDuplexIntercom": MessageLookupByLibrary.simpleMessage(

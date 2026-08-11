@@ -52,19 +52,21 @@ final GoRouter goRouter = GoRouter(
     ///这种写法更适合推送消息跳转. 将信息转换为一个 Url, 直接跳转
     GoRoute(
       name: 'preview',
-      path: '/preview/:devId/:type',
+      path: '/preview/:devId/:type/:pid',
       builder: (context, state) => MediaRealPlayPage(
         deviceId: state.pathParameters['devId'] ?? '',
         type: int.tryParse(state.pathParameters['type']!) ?? 0,
+        pid: state.pathParameters['pid'] ?? '',
       ),
     ),
     GoRoute(
         name: 'device_config',
-        path: '/device_config/:devId/:channel/:type',
+        path: '/device_config/:devId/:channel/:type/:pid',
         builder: (context, state) => DeviceConfigPage(
               deviceId: state.pathParameters['devId'] ?? '',
               channel: int.tryParse(state.pathParameters['channel']!) ?? -1,
               type: int.tryParse(state.pathParameters['type']!) ?? 0,
+              pid: state.pathParameters['pid'] ?? '',
             )),
     GoRoute(
       name: 'card_record',

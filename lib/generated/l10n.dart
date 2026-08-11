@@ -815,6 +815,16 @@ class TR {
     return Intl.message('反馈日志', name: 'toolsFeedbackLog', desc: '', args: []);
   }
 
+  /// `客服中心`
+  String get customerServiceCenter {
+    return Intl.message(
+      '客服中心',
+      name: 'customerServiceCenter',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `上传失败`
   String get Upload_F {
     return Intl.message('上传失败', name: 'Upload_F', desc: '', args: []);
@@ -1373,6 +1383,216 @@ class TR {
   /// `恢复出厂设置失败`
   String get resetFailed {
     return Intl.message('恢复出厂设置失败', name: 'resetFailed', desc: '', args: []);
+  }
+
+  /// `检查更新`
+  String get firmwareCheckUpdate {
+    return Intl.message(
+      '检查更新',
+      name: 'firmwareCheckUpdate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前版本`
+  String get firmwareCurrentVersion {
+    return Intl.message(
+      '当前版本',
+      name: 'firmwareCurrentVersion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `新版本`
+  String get firmwareNewVersion {
+    return Intl.message('新版本', name: 'firmwareNewVersion', desc: '', args: []);
+  }
+
+  /// `立即升级`
+  String get firmwareUpgradeNow {
+    return Intl.message('立即升级', name: 'firmwareUpgradeNow', desc: '', args: []);
+  }
+
+  /// `正在检查...`
+  String get firmwareChecking {
+    return Intl.message(
+      '正在检查...',
+      name: 'firmwareChecking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已是最新版本`
+  String get firmwareLatest {
+    return Intl.message('已是最新版本', name: 'firmwareLatest', desc: '', args: []);
+  }
+
+  /// `发现新版本`
+  String get firmwareUpgradeAvailable {
+    return Intl.message(
+      '发现新版本',
+      name: 'firmwareUpgradeAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `正在升级`
+  String get firmwareUpgrading {
+    return Intl.message('正在升级', name: 'firmwareUpgrading', desc: '', args: []);
+  }
+
+  /// `升级成功，重启中...`
+  String get firmwareUpgradeSuccess {
+    return Intl.message(
+      '升级成功，重启中...',
+      name: 'firmwareUpgradeSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `升级失败`
+  String get firmwareUpgradeFailed {
+    return Intl.message(
+      '升级失败',
+      name: 'firmwareUpgradeFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `升级过程中请勿断开设备电源`
+  String get firmwareUpgradeTip {
+    return Intl.message(
+      '升级过程中请勿断开设备电源',
+      name: 'firmwareUpgradeTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `正在下载固件`
+  String get firmwareDownloadFile {
+    return Intl.message(
+      '正在下载固件',
+      name: 'firmwareDownloadFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `正在发送固件到设备`
+  String get firmwareSendFile {
+    return Intl.message(
+      '正在发送固件到设备',
+      name: 'firmwareSendFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `版本检查失败`
+  String get firmwareVersionCheckFailed {
+    return Intl.message(
+      '版本检查失败',
+      name: 'firmwareVersionCheckFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未获取到pid，无法执行检测更新`
+  String get firmwarePidFail {
+    return Intl.message(
+      '未获取到pid，无法执行检测更新',
+      name: 'firmwarePidFail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `本地升级`
+  String get firmwareLocalUpgrade {
+    return Intl.message(
+      '本地升级',
+      name: 'firmwareLocalUpgrade',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `在线升级`
+  String get firmwareOnlineUpgrade {
+    return Intl.message(
+      '在线升级',
+      name: 'firmwareOnlineUpgrade',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `确认要升级设备固件吗？`
+  String get firmwareUpgradeConfirm {
+    return Intl.message(
+      '确认要升级设备固件吗？',
+      name: 'firmwareUpgradeConfirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选择本地固件文件`
+  String get firmwareSelectLocalFile {
+    return Intl.message(
+      '选择本地固件文件',
+      name: 'firmwareSelectLocalFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未找到本地固件文件`
+  String get firmwareNoLocalFile {
+    return Intl.message(
+      '未找到本地固件文件',
+      name: 'firmwareNoLocalFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `正在下载固件文件到本地`
+  String get firmwareDownloadingToFirmware {
+    return Intl.message(
+      '正在下载固件文件到本地',
+      name: 'firmwareDownloadingToFirmware',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `固件下载完成`
+  String get firmwareDownloadSuccess {
+    return Intl.message(
+      '固件下载完成',
+      name: 'firmwareDownloadSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `固件下载失败`
+  String get firmwareDownloadFailed {
+    return Intl.message(
+      '固件下载失败',
+      name: 'firmwareDownloadFailed',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `通用配置`
