@@ -20,20 +20,27 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(account) => "Are you sure to cancel share to ${account}?";
+  static String m0(level, isCharging) =>
+      "Battery level [${level}], charging [${isCharging}]";
 
-  static String m1(account) => "Are you sure to share device to ${account}?";
+  static String m1(account) => "Are you sure to cancel share to ${account}?";
 
-  static String m2(count) => "resend after ${count} seconds";
+  static String m2(account) => "Are you sure to share device to ${account}?";
 
-  static String m3(mail) => "will send verification code to ${mail}";
+  static String m3(count) => "resend after ${count} seconds";
 
-  static String m4(mail, phone) =>
+  static String m4(mail) => "will send verification code to ${mail}";
+
+  static String m5(mail, phone) =>
       "you can choose either ${phone} or ${mail}, verification code will be sent to";
 
-  static String m5(phone) => "will send verification code to ${phone}";
+  static String m6(phone) => "will send verification code to ${phone}";
 
-  static String m6(deviceId) => "${deviceId} Record List";
+  static String m7(deviceId) => "${deviceId} Record List";
+
+  static String m8(level) => "4G signal level [${level}]";
+
+  static String m9(level) => "WiFi signal level [${level}]";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -94,6 +101,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Humanoid detection switch",
     ),
     "basicSetting": MessageLookupByLibrary.simpleMessage("Basic Settings"),
+    "batteryInfo": m0,
     "blueToothPermissionCancelTips": MessageLookupByLibrary.simpleMessage(
       "Without the permission to scan nearby Bluetooth devices, you cannot perform network configuration, search, or other operations using Bluetooth.",
     ),
@@ -101,7 +109,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "cancelBtn": MessageLookupByLibrary.simpleMessage("Cancel"),
     "cancelShare": MessageLookupByLibrary.simpleMessage("Cancel Share"),
-    "cancelShareContent": m0,
+    "cancelShareContent": m1,
     "cancelShareFailed": MessageLookupByLibrary.simpleMessage(
       "Cancel share failed",
     ),
@@ -119,8 +127,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "commonConfig": MessageLookupByLibrary.simpleMessage("Common Settings"),
     "confirmBtn": MessageLookupByLibrary.simpleMessage("Confirm"),
     "confirmShare": MessageLookupByLibrary.simpleMessage("Confirm Share"),
-    "confirmShareContent": m1,
-    "countDown": m2,
+    "confirmShareContent": m2,
+    "countDown": m3,
     "customerServiceCenter": MessageLookupByLibrary.simpleMessage(
       "Customer Service Center",
     ),
@@ -297,7 +305,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mailHint": MessageLookupByLibrary.simpleMessage("mail"),
     "mailPhone": MessageLookupByLibrary.simpleMessage("mail/phone"),
     "mailRegister": MessageLookupByLibrary.simpleMessage("Mail Register"),
-    "mailTip": m3,
+    "mailTip": m4,
     "mediaType": MessageLookupByLibrary.simpleMessage("media type"),
     "memoryCardError": MessageLookupByLibrary.simpleMessage(
       "Abnormal storage card",
@@ -342,12 +350,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "permIntercom": MessageLookupByLibrary.simpleMessage("Intercom"),
     "permSdRecord": MessageLookupByLibrary.simpleMessage("SD Card Record"),
     "phone": MessageLookupByLibrary.simpleMessage("phone no"),
-    "phoneMailTip": m4,
+    "phoneMailTip": m5,
     "phoneRegister": MessageLookupByLibrary.simpleMessage("Phone Register"),
     "phoneRule": MessageLookupByLibrary.simpleMessage(
       "Overseas mobile phone numbers need to add area code. eg:+1:80998098979",
     ),
-    "phoneTip": m5,
+    "phoneTip": m6,
     "preview": MessageLookupByLibrary.simpleMessage("preview"),
     "privacyPermissionBluetooth": MessageLookupByLibrary.simpleMessage(
       "Bluetooth Access Permission",
@@ -371,7 +379,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "recordAudio": MessageLookupByLibrary.simpleMessage("Audio Recording"),
     "recordClip": MessageLookupByLibrary.simpleMessage("Video Segment"),
-    "recordList": m6,
+    "recordList": m7,
     "recordMode": MessageLookupByLibrary.simpleMessage("REC Button"),
     "recordQuality": MessageLookupByLibrary.simpleMessage("Recording Quality"),
     "recordQualityBad": MessageLookupByLibrary.simpleMessage("Relatively Poor"),
@@ -430,6 +438,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "shareSuccess": MessageLookupByLibrary.simpleMessage("Share success"),
     "shareTo": MessageLookupByLibrary.simpleMessage("Share to"),
     "sharedAccounts": MessageLookupByLibrary.simpleMessage("Shared Accounts"),
+    "signal4GLevel": m8,
     "smsLogin": MessageLookupByLibrary.simpleMessage("SmsLogin"),
     "speakerVolume": MessageLookupByLibrary.simpleMessage("Speaker Volume"),
     "startAdd": MessageLookupByLibrary.simpleMessage("start distribute"),
@@ -471,5 +480,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "voiceTipSwitch": MessageLookupByLibrary.simpleMessage("Voice Prompt"),
     "wifi": MessageLookupByLibrary.simpleMessage("add via wifi"),
     "wifiPwdHint": MessageLookupByLibrary.simpleMessage("Wifi Password"),
+    "wifiSignalLevel": m9,
   };
 }

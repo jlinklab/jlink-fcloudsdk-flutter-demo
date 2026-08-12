@@ -1739,6 +1739,36 @@ class TR {
   String get micVolume {
     return Intl.message('麦克风音量', name: 'micVolume', desc: '', args: []);
   }
+
+  /// `WiFi信号等级【{level}】`
+  String wifiSignalLevel(Object level) {
+    return Intl.message(
+      'WiFi信号等级【$level】',
+      name: 'wifiSignalLevel',
+      desc: '',
+      args: [level],
+    );
+  }
+
+  /// `电量等级【{level}】,是否充电中【{isCharging}】`
+  String batteryInfo(Object level, Object isCharging) {
+    return Intl.message(
+      '电量等级【$level】,是否充电中【$isCharging】',
+      name: 'batteryInfo',
+      desc: '',
+      args: [level, isCharging],
+    );
+  }
+
+  /// `4G信号等级【{level}】`
+  String signal4GLevel(Object level) {
+    return Intl.message(
+      '4G信号等级【$level】',
+      name: 'signal4GLevel',
+      desc: '',
+      args: [level],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

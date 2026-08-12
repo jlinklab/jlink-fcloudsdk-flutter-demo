@@ -20,19 +20,25 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh';
 
-  static String m0(account) => "确定取消分享给 ${account}？";
+  static String m0(level, isCharging) => "电量等级【${level}】,是否充电中【${isCharging}】";
 
-  static String m1(account) => "确定将设备分享给 ${account}？";
+  static String m1(account) => "确定取消分享给 ${account}？";
 
-  static String m2(count) => "${count}秒后重新发送";
+  static String m2(account) => "确定将设备分享给 ${account}？";
 
-  static String m3(mail) => "将发送验证码到邮箱:${mail}中";
+  static String m3(count) => "${count}秒后重新发送";
 
-  static String m4(mail, phone) => "将发送验证码到邮箱:${mail}中和手机:${phone}上,填入其中一个即可";
+  static String m4(mail) => "将发送验证码到邮箱:${mail}中";
 
-  static String m5(phone) => "将发送验证码到${phone}上";
+  static String m5(mail, phone) => "将发送验证码到邮箱:${mail}中和手机:${phone}上,填入其中一个即可";
 
-  static String m6(deviceId) => "${deviceId} 回放列表";
+  static String m6(phone) => "将发送验证码到${phone}上";
+
+  static String m7(deviceId) => "${deviceId} 回放列表";
+
+  static String m8(level) => "4G信号等级【${level}】";
+
+  static String m9(level) => "WiFi信号等级【${level}】";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -77,6 +83,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "人形检测开关",
     ),
     "basicSetting": MessageLookupByLibrary.simpleMessage("基本设置"),
+    "batteryInfo": m0,
     "blueToothPermissionCancelTips": MessageLookupByLibrary.simpleMessage(
       "未获取到附近蓝牙设备扫描权限，将无法进行蓝牙配网、搜索等操作",
     ),
@@ -84,7 +91,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel": MessageLookupByLibrary.simpleMessage("取消"),
     "cancelBtn": MessageLookupByLibrary.simpleMessage("取消"),
     "cancelShare": MessageLookupByLibrary.simpleMessage("取消分享"),
-    "cancelShareContent": m0,
+    "cancelShareContent": m1,
     "cancelShareFailed": MessageLookupByLibrary.simpleMessage("取消分享失败"),
     "cancelShareSuccess": MessageLookupByLibrary.simpleMessage("取消分享成功"),
     "check": MessageLookupByLibrary.simpleMessage("确定"),
@@ -96,8 +103,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "commonConfig": MessageLookupByLibrary.simpleMessage("通用配置"),
     "confirmBtn": MessageLookupByLibrary.simpleMessage("确定"),
     "confirmShare": MessageLookupByLibrary.simpleMessage("确认分享"),
-    "confirmShareContent": m1,
-    "countDown": m2,
+    "confirmShareContent": m2,
+    "countDown": m3,
     "customerServiceCenter": MessageLookupByLibrary.simpleMessage("客服中心"),
     "dayNightAuto": MessageLookupByLibrary.simpleMessage("自动切换"),
     "dayNightAutoTip": MessageLookupByLibrary.simpleMessage("根据环境光线自动切换日夜模式"),
@@ -206,7 +213,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mailHint": MessageLookupByLibrary.simpleMessage("邮箱"),
     "mailPhone": MessageLookupByLibrary.simpleMessage("邮箱/手机号"),
     "mailRegister": MessageLookupByLibrary.simpleMessage("邮箱注册"),
-    "mailTip": m3,
+    "mailTip": m4,
     "mediaType": MessageLookupByLibrary.simpleMessage("媒体类型"),
     "memoryCardError": MessageLookupByLibrary.simpleMessage("存储卡异常"),
     "message": MessageLookupByLibrary.simpleMessage("消息"),
@@ -239,12 +246,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "permIntercom": MessageLookupByLibrary.simpleMessage("对讲"),
     "permSdRecord": MessageLookupByLibrary.simpleMessage("SD卡录像"),
     "phone": MessageLookupByLibrary.simpleMessage("手机号"),
-    "phoneMailTip": m4,
+    "phoneMailTip": m5,
     "phoneRegister": MessageLookupByLibrary.simpleMessage("手机号注册"),
     "phoneRule": MessageLookupByLibrary.simpleMessage(
       "国外手机号要加区号，如：+1:80998098979",
     ),
-    "phoneTip": m5,
+    "phoneTip": m6,
     "preview": MessageLookupByLibrary.simpleMessage("预览"),
     "privacyPermissionBluetooth": MessageLookupByLibrary.simpleMessage(
       "访问蓝牙权限",
@@ -264,7 +271,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "rebootSuccess": MessageLookupByLibrary.simpleMessage("设备重启中..."),
     "recordAudio": MessageLookupByLibrary.simpleMessage("录像音频"),
     "recordClip": MessageLookupByLibrary.simpleMessage("录像段"),
-    "recordList": m6,
+    "recordList": m7,
     "recordMode": MessageLookupByLibrary.simpleMessage("录像开关"),
     "recordQuality": MessageLookupByLibrary.simpleMessage("录像画质"),
     "recordQualityBad": MessageLookupByLibrary.simpleMessage("较差"),
@@ -312,6 +319,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "shareSuccess": MessageLookupByLibrary.simpleMessage("分享成功"),
     "shareTo": MessageLookupByLibrary.simpleMessage("分享给"),
     "sharedAccounts": MessageLookupByLibrary.simpleMessage("已分享账号"),
+    "signal4GLevel": m8,
     "smsLogin": MessageLookupByLibrary.simpleMessage("短信登录"),
     "speakerVolume": MessageLookupByLibrary.simpleMessage("喇叭音量"),
     "startAdd": MessageLookupByLibrary.simpleMessage("开始配网"),
@@ -347,5 +355,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "voiceTipSwitch": MessageLookupByLibrary.simpleMessage("提示音"),
     "wifi": MessageLookupByLibrary.simpleMessage("快速wifi配网"),
     "wifiPwdHint": MessageLookupByLibrary.simpleMessage("输入WIFI密码"),
+    "wifiSignalLevel": m9,
   };
 }

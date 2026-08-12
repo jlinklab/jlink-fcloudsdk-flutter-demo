@@ -1,4 +1,5 @@
 import { FlutterEngine, Log } from '@ohos/flutter_ohos';
+import XCloudFlutterPlugin from 'xcloudsdk_flutter';
 import AudioplayersPlugin from 'audioplayers_ohos';
 import ImageGallerySaverPlugin from 'image_gallery_saver';
 import PathProviderPlugin from 'path_provider_ohos';
@@ -15,7 +16,6 @@ import MobileScannerPlugin from 'mobile_scanner';
 import RecordOhosPlugin from 'record_ohos';
 import ScanPlugin from 'scan';
 import VideoThumbnaiOhosPlugin from 'video_thumbnail';
-import XCloudFlutterPlugin from 'xcloudsdk_flutter';
 
 /**
  * Generated file. Do not edit.
@@ -29,6 +29,7 @@ export class GeneratedPluginRegistrant {
 
   static registerWith(flutterEngine: FlutterEngine) {
     try {
+      flutterEngine.getPlugins()?.add(new XCloudFlutterPlugin());
       flutterEngine.getPlugins()?.add(new AudioplayersPlugin());
       flutterEngine.getPlugins()?.add(new ImageGallerySaverPlugin());
       flutterEngine.getPlugins()?.add(new PathProviderPlugin());
@@ -45,7 +46,6 @@ export class GeneratedPluginRegistrant {
       flutterEngine.getPlugins()?.add(new RecordOhosPlugin());
       flutterEngine.getPlugins()?.add(new ScanPlugin());
       flutterEngine.getPlugins()?.add(new VideoThumbnaiOhosPlugin());
-      flutterEngine.getPlugins()?.add(new XCloudFlutterPlugin());
     } catch (e) {
       Log.e(
         TAG,

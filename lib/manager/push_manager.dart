@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/utils/log_util.dart';
+import 'package:xcloudsdk_flutter/utils/log_util.dart';
 
 import '../models/user_instance.dart';
 import '../pages/device_setting/model/model.dart';

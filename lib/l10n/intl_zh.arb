@@ -254,5 +254,8 @@
   "endTime": "结束时间",
   "fullDuplexIntercom": "全双工对讲",
   "speakerVolume": "喇叭音量",
-  "micVolume": "麦克风音量"
+  "micVolume": "麦克风音量",
+  "wifiSignalLevel": "WiFi信号等级【{level}】",
+  "batteryInfo": "电量等级【{level}】,是否充电中【{isCharging}】",
+  "signal4GLevel": "4G信号等级【{level}】"
 }

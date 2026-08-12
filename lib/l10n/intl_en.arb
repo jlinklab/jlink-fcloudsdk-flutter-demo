@@ -439,5 +439,32 @@
   "endTime": "End Time",
   "fullDuplexIntercom": "Full-duplex Intercom",
   "speakerVolume": "Speaker Volume",
-  "micVolume": "Microphone Volume"
+  "micVolume": "Microphone Volume",
+  "wifiSignalLevel": "WiFi signal level [{level}]",
+  "@wifiSignalLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "batteryInfo": "Battery level [{level}], charging [{isCharging}]",
+  "@batteryInfo": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      },
+      "isCharging": {
+        "type": "String"
+      }
+    }
+  },
+  "signal4GLevel": "4G signal level [{level}]",
+  "@signal4GLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  }
 }
