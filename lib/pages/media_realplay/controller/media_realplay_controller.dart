@@ -23,7 +23,7 @@ class MediaRealplayController extends ChangeNotifier {
   final String deviceId;
 
   ///设备对象
-  late Device? device;
+  late Device device;
 
   late final PreviewMediaController mediaController;
 
@@ -145,6 +145,7 @@ class MediaRealplayController extends ChangeNotifier {
       IDRPropertyManager.instance
           .makeStopUploadProperty(deviceId: deviceId, handle: uploadHandle);
     }
+    mediaController.dispose();
     super.dispose();
   }
 }

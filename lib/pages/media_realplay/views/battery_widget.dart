@@ -21,8 +21,8 @@ class BatteryWidget extends StatelessWidget {
             return const SizedBox();
           }
           return Text(
-            TR.current
-                .batteryInfo(data.level!, data.isCharging == true ? '是' : '否'),
+            TR.current.batteryInfo(
+                data.level!, data.isCharging == true ? TR.current.chargingYes : TR.current.chargingNo),
             style: const TextStyle(fontSize: 13, color: Colors.white),
           );
         },

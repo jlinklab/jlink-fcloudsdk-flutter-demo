@@ -428,17 +428,19 @@ class DevicePropertyManager {
   bool supportSignal4G({required String deviceId}) {
     String key = _spKey(_supportSignal4G, deviceId);
     bool support = SPUtils.preferences.getBool(key) ?? false;
-    if (!support) {
-      DeviceCloudService? cloudService = DeviceCloudServiceManager.instance
-          .getCloudService(deviceId: deviceId);
-      support = cloudService?.cloudFlowStatus != CloudFlowStatus.notSupported;
-      if (!support) {
-        //此处不能使用异步获取，因为在设备列表就需要知道是否支持，去请求影子服务，如果阻塞会导致获取太慢
-        support = DeviceAbilityManager.getLocalAbilityEnable(
-            deviceId: deviceId,
-            type: DeviceAbilityType.bNetServerFunctionNet4GSignalLevel);
-      }
+    if (support) {
+      return true;
     }
-    return support;
+
+    DeviceCloudService? cloudService = DeviceCloudServiceManager.instance
+        .getCloudService(deviceId: deviceId);
+    if (cloudService != null &&
+        cloudService.cloudFlowStatus != CloudFlowStatus.notSupported) {
+      return true;
+    }
+
+    return DeviceAbilityManager.getLocalAbilityEnable(
+        deviceId: deviceId,
+        type: DeviceAbilityType.bNetServerFunctionNet4GSignalLevel);
   }
 }

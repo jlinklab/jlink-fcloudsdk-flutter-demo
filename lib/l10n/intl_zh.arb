@@ -257,5 +257,8 @@
   "micVolume": "麦克风音量",
   "wifiSignalLevel": "WiFi信号等级【{level}】",
   "batteryInfo": "电量等级【{level}】,是否充电中【{isCharging}】",
-  "signal4GLevel": "4G信号等级【{level}】"
+  "signal4GLevel": "4G信号等级【{level}】",
+  "chargingYes": "是",
+  "chargingNo": "否",
+  "selectPlaybackSpeed": "选择播放倍速"
 }

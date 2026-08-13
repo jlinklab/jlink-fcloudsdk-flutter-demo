@@ -104,7 +104,7 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('选择播放倍速'),
+          title: Text(TR.current.selectPlaybackSpeed),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,

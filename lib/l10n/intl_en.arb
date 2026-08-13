@@ -466,5 +466,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "chargingYes": "Yes",
+  "chargingNo": "No",
+  "selectPlaybackSpeed": "Select playback speed"
 }

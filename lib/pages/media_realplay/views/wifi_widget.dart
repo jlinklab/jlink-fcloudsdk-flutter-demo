@@ -52,7 +52,9 @@ class _WifiWidgetState extends State<WifiWidget> {
                     key: "Eth0Status", defaultValue: true)) ||
             response["WlanStatus"] == null) {
           wifiLevel = response.getIntValue(key: "SignalLevel", defaultValue: 0);
-          setState(() {});
+          if (mounted) {
+            setState(() {});
+          }
         }
       }
     } catch (e) {

@@ -119,9 +119,9 @@ class IDRPropertyManager {
   ///[deviceId] 设备Id
   ///返回监听句柄，-1失败，其它为成功，取消上报时使用 handle
   Future<int> makeStartUploadProperty({required String deviceId}) async {
+    StreamSubscription? subscription;
     try {
-      StreamSubscription subscription = DeviceUploadDevDataAPI
-          .instance.deviceUploadDataStream
+      subscription = DeviceUploadDevDataAPI.instance.deviceUploadDataStream
           .listen((event) async {
         try {
           var map = event['Dev.ElectCapacity'];
@@ -160,6 +160,7 @@ class IDRPropertyManager {
       _uploadSubMap[handle] = subscription;
       return handle;
     } catch (error) {
+      subscription?.cancel();
       return -1;
     }
   }
@@ -173,7 +174,7 @@ class IDRPropertyManager {
       if (handle < 0) {
         return;
       }
-      _uploadSubMap[handle]?.cancel();
+      _uploadSubMap.remove(handle)?.cancel();
       await DeviceUploadDevDataAPI.instance.xcStopUploadDevData(handle: handle);
     } catch (e) {
       //
@@ -205,7 +206,9 @@ class IDRPropertyManager {
     if (needAdd) {
       _signalSubjects[deviceId] = subject;
     }
-    subject.add(SignalLevelEntry(deviceId, level));
+    if (!subject.isClosed) {
+      subject.add(SignalLevelEntry(deviceId, level));
+    }
   }
 
   ///更新信噪比
@@ -248,7 +251,9 @@ class IDRPropertyManager {
     if (needAdd) {
       _liveSDStateSubjects[devId] = subObj;
     }
-    subObj.add(LiveSDStatusEntry(devId, status));
+    if (!subObj.isClosed) {
+      subObj.add(LiveSDStatusEntry(devId, status));
+    }
   }
 
   // todo: 清除对应devId的sd卡状态
@@ -269,28 +274,66 @@ class IDRPropertyManager {
     if (needAdd) {
       _wifiSignalSubjects[devId] = subObj;
     }
-    subObj.add(SignalLevelEntry(devId, status));
+    if (!subObj.isClosed) {
+      subObj.add(SignalLevelEntry(devId, status));
+    }
   }
 
   ///释放Stream
-  void dispose() async {
+  Future<void> dispose() async {
     for (var subscribe in _uploadSubMap.values) {
-      subscribe.cancel();
+      try {
+        await subscribe.cancel();
+      } catch (e) {
+        //
+      }
     }
+    _uploadSubMap.clear();
+
     for (var subject in _signalSubjects.values) {
-      subject.close();
+      try {
+        await subject.close();
+      } catch (e) {
+        //
+      }
     }
+    _signalSubjects.clear();
+
+    for (var subject in _sinrSubjects.values) {
+      try {
+        await subject.close();
+      } catch (e) {
+        //
+      }
+    }
+    _sinrSubjects.clear();
+
     for (var subject in _eleSubjects.values) {
-      await subject.close();
+      try {
+        await subject.close();
+      } catch (e) {
+        //
+      }
     }
     _eleSubjects.clear();
 
     for (var subObj in _liveSDStateSubjects.values) {
-      subObj.close();
+      try {
+        await subObj.close();
+      } catch (e) {
+        //
+      }
     }
+    _liveSDStateSubjects.clear();
+
     for (var subObj in _wifiSignalSubjects.values) {
-      subObj.close();
+      try {
+        await subObj.close();
+      } catch (e) {
+        //
+      }
     }
+    _wifiSignalSubjects.clear();
   }
 }
 
