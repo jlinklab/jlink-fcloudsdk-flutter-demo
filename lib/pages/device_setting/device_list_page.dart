@@ -17,6 +17,7 @@ import '../alarm_message/alarm_message_list_page.dart';
 import '../cloud/device_cloud_service_manager.dart';
 import '../cloud/model/device_cloud.dart';
 import '../share/device_share_page.dart';
+import '../device_ability/device_ability_page.dart';
 import 'model/model.dart';
 import 'viewmodel/device_list_view_model.dart';
 
@@ -291,6 +292,19 @@ class _DeviceCard extends StatelessWidget {
                   ),
                   if (cloudService != null)
                     _buildCloudBadge(cloudService.cloudServerStatus),
+                  const SizedBox(width: 4),
+                  // 更多按钮
+                  GestureDetector(
+                    onTap: () => _showDeviceMoreMenu(context),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Icon(
+                        Icons.more_horiz,
+                        size: 20,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -389,6 +403,113 @@ class _DeviceCard extends StatelessWidget {
         size: 16,
       ),
     );
+  }
+
+  /// 显示设备更多设置弹窗
+  void _showDeviceMoreMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Text(
+                  device.nickname ?? device.uuid,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const Divider(height: 1),
+              ListTile(
+                leading: const Icon(Icons.developer_board_outlined),
+                title: Text(TR.current.viewDeviceAbility),
+                subtitle: Text(TR.current.viewDeviceAbilityDesc),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _showDeviceAbility(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.vpn_key_outlined),
+                title: Text(TR.current.getDeviceToken),
+                subtitle: Text(TR.current.getDeviceTokenDesc),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _getDeviceTokenFromServer(context);
+                },
+              ),
+              // 后续可在此处添加更多设置项目
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  /// 查看设备能力集（跳转到能力集页面）
+  void _showDeviceAbility(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => DeviceAbilityPage(
+          deviceId: device.uuid,
+          deviceName: device.nickname ?? device.uuid,
+        ),
+      ),
+    );
+  }
+
+  /// 从服务器获取设备最新Token
+  void _getDeviceTokenFromServer(BuildContext context) async {
+    KToast.show();
+    try {
+      // 从服务器获取设备最新Token
+      final token = await JFApi.xcDevice.xcGetDeviceTokenFromNet(
+        deviceId: device.uuid,
+      );
+      //如果设备Token不为空，需要将设备同步给SDK
+      if (token.isNotEmpty) {
+        await JFApi.xcDevice.xcSetDeviceToken(deviceId: device.uuid, token: token);
+      }
+      KToast.dismiss();
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(TR.current.deviceToken),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('${TR.current.device}: ${device.nickname ?? device.uuid}'),
+                const SizedBox(height: 8),
+                Text(TR.current.tokenLabel, style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                SelectableText(
+                  token.isNotEmpty ? token : '(${TR.current.empty})',
+                  style: const TextStyle(fontSize: 12, fontFamily: 'monospace'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(TR.current.cancel),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      KToast.dismiss();
+      KToast.show(status: kErrorMsg(e));
+    }
   }
 
   void onDeleteDialog(BuildContext context) {
