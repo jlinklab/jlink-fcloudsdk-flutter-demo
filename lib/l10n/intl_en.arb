@@ -449,5 +449,14 @@
   "getDeviceTokenDesc": "Get latest token from server",
   "deviceToken": "Device Token",
   "tokenLabel": "Token:",
-  "empty": "(empty)"
+  "empty": "(empty)",
+  "modifyDeviceInfo": "Modify Device Info",
+  "deviceLoginName": "Device Login Name",
+  "deviceLoginPassword": "Device Login Password",
+  "inputDeviceLoginName": "Enter device login name",
+  "inputDeviceLoginPassword": "Enter device login password",
+  "modifySuccess": "Modified successfully",
+  "modifyFailed": "Modification failed",
+  "deviceLoginNameInvalid": "Device login name format is invalid",
+  "devicePwdInvalid": "Device login password format is invalid"
 }

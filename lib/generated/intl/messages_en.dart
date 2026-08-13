@@ -178,8 +178,20 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "deviceLanguage": MessageLookupByLibrary.simpleMessage("Device Language"),
     "deviceList": MessageLookupByLibrary.simpleMessage("Device List"),
+    "deviceLoginName": MessageLookupByLibrary.simpleMessage(
+      "Device Login Name",
+    ),
+    "deviceLoginNameInvalid": MessageLookupByLibrary.simpleMessage(
+      "Device login name format is invalid",
+    ),
+    "deviceLoginPassword": MessageLookupByLibrary.simpleMessage(
+      "Device Login Password",
+    ),
     "deviceNoMemoryCard": MessageLookupByLibrary.simpleMessage(
       "The device does not have a storage card",
+    ),
+    "devicePwdInvalid": MessageLookupByLibrary.simpleMessage(
+      "Device login password format is invalid",
     ),
     "deviceReset": MessageLookupByLibrary.simpleMessage("Device Reset"),
     "deviceResetTip": MessageLookupByLibrary.simpleMessage(
@@ -291,6 +303,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "inputAccountHint": MessageLookupByLibrary.simpleMessage(
       "Enter username/phone/email",
     ),
+    "inputDeviceLoginName": MessageLookupByLibrary.simpleMessage(
+      "Enter device login name",
+    ),
+    "inputDeviceLoginPassword": MessageLookupByLibrary.simpleMessage(
+      "Enter device login password",
+    ),
     "inputDeviceNameHint": MessageLookupByLibrary.simpleMessage(
       "Please enter device name",
     ),
@@ -319,6 +337,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "micVolume": MessageLookupByLibrary.simpleMessage("Microphone Volume"),
     "mine": MessageLookupByLibrary.simpleMessage("Mine"),
+    "modifyDeviceInfo": MessageLookupByLibrary.simpleMessage(
+      "Modify Device Info",
+    ),
+    "modifyFailed": MessageLookupByLibrary.simpleMessage("Modification failed"),
+    "modifySuccess": MessageLookupByLibrary.simpleMessage(
+      "Modified successfully",
+    ),
     "myDevice": MessageLookupByLibrary.simpleMessage("Mine"),
     "name": MessageLookupByLibrary.simpleMessage("username"),
     "nameHint": MessageLookupByLibrary.simpleMessage("username/email/phone"),

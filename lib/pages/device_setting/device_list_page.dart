@@ -8,6 +8,7 @@ import 'package:xcloudsdk_flutter/api/api_center.dart';
 import '../../api/share_api.dart';
 import '../../common/code_prase.dart';
 import '../../common/event.dart';
+import '../../common/match.dart';
 import '../../generated/l10n.dart';
 import '../../manager/device_manager.dart';
 import '../../manager/push_manager.dart';
@@ -443,6 +444,15 @@ class _DeviceCard extends StatelessWidget {
                   _getDeviceTokenFromServer(context);
                 },
               ),
+              ListTile(
+                leading: const Icon(Icons.edit_outlined),
+                title: Text(TR.current.modifyDeviceInfo),
+                subtitle: Text(TR.current.deviceLoginName),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _showModifyDeviceInfo(context);
+                },
+              ),
               // 后续可在此处添加更多设置项目
             ],
           ),
@@ -508,6 +518,91 @@ class _DeviceCard extends StatelessWidget {
       );
     } catch (e) {
       KToast.dismiss();
+      KToast.show(status: kErrorMsg(e));
+    }
+  }
+
+  /// 修改设备登录名和密码弹窗（仅修改本地缓存，参考Android demo）
+  void _showModifyDeviceInfo(BuildContext context) async {
+    // 先获取当前本地保存的登录名和密码
+    final String curUserName =
+        await JFApi.xcDevice.xcDevGetLocalUserName(deviceId: device.uuid);
+    final String curPassword =
+        await JFApi.xcDevice.xcDevGetLocalPassword(deviceId: device.uuid);
+
+    final nameController = TextEditingController(text: curUserName);
+    final pwdController = TextEditingController(text: curPassword);
+
+    showDialog(
+      context: context,
+      builder: (dialogCtx) {
+        return AlertDialog(
+          title: Text(TR.current.modifyDeviceInfo),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                device.uuid,
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: TR.current.deviceLoginName,
+                  hintText: TR.current.inputDeviceLoginName,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: pwdController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: TR.current.deviceLoginPassword,
+                  hintText: TR.current.inputDeviceLoginPassword,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogCtx),
+              child: Text(TR.current.cancelBtn),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                _doModifyDeviceInfo(
+                  context,
+                  nameController.text.trim(),
+                  pwdController.text.trim(),
+                );
+              },
+              child: Text(TR.current.confirmBtn),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// 执行修改设备登录名和密码（仅保存到本地SDK，不下发到设备）
+  void _doModifyDeviceInfo(
+      BuildContext context, String loginName, String loginPwd) async {
+    if (loginName.isEmpty && loginPwd.isEmpty) return;
+
+    try {
+      // 仅保存到本地SDK缓存
+      await JFApi.xcDevice.xcSetLocalUserNameAndPwd(
+        deviceId: device.uuid,
+        userName: loginName,
+        pwd: loginPwd,
+      );
+      KToast.show(status: TR.current.modifySuccess);
+    } catch (e) {
       KToast.show(status: kErrorMsg(e));
     }
   }

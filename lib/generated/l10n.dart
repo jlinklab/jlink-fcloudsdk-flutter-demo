@@ -1809,6 +1809,76 @@ class TR {
   String get empty {
     return Intl.message('(空)', name: 'empty', desc: '', args: []);
   }
+
+  /// `修改设备信息`
+  String get modifyDeviceInfo {
+    return Intl.message('修改设备信息', name: 'modifyDeviceInfo', desc: '', args: []);
+  }
+
+  /// `设备登录名`
+  String get deviceLoginName {
+    return Intl.message('设备登录名', name: 'deviceLoginName', desc: '', args: []);
+  }
+
+  /// `设备登录密码`
+  String get deviceLoginPassword {
+    return Intl.message(
+      '设备登录密码',
+      name: 'deviceLoginPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请输入设备登录名`
+  String get inputDeviceLoginName {
+    return Intl.message(
+      '请输入设备登录名',
+      name: 'inputDeviceLoginName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请输入设备登录密码`
+  String get inputDeviceLoginPassword {
+    return Intl.message(
+      '请输入设备登录密码',
+      name: 'inputDeviceLoginPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `修改成功`
+  String get modifySuccess {
+    return Intl.message('修改成功', name: 'modifySuccess', desc: '', args: []);
+  }
+
+  /// `修改失败`
+  String get modifyFailed {
+    return Intl.message('修改失败', name: 'modifyFailed', desc: '', args: []);
+  }
+
+  /// `设备登录名格式不正确`
+  String get deviceLoginNameInvalid {
+    return Intl.message(
+      '设备登录名格式不正确',
+      name: 'deviceLoginNameInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备登录密码格式不正确`
+  String get devicePwdInvalid {
+    return Intl.message(
+      '设备登录密码格式不正确',
+      name: 'devicePwdInvalid',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {
