@@ -34,7 +34,7 @@ dependencies:
 
   xcloudsdk_flutter:
     # path: ../xcloudsdk_flutter
-    hosted: https://repo.jftechsoft.com/pub/
+    hosted: https://repo.jftechsoft.com/
     version: 3.0.9
 
   flutter_localizations:

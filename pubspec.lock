@@ -1668,7 +1668,7 @@ packages:
     description:
       name: xcloudsdk_flutter
       sha256: "51617a29056b76f6efa76a2c6bf594492991179472f0571edc8c5da6249a5872"
-      url: "https://repo.jftechsoft.com/pub/"
+      url: "https://repo.jftechsoft.com"
     source: hosted
     version: "3.0.9"
   xdg_directories:
