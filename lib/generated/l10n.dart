@@ -1739,6 +1739,11 @@ class TR {
   String get micVolume {
     return Intl.message('麦克风音量', name: 'micVolume', desc: '', args: []);
   }
+
+  /// `错误码`
+  String get errorCode {
+    return Intl.message('错误码', name: 'errorCode', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

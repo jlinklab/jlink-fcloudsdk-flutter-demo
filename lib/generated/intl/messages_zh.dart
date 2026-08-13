@@ -148,6 +148,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "deviceShare": MessageLookupByLibrary.simpleMessage("设备分享"),
     "download": MessageLookupByLibrary.simpleMessage("下载管理"),
     "endTime": MessageLookupByLibrary.simpleMessage("结束时间"),
+    "errorCode": MessageLookupByLibrary.simpleMessage("错误码"),
     "factoryResetAndDeleteDev": MessageLookupByLibrary.simpleMessage(
       "恢复出厂设置并删除设备",
     ),

@@ -439,5 +439,6 @@
   "endTime": "End Time",
   "fullDuplexIntercom": "Full-duplex Intercom",
   "speakerVolume": "Speaker Volume",
-  "micVolume": "Microphone Volume"
+  "micVolume": "Microphone Volume",
+  "errorCode": "Error Code"
 }

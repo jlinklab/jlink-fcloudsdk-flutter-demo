@@ -191,6 +191,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "deviceShare": MessageLookupByLibrary.simpleMessage("Device Share"),
     "download": MessageLookupByLibrary.simpleMessage("Download Management"),
     "endTime": MessageLookupByLibrary.simpleMessage("End Time"),
+    "errorCode": MessageLookupByLibrary.simpleMessage("Error Code"),
     "factoryResetAndDeleteDev": MessageLookupByLibrary.simpleMessage(
       "Factory reset and delete device",
     ),
