@@ -115,6 +115,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "devName": MessageLookupByLibrary.simpleMessage("请输入设备名称"),
     "devSN": MessageLookupByLibrary.simpleMessage("请输入设备序列号"),
     "device": MessageLookupByLibrary.simpleMessage("设备"),
+    "deviceAbility": MessageLookupByLibrary.simpleMessage("设备能力集"),
     "deviceAddConnectBleSuccess": MessageLookupByLibrary.simpleMessage(
       "连接蓝牙设备成功！",
     ),
@@ -146,7 +147,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "deviceRestart": MessageLookupByLibrary.simpleMessage("设备重启"),
     "deviceRestartTip": MessageLookupByLibrary.simpleMessage("是否要重启设备？"),
     "deviceShare": MessageLookupByLibrary.simpleMessage("设备分享"),
+    "deviceToken": MessageLookupByLibrary.simpleMessage("设备Token"),
     "download": MessageLookupByLibrary.simpleMessage("下载管理"),
+    "empty": MessageLookupByLibrary.simpleMessage("(空)"),
     "endTime": MessageLookupByLibrary.simpleMessage("结束时间"),
     "factoryResetAndDeleteDev": MessageLookupByLibrary.simpleMessage(
       "恢复出厂设置并删除设备",
@@ -185,6 +188,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "forgotPwd": MessageLookupByLibrary.simpleMessage("忘记密码"),
     "fullDuplexIntercom": MessageLookupByLibrary.simpleMessage("全双工对讲"),
     "getCode": MessageLookupByLibrary.simpleMessage("获取验证码"),
+    "getDeviceToken": MessageLookupByLibrary.simpleMessage("获取设备最新Token"),
+    "getDeviceTokenDesc": MessageLookupByLibrary.simpleMessage(
+      "从服务器获取设备最新Token",
+    ),
     "goLogin": MessageLookupByLibrary.simpleMessage("已有帐号，去登录"),
     "goPhoneRegister": MessageLookupByLibrary.simpleMessage("试试手机号注册"),
     "goRegister": MessageLookupByLibrary.simpleMessage("没有账号，去注册"),
@@ -219,6 +226,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "name": MessageLookupByLibrary.simpleMessage("用户名"),
     "nameHint": MessageLookupByLibrary.simpleMessage("用户名/邮箱/手机号"),
     "newPwd": MessageLookupByLibrary.simpleMessage("新密码"),
+    "noAbilityData": MessageLookupByLibrary.simpleMessage("暂无能力数据"),
     "noDevice": MessageLookupByLibrary.simpleMessage("暂无设备"),
     "noFound": MessageLookupByLibrary.simpleMessage("未检测到设备"),
     "noPermissionTip": MessageLookupByLibrary.simpleMessage("暂无权限"),
@@ -283,6 +291,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetPwd": MessageLookupByLibrary.simpleMessage("重置账号密码"),
     "resetSuccess": MessageLookupByLibrary.simpleMessage("恢复出厂设置成功，重启中..."),
     "restartScan": MessageLookupByLibrary.simpleMessage("重新搜索"),
+    "retry": MessageLookupByLibrary.simpleMessage("重试"),
     "routeSetting": MessageLookupByLibrary.simpleMessage("路由器配置"),
     "save": MessageLookupByLibrary.simpleMessage("保存"),
     "saveFailed": MessageLookupByLibrary.simpleMessage("保存失败"),
@@ -320,6 +329,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "statusLightSwitch": MessageLookupByLibrary.simpleMessage("指示灯"),
     "stopScan": MessageLookupByLibrary.simpleMessage("停止搜索"),
     "storageManagement": MessageLookupByLibrary.simpleMessage("存储管理"),
+    "tokenLabel": MessageLookupByLibrary.simpleMessage("Token:"),
     "toolsFeedbackLog": MessageLookupByLibrary.simpleMessage("反馈日志"),
     "tr_common_download_management": MessageLookupByLibrary.simpleMessage(
       "下载管理",
@@ -344,6 +354,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "verCodeLogin": MessageLookupByLibrary.simpleMessage("验证码登录"),
     "version": MessageLookupByLibrary.simpleMessage("版本信息"),
     "video": MessageLookupByLibrary.simpleMessage("录像"),
+    "viewDeviceAbility": MessageLookupByLibrary.simpleMessage("查看设备能力集"),
+    "viewDeviceAbilityDesc": MessageLookupByLibrary.simpleMessage(
+      "查看设备支持的功能特性",
+    ),
     "voiceTipSwitch": MessageLookupByLibrary.simpleMessage("提示音"),
     "wifi": MessageLookupByLibrary.simpleMessage("快速wifi配网"),
     "wifiPwdHint": MessageLookupByLibrary.simpleMessage("输入WIFI密码"),

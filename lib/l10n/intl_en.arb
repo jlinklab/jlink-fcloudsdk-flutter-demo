@@ -439,5 +439,15 @@
   "endTime": "End Time",
   "fullDuplexIntercom": "Full-duplex Intercom",
   "speakerVolume": "Speaker Volume",
-  "micVolume": "Microphone Volume"
+  "micVolume": "Microphone Volume",
+  "deviceAbility": "Device Ability",
+  "retry": "Retry",
+  "noAbilityData": "No ability data",
+  "viewDeviceAbility": "View Device Ability",
+  "viewDeviceAbilityDesc": "View device supported features",
+  "getDeviceToken": "Get Latest Device Token",
+  "getDeviceTokenDesc": "Get latest token from server",
+  "deviceToken": "Device Token",
+  "tokenLabel": "Token:",
+  "empty": "(empty)"
 }

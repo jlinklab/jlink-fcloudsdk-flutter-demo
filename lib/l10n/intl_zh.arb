@@ -254,5 +254,15 @@
   "endTime": "结束时间",
   "fullDuplexIntercom": "全双工对讲",
   "speakerVolume": "喇叭音量",
-  "micVolume": "麦克风音量"
+  "micVolume": "麦克风音量",
+  "deviceAbility": "设备能力集",
+  "retry": "重试",
+  "noAbilityData": "暂无能力数据",
+  "viewDeviceAbility": "查看设备能力集",
+  "viewDeviceAbilityDesc": "查看设备支持的功能特性",
+  "getDeviceToken": "获取设备最新Token",
+  "getDeviceTokenDesc": "从服务器获取设备最新Token",
+  "deviceToken": "设备Token",
+  "tokenLabel": "Token:",
+  "empty": "(空)"
 }

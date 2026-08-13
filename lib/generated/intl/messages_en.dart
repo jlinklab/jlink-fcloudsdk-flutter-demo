@@ -148,6 +148,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "devName": MessageLookupByLibrary.simpleMessage("device name"),
     "devSN": MessageLookupByLibrary.simpleMessage("device serial No"),
     "device": MessageLookupByLibrary.simpleMessage("Device"),
+    "deviceAbility": MessageLookupByLibrary.simpleMessage("Device Ability"),
     "deviceAddConnectBleSuccess": MessageLookupByLibrary.simpleMessage(
       "Connect Bluetooth device successfully!",
     ),
@@ -189,7 +190,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Are you sure you want to restart the device?",
     ),
     "deviceShare": MessageLookupByLibrary.simpleMessage("Device Share"),
+    "deviceToken": MessageLookupByLibrary.simpleMessage("Device Token"),
     "download": MessageLookupByLibrary.simpleMessage("Download Management"),
+    "empty": MessageLookupByLibrary.simpleMessage("(empty)"),
     "endTime": MessageLookupByLibrary.simpleMessage("End Time"),
     "factoryResetAndDeleteDev": MessageLookupByLibrary.simpleMessage(
       "Factory reset and delete device",
@@ -260,6 +263,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Full-duplex Intercom",
     ),
     "getCode": MessageLookupByLibrary.simpleMessage("GET CODE"),
+    "getDeviceToken": MessageLookupByLibrary.simpleMessage(
+      "Get Latest Device Token",
+    ),
+    "getDeviceTokenDesc": MessageLookupByLibrary.simpleMessage(
+      "Get latest token from server",
+    ),
     "goLogin": MessageLookupByLibrary.simpleMessage(
       "has account yet, go to login page",
     ),
@@ -314,6 +323,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "name": MessageLookupByLibrary.simpleMessage("username"),
     "nameHint": MessageLookupByLibrary.simpleMessage("username/email/phone"),
     "newPwd": MessageLookupByLibrary.simpleMessage("new password"),
+    "noAbilityData": MessageLookupByLibrary.simpleMessage("No ability data"),
     "noDevice": MessageLookupByLibrary.simpleMessage("No Device Available"),
     "noFound": MessageLookupByLibrary.simpleMessage("No Device Search"),
     "noPermissionTip": MessageLookupByLibrary.simpleMessage("No permission"),
@@ -398,6 +408,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Factory reset successful, restarting...",
     ),
     "restartScan": MessageLookupByLibrary.simpleMessage("restart scan"),
+    "retry": MessageLookupByLibrary.simpleMessage("Retry"),
     "routeSetting": MessageLookupByLibrary.simpleMessage("Route Setting"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "saveFailed": MessageLookupByLibrary.simpleMessage("Save failed"),
@@ -440,6 +451,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "storageManagement": MessageLookupByLibrary.simpleMessage(
       "storage management",
     ),
+    "tokenLabel": MessageLookupByLibrary.simpleMessage("Token:"),
     "toolsFeedbackLog": MessageLookupByLibrary.simpleMessage("Feedback Log"),
     "tr_common_download_management": MessageLookupByLibrary.simpleMessage(
       "Download management",
@@ -468,6 +480,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "version": MessageLookupByLibrary.simpleMessage("Version"),
     "video": MessageLookupByLibrary.simpleMessage("record"),
+    "viewDeviceAbility": MessageLookupByLibrary.simpleMessage(
+      "View Device Ability",
+    ),
+    "viewDeviceAbilityDesc": MessageLookupByLibrary.simpleMessage(
+      "View device supported features",
+    ),
     "voiceTipSwitch": MessageLookupByLibrary.simpleMessage("Voice Prompt"),
     "wifi": MessageLookupByLibrary.simpleMessage("add via wifi"),
     "wifiPwdHint": MessageLookupByLibrary.simpleMessage("Wifi Password"),

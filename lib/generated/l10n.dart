@@ -1739,6 +1739,76 @@ class TR {
   String get micVolume {
     return Intl.message('麦克风音量', name: 'micVolume', desc: '', args: []);
   }
+
+  /// `设备能力集`
+  String get deviceAbility {
+    return Intl.message('设备能力集', name: 'deviceAbility', desc: '', args: []);
+  }
+
+  /// `重试`
+  String get retry {
+    return Intl.message('重试', name: 'retry', desc: '', args: []);
+  }
+
+  /// `暂无能力数据`
+  String get noAbilityData {
+    return Intl.message('暂无能力数据', name: 'noAbilityData', desc: '', args: []);
+  }
+
+  /// `查看设备能力集`
+  String get viewDeviceAbility {
+    return Intl.message(
+      '查看设备能力集',
+      name: 'viewDeviceAbility',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `查看设备支持的功能特性`
+  String get viewDeviceAbilityDesc {
+    return Intl.message(
+      '查看设备支持的功能特性',
+      name: 'viewDeviceAbilityDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `获取设备最新Token`
+  String get getDeviceToken {
+    return Intl.message(
+      '获取设备最新Token',
+      name: 'getDeviceToken',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `从服务器获取设备最新Token`
+  String get getDeviceTokenDesc {
+    return Intl.message(
+      '从服务器获取设备最新Token',
+      name: 'getDeviceTokenDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备Token`
+  String get deviceToken {
+    return Intl.message('设备Token', name: 'deviceToken', desc: '', args: []);
+  }
+
+  /// `Token:`
+  String get tokenLabel {
+    return Intl.message('Token:', name: 'tokenLabel', desc: '', args: []);
+  }
+
+  /// `(空)`
+  String get empty {
+    return Intl.message('(空)', name: 'empty', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {
