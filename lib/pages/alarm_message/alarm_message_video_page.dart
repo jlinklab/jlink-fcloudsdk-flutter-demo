@@ -188,7 +188,7 @@ class _AlarmMsgVideoState extends State<AlarmMsgVideo>
       String userid = context.read<UserInfo>().userId;
 
       CloudRecordByTime model = CloudRecordByTime(
-          msg: needUserCheck ? 'short_video_query_user' : 'video_query',
+          msg: needUserCheck ? 'short_video_query_user' : 'short_video_query',
           userId: userid,
           sn: widget.deviceId,
           startTime: startDateTime,
