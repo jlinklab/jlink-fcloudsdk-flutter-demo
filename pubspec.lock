@@ -1253,7 +1253,7 @@ packages:
     source: hosted
     version: "9.3.0"
   rxdart:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: rxdart
       sha256: "5c3004a4a8dbb94bd4bf5412a4def4acdaa12e12f269737a5751369e12d1a962"
@@ -1667,10 +1667,10 @@ packages:
     dependency: "direct main"
     description:
       name: xcloudsdk_flutter
-      sha256: "51617a29056b76f6efa76a2c6bf594492991179472f0571edc8c5da6249a5872"
+      sha256: d89c6b997490c7fbc0de2ef35db753af8a67e4410ba3043fb20c593afbbd77a4
       url: "https://repo.jftechsoft.com"
     source: hosted
-    version: "3.0.9"
+    version: "3.1.0"
   xdg_directories:
     dependency: transitive
     description:

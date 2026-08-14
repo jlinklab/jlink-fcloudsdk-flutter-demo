@@ -35,7 +35,7 @@ dependencies:
   xcloudsdk_flutter:
     # path: ../xcloudsdk_flutter
     hosted: https://repo.jftechsoft.com/
-    version: 3.0.9
+    version: 3.1.0
 
   flutter_localizations:
     sdk: flutter
@@ -147,6 +147,7 @@ dependencies:
     git:
       url: "https://gitcode.com/openharmony-sig/fluttertpc_mobile_scanner.git"
       ref: "master"
+  rxdart: 0.28.0
 
 dependency_overrides:
   http: 0.13.6
