@@ -68,9 +68,4 @@ class _Signal4GWidgetState extends State<Signal4GWidget> {
           style: const TextStyle(fontSize: 13, color: Colors.white),
         ));
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }

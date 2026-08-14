@@ -77,9 +77,4 @@ class _WifiWidgetState extends State<WifiWidget> {
       ),
     );
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }

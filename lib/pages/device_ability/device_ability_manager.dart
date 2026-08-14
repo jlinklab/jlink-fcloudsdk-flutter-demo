@@ -231,15 +231,17 @@ class DeviceAbilityManager {
   }
 
   ///如果没有缓存就实时获取
-  static Future<bool> getAbilityEnableIfNedd(
+  static Future<bool> getAbilityEnableIfNeed(
       {required String deviceId, required DeviceAbilityType type}) async {
     if (DeviceAbilityManager.instance.allDataAbilityMap[deviceId] == null) {
       await DeviceAbilityManager.update(deviceId: deviceId);
     }
     bool isSupport = false;
-    final Map abilityMap =
-        DeviceAbilityManager.instance.allDataAbilityMap[deviceId]!;
-    isSupport = getAbilityEnable(abilityMap, type);
+    final Map? abilityMap =
+        DeviceAbilityManager.instance.allDataAbilityMap[deviceId];
+    if (abilityMap != null) {
+      isSupport = getAbilityEnable(abilityMap, type);
+    }
     return isSupport;
   }
 }

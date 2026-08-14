@@ -76,7 +76,7 @@ class MediaRealplayController extends ChangeNotifier {
 
   void _startUploadData() async {
     /// 是否支持GetBatteryInfo
-    _isSupportBatteryInfo = await DeviceAbilityManager.getAbilityEnableIfNedd(
+    _isSupportBatteryInfo = await DeviceAbilityManager.getAbilityEnableIfNeed(
         deviceId: deviceId,
         type: DeviceAbilityType.bOtherFunctionGetBatteryInfo);
 

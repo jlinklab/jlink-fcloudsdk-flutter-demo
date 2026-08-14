@@ -416,7 +416,7 @@ class DeviceAlarmLineOrAreaController extends ChangeNotifier {
           String reverseBinaryLine = _hexToReverseBinary(dwLineDirect);
           dataList = [];
           for (int i = 0; i < reverseBinaryLine.length; i++) {
-            if (reverseBinaryLine[i] == '1') {
+            if (reverseBinaryLine[i] == '1' && i < _mapLineType.length) {
               dataList.add(_mapLineType[i]);
             }
           }
