@@ -170,8 +170,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "deviceAddConnectBledDisconnected": MessageLookupByLibrary.simpleMessage(
       "Bluetooth Disconnected",
     ),
+    "deviceAwakened": MessageLookupByLibrary.simpleMessage("Awakened"),
     "deviceBluetoothCantConnect": MessageLookupByLibrary.simpleMessage(
       "Cannot connect to Bluetooth",
+    ),
+    "deviceDeepSleep": MessageLookupByLibrary.simpleMessage("Deep Sleep"),
+    "deviceDeepSleepCannotWake": MessageLookupByLibrary.simpleMessage(
+      "Device is in deep sleep and cannot be woken",
     ),
     "deviceFirmwareUpgrade": MessageLookupByLibrary.simpleMessage(
       "Device Firmware Upgrade",
@@ -190,6 +195,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "deviceNoMemoryCard": MessageLookupByLibrary.simpleMessage(
       "The device does not have a storage card",
     ),
+    "deviceOffline": MessageLookupByLibrary.simpleMessage(
+      "Device is offline, unable to preview",
+    ),
+    "devicePrepareSleep": MessageLookupByLibrary.simpleMessage(
+      "Preparing to Sleep",
+    ),
     "devicePwdInvalid": MessageLookupByLibrary.simpleMessage(
       "Device login password format is invalid",
     ),
@@ -202,7 +213,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Are you sure you want to restart the device?",
     ),
     "deviceShare": MessageLookupByLibrary.simpleMessage("Device Share"),
+    "deviceSleeping": MessageLookupByLibrary.simpleMessage("Sleeping"),
     "deviceToken": MessageLookupByLibrary.simpleMessage("Device Token"),
+    "deviceWakingUp": MessageLookupByLibrary.simpleMessage("Waking up..."),
     "download": MessageLookupByLibrary.simpleMessage("Download Management"),
     "empty": MessageLookupByLibrary.simpleMessage("(empty)"),
     "endTime": MessageLookupByLibrary.simpleMessage("End Time"),
@@ -321,6 +334,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "local": MessageLookupByLibrary.simpleMessage("en"),
     "login": MessageLookupByLibrary.simpleMessage("Login"),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+    "lowPowerDevice": MessageLookupByLibrary.simpleMessage("Low Power Device"),
     "mailHint": MessageLookupByLibrary.simpleMessage("mail"),
     "mailPhone": MessageLookupByLibrary.simpleMessage("mail/phone"),
     "mailRegister": MessageLookupByLibrary.simpleMessage("Mail Register"),
@@ -512,6 +526,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "View device supported features",
     ),
     "voiceTipSwitch": MessageLookupByLibrary.simpleMessage("Voice Prompt"),
+    "wakeUpFailed": MessageLookupByLibrary.simpleMessage("Wake up failed"),
+    "wakeUpTimeout": MessageLookupByLibrary.simpleMessage("Wake up timeout"),
+    "wakingUpPleaseWait": MessageLookupByLibrary.simpleMessage(
+      "Waking up device, please wait...",
+    ),
     "wifi": MessageLookupByLibrary.simpleMessage("add via wifi"),
     "wifiPwdHint": MessageLookupByLibrary.simpleMessage("Wifi Password"),
   };

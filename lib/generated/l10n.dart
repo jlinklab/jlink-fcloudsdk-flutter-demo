@@ -1879,6 +1879,76 @@ class TR {
       args: [],
     );
   }
+
+  /// `低功耗设备`
+  String get lowPowerDevice {
+    return Intl.message('低功耗设备', name: 'lowPowerDevice', desc: '', args: []);
+  }
+
+  /// `休眠中`
+  String get deviceSleeping {
+    return Intl.message('休眠中', name: 'deviceSleeping', desc: '', args: []);
+  }
+
+  /// `唤醒中...`
+  String get deviceWakingUp {
+    return Intl.message('唤醒中...', name: 'deviceWakingUp', desc: '', args: []);
+  }
+
+  /// `已唤醒`
+  String get deviceAwakened {
+    return Intl.message('已唤醒', name: 'deviceAwakened', desc: '', args: []);
+  }
+
+  /// `深度休眠`
+  String get deviceDeepSleep {
+    return Intl.message('深度休眠', name: 'deviceDeepSleep', desc: '', args: []);
+  }
+
+  /// `准备休眠`
+  String get devicePrepareSleep {
+    return Intl.message('准备休眠', name: 'devicePrepareSleep', desc: '', args: []);
+  }
+
+  /// `设备处于深度休眠状态，无法唤醒`
+  String get deviceDeepSleepCannotWake {
+    return Intl.message(
+      '设备处于深度休眠状态，无法唤醒',
+      name: 'deviceDeepSleepCannotWake',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `唤醒失败`
+  String get wakeUpFailed {
+    return Intl.message('唤醒失败', name: 'wakeUpFailed', desc: '', args: []);
+  }
+
+  /// `唤醒超时`
+  String get wakeUpTimeout {
+    return Intl.message('唤醒超时', name: 'wakeUpTimeout', desc: '', args: []);
+  }
+
+  /// `正在唤醒设备，请稍候...`
+  String get wakingUpPleaseWait {
+    return Intl.message(
+      '正在唤醒设备，请稍候...',
+      name: 'wakingUpPleaseWait',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备已离线，无法预览`
+  String get deviceOffline {
+    return Intl.message(
+      '设备已离线，无法预览',
+      name: 'deviceOffline',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

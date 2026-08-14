@@ -242,11 +242,160 @@ class _DeviceCard extends StatelessWidget {
   const _DeviceCard({Key? key, required this.device, required this.type})
       : super(key: key);
 
+  static const int _stateOffline = 0;
+  static const int _stateOnline = 1;
+  static const int _stateSleep = 2; // 浅度休眠
+  static const int _stateWakingUp = 3; // 唤醒中
+  static const int _stateAwakened = 4; // 已唤醒
+  static const int _stateDeepSleep = 5; // 深度休眠（不可唤醒）
+  static const int _statePrepareSleep = 6; // 准备休眠
+
+  /// 获取低功耗设备的详细状态（从 ViewModel 查询，而非 device.state）
+  int _getLowPowerState(BuildContext context) {
+    if (!device.isLowPowerType) return device.state;
+    final viewModel = context.read<DevListViewModel>();
+    return viewModel.getLowPowerDevState(device.uuid);
+  }
+
+  /// 获取设备状态信息（颜色、文本）
+  ({Color color, String? text}) _getDeviceStateInfo(int lpState) {
+    final isLowPower = device.isLowPowerType;
+
+    if (!isLowPower) {
+      // 非低功耗设备：仅显示在线/离线
+      final state = device.state;
+      return (
+        color: state > 0 ? Colors.green : Colors.grey,
+        text: null,
+      );
+    }
+
+    // 低功耗设备：细分休眠状态（使用接口查询的状态）
+    switch (lpState) {
+      case _stateOffline:
+        return (color: Colors.grey, text: null);
+      case _stateOnline:
+      case _stateAwakened:
+        return (color: Colors.green, text: TR.current.deviceAwakened);
+      case _stateSleep:
+        return (color: Colors.orange, text: TR.current.deviceSleeping);
+      case _stateWakingUp:
+        return (color: Colors.blue, text: TR.current.deviceWakingUp);
+      case _stateDeepSleep:
+        return (color: Colors.red, text: TR.current.deviceDeepSleep);
+      case _statePrepareSleep:
+        return (color: Colors.orange, text: TR.current.devicePrepareSleep);
+      default:
+        return (color: Colors.grey, text: null);
+    }
+  }
+
+  /// 判断设备是否处于休眠状态（需要唤醒才能预览）
+  bool _isSleeping(int lpState) =>
+      device.isLowPowerType &&
+      (lpState == _stateSleep || lpState == _statePrepareSleep);
+
+  /// 判断设备是否深度休眠（不可唤醒）
+  bool _isDeepSleep(int lpState) =>
+      device.isLowPowerType && lpState == _stateDeepSleep;
+
+  /// 导航到预览页面（低功耗设备需先唤醒）
+  void _navigateToPreview(BuildContext context) async {
+    if(device.isLowPowerType){
+      final lpState = _getLowPowerState(context);
+
+      // 离线状态，无法预览
+      if (lpState == _stateOffline || lpState < 0) {
+        KToast.show(status: TR.current.deviceOffline);
+        return;
+      }
+
+      // 深度休眠，无法唤醒
+      if (_isDeepSleep(lpState)) {
+        KToast.show(status: TR.current.deviceDeepSleepCannotWake);
+        return;
+      }
+
+      // 休眠状态，需要先唤醒
+      if (_isSleeping(lpState)) {
+        _showWakeUpDialog(context);
+        return;
+      }
+
+    } else {
+      // 离线状态，无法预览
+      if (device.state <= _stateOffline) {
+        KToast.show(status: TR.current.deviceOffline);
+        return;
+      }
+    }
+
+    // 正常导航到预览
+    _goToPreview(context);
+  }
+
+  /// 跳转到预览页面
+  void _goToPreview(BuildContext context) {
+    context.pushNamed('preview', pathParameters: {
+      'devId': device.uuid,
+      'type': type.toString(),
+      'pid': device.pid.isNotEmpty ? device.pid : '-1'
+    });
+  }
+
+  /// 显示唤醒对话框
+  void _showWakeUpDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 24),
+              Text(TR.current.wakingUpPleaseWait),
+            ],
+          ),
+        );
+      },
+    );
+
+    // 执行唤醒操作
+    _doWakeUp(context);
+  }
+
+  /// 执行唤醒操作
+  void _doWakeUp(BuildContext context) async {
+    try {
+      final result = await JFApi.xcDevice.xcDeviceWakeup(
+        deviceId: device.uuid,
+        timeout: 15000,
+      );
+
+      if (!context.mounted) return;
+      Navigator.of(context).pop(); // 关闭唤醒对话框
+
+      if (result >= 0) {
+        // 唤醒成功，跳转到预览
+        _goToPreview(context);
+      } else {
+        KToast.show(status: TR.current.wakeUpFailed);
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      Navigator.of(context).pop(); // 关闭唤醒对话框
+      KToast.show(status: TR.current.wakeUpFailed);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cloudService = DeviceCloudServiceManager.instance
         .getCloudService(deviceId: device.uuid);
-    final isOnline = device.state > 0;
+    final lpState = _getLowPowerState(context);
+    final stateInfo = _getDeviceStateInfo(lpState);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -254,19 +403,13 @@ class _DeviceCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () {
-          context.pushNamed('preview', pathParameters: {
-            'devId': device.uuid,
-            'type': type.toString(),
-            'pid': device.pid.isNotEmpty ? device.pid : '-1'
-          });
-        },
+        onTap: () => _navigateToPreview(context),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 第一行：设备名称 + 在线状态
+              // 第一行：设备名称 + 状态指示
               Row(
                 children: [
                   Container(
@@ -274,7 +417,7 @@ class _DeviceCard extends StatelessWidget {
                     height: 10,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: isOnline ? Colors.green : Colors.grey,
+                      color: stateInfo.color,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -291,6 +434,24 @@ class _DeviceCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  // 低功耗设备状态标签
+                  if (stateInfo.text != null)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: stateInfo.color.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        stateInfo.text!,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: stateInfo.color,
+                        ),
+                      ),
+                    ),
+                  if (stateInfo.text != null) const SizedBox(width: 4),
                   if (cloudService != null)
                     _buildCloudBadge(cloudService.cloudServerStatus),
                   const SizedBox(width: 4),
@@ -321,13 +482,7 @@ class _DeviceCard extends StatelessWidget {
                   _ActionButton(
                     icon: Icons.videocam,
                     label: TR.current.preview,
-                    onTap: () {
-                      context.pushNamed('preview', pathParameters: {
-                        'devId': device.uuid,
-                        'type': type.toString(),
-                        'pid': device.pid.isNotEmpty ? device.pid : '-1',
-                      });
-                    },
+                    onTap: () => _navigateToPreview(context),
                   ),
                   const SizedBox(width: 8),
                   _ActionButton(

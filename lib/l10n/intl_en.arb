@@ -458,5 +458,16 @@
   "modifySuccess": "Modified successfully",
   "modifyFailed": "Modification failed",
   "deviceLoginNameInvalid": "Device login name format is invalid",
-  "devicePwdInvalid": "Device login password format is invalid"
+  "devicePwdInvalid": "Device login password format is invalid",
+  "lowPowerDevice": "Low Power Device",
+  "deviceSleeping": "Sleeping",
+  "deviceWakingUp": "Waking up...",
+  "deviceAwakened": "Awakened",
+  "deviceDeepSleep": "Deep Sleep",
+  "devicePrepareSleep": "Preparing to Sleep",
+  "deviceDeepSleepCannotWake": "Device is in deep sleep and cannot be woken",
+  "wakeUpFailed": "Wake up failed",
+  "wakeUpTimeout": "Wake up timeout",
+  "wakingUpPleaseWait": "Waking up device, please wait...",
+  "deviceOffline": "Device is offline, unable to preview"
 }
