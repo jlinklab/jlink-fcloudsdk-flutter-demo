@@ -5,11 +5,11 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/api/sdk_init/sdk_init_api.dart';
-import 'package:xcloudsdk_flutter_example/api/core/api_url.dart';
-import 'package:xcloudsdk_flutter_example/api/core/param_encoder.dart';
-import 'package:xcloudsdk_flutter_example/utils/app_config.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/api/sdk_init/sdk_init_api.dart';
+import 'package:fcloudsdk_example/api/core/api_url.dart';
+import 'package:fcloudsdk_example/api/core/param_encoder.dart';
+import 'package:fcloudsdk_example/utils/app_config.dart';
 
 ///几乎所有的接口都是这种加密方式
 ///在拦截器中 生成 timeMillis 和 secret 参数, 替换参数之后发起请求

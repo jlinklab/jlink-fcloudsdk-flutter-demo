@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/pages/album/models/album_model.dart';
-import 'package:xcloudsdk_flutter_example/pages/album/views/album_image_detail_view.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/pages/album/models/album_model.dart';
+import 'package:fcloudsdk_example/pages/album/views/album_image_detail_view.dart';
 
 class AlbumItemView extends StatefulWidget {
   final Album album;

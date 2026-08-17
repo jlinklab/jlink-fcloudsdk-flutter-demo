@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
-import 'package:xcloudsdk_flutter/api/device_upload_dev_data/device_upload_dev_data_api.dart';
-import 'package:xcloudsdk_flutter/utils/log_util.dart';
-import 'package:xcloudsdk_flutter_example/utils/map_utils.dart';
+import 'package:fcloudsdk/api/device_upload_dev_data/device_upload_dev_data_api.dart';
+import 'package:fcloudsdk/utils/log_util.dart';
+import 'package:fcloudsdk_example/utils/map_utils.dart';
 
 /// 低功耗设备：电量+4G信号+充电状态 等设备属性获取更新管理类
 class IDRPropertyManager {

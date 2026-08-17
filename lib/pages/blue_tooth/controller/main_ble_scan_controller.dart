@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/ble_by_sdk/ble_device.dart';
-import 'package:xcloudsdk_flutter/ble_by_sdk/ble_search.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/manager/add_device_permission_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/manager/global_ble_search_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/models/scanned_device.dart';
+import 'package:fcloudsdk/ble_by_sdk/ble_device.dart';
+import 'package:fcloudsdk/ble_by_sdk/ble_search.dart';
+import 'package:fcloudsdk_example/pages/add_device/manager/add_device_permission_manager.dart';
+import 'package:fcloudsdk_example/pages/add_device/manager/global_ble_search_manager.dart';
+import 'package:fcloudsdk_example/pages/add_device/models/scanned_device.dart';
 
 class MainBleScanController extends ChangeNotifier {
   final BuildContext context;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/device_list_page.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_list_page.dart';
 
 import 'pages/account/account_info_page.dart';
 import 'pages/album/album_page.dart';

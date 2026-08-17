@@ -9,10 +9,10 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/ble/ble_api.dart';
-import 'package:xcloudsdk_flutter_example/utils/app_config.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/ble/ble_api.dart';
+import 'package:fcloudsdk_example/utils/app_config.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 ///权限工具类
 /// isDenied 拒绝

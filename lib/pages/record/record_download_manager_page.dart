@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:open_file/open_file.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/media/media_download.dart';
-import 'package:xcloudsdk_flutter/utils/date_util.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/media/media_download.dart';
+import 'package:fcloudsdk/utils/date_util.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:date_format/date_format.dart';
-import 'package:xcloudsdk_flutter/utils/extensions.dart';
-import 'package:xcloudsdk_flutter_example/common/common_path.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
+import 'package:fcloudsdk/utils/extensions.dart';
+import 'package:fcloudsdk_example/common/common_path.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
 
 import '../download_manage/model/record_file.dart';
 import 'model/model.dart';

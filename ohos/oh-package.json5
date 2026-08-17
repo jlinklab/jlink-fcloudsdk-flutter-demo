@@ -19,7 +19,7 @@
     "package_info_plus": "file:./har/package_info_plus.har",
     "flutter_geolocator_ohos": "file:./har/flutter_geolocator_ohos.har",
     "video_thumbnail_ohos": "file:./har/video_thumbnail_ohos.har",
-    "xcloudsdk_flutter": "file:./har/xcloudsdk_flutter.har",
+    "fcloudsdk": "file:./har/fcloudsdk.har",
     "@ohos/flutter_module": "file:./entry",
     "@ohos/flutter_ohos": "file:./har/flutter.har",
     "device_info_plus": "file:./har/device_info_plus.har",

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:xcloudsdk_flutter/media/controller/media_controller.dart';
+import 'package:fcloudsdk/media/controller/media_controller.dart';
 
 typedef PlaybackCallback = void Function(bool playing);
 

@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/api/core/dio_config.dart';
-import 'package:xcloudsdk_flutter_example/api/share_api.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
-import 'package:xcloudsdk_flutter_example/pages/share/model/model.dart';
-import 'package:xcloudsdk_flutter_example/pages/share/share_qr_page.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/api/core/dio_config.dart';
+import 'package:fcloudsdk_example/api/share_api.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/pages/share/model/model.dart';
+import 'package:fcloudsdk_example/pages/share/share_qr_page.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 import '../../models/user_instance.dart';
 

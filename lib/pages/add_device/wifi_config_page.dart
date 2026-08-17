@@ -5,15 +5,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:permission_handler/permission_handler.dart';
-import 'package:xcloudsdk_flutter/device/wifi_config_controller.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/add_device_fill_device_name_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/manager/add_device_permission_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/models/add_device_center.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/reset_device_random_loginName_password_page.dart';
-import 'package:xcloudsdk_flutter_example/views/animations/ripples.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/device/wifi_config_controller.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/add_device/add_device_fill_device_name_page.dart';
+import 'package:fcloudsdk_example/pages/add_device/manager/add_device_permission_manager.dart';
+import 'package:fcloudsdk_example/pages/add_device/models/add_device_center.dart';
+import 'package:fcloudsdk_example/pages/add_device/reset_device_random_loginName_password_page.dart';
+import 'package:fcloudsdk_example/views/animations/ripples.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class WIFIConfigPage extends StatefulWidget {
   const WIFIConfigPage({Key? key}) : super(key: key);

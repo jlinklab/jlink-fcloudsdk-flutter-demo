@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
+import 'package:fcloudsdk/api/api_center.dart';
 import '../../api/share_api.dart';
 import '../../common/code_prase.dart';
 import '../../common/event.dart';

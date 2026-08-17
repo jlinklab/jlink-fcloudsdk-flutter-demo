@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/media/controller/media_controller.dart';
-import 'package:xcloudsdk_flutter/media/controller/mixin/media_record_video_mixin.dart';
-import 'package:xcloudsdk_flutter/media/controller/preview_media_controller.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/common/event.dart';
-import 'package:xcloudsdk_flutter_example/event/event.dart';
-import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
-import 'package:xcloudsdk_flutter_example/manager/device_property_manager.dart';
-import 'package:xcloudsdk_flutter_example/manager/idr_property_manager.dart';
-import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_ability/device_ability_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_pwd_setting/device_pwd_find_back_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/device_pwd_input.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/media/controller/media_controller.dart';
+import 'package:fcloudsdk/media/controller/mixin/media_record_video_mixin.dart';
+import 'package:fcloudsdk/media/controller/preview_media_controller.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/common/event.dart';
+import 'package:fcloudsdk_example/event/event.dart';
+import 'package:fcloudsdk_example/manager/device_manager.dart';
+import 'package:fcloudsdk_example/manager/device_property_manager.dart';
+import 'package:fcloudsdk_example/manager/idr_property_manager.dart';
+import 'package:fcloudsdk_example/models/user_instance.dart';
+import 'package:fcloudsdk_example/pages/device_ability/device_ability_manager.dart';
+import 'package:fcloudsdk_example/pages/device_pwd_setting/device_pwd_find_back_page.dart';
+import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/views/toast/device_pwd_input.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class MediaRealplayController extends ChangeNotifier {
   final BuildContext context;

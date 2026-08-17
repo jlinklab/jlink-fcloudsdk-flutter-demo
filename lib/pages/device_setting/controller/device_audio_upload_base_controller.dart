@@ -10,12 +10,12 @@ import 'package:go_router/go_router.dart';
 //ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:record/record.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/api/mobile_systeminfo/MobileSystemInfo_api.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/common/common_path.dart';
-import 'package:xcloudsdk_flutter_example/utils/permission_utils.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/api/mobile_systeminfo/MobileSystemInfo_api.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/common/common_path.dart';
+import 'package:fcloudsdk_example/utils/permission_utils.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 import '../../../../generated/l10n.dart';
 

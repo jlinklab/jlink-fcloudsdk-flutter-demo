@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/manager/device_config_manager.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/manager/device_config_manager.dart';
 
 import '../../../common/code_prase.dart';
 import '../../../generated/l10n.dart';

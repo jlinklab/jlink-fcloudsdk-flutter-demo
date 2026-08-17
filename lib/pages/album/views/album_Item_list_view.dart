@@ -1,9 +1,9 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/album/models/album_model.dart';
-import 'package:xcloudsdk_flutter_example/pages/album/views/album_item_view.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/album/models/album_model.dart';
+import 'package:fcloudsdk_example/pages/album/views/album_item_view.dart';
 
 class AlbumItemListView extends StatefulWidget {
   final bool isEditting;

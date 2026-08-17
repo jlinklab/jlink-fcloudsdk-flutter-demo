@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:xcloudsdk_flutter/utils/extensions.dart';
-import 'package:xcloudsdk_flutter_example/api/add_device_api.dart';
-import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/cloud/device_cloud_service_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/cloud/model/device_cloud.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_ability/device_ability_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
-import 'package:xcloudsdk_flutter_example/utils/sp_utils.dart';
+import 'package:fcloudsdk/utils/extensions.dart';
+import 'package:fcloudsdk_example/api/add_device_api.dart';
+import 'package:fcloudsdk_example/manager/device_manager.dart';
+import 'package:fcloudsdk_example/pages/cloud/device_cloud_service_manager.dart';
+import 'package:fcloudsdk_example/pages/cloud/model/device_cloud.dart';
+import 'package:fcloudsdk_example/pages/device_ability/device_ability_manager.dart';
+import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/utils/sp_utils.dart';
 
 ///多目类别, 根据[streamCount]路码流[lensesCount]个展示窗口判别类别
 enum MultiCategory {

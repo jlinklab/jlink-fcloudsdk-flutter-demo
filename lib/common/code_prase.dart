@@ -1,5 +1,5 @@
 // ignore: non_constant_identifier_names
-import 'package:xcloudsdk_flutter/api/api_center.dart';
+import 'package:fcloudsdk/api/api_center.dart';
 
 import '../api/core/dio_config.dart';
 import '../generated/l10n.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/media/controller/media_controller.dart';
+import 'package:fcloudsdk/media/controller/media_controller.dart';
 
 class BitsWidget extends StatelessWidget {
   const BitsWidget({

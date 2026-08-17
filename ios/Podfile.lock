@@ -9,6 +9,8 @@ PODS:
     - FlutterMacOS
   - device_info_plus (0.0.1):
     - Flutter
+  - fcloudsdk (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - flutter_local_notifications (0.0.1):
     - Flutter
@@ -115,14 +117,13 @@ PODS:
   - video_thumbnail (0.0.1):
     - Flutter
     - libwebp
-  - xcloudsdk_flutter (0.0.1):
-    - Flutter
 
 DEPENDENCIES:
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/darwin`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/darwin`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
+  - fcloudsdk (from `.symlinks/plugins/fcloudsdk/ios`)
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
@@ -139,7 +140,6 @@ DEPENDENCIES:
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
   - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
-  - xcloudsdk_flutter (from `.symlinks/plugins/xcloudsdk_flutter/ios`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -166,6 +166,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/connectivity_plus/darwin"
   device_info_plus:
     :path: ".symlinks/plugins/device_info_plus/ios"
+  fcloudsdk:
+    :path: ".symlinks/plugins/fcloudsdk/ios"
   Flutter:
     :path: Flutter
   flutter_local_notifications:
@@ -198,14 +200,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sqflite_darwin/darwin"
   video_thumbnail:
     :path: ".symlinks/plugins/video_thumbnail/ios"
-  xcloudsdk_flutter:
-    :path: ".symlinks/plugins/xcloudsdk_flutter/ios"
 
 SPEC CHECKSUMS:
   app_settings: c8026d12f9fdbfa7f0ed1a79dc09e12cc6117829
   audioplayers_darwin: 4f9ca89d92d3d21cec7ec580e78ca888e5fb68bd
   connectivity_plus: b21496ab28d1324eb59885d888a4d83b98531f01
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
+  fcloudsdk: 16c3a73234f350d9f497ed041873e1766d040323
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_local_notifications: ad39620c743ea4c15127860f4b5641649a988100
   geolocator_apple: 1d9e8e718b0aee61b8573d2d531eff76d00f383b
@@ -235,8 +236,7 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
   video_thumbnail: b637e0ad5f588ca9945f6e2c927f73a69a661140
-  xcloudsdk_flutter: 305118cece2aade68054b83c794d66fbd1e1ae32
 
-PODFILE CHECKSUM: 186919bfa5714bb4587713bbc580dcc417c64be9
+PODFILE CHECKSUM: 3d0f8d063dd53fa09bd85652ef6d71068b74055d
 
 COCOAPODS: 1.16.2

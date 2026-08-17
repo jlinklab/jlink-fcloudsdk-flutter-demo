@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/api/cloud_service/cloud_service.dart';
-import 'package:xcloudsdk_flutter/utils/extensions.dart';
-import 'package:xcloudsdk_flutter_example/pages/cloud/model/device_cloud.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/api/cloud_service/cloud_service.dart';
+import 'package:fcloudsdk/utils/extensions.dart';
+import 'package:fcloudsdk_example/pages/cloud/model/device_cloud.dart';
+import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
 
 ///更新了云服务状态事件，上层可监听进行刷新
 ///收到这个事件之后，可以使用缓存获取到最新的值，不需要再次异步获取刷新

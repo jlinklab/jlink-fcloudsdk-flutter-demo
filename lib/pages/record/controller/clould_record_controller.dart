@@ -1,17 +1,17 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:flutter/foundation.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/model/dev_record.dart';
-import 'package:xcloudsdk_flutter/utils/date_util.dart';
-import 'package:xcloudsdk_flutter/utils/extensions.dart';
-import 'package:xcloudsdk_flutter_example/common/common_path.dart';
-import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
-import 'package:xcloudsdk_flutter_example/pages/record/model/model.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/model/dev_record.dart';
+import 'package:fcloudsdk/utils/date_util.dart';
+import 'package:fcloudsdk/utils/extensions.dart';
+import 'package:fcloudsdk_example/common/common_path.dart';
+import 'package:fcloudsdk_example/models/user_instance.dart';
+import 'package:fcloudsdk_example/pages/record/model/model.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:time/time.dart';
-import 'package:xcloudsdk_flutter/media/media_player.dart';
+import 'package:fcloudsdk/media/media_player.dart';
 import '../../../common/code_prase.dart';
 
 class CloudRecordController extends ChangeNotifier {

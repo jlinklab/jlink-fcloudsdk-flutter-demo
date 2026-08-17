@@ -15,7 +15,7 @@ import MobileScannerPlugin from 'mobile_scanner';
 import RecordOhosPlugin from 'record_ohos';
 import ScanPlugin from 'scan';
 import VideoThumbnaiOhosPlugin from 'video_thumbnail';
-import XCloudFlutterPlugin from 'xcloudsdk_flutter';
+import XCloudFlutterPlugin from 'fcloudsdk';
 
 /**
  * Generated file. Do not edit.

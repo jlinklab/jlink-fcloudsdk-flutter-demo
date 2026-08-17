@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/controller/device_record_set_controller.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/device_setting/controller/device_record_set_controller.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class DeviceRecordSetPage extends StatefulWidget {
   const DeviceRecordSetPage(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/manager/device_config_manager.dart';
-import 'package:xcloudsdk_flutter/media/controller/media_controller.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
+import 'package:fcloudsdk/manager/device_config_manager.dart';
+import 'package:fcloudsdk/media/controller/media_controller.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
 
 ///4g 信号展示
 class Signal4GWidget extends StatefulWidget {

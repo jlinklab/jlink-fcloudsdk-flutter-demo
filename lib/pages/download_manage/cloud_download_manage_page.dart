@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:open_file/open_file.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class CloudDownloadManagerPage extends StatefulWidget {
   const CloudDownloadManagerPage({Key? key}) : super(key: key);

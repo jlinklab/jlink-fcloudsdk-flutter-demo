@@ -67,7 +67,7 @@ post_install do |installer|
       ]
     end
     
-    if target.name == 'xcloudsdk_flutter'
+    if target.name == 'fcloudsdk'
       target.build_configurations.each do |config|
         config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)']
 #        config.build_settings['HEADER_SEARCH_PATHS'] << '${PODS_ROOT}/../../../ios/XCloudSDK.framework/Headers'

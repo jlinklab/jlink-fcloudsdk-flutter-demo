@@ -1,20 +1,20 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/common/event.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_ability/device_ability_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_pwd_setting/device_pwd_reset_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/device_alarm_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/device_basic_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/device_info_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/device_record_set_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/device_storage_manage_page.dart';
-import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/device_firmware_upgrade_page.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/common/event.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
+import 'package:fcloudsdk_example/pages/device_ability/device_ability_manager.dart';
+import 'package:fcloudsdk_example/pages/device_pwd_setting/device_pwd_reset_page.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_alarm_page.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_basic_page.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_info_page.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_record_set_page.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_storage_manage_page.dart';
+import 'package:fcloudsdk_example/manager/device_manager.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_firmware_upgrade_page.dart';
 
 typedef GetTitle = String Function(BuildContext context);
 

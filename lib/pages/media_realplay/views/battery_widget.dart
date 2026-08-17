@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/manager/idr_property_manager.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/manager/idr_property_manager.dart';
 
 /// 电量等级+充电状态展示
 class BatteryWidget extends StatelessWidget {

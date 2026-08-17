@@ -6,9 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/media/media_player.dart';
-import 'package:xcloudsdk_flutter_example/pages/record/alarmplaytoolbar/alarmplaytoolbar.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/media/media_player.dart';
+import 'package:fcloudsdk_example/pages/record/alarmplaytoolbar/alarmplaytoolbar.dart';
 
 import '../../common/code_prase.dart';
 import '../../common/named_route.dart';

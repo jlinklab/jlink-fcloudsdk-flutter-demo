@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
-import 'package:xcloudsdk_flutter_example/utils/common_path.dart';
+import 'package:fcloudsdk_example/utils/common_path.dart';
 
 ///上传日志文件工具类
 ///日志文件合并成zip

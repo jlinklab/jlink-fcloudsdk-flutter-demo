@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:xcloudsdk_flutter/media/download/meida_download_controller.dart';
-import 'package:xcloudsdk_flutter/utils/extensions.dart';
-import 'package:xcloudsdk_flutter_example/pages/download_manage/model/record_file.dart';
-import 'package:xcloudsdk_flutter_example/pages/record/model/model.dart';
+import 'package:fcloudsdk/media/download/meida_download_controller.dart';
+import 'package:fcloudsdk/utils/extensions.dart';
+import 'package:fcloudsdk_example/pages/download_manage/model/record_file.dart';
+import 'package:fcloudsdk_example/pages/record/model/model.dart';
 
 ///缓存下载记录
 class DownloadManage extends ChangeNotifier {

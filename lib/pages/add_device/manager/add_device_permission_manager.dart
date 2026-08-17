@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:xcloudsdk_flutter_example/utils/permission_utils.dart';
+import 'package:fcloudsdk_example/utils/permission_utils.dart';
 
 ///检查添加设备所需权限开关状态
 class AddDevicePermissionUsecase {
