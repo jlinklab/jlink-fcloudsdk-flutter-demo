@@ -469,5 +469,18 @@
   "wakeUpFailed": "Wake up failed",
   "wakeUpTimeout": "Wake up timeout",
   "wakingUpPleaseWait": "Waking up device, please wait...",
-  "deviceOffline": "Device is offline, unable to preview"
+  "deviceOffline": "Device is offline, unable to preview",
+  "channelList": "Channel List",
+  "channel": "Channel",
+  "channelOnline": "Online",
+  "channelOffline": "Offline",
+  "channelNoConfig": "Not Configured",
+  "channelNoLogin": "Not Logged In",
+  "channelNoConnect": "Not Connected",
+  "channelLoginFailed": "Login Failed",
+  "channelIpLimit": "IP Limited",
+  "channelSleep": "Sleep",
+  "channelUnknown": "Unknown",
+  "loadingChannelInfo": "Loading channel info...",
+  "loadChannelFailed": "Failed to load channel info"
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:xcloudsdk_flutter/manager/device_config_manager.dart';
 import 'package:xcloudsdk_flutter/utils/extensions.dart';
 import 'package:xcloudsdk_flutter_example/api/add_device_api.dart';
 import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
@@ -335,6 +336,191 @@ class DevicePropertyManager {
     }
 
     return lowPower;
+  }
+
+  // ==================== NVR 设备判断 ====================
+
+  static const String _nvr = 'is_nvr';
+  static const String _nvrChannelCount = 'nvr_channel_count';
+
+  /// 根据设备类型判断是否是NVR（同步方法）
+  bool isNVRByDeviceType(int devType) {
+    // 无线基站设备
+    const int eeDevWBS = 305201153;
+    if (devType == eeDevWBS) {
+      return true;
+    }
+
+    // 高4位为 0x02 或 0x03 表示NVR
+    const int mask = 0x0F000000;
+    int masked = devType & mask;
+    if (masked == 0x02000000 || masked == 0x03000000) {
+      return true;
+    }
+    return false;
+  }
+
+  /// IPC 通过 Pid 判断
+  bool isIPCCheckedByPid(String pid) {
+    return pid.startsWith('A9');
+  }
+
+  /// 同步读取缓存判断是否是NVR
+  bool isNVR({required String deviceId}) {
+    String key = _spKey(_nvr, deviceId);
+    return SPUtils.preferences.getBool(key) ?? false;
+  }
+
+  /// 异步判断是否是NVR设备（三层判断：缓存 → 设备配置 → 云服务）
+  Future<bool> isNVRAsync({required String deviceId}) async {
+    Device? device = DeviceManager.instance.getDevice(deviceId: deviceId);
+    if (device == null) {
+      return false;
+    }
+    String key = _spKey(_nvr, deviceId);
+    String countKey = _spKey(_nvrChannelCount, deviceId);
+    bool nvr = false;
+
+    // 第一步：缓存命中直接返回
+    if (SPUtils.preferences.containsKey(key)) {
+      nvr = SPUtils.preferences.getBool(key) ?? false;
+      return nvr;
+    }
+
+    // 第二步：通过设备配置获取通道列表判断
+    try {
+      if (!isIPCCheckedByPid(device.pid) &&
+          (isNVRByDeviceType(device.deviceType) ||
+              device.deviceType == 0 ||
+              device.deviceType == 1 ||
+              device.deviceType == 2 ||
+              device.deviceType == 4 ||
+              device.deviceType == 8)) {
+        var response = await DeviceConfigManager.getConfigToObject<List<String>>(
+          deviceId: deviceId,
+          command: 1048,
+          commandName: DeviceJsonName.channelTitle,
+        );
+        if (response.isNotEmpty) {
+          nvr = response.length > 1;
+          await SPUtils.preferences.setInt(countKey, response.length);
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    // 通过设备配置确认是NVR，缓存之后直接返回
+    if (nvr) {
+      await SPUtils.preferences.setBool(key, nvr);
+      return nvr;
+    }
+
+    // 第三步：通过云服务字段判断
+    try {
+      final cloudService = device.cloudService();
+      if (cloudService != null && cloudService.channelCloud.isNotEmpty) {
+        nvr = true;
+        await SPUtils.preferences.setBool(key, nvr);
+        await SPUtils.preferences.setInt(countKey, cloudService.channelCloud.length);
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    return nvr;
+  }
+
+  /// 同步读取缓存获取NVR通道数
+  int getNvrChannelCount({required String deviceId}) {
+    String key = _spKey(_nvrChannelCount, deviceId);
+    return SPUtils.preferences.getInt(key) ?? 1;
+  }
+
+  /// 异步获取NVR通道数
+  Future<int> getNvrChannelCountAsync({required String deviceId}) async {
+    String key = _spKey(_nvrChannelCount, deviceId);
+    if (SPUtils.preferences.containsKey(key)) {
+      return SPUtils.preferences.getInt(key)!;
+    }
+    int channelCount = 1;
+
+    // 方式1：通过设备配置获取通道列表
+    try {
+      var response = await DeviceConfigManager.getConfigToObject<List<String>>(
+        deviceId: deviceId,
+        command: 1048,
+        commandName: DeviceJsonName.channelTitle,
+      );
+      if (response.isNotEmpty) {
+        channelCount = response.length;
+        await SPUtils.preferences.setInt(key, channelCount);
+        return channelCount;
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    // 方式2：通过 AVEnc.VideoWidget 获取
+    if (channelCount == 1) {
+      try {
+        var response = await DeviceConfigManager.getConfigToObject<
+            List<Map<String, dynamic>>>(
+          deviceId: deviceId,
+          commandName: DeviceJsonName.aVEncVideoWidget,
+        );
+        if (response.isNotEmpty) {
+          channelCount = response.length;
+          await SPUtils.preferences.setInt(key, channelCount);
+          return channelCount;
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    return channelCount;
+  }
+
+  // ==================== NVR 通道状态获取 ====================
+
+  /// 获取 NVR 设备各通道的状态列表
+  /// 通过 NetWork.ChnStatus 设备配置获取
+  Future<List<FrontDeviceStatus>> getChannelStates({
+    required String deviceId,
+    required int channelCount,
+  }) async {
+    List<FrontDeviceStatus> statusList = [];
+
+    try {
+      // 通过 NetWork.ChnStatus 获取通道状态
+      var response = await DeviceConfigManager.getConfigToObject<
+          List<Map<String, dynamic>>>(
+        deviceId: deviceId,
+        commandName: DeviceJsonName.netWorkChnStatus,
+      );
+
+      if (response.isNotEmpty) {
+        for (int i = 0; i < channelCount && i < response.length; i++) {
+          Map<String, dynamic> channelStatusMap = response[i];
+          String status = channelStatusMap['Status'] ?? '';
+          FrontDeviceStatus deviceStatus = FrontDeviceStatus.values.firstWhere(
+            (e) => e.des == (status.isEmpty ? 'None' : status),
+            orElse: () => FrontDeviceStatus.unKnown,
+          );
+          statusList.add(deviceStatus);
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    // 如果获取失败，填充默认状态
+    while (statusList.length < channelCount) {
+      statusList.add(FrontDeviceStatus.none);
+    }
+
+    return statusList;
   }
 
   ///缓存获取是否是AOV设备

@@ -284,5 +284,18 @@
   "wakeUpFailed": "唤醒失败",
   "wakeUpTimeout": "唤醒超时",
   "wakingUpPleaseWait": "正在唤醒设备，请稍候...",
-  "deviceOffline": "设备已离线，无法预览"
+  "deviceOffline": "设备已离线，无法预览",
+  "channelList": "通道列表",
+  "channel": "通道",
+  "channelOnline": "在线",
+  "channelOffline": "离线",
+  "channelNoConfig": "未配置",
+  "channelNoLogin": "未登录",
+  "channelNoConnect": "未连接",
+  "channelLoginFailed": "登录失败",
+  "channelIpLimit": "IP受限",
+  "channelSleep": "休眠",
+  "channelUnknown": "未知",
+  "loadingChannelInfo": "正在加载通道信息...",
+  "loadChannelFailed": "加载通道信息失败"
 }

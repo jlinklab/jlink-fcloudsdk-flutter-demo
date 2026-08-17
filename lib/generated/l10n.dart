@@ -1949,6 +1949,81 @@ class TR {
       args: [],
     );
   }
+
+  /// `通道列表`
+  String get channelList {
+    return Intl.message('通道列表', name: 'channelList', desc: '', args: []);
+  }
+
+  /// `通道`
+  String get channel {
+    return Intl.message('通道', name: 'channel', desc: '', args: []);
+  }
+
+  /// `在线`
+  String get channelOnline {
+    return Intl.message('在线', name: 'channelOnline', desc: '', args: []);
+  }
+
+  /// `离线`
+  String get channelOffline {
+    return Intl.message('离线', name: 'channelOffline', desc: '', args: []);
+  }
+
+  /// `未配置`
+  String get channelNoConfig {
+    return Intl.message('未配置', name: 'channelNoConfig', desc: '', args: []);
+  }
+
+  /// `未登录`
+  String get channelNoLogin {
+    return Intl.message('未登录', name: 'channelNoLogin', desc: '', args: []);
+  }
+
+  /// `未连接`
+  String get channelNoConnect {
+    return Intl.message('未连接', name: 'channelNoConnect', desc: '', args: []);
+  }
+
+  /// `登录失败`
+  String get channelLoginFailed {
+    return Intl.message('登录失败', name: 'channelLoginFailed', desc: '', args: []);
+  }
+
+  /// `IP受限`
+  String get channelIpLimit {
+    return Intl.message('IP受限', name: 'channelIpLimit', desc: '', args: []);
+  }
+
+  /// `休眠`
+  String get channelSleep {
+    return Intl.message('休眠', name: 'channelSleep', desc: '', args: []);
+  }
+
+  /// `未知`
+  String get channelUnknown {
+    return Intl.message('未知', name: 'channelUnknown', desc: '', args: []);
+  }
+
+  /// `正在加载通道信息...`
+  String get loadingChannelInfo {
+    return Intl.message(
+      '正在加载通道信息...',
+      name: 'loadingChannelInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `加载通道信息失败`
+  String get loadChannelFailed {
+    return Intl.message(
+      '加载通道信息失败',
+      name: 'loadChannelFailed',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

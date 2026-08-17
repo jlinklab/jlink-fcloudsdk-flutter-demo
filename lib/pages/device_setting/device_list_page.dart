@@ -13,7 +13,10 @@ import '../../generated/l10n.dart';
 import '../../manager/device_manager.dart';
 import '../../manager/push_manager.dart';
 import '../../models/user_instance.dart';
+import '../../manager/device_property_manager.dart';
 import '../../views/toast/toast.dart';
+import '../../views/toast/device_pwd_input.dart';
+import '../device_pwd_setting/device_pwd_find_back_page.dart';
 import '../alarm_message/alarm_message_list_page.dart';
 import '../cloud/device_cloud_service_manager.dart';
 import '../cloud/model/device_cloud.dart';
@@ -335,12 +338,134 @@ class _DeviceCard extends StatelessWidget {
   }
 
   /// 跳转到预览页面
-  void _goToPreview(BuildContext context) {
-    context.pushNamed('preview', pathParameters: {
-      'devId': device.uuid,
-      'type': type.toString(),
-      'pid': device.pid.isNotEmpty ? device.pid : '-1'
-    });
+  /// 对于 NVR 多通道设备，先登录设备，成功后跳转到通道列表
+  /// 对于普通设备，直接跳转到预览
+  void _goToPreview(BuildContext context) async {
+    // 检查是否是 NVR 多通道设备
+    final bool isNVR = await _checkIsNVR();
+
+    if (isNVR) {
+      // NVR 设备先登录，成功后跳转到通道列表
+      _loginAndGoToChannelList(context);
+    } else {
+      // 普通设备直接跳转预览
+      context.pushNamed('preview', pathParameters: {
+        'devId': device.uuid,
+        'type': type.toString(),
+        'pid': device.pid.isNotEmpty ? device.pid : '-1'
+      });
+    }
+  }
+
+  /// 登录设备并跳转到通道列表
+  /// 登录失败时弹出密码错误弹窗（复用预览页的 DevicePwdInput）
+  void _loginAndGoToChannelList(BuildContext context) async {
+    // 显示加载中
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) => const AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('正在登录设备...'),
+          ],
+        ),
+      ),
+    );
+
+    await _doLoginDevice(context);
+  }
+
+  /// 执行设备登录，失败时弹出密码错误弹窗
+  Future<void> _doLoginDevice(BuildContext context) async {
+    try {
+      final result = await JFApi.xcDevice.xcDeviceLogin(deviceId: device.uuid);
+      if (!context.mounted) return;
+      // 关闭加载弹窗
+      Navigator.of(context).pop();
+
+      if (result) {
+        // 登录成功，跳转到通道列表
+        context.pushNamed('channel_list', pathParameters: {
+          'devId': device.uuid,
+          'type': type.toString(),
+          'pid': device.pid.isNotEmpty ? device.pid : '-1'
+        });
+      } else {
+        KToast.show(status: TR.current.loadChannelFailed);
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      // 关闭加载弹窗
+      Navigator.of(context).pop();
+
+      // 解析错误码
+      int code = 0;
+      if (e is XCloudAPIException) {
+        code = e.code;
+      } else if (e is int) {
+        code = e;
+      }
+
+      // 密码错误错误码：-70106, -70163, -70203, -70205
+      if (code == -70106 || code == -70163 || code == -70203 || code == -70205) {
+        _showDevicePwdErrorDialog(context);
+      } else if (code < 0) {
+        KToast.show(status: kErrorMsg(code));
+      } else {
+        _loginAndGoToChannelList(context);
+      }
+    }
+  }
+
+  /// 显示设备密码错误弹窗（复用预览页的 DevicePwdInput）
+  void _showDevicePwdErrorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogCtx) {
+        return Material(
+          color: Colors.black26,
+          child: Center(
+            child: DevicePwdInput(
+              deviceId: device.uuid,
+              completion: (name, password) async {
+                Navigator.of(dialogCtx).pop();
+                // 保存设备信息到本地缓存
+                UserInfo.instance.saveDeviceInfo(device.uuid, name, password);
+                // 调用SDK接口将账号密码缓存到本地
+                await JFApi.xcDevice.xcSetLocalUserNameAndPwd(
+                  deviceId: device.uuid,
+                  userName: name,
+                  pwd: password,
+                );
+                // 重新登录设备
+                _doLoginDevice(context);
+              },
+              onFindPwd: () {
+                Navigator.of(dialogCtx).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (BuildContext ctx) {
+                    return DevicePwdFindBackPage(deviceId: device.uuid);
+                  }),
+                );
+              },
+              onCancel: () {
+                // DevicePwdInput 内部已经 Navigator.pop，这里不需要再 pop
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// 检查设备是否是 NVR（多通道设备）
+  /// 使用 DevicePropertyManager 的 isNVRAsync 方法判断
+  Future<bool> _checkIsNVR() async {
+    return DevicePropertyManager.instance.isNVRAsync(deviceId: device.uuid);
   }
 
   /// 显示唤醒对话框

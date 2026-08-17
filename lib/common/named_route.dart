@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:xcloudsdk_flutter_example/home_page.dart';
 import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
 import 'package:xcloudsdk_flutter_example/pages/add_device/add_device_page.dart';
+import 'package:xcloudsdk_flutter_example/pages/channel_list/channel_list_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/device_config_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/add_device/wifi_config_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/login/login_page.dart';
@@ -57,6 +58,16 @@ final GoRouter goRouter = GoRouter(
         deviceId: state.pathParameters['devId'] ?? '',
         type: int.tryParse(state.pathParameters['type']!) ?? 0,
         pid: state.pathParameters['pid'] ?? '',
+      ),
+    ),
+    /// NVR 通道列表页面
+    GoRoute(
+      name: 'channel_list',
+      path: '/channel_list/:devId/:type/:pid',
+      builder: (context, state) => ChannelListPage(
+        deviceId: state.pathParameters['devId'] ?? '',
+        type: int.tryParse(state.pathParameters['type']!) ?? 0,
+        pid: state.pathParameters['pid'] ?? '-1',
       ),
     ),
     GoRoute(

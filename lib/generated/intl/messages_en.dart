@@ -108,6 +108,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancelShareSuccess": MessageLookupByLibrary.simpleMessage(
       "Cancel share success",
     ),
+    "channel": MessageLookupByLibrary.simpleMessage("Channel"),
+    "channelIpLimit": MessageLookupByLibrary.simpleMessage("IP Limited"),
+    "channelList": MessageLookupByLibrary.simpleMessage("Channel List"),
+    "channelLoginFailed": MessageLookupByLibrary.simpleMessage("Login Failed"),
+    "channelNoConfig": MessageLookupByLibrary.simpleMessage("Not Configured"),
+    "channelNoConnect": MessageLookupByLibrary.simpleMessage("Not Connected"),
+    "channelNoLogin": MessageLookupByLibrary.simpleMessage("Not Logged In"),
+    "channelOffline": MessageLookupByLibrary.simpleMessage("Offline"),
+    "channelOnline": MessageLookupByLibrary.simpleMessage("Online"),
+    "channelSleep": MessageLookupByLibrary.simpleMessage("Sleep"),
+    "channelUnknown": MessageLookupByLibrary.simpleMessage("Unknown"),
     "check": MessageLookupByLibrary.simpleMessage("confirm"),
     "clickToShare": MessageLookupByLibrary.simpleMessage("Tap to share"),
     "cloudDownload": MessageLookupByLibrary.simpleMessage(
@@ -331,6 +342,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "labelDevSN": MessageLookupByLibrary.simpleMessage("Device SN"),
     "labelDeviceName": MessageLookupByLibrary.simpleMessage("Device name"),
     "lanSearch": MessageLookupByLibrary.simpleMessage("add via lan"),
+    "loadChannelFailed": MessageLookupByLibrary.simpleMessage(
+      "Failed to load channel info",
+    ),
+    "loadingChannelInfo": MessageLookupByLibrary.simpleMessage(
+      "Loading channel info...",
+    ),
     "local": MessageLookupByLibrary.simpleMessage("en"),
     "login": MessageLookupByLibrary.simpleMessage("Login"),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),

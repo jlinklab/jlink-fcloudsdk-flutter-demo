@@ -360,3 +360,41 @@ enum DevicePermission {
   // 修改云服务配置
   DP_CLoudConfig
 }
+
+/// 前端设备状态（NVR 通道状态）
+enum FrontDeviceStatus {
+  unKnown(-1, 'UnKnown'),
+  none(0, 'None'),
+  noConfig(1, 'NoConfig'),
+  noLogin(2, 'NoLogin'),
+  noConnect(3, 'NoConnect'),
+  connected(4, 'Connected'),
+  loginFailed(5, 'LoginFailed'),
+  offline(6, 'Offline'),
+  iplimit(7, 'IpLimit'),
+  sleep(8, 'Sleep');
+
+  final int value;
+  final String des;
+
+  const FrontDeviceStatus(this.value, this.des);
+
+  /// 通过 value 获取枚举值
+  static FrontDeviceStatus fromValue(int value) {
+    return FrontDeviceStatus.values.firstWhere(
+      (e) => e.value == value,
+      orElse: () => FrontDeviceStatus.unKnown,
+    );
+  }
+
+  /// 通过描述字符串获取枚举值
+  static FrontDeviceStatus fromDes(String des) {
+    return FrontDeviceStatus.values.firstWhere(
+      (e) => e.des == des,
+      orElse: () => FrontDeviceStatus.unKnown,
+    );
+  }
+
+  /// 是否在线（可预览）
+  bool get isOnline => this == FrontDeviceStatus.connected;
+}
