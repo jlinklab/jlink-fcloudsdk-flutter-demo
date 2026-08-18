@@ -46,6 +46,21 @@ enum DeviceAbilityType {
   /// 是否支持获取电池信息
   bOtherFunctionGetBatteryInfo,
 
+  /// 是否支持电池管理
+  bOtherFunctionSupportBatteryManager,
+
+  /// 是否支持消费类灯光
+  bOtherFunctionConsumerLightMode,
+
+  /// 是否支持基础白光
+  bOtherFunctionSupportCameraWhiteLight,
+
+  /// 是否支持低功耗工作模式切换
+  bOtherFunctionSupportLPWorkModeSwitchV2,
+
+  /// 是否支持低功耗设备唤醒和预览时长
+  bOtherFunctionLowPowerWorkTime,
+
   ///AlarmFunction ************************************************************
 
   ///是否支持人形检测, 如果支持, 则要展示 [智能警戒]
@@ -55,6 +70,9 @@ enum DeviceAbilityType {
 
   /// 是否支持获取4G信号强度
   bNetServerFunctionNet4GSignalLevel,
+
+  /// 是否支持4G流量卡切换
+  bNetServerFunctionNet4GDualSim,
 }
 
 class DeviceAbilityManager {
@@ -194,12 +212,61 @@ class DeviceAbilityManager {
         }
         break;
 
+      case DeviceAbilityType.bOtherFunctionSupportBatteryManager:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['BatteryManager'] != null) {
+          isSupport =
+              abilityMap['OtherFunction']!['BatteryManager']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionConsumerLightMode:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['ConsumerLightMode'] != null) {
+          isSupport =
+              abilityMap['OtherFunction']!['ConsumerLightMode']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionSupportCameraWhiteLight:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['SupportCameraWhiteLight'] != null) {
+          isSupport =
+              abilityMap['OtherFunction']!['SupportCameraWhiteLight']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionSupportLPWorkModeSwitchV2:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['SupportLPWorkModeSwitchV2'] !=
+                null) {
+          isSupport = abilityMap['OtherFunction']!['SupportLPWorkModeSwitchV2']!
+              as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionLowPowerWorkTime:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['LowPowerWorkTime'] != null) {
+          isSupport =
+              abilityMap['OtherFunction']!['LowPowerWorkTime']! as bool;
+        }
+        break;
+
       ///NetServerFunction ********************
       case DeviceAbilityType.bNetServerFunctionNet4GSignalLevel:
         if (abilityMap['NetServerFunction'] != null &&
             abilityMap['NetServerFunction']!['Net4GSignalLevel'] != null) {
           isSupport =
               abilityMap['NetServerFunction']!['Net4GSignalLevel']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bNetServerFunctionNet4GDualSim:
+        if (abilityMap['NetServerFunction'] != null &&
+            abilityMap['NetServerFunction']!['Net4GDualSim'] != null) {
+          isSupport =
+              abilityMap['NetServerFunction']!['Net4GDualSim']! as bool;
         }
         break;
 

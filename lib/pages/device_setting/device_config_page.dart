@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:fcloudsdk_example/manager/device_property_manager.dart';
+import 'package:fcloudsdk_example/pages/device_setting/aov/device_aov_setting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk_example/common/code_prase.dart';
@@ -20,7 +22,12 @@ typedef GetTitle = String Function(BuildContext context);
 
 // ignore: must_be_immutable
 class DeviceConfigPage extends StatefulWidget {
-  DeviceConfigPage({Key? key, required this.deviceId, required this.channel, required this.type, required this.pid})
+  DeviceConfigPage(
+      {Key? key,
+      required this.deviceId,
+      required this.channel,
+      required this.type,
+      required this.pid})
       : super(key: key);
 
   final String deviceId;
@@ -53,7 +60,37 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
   }
 
   _updateDeviceSystemFunction() async {
-    await DeviceAbilityManager.update(deviceId: widget.deviceId);
+    try {
+      bool isLowpower = await DevicePropertyManager.instance
+          .isLowPowerAsync(deviceId: widget.deviceId);
+      //获取能力集前低功耗设备需要先唤醒
+      if (isLowpower) {
+        KToast.show();
+        var result = await JFApi.xcDevice.xcDeviceWakeup(
+            deviceId: widget.deviceId, timeout: 10000); //唤醒超时10秒
+        if (result >= 0) {
+          //
+        } else {
+          KToast.show(status: TR.current.TR_Wakeup_Failed);
+          return;
+        }
+      }
+      await JFApi.xcDevice.xcDeviceLogin(deviceId: widget.deviceId);
+      await DeviceAbilityManager.update(deviceId: widget.deviceId);
+      bool isAov = await DevicePropertyManager.instance
+          .isAOVAsync(deviceId: widget.deviceId);
+      if (isAov) {
+        widget.dataSource.add(
+          (context) => TR.current.TR_Setting_AOV_Device_Config,
+        );
+        if (mounted) {
+          setState(() {});
+        }
+      }
+      KToast.dismiss();
+    } catch (e) {
+      KToast.show(status: kErrorMsg(e));
+    }
   }
 
   @override
@@ -121,9 +158,9 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
             deviceId: widget.deviceId, channel: widget.channel);
       }));
     } else if (title == TR.current.deviceRestart) {
-      _showRebootConfirmDialog(context);
+      showRebootConfirmDialog(context);
     } else if (title == TR.current.deviceReset) {
-      _showResetConfirmDialog(context);
+      showResetConfirmDialog(context);
     } else if (title == TR.current.deviceFirmwareUpgrade) {
       if (widget.pid == '-1') {
         KToast.show(status: TR.current.firmwarePidFail);
@@ -136,10 +173,15 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
           pid: widget.pid != '-1' ? widget.pid : '',
         );
       }));
+    } else if (title == TR.current.TR_Setting_AOV_Device_Config) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (BuildContext context) {
+        return DeviceAovSettingPage(deviceId: widget.deviceId);
+      }));
     }
   }
 
-  _showRebootConfirmDialog(BuildContext context) {
+  showRebootConfirmDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -152,7 +194,7 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(dialogContext).pop();
-                    _executeDeviceReboot();
+                    executeDeviceReboot();
                   },
                   child: Text(TR.current.confirmBtn),
                 ),
@@ -170,7 +212,7 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
     );
   }
 
-  _executeDeviceReboot() async {
+  executeDeviceReboot() async {
     KToast.show();
     try {
       final config = jsonEncode({
@@ -194,7 +236,7 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
 
   /// 设备恢复出厂设置确认弹窗
   /// 提供两个选项：仅恢复出厂设置 / 恢复出厂设置并删除设备
-  _showResetConfirmDialog(BuildContext context) {
+  showResetConfirmDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -207,7 +249,7 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
                 title: Text(TR.current.onlyFactoryReset),
                 onTap: () {
                   Navigator.of(dialogContext).pop();
-                  _executeDeviceReset(deleteDevice: false);
+                  executeDeviceReset(deleteDevice: false);
                 },
               ),
               const Divider(),
@@ -215,7 +257,7 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
                 title: Text(TR.current.factoryResetAndDeleteDev),
                 onTap: () {
                   Navigator.of(dialogContext).pop();
-                  _executeDeviceReset(deleteDevice: true);
+                  executeDeviceReset(deleteDevice: true);
                 },
               ),
             ],
@@ -236,7 +278,7 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
   /// 执行设备恢复出厂设置
   /// 通过 OPMachine 命令发送 Action: "Reset" 到设备
   /// [deleteDevice] 为 true 时，恢复出厂后从本地设备列表中删除设备
-  _executeDeviceReset({required bool deleteDevice}) async {
+  executeDeviceReset({required bool deleteDevice}) async {
     KToast.show();
     try {
       final config = jsonEncode({
@@ -244,20 +286,23 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
         "SessionID": "0x01",
         "OPMachine": {"Action": "Reset"}
       });
-      await JFApi.xcDevice.xcDevSetSysConfig(
+      await JFApi.xcDevice
+          .xcDevSetSysConfig(
         deviceId: widget.deviceId,
         commandName: "OPMachine",
         config: config,
         configLen: config.length,
         command: 1450,
         timeout: 15000,
-      ).then((value) {
+      )
+          .then((value) {
         KToast.show(status: TR.current.resetSuccess);
         try {
           // 如果选择恢复出厂并删除设备，从本地设备列表中移除
           if (deleteDevice) {
             JFApi.xcAccount.xcRemoveDevice(widget.deviceId).then((value) {
-              DeviceManager.instance.removeDevice(deviceId: widget.deviceId, type: widget.type);
+              DeviceManager.instance
+                  .removeDevice(deviceId: widget.deviceId, type: widget.type);
               eventBus.fire(RemoveDeviceUpdateEvent(type: widget.type));
             });
           }
@@ -267,7 +312,7 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
               Navigator.popUntil(context, (route) => route.isFirst);
             }
           });
-        } catch(e) {
+        } catch (e) {
           KToast.show(status: kErrorMsg(e));
         }
       });

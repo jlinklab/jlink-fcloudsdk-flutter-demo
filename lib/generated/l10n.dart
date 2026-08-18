@@ -1979,6 +1979,424 @@ class TR {
       args: [],
     );
   }
+
+  /// `AOV设备配置`
+  String get TR_Setting_AOV_Device_Config {
+    return Intl.message(
+      'AOV设备配置',
+      name: 'TR_Setting_AOV_Device_Config',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AOV工作模式`
+  String get TR_Setting_AOV_Work_Mode {
+    return Intl.message(
+      'AOV工作模式',
+      name: 'TR_Setting_AOV_Work_Mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AOV帧率`
+  String get TR_AOV_Fps {
+    return Intl.message('AOV帧率', name: 'TR_AOV_Fps', desc: '', args: []);
+  }
+
+  /// `AOV报警间隔`
+  String get TR_AOV_Alarm_interval {
+    return Intl.message(
+      'AOV报警间隔',
+      name: 'TR_AOV_Alarm_interval',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `事件录像最大时长`
+  String get TR_Setting_Aov_RecordLength {
+    return Intl.message(
+      '事件录像最大时长',
+      name: 'TR_Setting_Aov_RecordLength',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AOV帧率{param0}，AOV报警间隔{param1}，事件录像最大时长{param2}`
+  String TR_Setting_AOV_BlackLight_Blance_Tips(
+    Object param0,
+    Object param1,
+    Object param2,
+  ) {
+    return Intl.message(
+      'AOV帧率$param0，AOV报警间隔$param1，事件录像最大时长$param2',
+      name: 'TR_Setting_AOV_BlackLight_Blance_Tips',
+      desc: '',
+      args: [param0, param1, param2],
+    );
+  }
+
+  /// `AOV帧率{param0}，AOV报警间隔{param1}，事件录像最大时长{param2}，红外补光`
+  String TR_Setting_Aov_Blance_tips(
+    Object param0,
+    Object param1,
+    Object param2,
+  ) {
+    return Intl.message(
+      'AOV帧率$param0，AOV报警间隔$param1，事件录像最大时长$param2，红外补光',
+      name: 'TR_Setting_Aov_Blance_tips',
+      desc: '',
+      args: [param0, param1, param2],
+    );
+  }
+
+  /// `AOV帧率{param0}fps，带卡录像`
+  String TR_Setting_AOV_BlackLight_FPS_Description(Object param0) {
+    return Intl.message(
+      'AOV帧率${param0}fps，带卡录像',
+      name: 'TR_Setting_AOV_BlackLight_FPS_Description',
+      desc: '',
+      args: [param0],
+    );
+  }
+
+  /// `AOV帧率{param0}fps,红外补光，带卡录像`
+  String TR_Setting_AOV_FPS_Description(Object param0) {
+    return Intl.message(
+      'AOV帧率${param0}fps,红外补光，带卡录像',
+      name: 'TR_Setting_AOV_FPS_Description',
+      desc: '',
+      args: [param0],
+    );
+  }
+
+  /// `表示{param0}秒展示{param1}个画面`
+  String TR_Set_Aov_Fps_Tips(Object param0, Object param1) {
+    return Intl.message(
+      '表示$param0秒展示$param1个画面',
+      name: 'TR_Set_Aov_Fps_Tips',
+      desc: '',
+      args: [param0, param1],
+    );
+  }
+
+  /// `目前电量低于{param0}，处于低电量模式 会停止录像和报警推送，只能通过APP远程唤醒进行预览`
+  String TR_Setting_AOV_Low_Battery_Mode_Description(Object param0) {
+    return Intl.message(
+      '目前电量低于$param0，处于低电量模式 会停止录像和报警推送，只能通过APP远程唤醒进行预览',
+      name: 'TR_Setting_AOV_Low_Battery_Mode_Description',
+      desc: '',
+      args: [param0],
+    );
+  }
+
+  /// `微光开关`
+  String get TR_Low_Light_Control {
+    return Intl.message(
+      '微光开关',
+      name: 'TR_Low_Light_Control',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `微光开关开启后，在AOV状态下，夜晚场景会进行微补光`
+  String get TR_Low_Light_Control_Tip {
+    return Intl.message(
+      '微光开关开启后，在AOV状态下，夜晚场景会进行微补光',
+      name: 'TR_Low_Light_Control_Tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `光线不足时，AOV模式下录像画面黑白，实时画面红外灯亮起画面黑白，检测到人形白光灯亮起画面彩色`
+  String get TR_Setting_AOV_Low_Light_Human_Detected_White_Light_Color {
+    return Intl.message(
+      '光线不足时，AOV模式下录像画面黑白，实时画面红外灯亮起画面黑白，检测到人形白光灯亮起画面彩色',
+      name: 'TR_Setting_AOV_Low_Light_Human_Detected_White_Light_Color',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `光线不足时，AOV模式下录像画面黑白，实时画面红外灯亮起画面黑白`
+  String get TR_Setting_AOV_Low_Light_IR_BlackWhite {
+    return Intl.message(
+      '光线不足时，AOV模式下录像画面黑白，实时画面红外灯亮起画面黑白',
+      name: 'TR_Setting_AOV_Low_Light_IR_BlackWhite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `光线不足时，AOV模式下录像画面黑白，实时画面白光灯亮起画面彩色`
+  String get TR_Setting_AOV_Low_Light_White_Light_Color {
+    return Intl.message(
+      '光线不足时，AOV模式下录像画面黑白，实时画面白光灯亮起画面彩色',
+      name: 'TR_Setting_AOV_Low_Light_White_Light_Color',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `电量阈值`
+  String get TR_Setting_BatteryThreshold {
+    return Intl.message(
+      '电量阈值',
+      name: 'TR_Setting_BatteryThreshold',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `电量低于 {param0} 自动进入AOV工作模式`
+  String TR_Setting_BatteryThreshold_Desc(Object param0) {
+    return Intl.message(
+      '电量低于 $param0 自动进入AOV工作模式',
+      name: 'TR_Setting_BatteryThreshold_Desc',
+      desc: '',
+      args: [param0],
+    );
+  }
+
+  /// `电池管理`
+  String get TR_Setting_Battery_Management {
+    return Intl.message(
+      '电池管理',
+      name: 'TR_Setting_Battery_Management',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `工作模式`
+  String get TR_Setting_Mode_Of_Work {
+    return Intl.message(
+      '工作模式',
+      name: 'TR_Setting_Mode_Of_Work',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `灯光设置`
+  String get TR_Light_Settings {
+    return Intl.message('灯光设置', name: 'TR_Light_Settings', desc: '', args: []);
+  }
+
+  /// `4G网络切换`
+  String get TR_Setting_4G_Network_Switching {
+    return Intl.message(
+      '4G网络切换',
+      name: 'TR_Setting_4G_Network_Switching',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `省电模式`
+  String get TR_Setting_Power_Saving_Mode {
+    return Intl.message(
+      '省电模式',
+      name: 'TR_Setting_Power_Saving_Mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `性能模式`
+  String get TR_Setting_Performance {
+    return Intl.message(
+      '性能模式',
+      name: 'TR_Setting_Performance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `自定义模式`
+  String get mode_customize {
+    return Intl.message('自定义模式', name: 'mode_customize', desc: '', args: []);
+  }
+
+  /// `智能省电模式`
+  String get TR_SmartPowerMode {
+    return Intl.message(
+      '智能省电模式',
+      name: 'TR_SmartPowerMode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `超级省电模式`
+  String get TR_SuperPowerMode {
+    return Intl.message(
+      '超级省电模式',
+      name: 'TR_SuperPowerMode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `供电方式`
+  String get TR_Setting_Power_Supply_Mode {
+    return Intl.message(
+      '供电方式',
+      name: 'TR_Setting_Power_Supply_Mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `电池`
+  String get TR_Setting_Battery {
+    return Intl.message('电池', name: 'TR_Setting_Battery', desc: '', args: []);
+  }
+
+  /// `当前电量`
+  String get TR_Setting_Current_Battery_Level {
+    return Intl.message(
+      '当前电量',
+      name: 'TR_Setting_Current_Battery_Level',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `低电量模式`
+  String get TR_Setting_Low_Power_Mode {
+    return Intl.message(
+      '低电量模式',
+      name: 'TR_Setting_Low_Power_Mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当电量小于所设阈值时， 设备工作模式 会自动切换为低电量状态下工作模式`
+  String get TR_Setting_Low_Power_Mode_Description {
+    return Intl.message(
+      '当电量小于所设阈值时， 设备工作模式 会自动切换为低电量状态下工作模式',
+      name: 'TR_Setting_Low_Power_Mode_Description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `电池统计`
+  String get TR_Setting_Battery_Statistic {
+    return Intl.message(
+      '电池统计',
+      name: 'TR_Setting_Battery_Statistic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `今天`
+  String get TR_Today {
+    return Intl.message('今天', name: 'TR_Today', desc: '', args: []);
+  }
+
+  /// `最近一周`
+  String get TR_Setting_Last_Week {
+    return Intl.message(
+      '最近一周',
+      name: 'TR_Setting_Last_Week',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `电量`
+  String get TR_Setting_Power_Level {
+    return Intl.message(
+      '电量',
+      name: 'TR_Setting_Power_Level',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `信号`
+  String get TR_Setting_Signal {
+    return Intl.message('信号', name: 'TR_Setting_Signal', desc: '', args: []);
+  }
+
+  /// `预览时间`
+  String get TR_Setting_Preview_Time {
+    return Intl.message(
+      '预览时间',
+      name: 'TR_Setting_Preview_Time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `唤醒时间`
+  String get TR_Setting_Wake_Up_Time {
+    return Intl.message(
+      '唤醒时间',
+      name: 'TR_Setting_Wake_Up_Time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `报警次数`
+  String get TR_Setting_Number_Of_Alarms {
+    return Intl.message(
+      '报警次数',
+      name: 'TR_Setting_Number_Of_Alarms',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `天`
+  String get days {
+    return Intl.message('天', name: 'days', desc: '', args: []);
+  }
+
+  /// `时`
+  String get sHour {
+    return Intl.message('时', name: 'sHour', desc: '', args: []);
+  }
+
+  /// `分`
+  String get sMin {
+    return Intl.message('分', name: 'sMin', desc: '', args: []);
+  }
+
+  /// `秒`
+  String get sSec {
+    return Intl.message('秒', name: 'sSec', desc: '', args: []);
+  }
+
+  /// `唤醒中...`
+  String get TR_Wakeup_In_Progress {
+    return Intl.message(
+      '唤醒中...',
+      name: 'TR_Wakeup_In_Progress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `唤醒成功`
+  String get TR_Wakeup_Success {
+    return Intl.message('唤醒成功', name: 'TR_Wakeup_Success', desc: '', args: []);
+  }
+
+  /// `唤醒失败`
+  String get TR_Wakeup_Failed {
+    return Intl.message('唤醒失败', name: 'TR_Wakeup_Failed', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {
