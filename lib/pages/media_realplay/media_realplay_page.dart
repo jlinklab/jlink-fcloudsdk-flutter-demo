@@ -325,31 +325,35 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      _playWidget(widget.orientation),
-      ...widget.orientation == Orientation.landscape
-          ? [const SizedBox()]
-          : [
-              const SizedBox(
-                height: 20,
-              ),
-              Expanded(
-                  child: MediaRealPlayToolView(
-                      onSound: onSound,
-                      onTalk: onTalk,
-                      onStopTalk: onStopTalk,
-                      onSnap: onSnap,
-                      onStarRecord: onStartRecord,
-                      onStopRecord: onStopRecord,
-                      onPTZControl: onPTZControl,
-                      onPictureFlip: onPictureFlip,
-                      onPlayback: onPlayback,
-                      onCloudPlayback: onCloudPlayback,
-                      onChangeStreamType: onChangeStreamType,
-                      previewController: widget.controller.mediaController,
-                      device: device!)),
-            ],
-    ]);
+    return Container(
+        color: widget.orientation == Orientation.landscape
+            ? Colors.black
+            : Colors.white,
+        child: Column(children: [
+          _playWidget(widget.orientation),
+          ...widget.orientation == Orientation.landscape
+              ? [const SizedBox()]
+              : [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Expanded(
+                      child: MediaRealPlayToolView(
+                          onSound: onSound,
+                          onTalk: onTalk,
+                          onStopTalk: onStopTalk,
+                          onSnap: onSnap,
+                          onStarRecord: onStartRecord,
+                          onStopRecord: onStopRecord,
+                          onPTZControl: onPTZControl,
+                          onPictureFlip: onPictureFlip,
+                          onPlayback: onPlayback,
+                          onCloudPlayback: onCloudPlayback,
+                          onChangeStreamType: onChangeStreamType,
+                          previewController: widget.controller.mediaController,
+                          device: device!)),
+                ],
+        ]));
   }
 
   Widget _playWidget(Orientation orientation) {
@@ -357,11 +361,17 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
       alignment: Alignment.center,
       children: [
         IgnorePointer(
-          ignoring: true,
-          child: MediaPlayerWidget(
-            controller: widget.controller.mediaController,
-          ),
-        ),
+            ignoring: true,
+            child: SizedBox(
+              width: orientation == Orientation.landscape
+                  ? MediaQuery.of(context).size.height *
+                      widget.controller.mediaController.aspectRatio
+                  : null,
+              child: MediaPlayerWidget(
+                controller: widget.controller.mediaController,
+                autoDispose: false,
+              ),
+            )),
         Visibility(
             visible: widget.controller.mediaController.isLoading,
             child: const Center(

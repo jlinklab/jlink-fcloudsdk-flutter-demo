@@ -70,7 +70,7 @@ class _WifiWidgetState extends State<WifiWidget> {
 
     return Positioned(
       top: 20,
-      left: 0,
+      left: 15,
       child: Text(
         TR.current.wifiSignalLevel(wifiLevel),
         style: const TextStyle(fontSize: 13, color: Colors.white),

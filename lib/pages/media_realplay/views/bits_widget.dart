@@ -17,7 +17,7 @@ class BitsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
         top: 5,
-        left: 0,
+        left: 15,
         child: Container(
           alignment: Alignment.center,
           child: Text(

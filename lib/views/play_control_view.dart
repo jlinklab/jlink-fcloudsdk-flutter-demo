@@ -55,10 +55,8 @@ class _MediaPlayControlViewState extends State<MediaPlayControlView> {
               children: [
                 _isLandscape()
                     ? Container(
-                        padding: const EdgeInsets.only(left: 16),
-                        alignment: Alignment.centerLeft,
-                        color: Colors.redAccent.withOpacity(0.3),
-                        height: 80,
+                        padding: const EdgeInsets.only(left: 16, top: 50),
+                        alignment: Alignment.topLeft,
                         child: InkWell(
                           onTap: () => setScreenOrientation(),
                           child: const Icon(

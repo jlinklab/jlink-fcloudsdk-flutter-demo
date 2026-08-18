@@ -1,16 +1,13 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
-
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/media/download/meida_download_controller.dart';
-import 'package:fcloudsdk/utils/extensions.dart';
 import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/pages/download_manage/manager/download_manage.dart';
 import 'package:fcloudsdk_example/pages/download_manage/model/record_file.dart';
-import 'package:fcloudsdk_example/pages/record/model/model.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
+import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
 
 class DownloadManagerPage extends StatefulWidget {
   const DownloadManagerPage({Key? key, required this.deviceId, this.records})

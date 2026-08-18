@@ -62,7 +62,7 @@ class _Signal4GWidgetState extends State<Signal4GWidget> {
     }
     return Positioned(
         top: 20,
-        left: 0,
+        left: 15,
         child: Text(
           TR.current.signal4GLevel(signal4GLevel),
           style: const TextStyle(fontSize: 13, color: Colors.white),

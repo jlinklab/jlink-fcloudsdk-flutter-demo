@@ -1,3 +1,4 @@
+import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:flutter/material.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/media/controller/media_controller.dart';
@@ -137,15 +138,26 @@ class MediaRealplayController extends ChangeNotifier {
     }
   }
 
+  Future<void> sleepIfNeed() async {
+    //调休眠接口是不会给回调的
+    await JFApi.xcDevice.xcDeviceSleep(deviceId: deviceId);
+    var result = await JFApi.xcDevice.xcLoginOut(deviceId: deviceId);
+    LogUtils.idr.log('低功耗设备是否休眠?=$result, deviceId=$deviceId');
+  }
+
   @override
   void dispose() {
+    mediaController.dispose();
     if (DevicePropertyManager.instance.isAOV(deviceId: deviceId) ||
         DevicePropertyManager.instance.isLowPower(deviceId: deviceId) ||
         _isSupportBatteryInfo) {
       IDRPropertyManager.instance
           .makeStopUploadProperty(deviceId: deviceId, handle: uploadHandle);
     }
-    mediaController.dispose();
+    if (DevicePropertyManager.instance.isLowPower(deviceId: deviceId)) {
+      //退出预览页就去休眠，登出设备（如果需要退出预览页xx秒再去休眠登出，需要自己加定时器）
+      sleepIfNeed();
+    }
     super.dispose();
   }
 }

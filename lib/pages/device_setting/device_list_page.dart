@@ -449,6 +449,7 @@ class _DeviceCard extends StatelessWidget {
     required BuildContext context,
   }) async {
     KToast.show();
+    LogUtils.device.log('goPreview ${device.uuid} 点击预览');
     try {
       //检查是否为低功耗设备,低功耗设备进行唤醒
       if (await DevicePropertyManager.instance

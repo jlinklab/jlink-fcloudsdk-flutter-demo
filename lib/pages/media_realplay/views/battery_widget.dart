@@ -12,7 +12,7 @@ class BatteryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       top: 35,
-      left: 0,
+      left: 15,
       child: StreamBuilder<EleEntry?>(
         stream: IDRPropertyManager.instance.eleStream(deviceId),
         builder: (context, snapshot) {
