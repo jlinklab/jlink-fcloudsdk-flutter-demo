@@ -37,6 +37,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "Recording_Times_Not_DURATION": MessageLookupByLibrary.simpleMessage(
+      "Recording duration must be at least 1 second",
+    ),
     "TR_Audition": MessageLookupByLibrary.simpleMessage("Audition"),
     "TR_File_Size_Exceed_Max_Size": MessageLookupByLibrary.simpleMessage(
       "The File size exceeds the maximum limit",
@@ -79,6 +82,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Distribution network failure",
     ),
     "addDevice": MessageLookupByLibrary.simpleMessage("Add Device"),
+    "addDeviceExisted": MessageLookupByLibrary.simpleMessage(
+      "Device already exists",
+    ),
     "alarm": MessageLookupByLibrary.simpleMessage("alarm"),
     "alarmRecording": MessageLookupByLibrary.simpleMessage("Alarm recording"),
     "alarmScreenshot": MessageLookupByLibrary.simpleMessage("Alarm screenshot"),
@@ -191,6 +197,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "deviceShare": MessageLookupByLibrary.simpleMessage("Device Share"),
     "download": MessageLookupByLibrary.simpleMessage("Download Management"),
     "endTime": MessageLookupByLibrary.simpleMessage("End Time"),
+    "enterErrorCode": MessageLookupByLibrary.simpleMessage("Enter Error Code"),
     "errorCode": MessageLookupByLibrary.simpleMessage("Error Code"),
     "factoryResetAndDeleteDev": MessageLookupByLibrary.simpleMessage(
       "Factory reset and delete device",
@@ -286,6 +293,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inputDeviceNameHint": MessageLookupByLibrary.simpleMessage(
       "Please enter device name",
     ),
+    "inputRightErrorCode": MessageLookupByLibrary.simpleMessage(
+      "Please enter the correct error code",
+    ),
     "invalidShareQR": MessageLookupByLibrary.simpleMessage(
       "Invalid share QR code",
     ),
@@ -333,6 +343,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "onlyFactoryReset": MessageLookupByLibrary.simpleMessage(
       "Factory reset only",
     ),
+    "openLinkFailed": MessageLookupByLibrary.simpleMessage(
+      "Failed to open link",
+    ),
     "operator_failed": MessageLookupByLibrary.simpleMessage("Operation failed"),
     "other": MessageLookupByLibrary.simpleMessage("other setting"),
     "pendingShareDevices": MessageLookupByLibrary.simpleMessage(
@@ -349,6 +362,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Overseas mobile phone numbers need to add area code. eg:+1:80998098979",
     ),
     "phoneTip": m5,
+    "pleaseCheckErrorCode": MessageLookupByLibrary.simpleMessage(
+      "Please check the error code below or visit the Open Platform Documentation Center",
+    ),
     "preview": MessageLookupByLibrary.simpleMessage("preview"),
     "privacyPermissionBluetooth": MessageLookupByLibrary.simpleMessage(
       "Bluetooth Access Permission",
@@ -407,6 +423,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "scanShareDevice": MessageLookupByLibrary.simpleMessage(
       "Scan to add shared device",
     ),
+    "sceneAddDevice": MessageLookupByLibrary.simpleMessage("Smart device"),
     "sd": MessageLookupByLibrary.simpleMessage("SD"),
     "sdList": MessageLookupByLibrary.simpleMessage("Card Storage Album"),
     "sdkVersion": MessageLookupByLibrary.simpleMessage("Current SDK version"),
@@ -445,6 +462,1106 @@ class MessageLookup extends MessageLookupByLibrary {
     "tr_common_download_management": MessageLookupByLibrary.simpleMessage(
       "Download management",
     ),
+    "tr_error_code_1000": MessageLookupByLibrary.simpleMessage("Network error"),
+    "tr_error_code_100000": MessageLookupByLibrary.simpleMessage("Error"),
+    "tr_error_code_1001": MessageLookupByLibrary.simpleMessage(
+      "The send buffer is full",
+    ),
+    "tr_error_code_1002": MessageLookupByLibrary.simpleMessage(
+      "Network sending error",
+    ),
+    "tr_error_code_1003": MessageLookupByLibrary.simpleMessage(
+      "Network reception error",
+    ),
+    "tr_error_code_1004": MessageLookupByLibrary.simpleMessage(
+      "Network timeout",
+    ),
+    "tr_error_code_1005": MessageLookupByLibrary.simpleMessage(
+      "No network object",
+    ),
+    "tr_error_code_1006": MessageLookupByLibrary.simpleMessage(
+      "Creation failed",
+    ),
+    "tr_error_code_1007": MessageLookupByLibrary.simpleMessage(
+      "Connection failed",
+    ),
+    "tr_error_code_1008": MessageLookupByLibrary.simpleMessage("Timeout"),
+    "tr_error_code_1009": MessageLookupByLibrary.simpleMessage("No connection"),
+    "tr_error_code_101": MessageLookupByLibrary.simpleMessage(
+      "Device password error",
+    ),
+    "tr_error_code_1010": MessageLookupByLibrary.simpleMessage("socket error"),
+    "tr_error_code_1011": MessageLookupByLibrary.simpleMessage(
+      "socket close error",
+    ),
+    "tr_error_code_1012": MessageLookupByLibrary.simpleMessage(
+      "New buffer error",
+    ),
+    "tr_error_code_1013": MessageLookupByLibrary.simpleMessage("Network busy"),
+    "tr_error_code_1014": MessageLookupByLibrary.simpleMessage(
+      "Listening error",
+    ),
+    "tr_error_code_1015": MessageLookupByLibrary.simpleMessage("Receive error"),
+    "tr_error_code_1016": MessageLookupByLibrary.simpleMessage("No buffer"),
+    "tr_error_code_1017": MessageLookupByLibrary.simpleMessage(
+      "Network error or DNS configuration error",
+    ),
+    "tr_error_code_1018": MessageLookupByLibrary.simpleMessage(
+      "Developer account has no permission",
+    ),
+    "tr_error_code_1019": MessageLookupByLibrary.simpleMessage("Uninitialized"),
+    "tr_error_code_102": MessageLookupByLibrary.simpleMessage(
+      "Device account no exist",
+    ),
+    "tr_error_code_1020": MessageLookupByLibrary.simpleMessage(
+      "The device is in deep sleep mode",
+    ),
+    "tr_error_code_1021": MessageLookupByLibrary.simpleMessage(
+      "Server error occurred",
+    ),
+    "tr_error_code_1022": MessageLookupByLibrary.simpleMessage(
+      "HTTPS communication error",
+    ),
+    "tr_error_code_1023": MessageLookupByLibrary.simpleMessage(
+      "The system is busy, please try again later",
+    ),
+    "tr_error_code_1024": MessageLookupByLibrary.simpleMessage(
+      "Network busy, please try again later",
+    ),
+    "tr_error_code_1025": MessageLookupByLibrary.simpleMessage(
+      "CPU busy, please try again later",
+    ),
+    "tr_error_code_1026": MessageLookupByLibrary.simpleMessage(
+      "Storage usage is too high, please try again later",
+    ),
+    "tr_error_code_1027": MessageLookupByLibrary.simpleMessage(
+      "Too many concurrent tasks, please try again later",
+    ),
+    "tr_error_code_103": MessageLookupByLibrary.simpleMessage(
+      "Device net unreachable",
+    ),
+    "tr_error_code_104": MessageLookupByLibrary.simpleMessage(
+      "Device account logined",
+    ),
+    "tr_error_code_105": MessageLookupByLibrary.simpleMessage(
+      "Device account locked",
+    ),
+    "tr_error_code_106": MessageLookupByLibrary.simpleMessage(
+      "Device account in blacklist",
+    ),
+    "tr_error_code_107": MessageLookupByLibrary.simpleMessage(
+      "Device device busy",
+    ),
+    "tr_error_code_109": MessageLookupByLibrary.simpleMessage(
+      "Device net host no found",
+    ),
+    "tr_error_code_120": MessageLookupByLibrary.simpleMessage(
+      "Device device no exist",
+    ),
+    "tr_error_code_1239510": MessageLookupByLibrary.simpleMessage(
+      "Object does not exist",
+    ),
+    "tr_error_code_1239511": MessageLookupByLibrary.simpleMessage(
+      "Value does not exist",
+    ),
+    "tr_error_code_137": MessageLookupByLibrary.simpleMessage(
+      "Device token error",
+    ),
+    "tr_error_code_2046401": MessageLookupByLibrary.simpleMessage("No i frame"),
+    "tr_error_code_2046402": MessageLookupByLibrary.simpleMessage(
+      "Device stream break",
+    ),
+    "tr_error_code_2046403": MessageLookupByLibrary.simpleMessage(
+      "Device stream timeout",
+    ),
+    "tr_error_code_2046404": MessageLookupByLibrary.simpleMessage(
+      "Get datasource error",
+    ),
+    "tr_error_code_2046405": MessageLookupByLibrary.simpleMessage(
+      "Url limited",
+    ),
+    "tr_error_code_2046406": MessageLookupByLibrary.simpleMessage(
+      "Check url timeout",
+    ),
+    "tr_error_code_2046407": MessageLookupByLibrary.simpleMessage(
+      "Http parse error",
+    ),
+    "tr_error_code_2046408": MessageLookupByLibrary.simpleMessage(
+      "Client not support please use chrome",
+    ),
+    "tr_error_code_2046409": MessageLookupByLibrary.simpleMessage(
+      "Key frame no sps",
+    ),
+    "tr_error_code_2046410": MessageLookupByLibrary.simpleMessage(
+      "Protocol parse error",
+    ),
+    "tr_error_code_2046411": MessageLookupByLibrary.simpleMessage(
+      "No recv dev frame",
+    ),
+    "tr_error_code_2046412": MessageLookupByLibrary.simpleMessage(
+      "No recv dev frame pre 2s",
+    ),
+    "tr_error_code_2046413": MessageLookupByLibrary.simpleMessage(
+      "No recv dev video frame pre 2s",
+    ),
+    "tr_error_code_2046414": MessageLookupByLibrary.simpleMessage(
+      "Fps too low",
+    ),
+    "tr_error_code_2046415": MessageLookupByLibrary.simpleMessage(
+      "Bad seektime",
+    ),
+    "tr_error_code_2051000": MessageLookupByLibrary.simpleMessage(
+      "Account owe fees, access to traffic service failed",
+    ),
+    "tr_error_code_2051001": MessageLookupByLibrary.simpleMessage(
+      "Service exception during service verification",
+    ),
+    "tr_error_code_2051002": MessageLookupByLibrary.simpleMessage(
+      "The service timed out during server verification",
+    ),
+    "tr_error_code_2051003": MessageLookupByLibrary.simpleMessage(
+      "There was an abnormality in the local network during service verification",
+    ),
+    "tr_error_code_221201": MessageLookupByLibrary.simpleMessage(
+      "Authorization failure for alarm related functions",
+    ),
+    "tr_error_code_225000": MessageLookupByLibrary.simpleMessage(
+      "Server parsing failed",
+    ),
+    "tr_error_code_225400": MessageLookupByLibrary.simpleMessage(
+      "Authentication information not filled in",
+    ),
+    "tr_error_code_225401": MessageLookupByLibrary.simpleMessage(
+      "Authcode verification failed",
+    ),
+    "tr_error_code_225402": MessageLookupByLibrary.simpleMessage(
+      "The message type is illegal",
+    ),
+    "tr_error_code_225501": MessageLookupByLibrary.simpleMessage(
+      "Incorrect username or password",
+    ),
+    "tr_error_code_225502": MessageLookupByLibrary.simpleMessage(
+      "Failed to obtain Redis IP and port",
+    ),
+    "tr_error_code_225503": MessageLookupByLibrary.simpleMessage(
+      "Redis connection establishment failed",
+    ),
+    "tr_error_code_225504": MessageLookupByLibrary.simpleMessage(
+      "Redis operation failed",
+    ),
+    "tr_error_code_225505": MessageLookupByLibrary.simpleMessage(
+      "Failed to obtain MySQL address",
+    ),
+    "tr_error_code_225506": MessageLookupByLibrary.simpleMessage(
+      "Alarm Server parameter error",
+    ),
+    "tr_error_code_225507": MessageLookupByLibrary.simpleMessage(
+      "SQL operation failed",
+    ),
+    "tr_error_code_225508": MessageLookupByLibrary.simpleMessage(
+      "Thumbnail URL retrieval failed",
+    ),
+    "tr_error_code_225509": MessageLookupByLibrary.simpleMessage(
+      "Time format verification failed",
+    ),
+    "tr_error_code_225510": MessageLookupByLibrary.simpleMessage(
+      "Abnormal cloud storage package information",
+    ),
+    "tr_error_code_225511": MessageLookupByLibrary.simpleMessage(
+      "Invalid query type",
+    ),
+    "tr_error_code_225512": MessageLookupByLibrary.simpleMessage(
+      "The start time and end time of the query are not on the same day",
+    ),
+    "tr_error_code_225513": MessageLookupByLibrary.simpleMessage(
+      "The SN format is illegal",
+    ),
+    "tr_error_code_225514": MessageLookupByLibrary.simpleMessage(
+      "Clearing type is illegal",
+    ),
+    "tr_error_code_225515": MessageLookupByLibrary.simpleMessage(
+      "Unknown subscription query protocol format",
+    ),
+    "tr_error_code_225516": MessageLookupByLibrary.simpleMessage(
+      "Non whitelist IP requests",
+    ),
+    "tr_error_code_225517": MessageLookupByLibrary.simpleMessage(
+      "This user does not have query permission",
+    ),
+    "tr_error_code_225518": MessageLookupByLibrary.simpleMessage(
+      "Unknown unsubscribe method",
+    ),
+    "tr_error_code_225519": MessageLookupByLibrary.simpleMessage(
+      "Parameter format parsing error",
+    ),
+    "tr_error_code_225520": MessageLookupByLibrary.simpleMessage(
+      "MongoDB operation error",
+    ),
+    "tr_error_code_225521": MessageLookupByLibrary.simpleMessage(
+      "Simultaneous operation of MongoDB and MySQL failed",
+    ),
+    "tr_error_code_225522": MessageLookupByLibrary.simpleMessage(
+      "The setting result of the query is invalid and cannot be resolved",
+    ),
+    "tr_error_code_225523": MessageLookupByLibrary.simpleMessage(
+      "Unknown message, unable to parse",
+    ),
+    "tr_error_code_225524": MessageLookupByLibrary.simpleMessage(
+      "Unable to obtain event at level Important",
+    ),
+    "tr_error_code_225525": MessageLookupByLibrary.simpleMessage(
+      "Unknown state",
+    ),
+    "tr_error_code_225526": MessageLookupByLibrary.simpleMessage(
+      "The device has been unbound by this account and subscription is not allowed",
+    ),
+    "tr_error_code_225527": MessageLookupByLibrary.simpleMessage(
+      "All video IDs are illegal",
+    ),
+    "tr_error_code_500000": MessageLookupByLibrary.simpleMessage(
+      "The parameter encoding format is not UTF8",
+    ),
+    "tr_error_code_500001": MessageLookupByLibrary.simpleMessage(
+      "The parameter is not in JSON format",
+    ),
+    "tr_error_code_514053": MessageLookupByLibrary.simpleMessage(
+      "The playback channel is already occupied",
+    ),
+    "tr_error_code_514100": MessageLookupByLibrary.simpleMessage(
+      "The intercom channel is occupied",
+    ),
+    "tr_error_code_515000": MessageLookupByLibrary.simpleMessage(
+      "Device offline",
+    ),
+    "tr_error_code_515001": MessageLookupByLibrary.simpleMessage(
+      "Device not registered",
+    ),
+    "tr_error_code_515002": MessageLookupByLibrary.simpleMessage(
+      "The channel does not exist",
+    ),
+    "tr_error_code_515003": MessageLookupByLibrary.simpleMessage(
+      "Channel not online",
+    ),
+    "tr_error_code_515004": MessageLookupByLibrary.simpleMessage(
+      "Account error",
+    ),
+    "tr_error_code_515005": MessageLookupByLibrary.simpleMessage(
+      "Password error",
+    ),
+    "tr_error_code_515006": MessageLookupByLibrary.simpleMessage(
+      "National standard or ONVIF login exception",
+    ),
+    "tr_error_code_515104": MessageLookupByLibrary.simpleMessage(
+      "Failed to obtain device information",
+    ),
+    "tr_error_code_515200": MessageLookupByLibrary.simpleMessage(
+      "National standard equipment overloaded or under maintenance",
+    ),
+    "tr_error_code_515201": MessageLookupByLibrary.simpleMessage(
+      "The device has no video recording",
+    ),
+    "tr_error_code_515202": MessageLookupByLibrary.simpleMessage(
+      "Play failed, please try again",
+    ),
+    "tr_error_code_515203": MessageLookupByLibrary.simpleMessage(
+      "The device is not responding",
+    ),
+    "tr_error_code_515204": MessageLookupByLibrary.simpleMessage(
+      "Device protocol incompatibility",
+    ),
+    "tr_error_code_515205": MessageLookupByLibrary.simpleMessage(
+      "Device unauthorized",
+    ),
+    "tr_error_code_516101": MessageLookupByLibrary.simpleMessage(
+      "URL format error",
+    ),
+    "tr_error_code_516102": MessageLookupByLibrary.simpleMessage(
+      "No video recording",
+    ),
+    "tr_error_code_516103": MessageLookupByLibrary.simpleMessage("URL expired"),
+    "tr_error_code_516104": MessageLookupByLibrary.simpleMessage(
+      "URL authentication failed",
+    ),
+    "tr_error_code_516105": MessageLookupByLibrary.simpleMessage(
+      "Account has no data usage (please contact the service provider)",
+    ),
+    "tr_error_code_516106": MessageLookupByLibrary.simpleMessage(
+      "URL verification timeout, please try again",
+    ),
+    "tr_error_code_516107": MessageLookupByLibrary.simpleMessage(
+      "Open playback failed, please try again",
+    ),
+    "tr_error_code_516108": MessageLookupByLibrary.simpleMessage(
+      "Video recording query failed",
+    ),
+    "tr_error_code_516109": MessageLookupByLibrary.simpleMessage(
+      "Time parameter exceeds the range",
+    ),
+    "tr_error_code_516110": MessageLookupByLibrary.simpleMessage("Illegal URL"),
+    "tr_error_code_516116": MessageLookupByLibrary.simpleMessage(
+      "Request too frequently",
+    ),
+    "tr_error_code_604000": MessageLookupByLibrary.simpleMessage(
+      "The username or password is incorrect",
+    ),
+    "tr_error_code_604010": MessageLookupByLibrary.simpleMessage(
+      "The verification code is incorrect",
+    ),
+    "tr_error_code_604011": MessageLookupByLibrary.simpleMessage(
+      "The password is inconsistent",
+    ),
+    "tr_error_code_604012": MessageLookupByLibrary.simpleMessage(
+      "The username has been registered",
+    ),
+    "tr_error_code_604013": MessageLookupByLibrary.simpleMessage(
+      "The user name is empty",
+    ),
+    "tr_error_code_604014": MessageLookupByLibrary.simpleMessage(
+      "The password is empty",
+    ),
+    "tr_error_code_604015": MessageLookupByLibrary.simpleMessage(
+      "The confirm password is empty",
+    ),
+    "tr_error_code_604016": MessageLookupByLibrary.simpleMessage(
+      "The mobile phone number is empty",
+    ),
+    "tr_error_code_604017": MessageLookupByLibrary.simpleMessage(
+      "The username format is incorrect",
+    ),
+    "tr_error_code_604018": MessageLookupByLibrary.simpleMessage(
+      "The password format is incorrect",
+    ),
+    "tr_error_code_604019": MessageLookupByLibrary.simpleMessage(
+      "The confirm password format is incorrect",
+    ),
+    "tr_error_code_604020": MessageLookupByLibrary.simpleMessage(
+      "The format of the mobile phone number is incorrect",
+    ),
+    "tr_error_code_604021": MessageLookupByLibrary.simpleMessage(
+      "The phone number already exists",
+    ),
+    "tr_error_code_604022": MessageLookupByLibrary.simpleMessage(
+      "The phone number does not exist",
+    ),
+    "tr_error_code_604023": MessageLookupByLibrary.simpleMessage(
+      "The mailbox already exists",
+    ),
+    "tr_error_code_604024": MessageLookupByLibrary.simpleMessage(
+      "The mailbox does not exists",
+    ),
+    "tr_error_code_604026": MessageLookupByLibrary.simpleMessage(
+      "The old password is wrong",
+    ),
+    "tr_error_code_604027": MessageLookupByLibrary.simpleMessage(
+      "Failed to change the password",
+    ),
+    "tr_error_code_604028": MessageLookupByLibrary.simpleMessage(
+      "The link for resetting the user\'s password has expired",
+    ),
+    "tr_error_code_604029": MessageLookupByLibrary.simpleMessage(
+      "The user ID is empty",
+    ),
+    "tr_error_code_604030": MessageLookupByLibrary.simpleMessage(
+      "The verification code is empty",
+    ),
+    "tr_error_code_604031": MessageLookupByLibrary.simpleMessage(
+      "The mailbox is empty",
+    ),
+    "tr_error_code_604032": MessageLookupByLibrary.simpleMessage(
+      "The mailbox format is incorrect",
+    ),
+    "tr_error_code_604033": MessageLookupByLibrary.simpleMessage(
+      "No permission for this user",
+    ),
+    "tr_error_code_604034": MessageLookupByLibrary.simpleMessage(
+      "The user is not bound",
+    ),
+    "tr_error_code_604035": MessageLookupByLibrary.simpleMessage(
+      "Failed to bind user",
+    ),
+    "tr_error_code_604036": MessageLookupByLibrary.simpleMessage(
+      "Failed to bind phone number",
+    ),
+    "tr_error_code_604037": MessageLookupByLibrary.simpleMessage(
+      "Failed to bind mailbox",
+    ),
+    "tr_error_code_604038": MessageLookupByLibrary.simpleMessage(
+      "Send the verification code more than the maximum number of times",
+    ),
+    "tr_error_code_604039": MessageLookupByLibrary.simpleMessage(
+      "Registration failed",
+    ),
+    "tr_error_code_604040": MessageLookupByLibrary.simpleMessage(
+      "Wechat has been bound to users",
+    ),
+    "tr_error_code_604041": MessageLookupByLibrary.simpleMessage(
+      "No permission to modify the user name (only for the generated anonymous user)",
+    ),
+    "tr_error_code_604042": MessageLookupByLibrary.simpleMessage(
+      "The user is not binding on facebook",
+    ),
+    "tr_error_code_604043": MessageLookupByLibrary.simpleMessage(
+      "The user failed to bind facebook",
+    ),
+    "tr_error_code_604044": MessageLookupByLibrary.simpleMessage(
+      "The user is not binding on google",
+    ),
+    "tr_error_code_604045": MessageLookupByLibrary.simpleMessage(
+      "The user failed to bind google",
+    ),
+    "tr_error_code_604046": MessageLookupByLibrary.simpleMessage(
+      "The Line account is not bound",
+    ),
+    "tr_error_code_604047": MessageLookupByLibrary.simpleMessage(
+      "Failed to bind the Line account",
+    ),
+    "tr_error_code_604048": MessageLookupByLibrary.simpleMessage(
+      "Too many errors in user verification code, resulting in invalid verification code",
+    ),
+    "tr_error_code_604049": MessageLookupByLibrary.simpleMessage(
+      "Too many user login errors, locked account for ten minutes",
+    ),
+    "tr_error_code_604050": MessageLookupByLibrary.simpleMessage(
+      "Request too frequent, please try again later",
+    ),
+    "tr_error_code_604056": MessageLookupByLibrary.simpleMessage(
+      "User not activated",
+    ),
+    "tr_error_code_604065": MessageLookupByLibrary.simpleMessage(
+      "The user did not retrieve the password, and the app should continue to listen",
+    ),
+    "tr_error_code_604100": MessageLookupByLibrary.simpleMessage(
+      "Cannot be added due to the device is invalid",
+    ),
+    "tr_error_code_604101": MessageLookupByLibrary.simpleMessage(
+      "The device already exists",
+    ),
+    "tr_error_code_604102": MessageLookupByLibrary.simpleMessage(
+      "Failed to delete device",
+    ),
+    "tr_error_code_604103": MessageLookupByLibrary.simpleMessage(
+      "Failed to modify",
+    ),
+    "tr_error_code_604104": MessageLookupByLibrary.simpleMessage(
+      "The device uuid parameter is abnormal",
+    ),
+    "tr_error_code_604105": MessageLookupByLibrary.simpleMessage(
+      "The device user name parameter is abnormal",
+    ),
+    "tr_error_code_604106": MessageLookupByLibrary.simpleMessage(
+      "The device password parameter is abnormal",
+    ),
+    "tr_error_code_604107": MessageLookupByLibrary.simpleMessage(
+      "Abnormal device port parameters",
+    ),
+    "tr_error_code_604108": MessageLookupByLibrary.simpleMessage(
+      "Device extension field parameter exception",
+    ),
+    "tr_error_code_604110": MessageLookupByLibrary.simpleMessage(
+      "New password verification failed",
+    ),
+    "tr_error_code_604111": MessageLookupByLibrary.simpleMessage(
+      "Confirm password verification failed",
+    ),
+    "tr_error_code_604112": MessageLookupByLibrary.simpleMessage(
+      "Device alias verification failed",
+    ),
+    "tr_error_code_604114": MessageLookupByLibrary.simpleMessage(
+      "Cloud storage support",
+    ),
+    "tr_error_code_604115": MessageLookupByLibrary.simpleMessage(
+      "Cloud storage not support",
+    ),
+    "tr_error_code_604116": MessageLookupByLibrary.simpleMessage(
+      "Failed to transfer the master account of the device to another user. Check whether the user owns the device and has the master account rights",
+    ),
+    "tr_error_code_604117": MessageLookupByLibrary.simpleMessage(
+      "Not the main account",
+    ),
+    "tr_error_code_604118": MessageLookupByLibrary.simpleMessage(
+      "The device no longer exists and has been removed",
+    ),
+    "tr_error_code_604119": MessageLookupByLibrary.simpleMessage(
+      "Adding devices is not unique. Other accounts have been added",
+    ),
+    "tr_error_code_604120": MessageLookupByLibrary.simpleMessage(
+      "Maximum number of added devices",
+    ),
+    "tr_error_code_604126": MessageLookupByLibrary.simpleMessage(
+      "The device support token is added by only one account",
+    ),
+    "tr_error_code_604127": MessageLookupByLibrary.simpleMessage(
+      "Device token is missing",
+    ),
+    "tr_error_code_604200": MessageLookupByLibrary.simpleMessage(
+      "Add authorization failed",
+    ),
+    "tr_error_code_604201": MessageLookupByLibrary.simpleMessage(
+      "Failed to modify authorization",
+    ),
+    "tr_error_code_604202": MessageLookupByLibrary.simpleMessage(
+      "Delete authorization failed",
+    ),
+    "tr_error_code_604203": MessageLookupByLibrary.simpleMessage(
+      "Single authorization synchronization failed",
+    ),
+    "tr_error_code_604300": MessageLookupByLibrary.simpleMessage(
+      "Send failure",
+    ),
+    "tr_error_code_604301": MessageLookupByLibrary.simpleMessage(
+      "Email signature failed",
+    ),
+    "tr_error_code_604302": MessageLookupByLibrary.simpleMessage(
+      "Account cancellation requires verification code",
+    ),
+    "tr_error_code_604303": MessageLookupByLibrary.simpleMessage(
+      "Registration email sent too many times, each email can only be sent five times a day",
+    ),
+    "tr_error_code_604304": MessageLookupByLibrary.simpleMessage(
+      "The password recovery email has been sent too many times, and each email can only be sent five times a day",
+    ),
+    "tr_error_code_604400": MessageLookupByLibrary.simpleMessage(
+      "SMS interface verification failed. Please contact us",
+    ),
+    "tr_error_code_604401": MessageLookupByLibrary.simpleMessage(
+      "The parameters of the SMS interface are incorrect. Please contact us",
+    ),
+    "tr_error_code_604402": MessageLookupByLibrary.simpleMessage(
+      "Text messages can only be sent three times a day per phone number",
+    ),
+    "tr_error_code_604403": MessageLookupByLibrary.simpleMessage(
+      "Sending failed, please try again later",
+    ),
+    "tr_error_code_604404": MessageLookupByLibrary.simpleMessage(
+      "Sent too frequently, please wait 120 seconds",
+    ),
+    "tr_error_code_604405": MessageLookupByLibrary.simpleMessage(
+      "Send failure",
+    ),
+    "tr_error_code_604500": MessageLookupByLibrary.simpleMessage(
+      "No user list found or user list is empty",
+    ),
+    "tr_error_code_604502": MessageLookupByLibrary.simpleMessage(
+      "No device list found or the device list is empty",
+    ),
+    "tr_error_code_604503": MessageLookupByLibrary.simpleMessage(
+      "Failed to reset app secret",
+    ),
+    "tr_error_code_604600": MessageLookupByLibrary.simpleMessage(
+      "WeChat alarm failed to open",
+    ),
+    "tr_error_code_604601": MessageLookupByLibrary.simpleMessage(
+      "WeChat alarm failed to close",
+    ),
+    "tr_error_code_605000": MessageLookupByLibrary.simpleMessage(
+      "Server error",
+    ),
+    "tr_error_code_605001": MessageLookupByLibrary.simpleMessage(
+      "Certificate does not exist",
+    ),
+    "tr_error_code_605002": MessageLookupByLibrary.simpleMessage(
+      "The request header information is incorrect",
+    ),
+    "tr_error_code_605003": MessageLookupByLibrary.simpleMessage(
+      "Certificate invalid",
+    ),
+    "tr_error_code_605004": MessageLookupByLibrary.simpleMessage(
+      "Key validation error",
+    ),
+    "tr_error_code_605005": MessageLookupByLibrary.simpleMessage(
+      "Parameter Exception",
+    ),
+    "tr_error_code_605006": MessageLookupByLibrary.simpleMessage(
+      "Connection failed",
+    ),
+    "tr_error_code_605007": MessageLookupByLibrary.simpleMessage(
+      "Unknown error",
+    ),
+    "tr_error_code_605008": MessageLookupByLibrary.simpleMessage(
+      "IP address not allowed for access",
+    ),
+    "tr_error_code_605009": MessageLookupByLibrary.simpleMessage(
+      "Wechat code error, AES encryption and decryption error",
+    ),
+    "tr_error_code_605010": MessageLookupByLibrary.simpleMessage(
+      "Token Expired",
+    ),
+    "tr_error_code_605011": MessageLookupByLibrary.simpleMessage("Token error"),
+    "tr_error_code_605012": MessageLookupByLibrary.simpleMessage(
+      "Token No permission",
+    ),
+    "tr_error_code_605013": MessageLookupByLibrary.simpleMessage(
+      "Not supported",
+    ),
+    "tr_error_code_605014": MessageLookupByLibrary.simpleMessage(
+      "Frequent operations",
+    ),
+    "tr_error_code_606000": MessageLookupByLibrary.simpleMessage(
+      "Invalid login method",
+    ),
+    "tr_error_code_69999": MessageLookupByLibrary.simpleMessage(
+      "Json parsing failed",
+    ),
+    "tr_error_code_70001": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Out of memory",
+    ),
+    "tr_error_code_70002": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---File format error",
+    ),
+    "tr_error_code_70003": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---A partition upgrade failed",
+    ),
+    "tr_error_code_70004": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Hardware model mismatch",
+    ),
+    "tr_error_code_70005": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Customer information mismatch",
+    ),
+    "tr_error_code_70006": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---The version to be upgraded is lower than the current version of the device and cannot be upgraded",
+    ),
+    "tr_error_code_70007": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Illegal version",
+    ),
+    "tr_error_code_70008": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---The WiFi driver in the upgrade program does not match the WiFi network card currently in use by the device",
+    ),
+    "tr_error_code_70009": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Network error",
+    ),
+    "tr_error_code_70010": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---The upgrade program does not support Flash used by the device",
+    ),
+    "tr_error_code_70011": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---The upgrade file has been modified and cannot be upgraded through an external network",
+    ),
+    "tr_error_code_70012": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Upgrading this firmware requires special capability support",
+    ),
+    "tr_error_code_70101": MessageLookupByLibrary.simpleMessage(
+      "Unknown mistake",
+    ),
+    "tr_error_code_70102": MessageLookupByLibrary.simpleMessage(
+      "Version not supported",
+    ),
+    "tr_error_code_70103": MessageLookupByLibrary.simpleMessage(
+      "Illegal request",
+    ),
+    "tr_error_code_70104": MessageLookupByLibrary.simpleMessage(
+      "The user is already logged in",
+    ),
+    "tr_error_code_70105": MessageLookupByLibrary.simpleMessage(
+      "The user is not logged in",
+    ),
+    "tr_error_code_70106": MessageLookupByLibrary.simpleMessage(
+      "Username or password is incorrect",
+    ),
+    "tr_error_code_70107": MessageLookupByLibrary.simpleMessage(
+      "No device function permission",
+    ),
+    "tr_error_code_70108": MessageLookupByLibrary.simpleMessage("Timeout"),
+    "tr_error_code_70109": MessageLookupByLibrary.simpleMessage(
+      "Search failed, no corresponding file found",
+    ),
+    "tr_error_code_70110": MessageLookupByLibrary.simpleMessage(
+      "Find success, return all files",
+    ),
+    "tr_error_code_70111": MessageLookupByLibrary.simpleMessage(
+      "Find success, return some files",
+    ),
+    "tr_error_code_70112": MessageLookupByLibrary.simpleMessage(
+      "The user already exists",
+    ),
+    "tr_error_code_70113": MessageLookupByLibrary.simpleMessage(
+      "The user does not exist",
+    ),
+    "tr_error_code_70114": MessageLookupByLibrary.simpleMessage(
+      "The user group already exists",
+    ),
+    "tr_error_code_70115": MessageLookupByLibrary.simpleMessage(
+      "The user group does not exist",
+    ),
+    "tr_error_code_70116": MessageLookupByLibrary.simpleMessage(
+      "Pirated software",
+    ),
+    "tr_error_code_70117": MessageLookupByLibrary.simpleMessage(
+      "Malformed message",
+    ),
+    "tr_error_code_70118": MessageLookupByLibrary.simpleMessage(
+      "PTZ protocol not set",
+    ),
+    "tr_error_code_70119": MessageLookupByLibrary.simpleMessage(
+      "Record file not found",
+    ),
+    "tr_error_code_70120": MessageLookupByLibrary.simpleMessage(
+      "Configuration not enabled",
+    ),
+    "tr_error_code_70121": MessageLookupByLibrary.simpleMessage(
+      "Digital channel not connected",
+    ),
+    "tr_error_code_70122": MessageLookupByLibrary.simpleMessage(
+      "NAT video links maxed out, no new NAT video links allowed",
+    ),
+    "tr_error_code_70123": MessageLookupByLibrary.simpleMessage(
+      "TCP video link reaches maximum, no new TCP video link is allowed",
+    ),
+    "tr_error_code_70124": MessageLookupByLibrary.simpleMessage(
+      "Incorrect encryption algorithm for username and password",
+    ),
+    "tr_error_code_70125": MessageLookupByLibrary.simpleMessage(
+      "Created other users, can no longer log in with admin",
+    ),
+    "tr_error_code_70126": MessageLookupByLibrary.simpleMessage(
+      "AES encrypted data format error",
+    ),
+    "tr_error_code_70127": MessageLookupByLibrary.simpleMessage(
+      "The user has disabled video recording and preview functions through one click masking and other functions",
+    ),
+    "tr_error_code_70128": MessageLookupByLibrary.simpleMessage(
+      "Prohibit 4G remote video watching",
+    ),
+    "tr_error_code_70129": MessageLookupByLibrary.simpleMessage(
+      "Prohibit remote login using admin username",
+    ),
+    "tr_error_code_70130": MessageLookupByLibrary.simpleMessage(
+      "NAS address already exists",
+    ),
+    "tr_error_code_70131": MessageLookupByLibrary.simpleMessage(
+      "The path is in use and cannot be operated",
+    ),
+    "tr_error_code_70132": MessageLookupByLibrary.simpleMessage(
+      "The NAS has reached the maximum supported value, and further additions are not allowed",
+    ),
+    "tr_error_code_70136": MessageLookupByLibrary.simpleMessage(
+      "CGI format error",
+    ),
+    "tr_error_code_70137": MessageLookupByLibrary.simpleMessage(
+      "Device login token error",
+    ),
+    "tr_error_code_70140": MessageLookupByLibrary.simpleMessage(
+      "Consumer product remote control is bound to the wrong key",
+    ),
+    "tr_error_code_70150": MessageLookupByLibrary.simpleMessage(
+      "Success, the device needs to be restarted",
+    ),
+    "tr_error_code_70151": MessageLookupByLibrary.simpleMessage(
+      "The file was not successfully deleted",
+    ),
+    "tr_error_code_70152": MessageLookupByLibrary.simpleMessage(
+      "Lack of capacity",
+    ),
+    "tr_error_code_70153": MessageLookupByLibrary.simpleMessage(
+      "No SD card or hard drive",
+    ),
+    "tr_error_code_70160": MessageLookupByLibrary.simpleMessage(
+      "Video backup failed",
+    ),
+    "tr_error_code_70161": MessageLookupByLibrary.simpleMessage(
+      "There is no recording device or the device is not recording",
+    ),
+    "tr_error_code_70162": MessageLookupByLibrary.simpleMessage(
+      "Device is being added",
+    ),
+    "tr_error_code_70163": MessageLookupByLibrary.simpleMessage(
+      "The device returned the wrong password",
+    ),
+    "tr_error_code_70164": MessageLookupByLibrary.simpleMessage(
+      "Not enough space on the device",
+    ),
+    "tr_error_code_70165": MessageLookupByLibrary.simpleMessage(
+      "Device is busy and currently not in service",
+    ),
+    "tr_error_code_70170": MessageLookupByLibrary.simpleMessage(
+      "Function not enabled",
+    ),
+    "tr_error_code_70173": MessageLookupByLibrary.simpleMessage(
+      "Connection to server failed",
+    ),
+    "tr_error_code_70174": MessageLookupByLibrary.simpleMessage(
+      "Unable to detect memory",
+    ),
+    "tr_error_code_70180": MessageLookupByLibrary.simpleMessage(
+      "The function has been activated",
+    ),
+    "tr_error_code_70181": MessageLookupByLibrary.simpleMessage(
+      "Network initialization failed",
+    ),
+    "tr_error_code_70182": MessageLookupByLibrary.simpleMessage("System error"),
+    "tr_error_code_70183": MessageLookupByLibrary.simpleMessage(
+      "Operation failed",
+    ),
+    "tr_error_code_70184": MessageLookupByLibrary.simpleMessage(
+      "Switching from low-power mode to constant power mode failed",
+    ),
+    "tr_error_code_70202": MessageLookupByLibrary.simpleMessage("Do not login"),
+    "tr_error_code_70203": MessageLookupByLibrary.simpleMessage(
+      "The password is invalid",
+    ),
+    "tr_error_code_70205": MessageLookupByLibrary.simpleMessage(
+      "The user is invalid",
+    ),
+    "tr_error_code_70206": MessageLookupByLibrary.simpleMessage(
+      "Account is locked with wrong login",
+    ),
+    "tr_error_code_70207": MessageLookupByLibrary.simpleMessage(
+      "Account is blacklisted",
+    ),
+    "tr_error_code_70208": MessageLookupByLibrary.simpleMessage(
+      "User has used",
+    ),
+    "tr_error_code_70209": MessageLookupByLibrary.simpleMessage(
+      "Invalid input",
+    ),
+    "tr_error_code_70210": MessageLookupByLibrary.simpleMessage(
+      "The index is duplicated if the user to be added already exists",
+    ),
+    "tr_error_code_70211": MessageLookupByLibrary.simpleMessage(
+      "Object does not exist when used for query",
+    ),
+    "tr_error_code_70212": MessageLookupByLibrary.simpleMessage(
+      "Object does not exist",
+    ),
+    "tr_error_code_70213": MessageLookupByLibrary.simpleMessage(
+      "The target is in use, if the group is used, it cannot be deleted",
+    ),
+    "tr_error_code_70214": MessageLookupByLibrary.simpleMessage(
+      "Subset out of scope",
+    ),
+    "tr_error_code_70215": MessageLookupByLibrary.simpleMessage(
+      "The password is incorrect",
+    ),
+    "tr_error_code_70216": MessageLookupByLibrary.simpleMessage(
+      "The password do not match",
+    ),
+    "tr_error_code_70217": MessageLookupByLibrary.simpleMessage("Keep account"),
+    "tr_error_code_70218": MessageLookupByLibrary.simpleMessage(
+      "Unable to log in during system maintenance",
+    ),
+    "tr_error_code_70219": MessageLookupByLibrary.simpleMessage(
+      "The trial period has ended and the unlock password is incorrect",
+    ),
+    "tr_error_code_70220": MessageLookupByLibrary.simpleMessage(
+      "Incorrect answer to security question",
+    ),
+    "tr_error_code_70221": MessageLookupByLibrary.simpleMessage(
+      "Reset password function, too many attempts to restore default verification code",
+    ),
+    "tr_error_code_70222": MessageLookupByLibrary.simpleMessage(
+      "Restore default verification code error",
+    ),
+    "tr_error_code_70223": MessageLookupByLibrary.simpleMessage(
+      "Username not available",
+    ),
+    "tr_error_code_70224": MessageLookupByLibrary.simpleMessage(
+      "Storage has reached its limit, no more new users can be added",
+    ),
+    "tr_error_code_70502": MessageLookupByLibrary.simpleMessage(
+      "Command is illegal",
+    ),
+    "tr_error_code_70503": MessageLookupByLibrary.simpleMessage(
+      "Voice intercom has been enabled",
+    ),
+    "tr_error_code_70504": MessageLookupByLibrary.simpleMessage(
+      "Intercom not enabled",
+    ),
+    "tr_error_code_70511": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Upgrade has started",
+    ),
+    "tr_error_code_70512": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Upgrade not started",
+    ),
+    "tr_error_code_70513": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Upgrade data error",
+    ),
+    "tr_error_code_70514": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Upgrade failed",
+    ),
+    "tr_error_code_70516": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Device busy or cloud upgrade server busy",
+    ),
+    "tr_error_code_70517": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---This upgrade was initiated by another connection and cannot be stopped",
+    ),
+    "tr_error_code_70518": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---It is the latest version currently",
+    ),
+    "tr_error_code_70519": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Upgrade file mismatch",
+    ),
+    "tr_error_code_70520": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Front end device not online",
+    ),
+    "tr_error_code_70521": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Restore default failed",
+    ),
+    "tr_error_code_70522": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Device needs to be restarted",
+    ),
+    "tr_error_code_70523": MessageLookupByLibrary.simpleMessage(
+      "Device upgrade---Illegal default configuration",
+    ),
+    "tr_error_code_70524": MessageLookupByLibrary.simpleMessage(
+      "Bluetooth pairing has started",
+    ),
+    "tr_error_code_70525": MessageLookupByLibrary.simpleMessage(
+      "Bluetooth pairing has reached the upper limit",
+    ),
+    "tr_error_code_70526": MessageLookupByLibrary.simpleMessage(
+      "Low battery does not support controlling the PTZ",
+    ),
+    "tr_error_code_70527": MessageLookupByLibrary.simpleMessage(
+      "Message sent to the main control failed",
+    ),
+    "tr_error_code_70528": MessageLookupByLibrary.simpleMessage(
+      "Failed to obtain upgrade file information",
+    ),
+    "tr_error_code_70529": MessageLookupByLibrary.simpleMessage(
+      "Online upgrade not initiated",
+    ),
+    "tr_error_code_70530": MessageLookupByLibrary.simpleMessage(
+      "Ignoring version information prompts",
+    ),
+    "tr_error_code_70531": MessageLookupByLibrary.simpleMessage(
+      "Remote facial recognition function not enabled",
+    ),
+    "tr_error_code_70602": MessageLookupByLibrary.simpleMessage(
+      "Need to restart the application",
+    ),
+    "tr_error_code_70603": MessageLookupByLibrary.simpleMessage(
+      "Need to restart the device",
+    ),
+    "tr_error_code_70604": MessageLookupByLibrary.simpleMessage(
+      "Failed to write file",
+    ),
+    "tr_error_code_70605": MessageLookupByLibrary.simpleMessage(
+      "Feature not supported",
+    ),
+    "tr_error_code_70606": MessageLookupByLibrary.simpleMessage(
+      "Verification failed",
+    ),
+    "tr_error_code_70607": MessageLookupByLibrary.simpleMessage(
+      "Configuration parsing error",
+    ),
+    "tr_error_code_70609": MessageLookupByLibrary.simpleMessage(
+      "Configuration does not exist",
+    ),
+    "tr_error_code_79998": MessageLookupByLibrary.simpleMessage(
+      "Opening audio failed",
+    ),
+    "tr_error_code_79999": MessageLookupByLibrary.simpleMessage(
+      "YUV data abnormality",
+    ),
+    "tr_error_code_90000": MessageLookupByLibrary.simpleMessage(
+      "User cancellation",
+    ),
+    "tr_error_code_90001": MessageLookupByLibrary.simpleMessage(
+      "Illegal files",
+    ),
+    "tr_error_code_90002": MessageLookupByLibrary.simpleMessage(
+      "Account not enabled",
+    ),
+    "tr_error_code_90003": MessageLookupByLibrary.simpleMessage(
+      "Function overdue",
+    ),
+    "tr_error_code_90004": MessageLookupByLibrary.simpleMessage(
+      "Reached maximum number of connections",
+    ),
+    "tr_error_code_90005": MessageLookupByLibrary.simpleMessage(
+      "Function not initialized",
+    ),
+    "tr_error_code_99967": MessageLookupByLibrary.simpleMessage(
+      "Wake up device failed",
+    ),
+    "tr_error_code_99968": MessageLookupByLibrary.simpleMessage(
+      "Device deep sleep",
+    ),
+    "tr_error_code_99969": MessageLookupByLibrary.simpleMessage(
+      "The device is preparing to sleep",
+    ),
+    "tr_error_code_99970": MessageLookupByLibrary.simpleMessage(
+      "File read failure",
+    ),
+    "tr_error_code_99971": MessageLookupByLibrary.simpleMessage(
+      "File download failed",
+    ),
+    "tr_error_code_99972": MessageLookupByLibrary.simpleMessage(
+      "File does not exist",
+    ),
+    "tr_error_code_99973": MessageLookupByLibrary.simpleMessage(
+      "Directory does not exist",
+    ),
+    "tr_error_code_99974": MessageLookupByLibrary.simpleMessage(
+      "Temporary file directory not set during initialization",
+    ),
+    "tr_error_code_99975": MessageLookupByLibrary.simpleMessage(
+      "Device offline",
+    ),
+    "tr_error_code_99976": MessageLookupByLibrary.simpleMessage(
+      "User on blacklist",
+    ),
+    "tr_error_code_99977": MessageLookupByLibrary.simpleMessage("User locked"),
+    "tr_error_code_99978": MessageLookupByLibrary.simpleMessage(
+      "The user has logged in from another location",
+    ),
+    "tr_error_code_99979": MessageLookupByLibrary.simpleMessage(
+      "Incorrect username or password",
+    ),
+    "tr_error_code_99980": MessageLookupByLibrary.simpleMessage(
+      "Protocol parsing error",
+    ),
+    "tr_error_code_99981": MessageLookupByLibrary.simpleMessage(
+      "Insufficient or full buffer size",
+    ),
+    "tr_error_code_99982": MessageLookupByLibrary.simpleMessage(
+      "Send buffer full",
+    ),
+    "tr_error_code_99983": MessageLookupByLibrary.simpleMessage(
+      "Failed to start listening server",
+    ),
+    "tr_error_code_99984": MessageLookupByLibrary.simpleMessage(
+      "Failed to bind listening port (port occupied)",
+    ),
+    "tr_error_code_99985": MessageLookupByLibrary.simpleMessage(
+      "Internal server error",
+    ),
+    "tr_error_code_99986": MessageLookupByLibrary.simpleMessage(
+      "Object is busy",
+    ),
+    "tr_error_code_99987": MessageLookupByLibrary.simpleMessage(
+      "Network sending error",
+    ),
+    "tr_error_code_99988": MessageLookupByLibrary.simpleMessage(
+      "Network acceptance error",
+    ),
+    "tr_error_code_99989": MessageLookupByLibrary.simpleMessage(
+      "Failed to create buffer",
+    ),
+    "tr_error_code_99990": MessageLookupByLibrary.simpleMessage("Not found"),
+    "tr_error_code_99991": MessageLookupByLibrary.simpleMessage("Timeout"),
+    "tr_error_code_99992": MessageLookupByLibrary.simpleMessage(
+      "Object already exists",
+    ),
+    "tr_error_code_99993": MessageLookupByLibrary.simpleMessage(
+      "Network error",
+    ),
+    "tr_error_code_99994": MessageLookupByLibrary.simpleMessage(
+      "Not supported",
+    ),
+    "tr_error_code_99995": MessageLookupByLibrary.simpleMessage(
+      "Fail to read file",
+    ),
+    "tr_error_code_99996": MessageLookupByLibrary.simpleMessage(
+      "Fail to write file",
+    ),
+    "tr_error_code_99997": MessageLookupByLibrary.simpleMessage(
+      "Fail to open file",
+    ),
+    "tr_error_code_99998": MessageLookupByLibrary.simpleMessage(
+      "Fail to create file",
+    ),
+    "tr_error_code_99999": MessageLookupByLibrary.simpleMessage(
+      "Parameter error",
+    ),
     "tr_pet_function_record_start": MessageLookupByLibrary.simpleMessage(
       "Click to Start Recording",
     ),
@@ -469,6 +1586,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "version": MessageLookupByLibrary.simpleMessage("Version"),
     "video": MessageLookupByLibrary.simpleMessage("record"),
+    "visitOpenPlatformDocumentationCenter":
+        MessageLookupByLibrary.simpleMessage(
+          "visit the Open Platform Documentation Center",
+        ),
     "voiceTipSwitch": MessageLookupByLibrary.simpleMessage("Voice Prompt"),
     "wifi": MessageLookupByLibrary.simpleMessage("add via wifi"),
     "wifiPwdHint": MessageLookupByLibrary.simpleMessage("Wifi Password"),

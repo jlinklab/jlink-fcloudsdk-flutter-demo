@@ -4,6 +4,7 @@ import ImageGallerySaverPlugin from 'image_gallery_saver';
 import PathProviderPlugin from 'path_provider_ohos';
 import SharedPreferencesPlugin from 'shared_preferences_ohos';
 import ImagePickerPlugin from 'image_picker_ohos';
+import UrlLauncherPlugin from 'url_launcher_ohos';
 import PermissionHandlerPlugin from 'permission_handler_ohos';
 import ConnectivityPlugin from 'connectivity_plus';
 import SharePlusOhosPlugin from 'share_plus';
@@ -34,6 +35,7 @@ export class GeneratedPluginRegistrant {
       flutterEngine.getPlugins()?.add(new PathProviderPlugin());
       flutterEngine.getPlugins()?.add(new SharedPreferencesPlugin());
       flutterEngine.getPlugins()?.add(new ImagePickerPlugin());
+      flutterEngine.getPlugins()?.add(new UrlLauncherPlugin());
       flutterEngine.getPlugins()?.add(new PermissionHandlerPlugin());
       flutterEngine.getPlugins()?.add(new ConnectivityPlugin());
       flutterEngine.getPlugins()?.add(new SharePlusOhosPlugin());

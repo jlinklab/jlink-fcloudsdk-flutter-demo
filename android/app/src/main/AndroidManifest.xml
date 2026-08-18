@@ -56,6 +56,19 @@ xmlns:tools="http://schemas.android.com/tools"
 
 
     
+    <!-- Android 11(API 30)+ 包可见性限制：声明需要打开的URL scheme，
+         否则 canLaunchUrl 返回 false / 部分设备无法拉起浏览器 -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+    </queries>
+
     <application
         android:name=".MyApplication"
         android:icon="@mipmap/ic_launcher"

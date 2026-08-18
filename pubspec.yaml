@@ -101,6 +101,11 @@ dependencies:
       url: https://gitcode.com/openharmony-sig/flutter_audioplayers.git
       path: packages/audioplayers
       ref: "br_v6.5.1_ohos_dev"
+  #url重定向
+  url_launcher:
+    git:
+      url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+      path: "packages/url_launcher/url_launcher"
     #设备信息
   device_info_plus:
     git:
