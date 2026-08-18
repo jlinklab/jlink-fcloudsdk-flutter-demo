@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter/manager/device_config_manager.dart';
 import 'package:xcloudsdk_flutter/utils/extensions.dart';
+import 'package:xcloudsdk_flutter/utils/log_util.dart';
 import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
 import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
@@ -13,7 +14,6 @@ import 'package:xcloudsdk_flutter_example/manager/push_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_ability/device_ability_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
 import 'package:xcloudsdk_flutter_example/utils/jpeg_chn_title_helper.dart';
-import 'package:xcloudsdk_flutter_example/utils/log_util.dart';
 import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
 import 'package:xcloudsdk_flutter_example/widgets/sensitivity_slider.dart';
 

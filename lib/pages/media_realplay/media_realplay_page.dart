@@ -6,26 +6,31 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:xcloudsdk_flutter/api/api_center.dart';
 import 'package:xcloudsdk_flutter/media/audio_player.dart';
 import 'package:xcloudsdk_flutter/media/media_player.dart';
 import 'package:xcloudsdk_flutter/model/talk_param.dart';
 import 'package:xcloudsdk_flutter/utils/num_util.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
 import 'package:xcloudsdk_flutter_example/common/common_path.dart';
+import 'package:xcloudsdk_flutter_example/common/event.dart';
 import 'package:xcloudsdk_flutter_example/common/named_route.dart';
+import 'package:xcloudsdk_flutter_example/event/event.dart';
 import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
 import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
 import 'package:xcloudsdk_flutter_example/manager/device_property_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_pwd_setting/device_pwd_find_back_page.dart';
+import 'package:xcloudsdk_flutter_example/pages/device_ability/device_ability_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
+import 'package:xcloudsdk_flutter_example/pages/media_realplay/controller/media_realplay_controller.dart';
+import 'package:xcloudsdk_flutter_example/pages/media_realplay/views/4g_widget.dart';
+import 'package:xcloudsdk_flutter_example/pages/media_realplay/views/battery_widget.dart';
+import 'package:xcloudsdk_flutter_example/pages/media_realplay/views/bits_widget.dart';
 import 'package:xcloudsdk_flutter_example/pages/media_realplay/views/dev_pre_set_view.dart';
+import 'package:xcloudsdk_flutter_example/pages/media_realplay/views/wifi_widget.dart';
 import 'package:xcloudsdk_flutter_example/utils/permission_utils.dart';
 import 'package:xcloudsdk_flutter_example/views/play_control_view.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/device_pwd_input.dart';
 import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
 
-import '../../models/user_instance.dart';
 import '../record/cloud_record_list_page.dart';
 
 class MediaRealPlayPage extends StatefulWidget {
@@ -52,37 +57,57 @@ class _MediaRealPlayPageState extends State<MediaRealPlayPage> {
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(builder: (context, orientation) {
+    if (device == null) {
       return Scaffold(
-        appBar: orientation == Orientation.portrait
-            ? AppBar(
-                title: Text(TR.current.preview),
-                centerTitle: true,
-                actions: [
-                  if ((device?.hasPermission(
-                          permission: DevicePermission.DP_ModifyConfig)) ??
-                      false)
-                    IconButton(
-                        onPressed: () {
-                          context.pushNamed('device_config', pathParameters: {
-                            'devId': widget.deviceId,
-                            'channel': (-1).toString(),
-                            'type': widget.type.toString(),
-                            'pid': widget.pid,
-                          });
-                          // Navigator.of(context).pushNamed('/device_config',
-                          //     arguments: {'deviceId': widget.deviceId, 'channel': -1});
-                        },
-                        icon: const Icon(Icons.settings)),
-                ],
-              )
-            : null,
-        body: JFMediaRealPlayBodyContent(
-          deviceId: widget.deviceId,
-          orientation: orientation,
+        appBar: AppBar(
+          title: Text(TR.current.preview),
+          centerTitle: true,
         ),
+        body: const Center(child: Text('设备信息不存在')),
       );
-    });
+    }
+    return ChangeNotifierProvider(
+        create: (context) => MediaRealplayController(
+              context: context,
+              deviceId: widget.deviceId,
+            ),
+        child: Consumer<MediaRealplayController>(
+            builder: (context, controller, child) {
+          return OrientationBuilder(builder: (context, orientation) {
+            return Scaffold(
+              appBar: orientation == Orientation.portrait
+                  ? AppBar(
+                      title: Text(TR.current.preview),
+                      centerTitle: true,
+                      actions: [
+                        if ((device?.hasPermission(
+                                permission:
+                                    DevicePermission.DP_ModifyConfig)) ??
+                            false)
+                          IconButton(
+                              onPressed: () {
+                                context.pushNamed('device_config',
+                                    pathParameters: {
+                                      'devId': widget.deviceId,
+                                      'channel': (-1).toString(),
+                                      'type': widget.type.toString(),
+                                      'pid': widget.pid,
+                                    });
+                                // Navigator.of(context).pushNamed('/device_config',
+                                //     arguments: {'deviceId': widget.deviceId, 'channel': -1});
+                              },
+                              icon: const Icon(Icons.settings)),
+                      ],
+                    )
+                  : null,
+              body: JFMediaRealPlayBodyContent(
+                deviceId: widget.deviceId,
+                orientation: orientation,
+                controller: controller,
+              ),
+            );
+          });
+        }));
   }
 
   @override
@@ -95,9 +120,13 @@ class _MediaRealPlayPageState extends State<MediaRealPlayPage> {
 class JFMediaRealPlayBodyContent extends StatefulWidget {
   final String deviceId;
   final Orientation orientation;
+  final MediaRealplayController controller;
 
   const JFMediaRealPlayBodyContent(
-      {super.key, required this.deviceId, required this.orientation});
+      {super.key,
+      required this.deviceId,
+      required this.orientation,
+      required this.controller});
 
   @override
   State<StatefulWidget> createState() => JFMediaRealPlayBodyContentState();
@@ -105,12 +134,6 @@ class JFMediaRealPlayBodyContent extends StatefulWidget {
 
 class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver, RouteAware {
-  late final PreviewMediaController controller;
-
-  ///当前页面是否可见
-  bool _isVisible = true;
-
-  bool isLoading = true;
   bool isRecording = false;
 
   late final AnimationController animationController;
@@ -119,6 +142,8 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
 
   Device? device;
 
+  late StreamSubscription<PreviewRenderedEvent> renderEvent;
+
   @override
   void initState() {
     super.initState();
@@ -126,13 +151,11 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
     WidgetsBinding.instance.addObserver(this);
     animationController = AnimationController(
         duration: const Duration(milliseconds: 500), vsync: this);
-    initMediaPlay();
-    startPlay();
     device = DeviceManager.instance.getDevice(deviceId: widget.deviceId);
-  }
-
-  void startPlay() async {
-    controller.startPreview();
+    //出图指令发完之后，更新各种能力，刷新一下功能
+    renderEvent = eventBus.on<PreviewRenderedEvent>().listen((_) async {
+      await DeviceAbilityManager.update(deviceId: widget.deviceId);
+    });
   }
 
   @override
@@ -141,6 +164,7 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
     WidgetsBinding.instance.removeObserver(this);
     routeObserver.unsubscribe(this);
     _snapshotSub?.cancel();
+    renderEvent.cancel();
 
     if (audioHandle != -1) {
       onStopTalk();
@@ -156,90 +180,15 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
   @override
   void didPushNext() {
     super.didPushNext();
-    _isVisible = false;
-    controller.stop();
+    widget.controller.mediaController.stop();
     print("didPushNext");
   }
 
   @override
   void didPopNext() {
     super.didPopNext();
-    _isVisible = true;
-    controller.restart();
+    widget.controller.mediaController.restart();
     print("didPopNext");
-  }
-
-  void dealErrorCode(int code) {
-    if (code == -70106 || code == -70163 || code == -70203 || code == -70205) {
-      //设备密码错误 需要重新输入
-      showDialog(
-          context: context,
-          builder: (context) {
-            return Material(
-              color: Colors.black26,
-              child: Center(
-                child: DevicePwdInput(
-                  deviceId: widget.deviceId,
-                  completion: (name, password) async {
-                    Navigator.of(context).pop();
-                    UserInfo.instance
-                        .saveDeviceInfo(widget.deviceId, name, password);
-                    await JFApi.xcDevice.xcSetLocalUserNameAndPwd(
-                        deviceId: widget.deviceId,
-                        userName: name,
-                        pwd: password);
-                    controller.restart();
-                  },
-                  onFindPwd: () {
-                    ///找回密码
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return DevicePwdFindBackPage(
-                        deviceId: widget.deviceId,
-                      );
-                    }));
-                  },
-                  onCancel: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-            );
-          });
-    } else {
-      //其他的直接显示错误码
-      KToast.show(status: kErrorMsg(code));
-    }
-  }
-
-  void initMediaPlay() async {
-    controller = PreviewMediaController(deviceId: widget.deviceId);
-    controller.addStatusListener((status) {
-      if (mounted) {
-        setState(() {
-          print(status);
-          isLoading = status == MediaStatus.buffering;
-        });
-      }
-    });
-    controller.addListener(() {});
-    controller.addErrorListener((code) {
-      dealErrorCode(code);
-    });
-    controller.addListener(() {
-      if (mounted) {
-        setState(() {});
-      }
-    });
-    controller.snapshoEvent.listen((event) {
-      if (event.controllerId != controller.controllerId) {
-        return;
-      }
-      if (event.snapshotKey == 'preset') {
-        return;
-      }
-      _handleSnapshotEvent(event);
-    });
   }
 
   void onPlay() async {}
@@ -280,15 +229,7 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
         '/$directoryPath/$kPrefixImage$deviceId $timeStr $channel.jpg';
 
     KToast.show();
-    await controller.snapshot(imagePath);
-  }
-
-  void _handleSnapshotEvent(SnapshotCallback event) {
-    if (event.code >= 0) {
-      KToast.show(status: '抓图成功');
-    } else {
-      KToast.show(status: '抓图失败 $event.code');
-    }
+    await widget.controller.mediaController.snapshot(imagePath);
   }
 
   void onStartRecord() async {
@@ -300,7 +241,7 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
     String channel = 'channel0'; //预留通道位置
     String vidoePath =
         '/$directoryPath/$kPrefixVideo$deviceId $timeStr $channel.mp4';
-    int code = await controller.startRecord(vidoePath);
+    int code = await widget.controller.mediaController.startRecord(vidoePath);
     KToast.show(status: '开启录像');
     setState(() {
       isRecording = true;
@@ -311,7 +252,7 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
   }
 
   void onStopRecord() async {
-    int code = await controller.stopRecord();
+    int code = await widget.controller.mediaController.stopRecord();
     KToast.show(status: '录像保存成功');
     setState(() {
       isRecording = false;
@@ -370,16 +311,16 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
   }
 
   void onSound(int sound) {
-    controller.setVolume(sound);
+    widget.controller.mediaController.setVolume(sound);
   }
 
   int streamType = 0;
 
   void onChangeStreamType() async {
-    await controller.stop();
+    await widget.controller.mediaController.stop();
     // await Future.delayed(Duration(seconds: 1));
     streamType = streamType == 0 ? 1 : 0;
-    controller.startPreview(streamType: streamType);
+    widget.controller.mediaController.startPreview(streamType: streamType);
   }
 
   @override
@@ -405,7 +346,7 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
                       onPlayback: onPlayback,
                       onCloudPlayback: onCloudPlayback,
                       onChangeStreamType: onChangeStreamType,
-                      previewController: controller,
+                      previewController: widget.controller.mediaController,
                       device: device!)),
             ],
     ]);
@@ -418,13 +359,42 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
         IgnorePointer(
           ignoring: true,
           child: MediaPlayerWidget(
-            controller: controller,
+            controller: widget.controller.mediaController,
           ),
         ),
         Visibility(
-            visible: isLoading,
+            visible: widget.controller.mediaController.isLoading,
             child: const Center(
               child: CircularProgressIndicator(),
+            )),
+        Visibility(
+            visible: widget.controller.mediaController.isPlaying,
+            child: WifiWidget(
+              mediaController: widget.controller.mediaController,
+              deviceId: widget.controller.deviceId,
+              support: DeviceAbilityManager.getLocalAbilityEnable(
+                      deviceId: widget.controller.deviceId,
+                      type: DeviceAbilityType
+                          .bNetServerFunctionNet4GSignalLevel) ==
+                  false,
+            )),
+        Visibility(
+            visible: widget.controller.mediaController.isPlaying,
+            child: BitsWidget(
+              mediaController: widget.controller.mediaController,
+            )),
+        Visibility(
+            visible: widget.controller.mediaController.isPlaying,
+            child: BatteryWidget(deviceId: widget.controller.deviceId)),
+        Visibility(
+            visible: widget.controller.mediaController.isPlaying,
+            child: Signal4GWidget(
+              mediaController: widget.controller.mediaController,
+              deviceId: widget.controller.deviceId,
+              support: DevicePropertyManager.instance
+                      .supportSignal4G(deviceId: widget.controller.deviceId) ||
+                  DevicePropertyManager.instance
+                      .isLowPower(deviceId: widget.controller.deviceId),
             )),
         Positioned(
             left: 10,
@@ -444,7 +414,7 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
             )),
         MediaPlayControlView(
             orientation: orientation,
-            mediaController: controller,
+            mediaController: widget.controller.mediaController,
             mediaType: MediaType.preview),
       ],
     );

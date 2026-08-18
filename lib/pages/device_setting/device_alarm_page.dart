@@ -36,18 +36,57 @@ class _DeviceAlarmPageState extends State<DeviceAlarmPage> {
                 appBar: AppBar(
                   title: Text(TR.current.alarm),
                 ),
-                body: ListView.separated(
+                body: ListView.builder(
                     itemBuilder: (BuildContext context, int index) {
-                      return controller.dataSource[index];
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const Divider(
-                        color: Colors.blueGrey,
+                      final section = controller.dataSource[index];
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (section.title?.isNotEmpty == true)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 5, bottom: 8),
+                                child: Text(
+                                  section.title!,
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                children: _buildSectionItems(section.items),
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     },
                     itemCount: controller.dataSource.length));
           });
         });
+  }
+
+  List<Widget> _buildSectionItems(List<ListTile> items) {
+    List<Widget> widgets = [];
+    for (int i = 0; i < items.length; i++) {
+      widgets.add(items[i]);
+      if (i != items.length - 1) {
+        widgets.add(const Divider(
+          height: 1,
+          indent: 15,
+          endIndent: 15,
+        ));
+      }
+    }
+    return widgets;
   }
 
   @override

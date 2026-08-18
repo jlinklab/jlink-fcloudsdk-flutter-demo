@@ -104,6 +104,8 @@ class CloudRecordController extends ChangeNotifier {
     await JFApi.xcDevice
         .xcFindAllCloudRecordFile(
             param: CloudRecordByTime(
+                //如果使用‘video_query_user’就会去鉴权userid，user字段会去校验，只显示账户A添加后产生的回放
+                //选择想要的即可
                 msg: 'video_query',
                 userId: UserInfo.instance.userId,
                 sn: devId,

@@ -136,7 +136,9 @@ class _RecordListPageState extends State<RecordListPage>
   void initMediaPlay() async {
     controller = CardMediaController(deviceId: widget.deviceId);
     controller.addListener(() {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
     controller.addStatusListener((status) {
       if (mounted) {
@@ -214,9 +216,7 @@ class _RecordListPageState extends State<RecordListPage>
         _existRecord = false;
       }
     } catch (error) {
-      if (error is XCloudAPIException) {
-        KToast.show(status: kErrorMsg(error.code));
-      }
+      KToast.show(status: kErrorMsg(error));
       _isLoading = false;
       records = [];
       _existRecord = false;
@@ -410,6 +410,39 @@ class _RecordListPageState extends State<RecordListPage>
     });
   }
 
+  String _playbackSpeedText(PlaybackSpeed speed) {
+    if (speed == PlaybackSpeed.x4_) return '-4X';
+    if (speed == PlaybackSpeed.x2_) return '-2X';
+    if (speed == PlaybackSpeed.x2) return '2X';
+    if (speed == PlaybackSpeed.x4) return '4X';
+    return '1X';
+  }
+
+  void _showPlaybackSpeedDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(TR.current.selectPlaybackSpeed),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: PlaybackSpeed.values.reversed.map((speed) {
+                return ListTile(
+                  title: Text(_playbackSpeedText(speed)),
+                  onTap: () {
+                    controller.setPlaybackSpeed(speed: speed);
+                    Navigator.of(context).pop();
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   ///录像
   _onRecord() async {
     if (_isRecording == false) {
@@ -586,6 +619,15 @@ class _RecordListPageState extends State<RecordListPage>
                                         ? Colors.red
                                         : Colors.white,
                                   )),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10.0),
+                              child: ElevatedButton(
+                                  onPressed: () {
+                                    _showPlaybackSpeedDialog();
+                                  },
+                                  child: Text(_playbackSpeedText(
+                                      controller.playbackSpeed))),
                             ),
                           ],
                         ),

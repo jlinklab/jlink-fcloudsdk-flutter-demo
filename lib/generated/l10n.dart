@@ -5494,6 +5494,246 @@ class TR {
       args: [],
     );
   }
+
+  /// `WiFi信号等级【{level}】`
+  String wifiSignalLevel(Object level) {
+    return Intl.message(
+      'WiFi信号等级【$level】',
+      name: 'wifiSignalLevel',
+      desc: '',
+      args: [level],
+    );
+  }
+
+  /// `电量等级【{level}】,是否充电中【{isCharging}】`
+  String batteryInfo(Object level, Object isCharging) {
+    return Intl.message(
+      '电量等级【$level】,是否充电中【$isCharging】',
+      name: 'batteryInfo',
+      desc: '',
+      args: [level, isCharging],
+    );
+  }
+
+  /// `4G信号等级【{level}】`
+  String signal4GLevel(Object level) {
+    return Intl.message(
+      '4G信号等级【$level】',
+      name: 'signal4GLevel',
+      desc: '',
+      args: [level],
+    );
+  }
+
+  /// `是`
+  String get chargingYes {
+    return Intl.message('是', name: 'chargingYes', desc: '', args: []);
+  }
+
+  /// `否`
+  String get chargingNo {
+    return Intl.message('否', name: 'chargingNo', desc: '', args: []);
+  }
+
+  /// `选择播放倍速`
+  String get selectPlaybackSpeed {
+    return Intl.message(
+      '选择播放倍速',
+      name: 'selectPlaybackSpeed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `报警设置`
+  String get dynamic_alarm {
+    return Intl.message('报警设置', name: 'dynamic_alarm', desc: '', args: []);
+  }
+
+  /// `高级设置`
+  String get advanced_set {
+    return Intl.message('高级设置', name: 'advanced_set', desc: '', args: []);
+  }
+
+  /// `消息推送`
+  String get push_setting {
+    return Intl.message('消息推送', name: 'push_setting', desc: '', args: []);
+  }
+
+  /// `智能规则设置`
+  String get TR_Rule_Setting {
+    return Intl.message('智能规则设置', name: 'TR_Rule_Setting', desc: '', args: []);
+  }
+
+  /// `智能警戒开关`
+  String get TR_Intelligent_Warning_Switch {
+    return Intl.message(
+      '智能警戒开关',
+      name: 'TR_Intelligent_Warning_Switch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `警戒线`
+  String get type_alert_line {
+    return Intl.message('警戒线', name: 'type_alert_line', desc: '', args: []);
+  }
+
+  /// `警戒区域`
+  String get type_alert_area {
+    return Intl.message('警戒区域', name: 'type_alert_area', desc: '', args: []);
+  }
+
+  /// `显示智能踪迹`
+  String get Show_traces {
+    return Intl.message('显示智能踪迹', name: 'Show_traces', desc: '', args: []);
+  }
+
+  /// `视频中出现人时，会对人做画框或画线标记`
+  String get TR_Show_Traces_Tip {
+    return Intl.message(
+      '视频中出现人时，会对人做画框或画线标记',
+      name: 'TR_Show_Traces_Tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `从左到右`
+  String get smart_analyze_line_left {
+    return Intl.message(
+      '从左到右',
+      name: 'smart_analyze_line_left',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `从右到左`
+  String get smart_analyze_line_right {
+    return Intl.message(
+      '从右到左',
+      name: 'smart_analyze_line_right',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `双向`
+  String get smart_analyze_line_middle {
+    return Intl.message(
+      '双向',
+      name: 'smart_analyze_line_middle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `三角形`
+  String get smart_analyze_shape_triangle {
+    return Intl.message(
+      '三角形',
+      name: 'smart_analyze_shape_triangle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `矩形`
+  String get smart_analyze_shape_rectangle {
+    return Intl.message(
+      '矩形',
+      name: 'smart_analyze_shape_rectangle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `五边形`
+  String get smart_analyze_shape_pentagram {
+    return Intl.message(
+      '五边形',
+      name: 'smart_analyze_shape_pentagram',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `L型`
+  String get smart_analyze_shape_l_sel {
+    return Intl.message(
+      'L型',
+      name: 'smart_analyze_shape_l_sel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `凹型`
+  String get smart_analyze_shape_concave {
+    return Intl.message(
+      '凹型',
+      name: 'smart_analyze_shape_concave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `还原`
+  String get smart_analyze_restore {
+    return Intl.message(
+      '还原',
+      name: 'smart_analyze_restore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `撤销`
+  String get smart_analyze_revoke {
+    return Intl.message('撤销', name: 'smart_analyze_revoke', desc: '', args: []);
+  }
+
+  /// `请设置警戒线，拖动两端调整位置`
+  String get TR_Alert_Set_Alert_Line_Tip {
+    return Intl.message(
+      '请设置警戒线，拖动两端调整位置',
+      name: 'TR_Alert_Set_Alert_Line_Tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `区域边线存在交叉，请重新绘制`
+  String get tr_settings_alarm_alert_have_intersection {
+    return Intl.message(
+      '区域边线存在交叉，请重新绘制',
+      name: 'tr_settings_alarm_alert_have_intersection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `修改成功`
+  String get TR_Modify_S {
+    return Intl.message('修改成功', name: 'TR_Modify_S', desc: '', args: []);
+  }
+
+  /// `完成`
+  String get Done {
+    return Intl.message('完成', name: 'Done', desc: '', args: []);
+  }
+
+  /// `缓冲中...`
+  String get waiting_buffering {
+    return Intl.message(
+      '缓冲中...',
+      name: 'waiting_buffering',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

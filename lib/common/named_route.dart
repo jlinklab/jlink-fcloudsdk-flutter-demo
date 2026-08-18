@@ -9,6 +9,8 @@ import 'package:xcloudsdk_flutter_example/pages/add_device/wifi_config_page.dart
 import 'package:xcloudsdk_flutter_example/pages/login/login_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/media_realplay/media_realplay_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/play_back/play_back_page.dart';
+import 'package:xcloudsdk_flutter_example/pages/device_setting/device_alarm_line_or_area_page.dart';
+import 'package:xcloudsdk_flutter_example/pages/device_setting/device_alarm_smart_rule_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/record/record_list_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/register/register_page.dart';
 import 'package:xcloudsdk_flutter_example/pages/setting/setting_page.dart';
@@ -73,6 +75,21 @@ final GoRouter goRouter = GoRouter(
       path: '/card_record/:devId',
       builder: (context, state) => RecordListPage(
         deviceId: state.pathParameters['devId'] ?? '',
+      ),
+    ),
+    GoRoute(
+      name: 'deviceAlarmSmartRule',
+      path: '/deviceAlarmSmartRule',
+      builder: (context, state) => DeviceAlarmSmartRulePage(
+        deviceId: state.queryParameters['deviceId'] ?? '',
+      ),
+    ),
+    GoRoute(
+      name: 'deviceAlarmLineOrArea',
+      path: '/deviceAlarmLineOrArea',
+      builder: (context, state) => DeviceAlarmLineOrAreaPage(
+        deviceId: state.queryParameters['deviceId'] ?? '',
+        alarmType: state.queryParameters['alarmType'] ?? '0',
       ),
     ),
   ],

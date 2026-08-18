@@ -43,10 +43,18 @@ enum DeviceAbilityType {
   /// 是否AOV设备
   bOtherFunctionSupportAovMode,
 
+  /// 是否支持获取电池信息
+  bOtherFunctionGetBatteryInfo,
+
   ///AlarmFunction ************************************************************
 
   ///是否支持人形检测, 如果支持, 则要展示 [智能警戒]
   bAlarmFunctionPEAInHumanPed,
+
+  ///NetServerFunction ************************************************************
+
+  /// 是否支持获取4G信号强度
+  bNetServerFunctionNet4GSignalLevel,
 }
 
 class DeviceAbilityManager {
@@ -160,8 +168,7 @@ class DeviceAbilityManager {
       case DeviceAbilityType.bOtherFunctionSupportSetVolume:
         if (abilityMap['OtherFunction'] != null &&
             abilityMap['OtherFunction']!['SupportSetVolume'] != null) {
-          isSupport =
-              abilityMap['OtherFunction']!['SupportSetVolume']! as bool;
+          isSupport = abilityMap['OtherFunction']!['SupportSetVolume']! as bool;
         }
         break;
 
@@ -177,6 +184,22 @@ class DeviceAbilityManager {
         if (abilityMap['OtherFunction'] != null &&
             abilityMap['OtherFunction']!['AovMode'] != null) {
           isSupport = abilityMap['OtherFunction']!['AovMode']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionGetBatteryInfo:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['GetBatteryInfo'] != null) {
+          isSupport = abilityMap['OtherFunction']!['GetBatteryInfo']! as bool;
+        }
+        break;
+
+      ///NetServerFunction ********************
+      case DeviceAbilityType.bNetServerFunctionNet4GSignalLevel:
+        if (abilityMap['NetServerFunction'] != null &&
+            abilityMap['NetServerFunction']!['Net4GSignalLevel'] != null) {
+          isSupport =
+              abilityMap['NetServerFunction']!['Net4GSignalLevel']! as bool;
         }
         break;
 
@@ -204,6 +227,21 @@ class DeviceAbilityManager {
     final Map abilityMap =
         DeviceAbilityManager.instance.allDataAbilityMap[deviceId]!;
     isSupport = getAbilityEnable(abilityMap, type);
+    return isSupport;
+  }
+
+  ///如果没有缓存就实时获取
+  static Future<bool> getAbilityEnableIfNeed(
+      {required String deviceId, required DeviceAbilityType type}) async {
+    if (DeviceAbilityManager.instance.allDataAbilityMap[deviceId] == null) {
+      await DeviceAbilityManager.update(deviceId: deviceId);
+    }
+    bool isSupport = false;
+    final Map? abilityMap =
+        DeviceAbilityManager.instance.allDataAbilityMap[deviceId];
+    if (abilityMap != null) {
+      isSupport = getAbilityEnable(abilityMap, type);
+    }
     return isSupport;
   }
 }

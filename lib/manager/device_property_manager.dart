@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:xcloudsdk_flutter/utils/extensions.dart';
 import 'package:xcloudsdk_flutter_example/api/add_device_api.dart';
 import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
+import 'package:xcloudsdk_flutter_example/pages/cloud/device_cloud_service_manager.dart';
+import 'package:xcloudsdk_flutter_example/pages/cloud/model/device_cloud.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_ability/device_ability_manager.dart';
 import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
 import 'package:xcloudsdk_flutter_example/utils/sp_utils.dart';
@@ -281,6 +283,9 @@ class DevicePropertyManager {
 
   static const String _idrTalkMode = 'idrTalkMode';
 
+  ///是否支持展示4G信号 根据云服务是否支持 4G 流量判断
+  static const String _supportSignal4G = 'showSignal4G';
+
   ///是否时AOV设备
   static const String _avo = 'aov';
 
@@ -417,5 +422,25 @@ class DevicePropertyManager {
             DeviceAbilityManager.getLocalAbilityEnable(
                 deviceId: deviceId,
                 type: DeviceAbilityType.bOtherFunctionSupportTwoWayVoiceTalk));
+  }
+
+  ///是否支持4G流量，展示4G信号标识
+  bool supportSignal4G({required String deviceId}) {
+    String key = _spKey(_supportSignal4G, deviceId);
+    bool support = SPUtils.preferences.getBool(key) ?? false;
+    if (support) {
+      return true;
+    }
+
+    DeviceCloudService? cloudService = DeviceCloudServiceManager.instance
+        .getCloudService(deviceId: deviceId);
+    if (cloudService != null &&
+        cloudService.cloudFlowStatus != CloudFlowStatus.notSupported) {
+      return true;
+    }
+
+    return DeviceAbilityManager.getLocalAbilityEnable(
+        deviceId: deviceId,
+        type: DeviceAbilityType.bNetServerFunctionNet4GSignalLevel);
   }
 }

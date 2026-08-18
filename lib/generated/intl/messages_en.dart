@@ -20,29 +20,47 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(account) => "Are you sure to cancel share to ${account}?";
+  static String m0(level, isCharging) =>
+      "Battery level [${level}], charging [${isCharging}]";
 
-  static String m1(account) => "Are you sure to share device to ${account}?";
+  static String m1(account) => "Are you sure to cancel share to ${account}?";
 
-  static String m2(count) => "resend after ${count} seconds";
+  static String m2(account) => "Are you sure to share device to ${account}?";
 
-  static String m3(mail) => "will send verification code to ${mail}";
+  static String m3(count) => "resend after ${count} seconds";
 
-  static String m4(mail, phone) =>
+  static String m4(mail) => "will send verification code to ${mail}";
+
+  static String m5(mail, phone) =>
       "you can choose either ${phone} or ${mail}, verification code will be sent to";
 
-  static String m5(phone) => "will send verification code to ${phone}";
+  static String m6(phone) => "will send verification code to ${phone}";
 
-  static String m6(deviceId) => "${deviceId} Record List";
+  static String m7(deviceId) => "${deviceId} Record List";
+
+  static String m8(level) => "4G signal level [${level}]";
+
+  static String m9(level) => "WiFi signal level [${level}]";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "Done": MessageLookupByLibrary.simpleMessage("Done"),
     "Recording_Times_Not_DURATION": MessageLookupByLibrary.simpleMessage(
       "Recording duration must be at least 1 second",
+    ),
+    "Show_traces": MessageLookupByLibrary.simpleMessage("Show smart trace"),
+    "TR_Alert_Set_Alert_Line_Tip": MessageLookupByLibrary.simpleMessage(
+      "Please set the alert line, drag both ends to adjust",
     ),
     "TR_Audition": MessageLookupByLibrary.simpleMessage("Audition"),
     "TR_File_Size_Exceed_Max_Size": MessageLookupByLibrary.simpleMessage(
       "The File size exceeds the maximum limit",
+    ),
+    "TR_Intelligent_Warning_Switch": MessageLookupByLibrary.simpleMessage(
+      "Smart Alert Switch",
+    ),
+    "TR_Modify_S": MessageLookupByLibrary.simpleMessage(
+      "Modified successfully",
     ),
     "TR_Please_Enter_Alarm_Tips": MessageLookupByLibrary.simpleMessage(
       "Please fill the warning message",
@@ -58,8 +76,12 @@ class MessageLookup extends MessageLookupByLibrary {
           "QR code has been used, please contact the device owner to regenerate",
         ),
     "TR_Record_Prompt": MessageLookupByLibrary.simpleMessage("Record a beep"),
+    "TR_Rule_Setting": MessageLookupByLibrary.simpleMessage("Smart Alert Rule"),
     "TR_Sex_Female": MessageLookupByLibrary.simpleMessage("female"),
     "TR_Sex_Male": MessageLookupByLibrary.simpleMessage("male"),
+    "TR_Show_Traces_Tip": MessageLookupByLibrary.simpleMessage(
+      "Draw a frame around the person who appears in front of the camera",
+    ),
     "TR_Text_To_Voice": MessageLookupByLibrary.simpleMessage("Text to speech"),
     "TR_Upload_Prompt_Voice": MessageLookupByLibrary.simpleMessage(
       "Upload prompt tone",
@@ -85,6 +107,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "addDeviceExisted": MessageLookupByLibrary.simpleMessage(
       "Device already exists",
     ),
+    "advanced_set": MessageLookupByLibrary.simpleMessage("Advanced Settings"),
     "alarm": MessageLookupByLibrary.simpleMessage("alarm"),
     "alarmRecording": MessageLookupByLibrary.simpleMessage("Alarm recording"),
     "alarmScreenshot": MessageLookupByLibrary.simpleMessage("Alarm screenshot"),
@@ -100,6 +123,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Humanoid detection switch",
     ),
     "basicSetting": MessageLookupByLibrary.simpleMessage("Basic Settings"),
+    "batteryInfo": m0,
     "blueToothPermissionCancelTips": MessageLookupByLibrary.simpleMessage(
       "Without the permission to scan nearby Bluetooth devices, you cannot perform network configuration, search, or other operations using Bluetooth.",
     ),
@@ -107,13 +131,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "cancelBtn": MessageLookupByLibrary.simpleMessage("Cancel"),
     "cancelShare": MessageLookupByLibrary.simpleMessage("Cancel Share"),
-    "cancelShareContent": m0,
+    "cancelShareContent": m1,
     "cancelShareFailed": MessageLookupByLibrary.simpleMessage(
       "Cancel share failed",
     ),
     "cancelShareSuccess": MessageLookupByLibrary.simpleMessage(
       "Cancel share success",
     ),
+    "chargingNo": MessageLookupByLibrary.simpleMessage("No"),
+    "chargingYes": MessageLookupByLibrary.simpleMessage("Yes"),
     "check": MessageLookupByLibrary.simpleMessage("confirm"),
     "clickToShare": MessageLookupByLibrary.simpleMessage("Tap to share"),
     "cloudDownload": MessageLookupByLibrary.simpleMessage(
@@ -125,8 +151,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "commonConfig": MessageLookupByLibrary.simpleMessage("Common Settings"),
     "confirmBtn": MessageLookupByLibrary.simpleMessage("Confirm"),
     "confirmShare": MessageLookupByLibrary.simpleMessage("Confirm Share"),
-    "confirmShareContent": m1,
-    "countDown": m2,
+    "confirmShareContent": m2,
+    "countDown": m3,
     "customerServiceCenter": MessageLookupByLibrary.simpleMessage(
       "Customer Service Center",
     ),
@@ -196,6 +222,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "deviceShare": MessageLookupByLibrary.simpleMessage("Device Share"),
     "download": MessageLookupByLibrary.simpleMessage("Download Management"),
+    "dynamic_alarm": MessageLookupByLibrary.simpleMessage("Alarm Settings"),
     "endTime": MessageLookupByLibrary.simpleMessage("End Time"),
     "enterErrorCode": MessageLookupByLibrary.simpleMessage("Enter Error Code"),
     "errorCode": MessageLookupByLibrary.simpleMessage("Error Code"),
@@ -308,7 +335,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mailHint": MessageLookupByLibrary.simpleMessage("mail"),
     "mailPhone": MessageLookupByLibrary.simpleMessage("mail/phone"),
     "mailRegister": MessageLookupByLibrary.simpleMessage("Mail Register"),
-    "mailTip": m3,
+    "mailTip": m4,
     "mediaType": MessageLookupByLibrary.simpleMessage("media type"),
     "memoryCardError": MessageLookupByLibrary.simpleMessage(
       "Abnormal storage card",
@@ -356,12 +383,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "permIntercom": MessageLookupByLibrary.simpleMessage("Intercom"),
     "permSdRecord": MessageLookupByLibrary.simpleMessage("SD Card Record"),
     "phone": MessageLookupByLibrary.simpleMessage("phone no"),
-    "phoneMailTip": m4,
+    "phoneMailTip": m5,
     "phoneRegister": MessageLookupByLibrary.simpleMessage("Phone Register"),
     "phoneRule": MessageLookupByLibrary.simpleMessage(
       "Overseas mobile phone numbers need to add area code. eg:+1:80998098979",
     ),
-    "phoneTip": m5,
+    "phoneTip": m6,
     "pleaseCheckErrorCode": MessageLookupByLibrary.simpleMessage(
       "Please check the error code below or visit the Open Platform Documentation Center",
     ),
@@ -372,6 +399,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "privacyPermissionDevNearbyContent": MessageLookupByLibrary.simpleMessage(
       "Used to search for nearby Bluetooth devices or other devices",
     ),
+    "push_setting": MessageLookupByLibrary.simpleMessage("Push Settings"),
     "pwdFindBack": MessageLookupByLibrary.simpleMessage("find back password"),
     "pwdHint": MessageLookupByLibrary.simpleMessage("password"),
     "pwdQuestion": MessageLookupByLibrary.simpleMessage(
@@ -388,7 +416,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "recordAudio": MessageLookupByLibrary.simpleMessage("Audio Recording"),
     "recordClip": MessageLookupByLibrary.simpleMessage("Video Segment"),
-    "recordList": m6,
+    "recordList": m7,
     "recordMode": MessageLookupByLibrary.simpleMessage("REC Button"),
     "recordQuality": MessageLookupByLibrary.simpleMessage("Recording Quality"),
     "recordQualityBad": MessageLookupByLibrary.simpleMessage("Relatively Poor"),
@@ -430,6 +458,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "search": MessageLookupByLibrary.simpleMessage("Search"),
     "searchFailed": MessageLookupByLibrary.simpleMessage("Search failed"),
     "selectAll": MessageLookupByLibrary.simpleMessage("SelectAll"),
+    "selectPlaybackSpeed": MessageLookupByLibrary.simpleMessage(
+      "Select playback speed",
+    ),
     "setDeviceName": MessageLookupByLibrary.simpleMessage("Set Device Name"),
     "setting": MessageLookupByLibrary.simpleMessage("Setting"),
     "share": MessageLookupByLibrary.simpleMessage("Share"),
@@ -448,6 +479,33 @@ class MessageLookup extends MessageLookupByLibrary {
     "shareSuccess": MessageLookupByLibrary.simpleMessage("Share success"),
     "shareTo": MessageLookupByLibrary.simpleMessage("Share to"),
     "sharedAccounts": MessageLookupByLibrary.simpleMessage("Shared Accounts"),
+    "signal4GLevel": m8,
+    "smart_analyze_line_left": MessageLookupByLibrary.simpleMessage(
+      "Left to Right",
+    ),
+    "smart_analyze_line_middle": MessageLookupByLibrary.simpleMessage(
+      "Bidirectional",
+    ),
+    "smart_analyze_line_right": MessageLookupByLibrary.simpleMessage(
+      "Right to Left",
+    ),
+    "smart_analyze_restore": MessageLookupByLibrary.simpleMessage("Restore"),
+    "smart_analyze_revoke": MessageLookupByLibrary.simpleMessage("Revoke"),
+    "smart_analyze_shape_concave": MessageLookupByLibrary.simpleMessage(
+      "Concave",
+    ),
+    "smart_analyze_shape_l_sel": MessageLookupByLibrary.simpleMessage(
+      "L-shape",
+    ),
+    "smart_analyze_shape_pentagram": MessageLookupByLibrary.simpleMessage(
+      "Pentagon",
+    ),
+    "smart_analyze_shape_rectangle": MessageLookupByLibrary.simpleMessage(
+      "Rectangle",
+    ),
+    "smart_analyze_shape_triangle": MessageLookupByLibrary.simpleMessage(
+      "Triangle",
+    ),
     "smsLogin": MessageLookupByLibrary.simpleMessage("SmsLogin"),
     "speakerVolume": MessageLookupByLibrary.simpleMessage("Speaker Volume"),
     "startAdd": MessageLookupByLibrary.simpleMessage("start distribute"),
@@ -1571,6 +1629,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "tr_pet_setting_sound_record_function":
         MessageLookupByLibrary.simpleMessage("Record summoning sound"),
     "tr_recording": MessageLookupByLibrary.simpleMessage("Recording..."),
+    "tr_settings_alarm_alert_have_intersection":
+        MessageLookupByLibrary.simpleMessage(
+          "The area boundaries intersect, please redraw",
+        ),
     "tr_settings_alarm_beep": MessageLookupByLibrary.simpleMessage(
       "Device alarm beep",
     ),
@@ -1580,6 +1642,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "tr_settings_alarm_bell_select": MessageLookupByLibrary.simpleMessage(
       "Device bell selection",
     ),
+    "type_alert_area": MessageLookupByLibrary.simpleMessage("Alert Area"),
+    "type_alert_line": MessageLookupByLibrary.simpleMessage("Alert Line"),
     "userNotFound": MessageLookupByLibrary.simpleMessage("User not found"),
     "verCodeLogin": MessageLookupByLibrary.simpleMessage(
       "Verification code login",
@@ -1591,7 +1655,9 @@ class MessageLookup extends MessageLookupByLibrary {
           "visit the Open Platform Documentation Center",
         ),
     "voiceTipSwitch": MessageLookupByLibrary.simpleMessage("Voice Prompt"),
+    "waiting_buffering": MessageLookupByLibrary.simpleMessage("Buffering..."),
     "wifi": MessageLookupByLibrary.simpleMessage("add via wifi"),
     "wifiPwdHint": MessageLookupByLibrary.simpleMessage("Wifi Password"),
+    "wifiSignalLevel": m9,
   };
 }
