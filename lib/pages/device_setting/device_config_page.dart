@@ -68,9 +68,7 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
         KToast.show();
         var result = await JFApi.xcDevice.xcDeviceWakeup(
             deviceId: widget.deviceId, timeout: 10000); //唤醒超时10秒
-        if (result >= 0) {
-          //
-        } else {
+        if (result < 0) {
           KToast.show(status: TR.current.TR_Wakeup_Failed);
           return;
         }

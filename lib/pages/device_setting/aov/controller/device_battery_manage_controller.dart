@@ -236,8 +236,8 @@ class DeviceBatteryManageController extends ChangeNotifier {
       var wakeuplist = MapParser.queryList(response, 'WakeupTime', []);
       todayPreview = viewlist.isNotEmpty ? viewlist.last : 0;
       todayWakeup = viewlist.isNotEmpty ? wakeuplist.last : 0;
-      weekPreview = viewlist.reduce((a, b) => a + b);
-      weekWakeup = wakeuplist.reduce((a, b) => a + b);
+      weekPreview = viewlist.isNotEmpty ? viewlist.reduce((a, b) => a + b) : 0;
+      weekWakeup = wakeuplist.isNotEmpty ? wakeuplist.reduce((a, b) => a + b) : 0;
     }
   }
 

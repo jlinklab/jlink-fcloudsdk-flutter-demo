@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk_example/manager/device_property_manager.dart';
 import 'package:flutter/material.dart';
 
@@ -458,9 +459,11 @@ class _DeviceCard extends StatelessWidget {
           KToast.show(status: TR.current.TR_Wakeup_Failed);
           return;
         }
+        LogUtils.device.log('goPreview ${device.uuid} 唤醒成功');
       }
       //设备登录校验
       await JFApi.xcDevice.xcDeviceLogin(deviceId: device.uuid);
+      LogUtils.device.log('goPreview ${device.uuid} 设备登录成功');
       context.pushNamed('preview', pathParameters: {
         'devId': device.uuid,
         'type': type.toString(),
