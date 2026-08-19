@@ -365,7 +365,9 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
             child: SizedBox(
               width: orientation == Orientation.landscape
                   ? MediaQuery.of(context).size.height *
-                      widget.controller.mediaController.aspectRatio
+                      (widget.controller.mediaController.aspectRatio > 0
+                          ? widget.controller.mediaController.aspectRatio
+                          : 16 / 9)
                   : null,
               child: MediaPlayerWidget(
                 controller: widget.controller.mediaController,
