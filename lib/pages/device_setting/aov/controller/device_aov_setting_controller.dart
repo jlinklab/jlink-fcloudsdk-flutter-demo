@@ -96,7 +96,7 @@ class DeviceAovSettingController extends ChangeNotifier {
       aovConfigList.add(_batteryItem!);
     }
 
-        ///工作模式：AOV设备
+    ///工作模式：AOV设备
     if (isAov) {
       _workModeItem = AovListItem(
         title: TR.current.TR_Setting_Mode_Of_Work,

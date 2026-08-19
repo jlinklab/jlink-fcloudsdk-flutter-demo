@@ -74,8 +74,9 @@ class DeviceAovWorkModeController extends ChangeNotifier {
         _getAovAbility(),
         _getDevAovWorkMode(),
       ]);
-      _refresh();
+      _refresh(); // 刷新 currentMode，内部调用 notifyListeners()
       isLoading = false;
+      // isLoading 状态变化需再次通知 UI 从 loading 切换到内容页
       notifyListeners();
     } catch (e) {
       isLoading = false;
@@ -223,6 +224,7 @@ class DeviceAovWorkModeController extends ChangeNotifier {
 
   ///修改自定义FPS
   saveFPS(String value) async {
+    if (workModeConfig == null || workModeConfig!['Custom'] == null) return;
     try {
       KToast.show();
       workModeConfig!['Custom']['Fps'] = value;
@@ -239,6 +241,7 @@ class DeviceAovWorkModeController extends ChangeNotifier {
 
   ///修改自定义报警间隔
   saveAlarmHoldTime(String value) async {
+    if (workModeConfig == null || workModeConfig!['Custom'] == null) return;
     try {
       KToast.show();
       workModeConfig!['Custom']['AlarmHoldTime'] = value;
@@ -255,6 +258,7 @@ class DeviceAovWorkModeController extends ChangeNotifier {
 
   ///修改最大录像时长
   saveRecordLength(int value) async {
+    if (workModeConfig == null || workModeConfig!['Custom'] == null) return;
     try {
       KToast.show();
       workModeConfig!['Custom']['RecordLength'] = value;
