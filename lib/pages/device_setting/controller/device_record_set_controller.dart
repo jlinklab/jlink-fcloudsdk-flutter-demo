@@ -42,6 +42,7 @@ class DeviceRecordSetController extends ChangeNotifier {
             bRecordSwitch = value;
             onSetRecordConfig(bShowLoading: true);
           }),
+      subtitle: bRecordSwitch ? buildRecordTypeWidget() : null,
     ));
 
     ///没有打开就不再显示后续的配置
@@ -151,6 +152,10 @@ class DeviceRecordSetController extends ChangeNotifier {
   //录像开关
   bool bRecordSwitch = false;
 
+  static const int RECORD_TYPE_ALARM = 6;
+  static const int RECORD_TYPE_ALL_DAY = 7;
+  int recordType = RECORD_TYPE_ALARM; // 默认报警录像
+
   //录像段-时间 5-120
   int recordPartTime = 5;
 
@@ -184,7 +189,10 @@ class DeviceRecordSetController extends ChangeNotifier {
         }
 
         ///录像开关状态
-        bRecordSwitch = pRecordMode == 'ConfigRecord' && mask == 7;
+        bRecordSwitch = pRecordMode == 'ConfigRecord' && (mask == 6 || mask == 7);
+        if (bRecordSwitch) {
+          recordType = mask;
+        }
         if (bShowLoading) {
           notifyListeners();
         }
@@ -210,7 +218,7 @@ class DeviceRecordSetController extends ChangeNotifier {
       //打开
       List masks = tempMap['Mask'];
       for (List subMask in masks) {
-        subMask[0] = '0x00000007';
+        subMask[0] = '0x0000000$recordType';
       }
       List timeSections = tempMap['TimeSection'];
       for (List subTimeSections in timeSections) {
@@ -241,7 +249,7 @@ class DeviceRecordSetController extends ChangeNotifier {
           deviceId: deviceId,
           commandName: 'Record',
           config: jsStr,
-          configLen: 2048,
+          configLen: jsStr.length,
           command: 1040,
           timeout: 5000);
       if (bShowLoading) {
@@ -252,6 +260,50 @@ class DeviceRecordSetController extends ChangeNotifier {
       KToast.show(status: kErrorMsg(e));
     }
     return Future.value();
+  }
+
+  Widget buildRecordTypeWidget() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 36),
+      child: Row(
+        children: [
+          Expanded(child: buildRecordTypeItem(RECORD_TYPE_ALL_DAY, TR.current.allDayRecording)),
+          const SizedBox(width: 10),
+          Expanded(child: buildRecordTypeItem(RECORD_TYPE_ALARM, TR.current.alarmRecording)),
+        ],
+      ),
+    );
+  }
+
+  Widget buildRecordTypeItem(int type, String name) {
+    final bool isSelected = recordType == type;
+    return GestureDetector(
+      onTap: () {
+        if (!isSelected) {
+          recordType = type;
+          onSetRecordConfig(bShowLoading: true);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSelected ? Colors.blueAccent : Colors.grey.shade300,
+            width: isSelected ? 1.5 : 1,
+          ),
+          color: isSelected ? Colors.blueAccent.withOpacity(0.08) : Colors.transparent,
+        ),
+        child: Text(
+          name,
+          style: TextStyle(
+            color: isSelected ? Colors.blueAccent : Colors.grey.shade600,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+          ),
+        ),
+      ),
+    );
   }
 
   ///编码配置 ##################

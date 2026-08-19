@@ -670,5 +670,6 @@
   "tr_settings_alarm_alert_have_intersection": "The area boundaries intersect, please redraw",
   "TR_Modify_S": "Modified successfully",
   "Done": "Done",
-  "waiting_buffering": "Buffering..."
+  "waiting_buffering": "Buffering...",
+  "allDayRecording": "All-day Recording"
 }
