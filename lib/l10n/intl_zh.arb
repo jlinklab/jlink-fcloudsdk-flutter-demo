@@ -310,8 +310,6 @@
   "TR_Setting_Power_Saving_Mode": "省电模式",
   "TR_Setting_Performance": "性能模式",
   "mode_customize": "自定义模式",
-  "TR_SmartPowerMode": "智能省电模式",
-  "TR_SuperPowerMode": "超级省电模式",
   "TR_Setting_Power_Supply_Mode": "供电方式",
   "TR_Setting_Battery": "电池",
   "TR_Setting_Current_Battery_Level": "当前电量",
@@ -331,5 +329,7 @@
   "sSec": "秒",
   "TR_Wakeup_In_Progress": "唤醒中...",
   "TR_Wakeup_Success": "唤醒成功",
-  "TR_Wakeup_Failed": "唤醒失败"
+  "TR_Wakeup_Failed": "唤醒失败",
+  "TR_Capture_Success": "抓图成功",
+  "TR_Capture_Failed": "抓图失败"
 }

@@ -519,8 +519,6 @@
   "TR_Setting_Power_Saving_Mode": "Power Saving Mode",
   "TR_Setting_Performance": "Performance mode",
   "mode_customize": "Custom Mode",
-  "TR_SmartPowerMode": "Smart power saving mode",
-  "TR_SuperPowerMode": "Ultra Power Saving Mode",
   "TR_Setting_Power_Supply_Mode": "Power supply method",
   "TR_Setting_Battery": "Battery",
   "TR_Setting_Current_Battery_Level": "Current battery level",
@@ -540,5 +538,7 @@
   "sSec": "Seconds",
   "TR_Wakeup_In_Progress": "Waking up...",
   "TR_Wakeup_Success": "Wake-up successful",
-  "TR_Wakeup_Failed": "Wake-up failed"
+  "TR_Wakeup_Failed": "Wake-up failed",
+  "TR_Capture_Success": "Capture successful",
+  "TR_Capture_Failed": "Capture failed"
 }

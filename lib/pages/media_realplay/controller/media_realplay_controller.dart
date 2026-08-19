@@ -1,4 +1,5 @@
 import 'package:fcloudsdk/utils/log_util.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/media/controller/media_controller.dart';
@@ -92,9 +93,9 @@ class MediaRealplayController extends ChangeNotifier {
 
   void _handleSnapshotEvent(SnapshotCallback event) {
     if (event.code >= 0) {
-      KToast.show(status: '抓图成功');
+      KToast.show(status: TR.current.TR_Capture_Success);
     } else {
-      KToast.show(status: '抓图失败 $event.code');
+      KToast.show(status: '${TR.current.TR_Capture_Failed} $event.code');
     }
   }
 

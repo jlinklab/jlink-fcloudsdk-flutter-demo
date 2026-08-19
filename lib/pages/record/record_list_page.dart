@@ -392,9 +392,9 @@ class _RecordListPageState extends State<RecordListPage>
     KToast.show();
     int code = await controller.snapshot(imagePath);
     if (code >= 0) {
-      KToast.show(status: '抓图成功');
+      KToast.show(status: TR.current.TR_Capture_Success);
     } else {
-      KToast.show(status: '抓图失败 $code');
+      KToast.show(status: '${TR.current.TR_Capture_Failed} $code');
     }
   }
 

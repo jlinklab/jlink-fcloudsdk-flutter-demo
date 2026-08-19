@@ -6,6 +6,7 @@ import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/manager/device_property_manager.dart';
 import 'package:fcloudsdk_example/manager/idr_property_manager.dart';
 import 'package:fcloudsdk_example/pages/device_ability/device_ability_manager.dart';
+import 'package:fcloudsdk_example/pages/device_setting/aov/device_aov_work_mode_page.dart';
 import 'package:fcloudsdk_example/pages/device_setting/aov/device_battery_manage_page.dart';
 import 'package:fcloudsdk_example/utils/map_utils.dart';
 
@@ -34,7 +35,6 @@ class DeviceAovSettingController extends ChangeNotifier {
     if (DevicePropertyManager.instance.isAOV(deviceId: deviceId)) {
       getDevAovWorkMode();
     }
-    getDevLPWorkMode();
   }
 
   ///aov相关设置
@@ -51,10 +51,6 @@ class DeviceAovSettingController extends ChangeNotifier {
 
   ///当前AOV工作模式
   DeviceWorkMode currentMode = DeviceWorkMode.unknown;
-
-  ///普通低功耗设备工作模式
-  ///ModeType参数表示当前设置的工作模式
-  int lpDeviceWorkMode = -1;
 
   ///电量上报句柄
   int _uploadHandle = -1;
@@ -87,13 +83,6 @@ class DeviceAovSettingController extends ChangeNotifier {
         deviceId: deviceId,
         type: DeviceAbilityType.bNetServerFunctionNet4GDualSim);
 
-    //是否支持低功耗工作模式切换
-    bool supportLPWorkModeSwitchV2 =
-        await DeviceAbilityManager.getAbilityEnableIfNeed(
-            deviceId: deviceId,
-            type: DeviceAbilityType.bOtherFunctionSupportLPWorkModeSwitchV2);
-
-    ///电池管理：低功耗设备 或 AOV设备且支持电池管理
     if (isLowPower || (isAov && supportBatteryManager)) {
       _batteryItem = AovListItem(
         title: TR.current.TR_Setting_Battery_Management,
@@ -107,15 +96,17 @@ class DeviceAovSettingController extends ChangeNotifier {
       aovConfigList.add(_batteryItem!);
     }
 
-    ///工作模式：AOV设备 或 支持低功耗工作模式切换
-    if (isAov || supportLPWorkModeSwitchV2) {
+        ///工作模式：AOV设备
+    if (isAov) {
       _workModeItem = AovListItem(
         title: TR.current.TR_Setting_Mode_Of_Work,
-        extraInfo: isAov
-            ? transWorkModeToDisplay()
-            : _getLpWorkModeStr(lpDeviceWorkMode),
-        onTap: () {
-          //TODO 跳转工作模式页
+        extraInfo: transWorkModeToDisplay(),
+        onTap: () async {
+          await Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  DeviceAovWorkModePage(deviceId: deviceId)));
+          //返回后刷新工作模式显示
+          getDevAovWorkMode();
         },
       );
       aovConfigList.add(_workModeItem!);
@@ -177,38 +168,6 @@ class DeviceAovSettingController extends ChangeNotifier {
     } catch (e) {
       debugPrint('Dev.AovWorkMode-------------error--${e.toString()}-');
     }
-  }
-
-  ///获取低功耗工作模式
-  Future getDevLPWorkMode() async {
-    try {
-      if (!await DeviceAbilityManager.getAbilityEnableIfNeed(
-          deviceId: deviceId,
-          type: DeviceAbilityType.bOtherFunctionSupportLPWorkModeSwitchV2)) {
-        return;
-      }
-      var response = await DeviceConfigManager.getConfigToObject(
-          deviceId: deviceId, commandName: DeviceJsonName.lpWorkMode);
-      lpDeviceWorkMode = MapParser.queryInt(response, 'ModeType', -1);
-      if (!DevicePropertyManager.instance.isAOV(deviceId: deviceId)) {
-        _workModeItem?.extraInfo = _getLpWorkModeStr(lpDeviceWorkMode);
-      }
-      if (context.mounted) {
-        notifyListeners();
-      }
-    } catch (e) {
-      debugPrint('LPDev.WorkMode-------------error--${e.toString()}-');
-    }
-  }
-
-  String _getLpWorkModeStr(int modeType) {
-    if (modeType == -1) {
-      return '';
-    }
-    if (modeType == 1) {
-      return TR.current.TR_SmartPowerMode;
-    }
-    return TR.current.TR_SuperPowerMode;
   }
 
   String transWorkModeToDisplay() {

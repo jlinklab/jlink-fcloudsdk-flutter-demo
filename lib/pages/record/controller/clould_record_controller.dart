@@ -1,5 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
+import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/model/dev_record.dart';
@@ -224,9 +225,9 @@ class CloudRecordController extends ChangeNotifier {
         '/$directoryPath/$kPrefixImage$devId $timeStr $channel.jpg';
     int code = await mediaController.snapshot(imagePath);
     if (code >= 0) {
-      KToast.show(status: '抓图成功');
+      KToast.show(status: TR.current.TR_Capture_Success);
     } else {
-      KToast.show(status: '抓图失败');
+      KToast.show(status: TR.current.TR_Capture_Failed);
     }
   }
 
