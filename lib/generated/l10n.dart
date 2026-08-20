@@ -5735,6 +5735,11 @@ class TR {
     );
   }
 
+  /// `全天录像`
+  String get allDayRecording {
+    return Intl.message('全天录像', name: 'allDayRecording', desc: '', args: []);
+  }
+
   /// `AOV设备配置`
   String get TR_Setting_AOV_Device_Config {
     return Intl.message(

@@ -205,6 +205,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "alarmScreenshot": MessageLookupByLibrary.simpleMessage("报警抓图"),
     "alarmSubscription": MessageLookupByLibrary.simpleMessage("报警订阅"),
     "album": MessageLookupByLibrary.simpleMessage("相册"),
+    "allDayRecording": MessageLookupByLibrary.simpleMessage("全天录像"),
     "areaCode": MessageLookupByLibrary.simpleMessage("区号选择"),
     "audio_ability_unsupport": MessageLookupByLibrary.simpleMessage("麦克风权限未开启"),
     "auto": MessageLookupByLibrary.simpleMessage("自动"),

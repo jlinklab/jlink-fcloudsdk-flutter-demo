@@ -671,6 +671,7 @@
   "TR_Modify_S": "修改成功",
   "Done": "完成",
   "waiting_buffering": "缓冲中...",
+  "allDayRecording": "全天录像",
   "TR_Setting_AOV_Device_Config": "AOV设备配置",
   "TR_Setting_AOV_Work_Mode": "AOV工作模式",
   "TR_AOV_Fps": "AOV帧率",

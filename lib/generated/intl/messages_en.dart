@@ -275,6 +275,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Alarm subscription",
     ),
     "album": MessageLookupByLibrary.simpleMessage("Album"),
+    "allDayRecording": MessageLookupByLibrary.simpleMessage(
+      "All-day Recording",
+    ),
     "areaCode": MessageLookupByLibrary.simpleMessage("Choose Area Code"),
     "audio_ability_unsupport": MessageLookupByLibrary.simpleMessage(
       "Microphone permission is not enabled",
