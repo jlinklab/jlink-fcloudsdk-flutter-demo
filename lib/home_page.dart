@@ -5,6 +5,7 @@ import 'package:fcloudsdk_example/pages/device_setting/device_list_page.dart';
 
 import 'pages/account/account_info_page.dart';
 import 'pages/album/album_page.dart';
+import 'pages/error_code/error_code_page.dart';
 
 ///登录之后首页
 class HomePage extends StatefulWidget {
@@ -21,6 +22,7 @@ class _HomePageState extends State<HomePage>
   bool _isHideBottomBar = false;
   late final DeviceListPage deviceListPage;
   late final AlbumPage albumPage;
+  late final ErrorCodePage errorCodePage;
   late final AccountInfoPage accountInfoPage;
 
   @override
@@ -33,6 +35,7 @@ class _HomePageState extends State<HomePage>
         });
       },
     );
+    errorCodePage = const ErrorCodePage();
     accountInfoPage = const AccountInfoPage();
     super.initState();
   }
@@ -49,11 +52,17 @@ class _HomePageState extends State<HomePage>
               _currentIndex = index;
             });
           },
-          children: [deviceListPage, albumPage, accountInfoPage]),
+          children: [deviceListPage, albumPage, errorCodePage, accountInfoPage]),
       bottomNavigationBar: _isHideBottomBar
           ? null
           : BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.white,
               currentIndex: _currentIndex,
+              unselectedItemColor: const Color(0xFF757575),
+              selectedItemColor: Colors.blueAccent,
+              unselectedLabelStyle: const TextStyle(fontSize: 12),
+              selectedLabelStyle: const TextStyle(fontSize: 14),
               onTap: (index) {
                 setState(() {
                   _currentIndex = index;
@@ -72,14 +81,22 @@ class _HomePageState extends State<HomePage>
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.home),
                   label: TR.current.device,
+                  activeIcon: const Icon(Icons.home)
                 ),
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.photo_album),
                   label: TR.current.album,
+                  activeIcon: const Icon(Icons.photo_album)
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.error_outline),
+                  label: TR.current.errorCode,
+                  activeIcon: const Icon(Icons.error_outline)
                 ),
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.person),
                   label: TR.current.mine,
+                  activeIcon: const Icon(Icons.person)
                 ),
               ],
             ),
