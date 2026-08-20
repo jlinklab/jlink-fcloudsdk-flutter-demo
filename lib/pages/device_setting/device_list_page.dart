@@ -1,19 +1,18 @@
 import 'dart:async';
 
+import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk_example/manager/device_property_manager.dart';
 import 'package:flutter/material.dart';
-
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:fcloudsdk/api/api_center.dart';
+
 import '../../api/share_api.dart';
 import '../../common/code_prase.dart';
 import '../../common/event.dart';
 import '../../generated/l10n.dart';
 import '../../manager/device_manager.dart';
 import '../../manager/push_manager.dart';
-import '../../models/user_instance.dart';
 import '../../views/toast/toast.dart';
 import '../alarm_message/alarm_message_list_page.dart';
 import '../cloud/device_cloud_service_manager.dart';
