@@ -3371,6 +3371,265 @@ class TR {
       args: [],
     );
   }
+
+  /// `白光灯开关`
+  String get TR_White_Light_Switch {
+    return Intl.message(
+      '白光灯开关',
+      name: 'TR_White_Light_Switch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `亮度`
+  String get Bright {
+    return Intl.message(
+      '亮度',
+      name: 'Bright',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `自动灯光`
+  String get TR_AutoLight {
+    return Intl.message(
+      '自动灯光',
+      name: 'TR_AutoLight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `通过环境自动开启和关闭灯光`
+  String get TR_AutoLightDetail {
+    return Intl.message(
+      '通过环境自动开启和关闭灯光',
+      name: 'TR_AutoLightDetail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `定时灯光`
+  String get TR_TimingLight {
+    return Intl.message(
+      '定时灯光',
+      name: 'TR_TimingLight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `自定义你的开灯时间`
+  String get TR_TimingLightDetail {
+    return Intl.message(
+      '自定义你的开灯时间',
+      name: 'TR_TimingLightDetail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备指示灯`
+  String get TR_Setting_Device_Indicator_Light {
+    return Intl.message(
+      '设备指示灯',
+      name: 'TR_Setting_Device_Indicator_Light',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `开始时间`
+  String get start_time {
+    return Intl.message(
+      '开始时间',
+      name: 'start_time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `结束时间`
+  String get set_finish {
+    return Intl.message(
+      '结束时间',
+      name: 'set_finish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `智能灵敏度`
+  String get Intelligent_sensitivity {
+    return Intl.message(
+      '智能灵敏度',
+      name: 'Intelligent_sensitivity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get TR_LightSensitivitySubTitle {
+    return Intl.message(
+      '',
+      name: 'TR_LightSensitivitySubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `最低`
+  String get TR_PIR_lowest {
+    return Intl.message(
+      '最低',
+      name: 'TR_PIR_lowest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `较低`
+  String get TR_PIR_Lower {
+    return Intl.message(
+      '较低',
+      name: 'TR_PIR_Lower',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `中等`
+  String get level_middle {
+    return Intl.message(
+      '中等',
+      name: 'level_middle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `较高`
+  String get TR_PIR_Higher {
+    return Intl.message(
+      '较高',
+      name: 'TR_PIR_Higher',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `最高`
+  String get TR_PIR_Hightext {
+    return Intl.message(
+      '最高',
+      name: 'TR_PIR_Hightext',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知`
+  String get TR_Unknow {
+    return Intl.message(
+      '未知',
+      name: 'TR_Unknow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `保存成功`
+  String get Save_Success {
+    return Intl.message(
+      '保存成功',
+      name: 'Save_Success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `开始和结束时间不能相同`
+  String get Start_And_End_Time_Unable_Equal {
+    return Intl.message(
+      '开始和结束时间不能相同',
+      name: 'Start_And_End_Time_Unable_Equal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `普通夜视`
+  String get General_Night_Vision {
+    return Intl.message(
+      '红外夜视',
+      name: 'General_Night_Vision',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `全彩夜视`
+  String get Full_Color_Vision {
+    return Intl.message(
+      '星光全彩',
+      name: 'Full_Color_Vision',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `双光夜视`
+  String get Double_Light_Vision {
+    return Intl.message(
+      '双光警戒',
+      name: 'Double_Light_Vision',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `自动`
+  String get auto {
+    return Intl.message(
+      '自动',
+      name: 'auto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `关闭`
+  String get close {
+    return Intl.message(
+      '关闭',
+      name: 'close',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `一直开启`
+  String get TR_Keep_On {
+    return Intl.message(
+      '一直开启',
+      name: 'TR_Keep_On',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `红外夜视灯`
+  String get TR_Night_VisionLight {
+    return Intl.message(
+      '红外夜视灯',
+      name: 'TR_Night_VisionLight',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

@@ -70,6 +70,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "TR_AOV_Alarm_interval":
             MessageLookupByLibrary.simpleMessage("AOV Alarm Interval"),
         "TR_AOV_Fps": MessageLookupByLibrary.simpleMessage("AOV frame rate"),
+        "TR_AutoLight": MessageLookupByLibrary.simpleMessage("Auto Light"),
+        "TR_AutoLightDetail": MessageLookupByLibrary.simpleMessage("Automatically turn lights on and off based on environment"),
         "TR_Alert_Set_Alert_Line_Tip": MessageLookupByLibrary.simpleMessage(
             "Please set the alert line, drag both ends to adjust"),
         "TR_Audition": MessageLookupByLibrary.simpleMessage("Audition"),
@@ -79,16 +81,28 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Capture successful"),
         "TR_File_Size_Exceed_Max_Size": MessageLookupByLibrary.simpleMessage(
             "The File size exceeds the maximum limit"),
+        "Bright": MessageLookupByLibrary.simpleMessage("Brightness"),
+        "Double_Light_Vision": MessageLookupByLibrary.simpleMessage("Dual Light Alert"),
+        "Full_Color_Vision": MessageLookupByLibrary.simpleMessage("Starlight Full Color"),
+        "General_Night_Vision": MessageLookupByLibrary.simpleMessage("IR Night Vision"),
+        "Intelligent_sensitivity": MessageLookupByLibrary.simpleMessage("Smart Sensitivity"),
         "TR_Intelligent_Warning_Switch":
             MessageLookupByLibrary.simpleMessage("Smart Alert Switch"),
+        "TR_Keep_On": MessageLookupByLibrary.simpleMessage("Always On"),
         "TR_Light_Settings":
             MessageLookupByLibrary.simpleMessage("Light Settings"),
+        "TR_LightSensitivitySubTitle": MessageLookupByLibrary.simpleMessage(""),
         "TR_Low_Light_Control":
             MessageLookupByLibrary.simpleMessage("Low light control"),
         "TR_Low_Light_Control_Tip": MessageLookupByLibrary.simpleMessage(
             "When the low-light switch is turned on, the night scene will undergo low-light supplementation in AOV mode"),
         "TR_Modify_S":
             MessageLookupByLibrary.simpleMessage("Modified successfully"),
+        "TR_Night_VisionLight": MessageLookupByLibrary.simpleMessage("IR Night Vision Light"),
+        "TR_PIR_Higher": MessageLookupByLibrary.simpleMessage("Higher"),
+        "TR_PIR_Hightext": MessageLookupByLibrary.simpleMessage("Highest"),
+        "TR_PIR_Lower": MessageLookupByLibrary.simpleMessage("Lower"),
+        "TR_PIR_lowest": MessageLookupByLibrary.simpleMessage("Lowest"),
         "TR_Please_Enter_Alarm_Tips": MessageLookupByLibrary.simpleMessage(
             "Please fill the warning message"),
         "TR_Press_To_End_Record":
@@ -135,6 +149,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Battery statistics"),
         "TR_Setting_Current_Battery_Level":
             MessageLookupByLibrary.simpleMessage("Current battery level"),
+        "TR_Setting_Device_Indicator_Light":
+            MessageLookupByLibrary.simpleMessage("Device Indicator Light"),
         "TR_Setting_Last_Week":
             MessageLookupByLibrary.simpleMessage("Last week"),
         "TR_Setting_Low_Power_Mode":
@@ -165,9 +181,13 @@ class MessageLookup extends MessageLookupByLibrary {
             "Draw a frame around the person who appears in front of the camera"),
         "TR_Text_To_Voice":
             MessageLookupByLibrary.simpleMessage("Text to speech"),
+        "TR_TimingLight": MessageLookupByLibrary.simpleMessage("Timed Light"),
+        "TR_TimingLightDetail": MessageLookupByLibrary.simpleMessage("Customize your light-on time"),
         "TR_Today": MessageLookupByLibrary.simpleMessage("Today"),
+        "TR_Unknow": MessageLookupByLibrary.simpleMessage("Unknown"),
         "TR_Upload_Prompt_Voice":
             MessageLookupByLibrary.simpleMessage("Upload prompt tone"),
+        "TR_White_Light_Switch": MessageLookupByLibrary.simpleMessage("White Light Switch"),
         "TR_Wakeup_Failed":
             MessageLookupByLibrary.simpleMessage("Wake-up failed"),
         "TR_Wakeup_In_Progress":
@@ -469,6 +489,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "sHour": MessageLookupByLibrary.simpleMessage("Hour"),
         "sMin": MessageLookupByLibrary.simpleMessage("Minute"),
         "sSec": MessageLookupByLibrary.simpleMessage("Seconds"),
+        "auto": MessageLookupByLibrary.simpleMessage("Auto"),
+        "close": MessageLookupByLibrary.simpleMessage("Close"),
+        "level_middle": MessageLookupByLibrary.simpleMessage("Medium"),
+        "set_finish": MessageLookupByLibrary.simpleMessage("End Time"),
+        "start_time": MessageLookupByLibrary.simpleMessage("Start Time"),
+        "Start_And_End_Time_Unable_Equal":
+            MessageLookupByLibrary.simpleMessage("Start and end time cannot be the same"),
+        "Save_Success": MessageLookupByLibrary.simpleMessage("Saved successfully"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "saveFailed": MessageLookupByLibrary.simpleMessage("Save failed"),
         "saveSuccess":

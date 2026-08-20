@@ -6,6 +6,7 @@ import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/manager/device_property_manager.dart';
 import 'package:fcloudsdk_example/manager/idr_property_manager.dart';
 import 'package:fcloudsdk_example/pages/device_ability/device_ability_manager.dart';
+import 'package:fcloudsdk_example/pages/device_setting/aov/device_aov_light_set_page.dart';
 import 'package:fcloudsdk_example/pages/device_setting/aov/device_aov_work_mode_page.dart';
 import 'package:fcloudsdk_example/pages/device_setting/aov/device_battery_manage_page.dart';
 import 'package:fcloudsdk_example/utils/map_utils.dart';
@@ -117,7 +118,9 @@ class DeviceAovSettingController extends ChangeNotifier {
       aovConfigList.add(AovListItem(
         title: TR.current.TR_Light_Settings,
         onTap: () {
-          //TODO 跳转灯光设置页
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  DeviceAovLightSetPage(deviceId: deviceId)));
         },
       ));
     }

@@ -73,6 +73,18 @@ enum DeviceAbilityType {
 
   /// 是否支持4G流量卡切换
   bNetServerFunctionNet4GDualSim,
+
+  /// 是否支持双光枪机
+  bOtherFunctionSupportDoubleLightBoxCamera,
+
+  /// 是否支持灯光亮度
+  bOtherFunctionSupportSetBrightness,
+
+  /// 支持自动灯光模式下的灵敏度设置
+  bOtherFunctionSoftLedThr,
+
+  /// 是否支持微光控制
+  bOtherFunctionMicroFillLight,
 }
 
 class DeviceAbilityManager {
@@ -267,6 +279,38 @@ class DeviceAbilityManager {
             abilityMap['NetServerFunction']!['Net4GDualSim'] != null) {
           isSupport =
               abilityMap['NetServerFunction']!['Net4GDualSim']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionSupportDoubleLightBoxCamera:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['SupportDoubleLightBoxCamera'] != null) {
+          isSupport =
+              abilityMap['OtherFunction']!['SupportDoubleLightBoxCamera']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionSupportSetBrightness:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['SupportSetBrightness'] != null) {
+          isSupport =
+              abilityMap['OtherFunction']!['SupportSetBrightness']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionSoftLedThr:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['SoftLedThr'] != null) {
+          isSupport =
+              abilityMap['OtherFunction']!['SoftLedThr']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionMicroFillLight:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['MicroFillLight'] != null) {
+          isSupport =
+              abilityMap['OtherFunction']!['MicroFillLight']! as bool;
         }
         break;
 

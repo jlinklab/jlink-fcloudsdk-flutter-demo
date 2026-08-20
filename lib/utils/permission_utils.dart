@@ -297,7 +297,7 @@ class BlueServicePermissionHandler extends PermissionHandler {
       isGranted = false;
     }
 
-    PermissionStatus? bleConnect = result[Permission.bluetoothScan];
+    PermissionStatus? bleConnect = result[Permission.bluetoothConnect];
     if (bleConnect != null && bleConnect.isGranted) {
     } else {
       isGranted = false;

@@ -183,6 +183,7 @@ class DeviceManager {
 
   /// 释放资源
   void dispose() {
+    stopDeviceStateListener();
     mineDeviceList.clear();
     shareDeviceList.clear();
     sharedNotAgreeDeviceList.clear();

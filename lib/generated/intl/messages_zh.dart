@@ -66,6 +66,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "TR_AOV_Alarm_interval":
             MessageLookupByLibrary.simpleMessage("AOV报警间隔"),
         "TR_AOV_Fps": MessageLookupByLibrary.simpleMessage("AOV帧率"),
+        "TR_AutoLight": MessageLookupByLibrary.simpleMessage("自动灯光"),
+        "TR_AutoLightDetail": MessageLookupByLibrary.simpleMessage("通过环境自动开启和关闭灯光"),
         "TR_Alert_Set_Alert_Line_Tip":
             MessageLookupByLibrary.simpleMessage("请设置警戒线，拖动两端调整位置"),
         "TR_Audition": MessageLookupByLibrary.simpleMessage("试听"),
@@ -73,13 +75,25 @@ class MessageLookup extends MessageLookupByLibrary {
         "TR_Capture_Success": MessageLookupByLibrary.simpleMessage("抓图成功"),
         "TR_File_Size_Exceed_Max_Size":
             MessageLookupByLibrary.simpleMessage("文件大小超过最大限制"),
+        "Bright": MessageLookupByLibrary.simpleMessage("亮度"),
+        "Double_Light_Vision": MessageLookupByLibrary.simpleMessage("双光警戒"),
+        "Full_Color_Vision": MessageLookupByLibrary.simpleMessage("星光全彩"),
+        "General_Night_Vision": MessageLookupByLibrary.simpleMessage("红外夜视"),
+        "Intelligent_sensitivity": MessageLookupByLibrary.simpleMessage("智能灵敏度"),
         "TR_Intelligent_Warning_Switch":
             MessageLookupByLibrary.simpleMessage("智能警戒开关"),
+        "TR_Keep_On": MessageLookupByLibrary.simpleMessage("一直开启"),
         "TR_Light_Settings": MessageLookupByLibrary.simpleMessage("灯光设置"),
+        "TR_LightSensitivitySubTitle": MessageLookupByLibrary.simpleMessage(""),
         "TR_Low_Light_Control": MessageLookupByLibrary.simpleMessage("微光开关"),
         "TR_Low_Light_Control_Tip":
             MessageLookupByLibrary.simpleMessage("微光开关开启后，在AOV状态下，夜晚场景会进行微补光"),
         "TR_Modify_S": MessageLookupByLibrary.simpleMessage("修改成功"),
+        "TR_Night_VisionLight": MessageLookupByLibrary.simpleMessage("红外夜视灯"),
+        "TR_PIR_Higher": MessageLookupByLibrary.simpleMessage("较高"),
+        "TR_PIR_Hightext": MessageLookupByLibrary.simpleMessage("最高"),
+        "TR_PIR_Lower": MessageLookupByLibrary.simpleMessage("较低"),
+        "TR_PIR_lowest": MessageLookupByLibrary.simpleMessage("最低"),
         "TR_Please_Enter_Alarm_Tips":
             MessageLookupByLibrary.simpleMessage("请输入报警提示语"),
         "TR_Press_To_End_Record":
@@ -122,6 +136,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("电池统计"),
         "TR_Setting_Current_Battery_Level":
             MessageLookupByLibrary.simpleMessage("当前电量"),
+        "TR_Setting_Device_Indicator_Light":
+            MessageLookupByLibrary.simpleMessage("设备指示灯"),
         "TR_Setting_Last_Week": MessageLookupByLibrary.simpleMessage("最近一周"),
         "TR_Setting_Low_Power_Mode":
             MessageLookupByLibrary.simpleMessage("低电量模式"),
@@ -145,8 +161,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "TR_Show_Traces_Tip":
             MessageLookupByLibrary.simpleMessage("视频中出现人时，会对人做画框或画线标记"),
         "TR_Text_To_Voice": MessageLookupByLibrary.simpleMessage("文字转语音"),
+        "TR_TimingLight": MessageLookupByLibrary.simpleMessage("定时灯光"),
+        "TR_TimingLightDetail": MessageLookupByLibrary.simpleMessage("自定义你的开灯时间"),
         "TR_Today": MessageLookupByLibrary.simpleMessage("今天"),
+        "TR_Unknow": MessageLookupByLibrary.simpleMessage("未知"),
         "TR_Upload_Prompt_Voice": MessageLookupByLibrary.simpleMessage("上传提示音"),
+        "TR_White_Light_Switch": MessageLookupByLibrary.simpleMessage("白光灯开关"),
         "TR_Wakeup_Failed": MessageLookupByLibrary.simpleMessage("唤醒失败"),
         "TR_Wakeup_In_Progress": MessageLookupByLibrary.simpleMessage("唤醒中..."),
         "TR_Wakeup_Success": MessageLookupByLibrary.simpleMessage("唤醒成功"),
@@ -382,6 +402,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "sHour": MessageLookupByLibrary.simpleMessage("时"),
         "sMin": MessageLookupByLibrary.simpleMessage("分"),
         "sSec": MessageLookupByLibrary.simpleMessage("秒"),
+        "auto": MessageLookupByLibrary.simpleMessage("自动"),
+        "close": MessageLookupByLibrary.simpleMessage("关闭"),
+        "level_middle": MessageLookupByLibrary.simpleMessage("中等"),
+        "set_finish": MessageLookupByLibrary.simpleMessage("结束时间"),
+        "start_time": MessageLookupByLibrary.simpleMessage("开始时间"),
+        "Start_And_End_Time_Unable_Equal":
+            MessageLookupByLibrary.simpleMessage("开始和结束时间不能相同"),
+        "Save_Success": MessageLookupByLibrary.simpleMessage("保存成功"),
         "save": MessageLookupByLibrary.simpleMessage("保存"),
         "saveFailed": MessageLookupByLibrary.simpleMessage("保存失败"),
         "saveSuccess": MessageLookupByLibrary.simpleMessage("保存成功"),
