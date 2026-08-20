@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter_example/pages/play_back/views/time_slider/time_slider.dart';
-import 'package:xcloudsdk_flutter_example/pages/play_back/views/time_view.dart';
-import 'package:xcloudsdk_flutter_example/pages/play_back/views/video_type_selector.dart';
-import 'package:xcloudsdk_flutter_example/views/calendar/rf_calendar.dart';
+import 'package:fcloudsdk_example/pages/play_back/views/time_slider/time_slider.dart';
+import 'package:fcloudsdk_example/pages/play_back/views/time_view.dart';
+import 'package:fcloudsdk_example/pages/play_back/views/video_type_selector.dart';
+import 'package:fcloudsdk_example/views/calendar/rf_calendar.dart';
 
 class PlayBackPage extends StatefulWidget {
   const PlayBackPage({Key? key}) : super(key: key);

@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart' hide Headers;
 import 'package:retrofit/retrofit.dart';
-import 'package:xcloudsdk_flutter_example/api/core/api_url.dart';
-import 'package:xcloudsdk_flutter_example/api/core/dio_config.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
-import 'package:xcloudsdk_flutter_example/pages/share/model/model.dart';
+import 'package:fcloudsdk_example/api/core/api_url.dart';
+import 'package:fcloudsdk_example/api/core/dio_config.dart';
+import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/pages/share/model/model.dart';
 
 export 'package:dio/src/headers.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/common/match.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/models/add_device_center.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/common/match.dart';
+import 'package:fcloudsdk_example/pages/add_device/models/add_device_center.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 ///填写设备名称页面
 class AddDeviceFillDeviceNamePage extends StatefulWidget {

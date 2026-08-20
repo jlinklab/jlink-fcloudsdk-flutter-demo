@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/manager/device_config_manager.dart';
-import 'package:xcloudsdk_flutter/media/controller/media_controller.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
+import 'package:fcloudsdk/manager/device_config_manager.dart';
+import 'package:fcloudsdk/media/controller/media_controller.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
 
 ///4g 信号展示
 class Signal4GWidget extends StatefulWidget {
@@ -62,7 +62,7 @@ class _Signal4GWidgetState extends State<Signal4GWidget> {
     }
     return Positioned(
         top: 20,
-        left: 0,
+        left: 15,
         child: Text(
           TR.current.signal4GLevel(signal4GLevel),
           style: const TextStyle(fontSize: 13, color: Colors.white),

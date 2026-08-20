@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:xcloudsdk_flutter/media/controller/media_controller.dart';
+import 'package:fcloudsdk/media/controller/media_controller.dart';
 
 typedef PlaybackCallback = void Function(bool playing);
 
@@ -55,10 +55,8 @@ class _MediaPlayControlViewState extends State<MediaPlayControlView> {
               children: [
                 _isLandscape()
                     ? Container(
-                        padding: const EdgeInsets.only(left: 16),
-                        alignment: Alignment.centerLeft,
-                        color: Colors.redAccent.withOpacity(0.3),
-                        height: 80,
+                        padding: const EdgeInsets.only(left: 16, top: 50),
+                        alignment: Alignment.topLeft,
                         child: InkWell(
                           onTap: () => setScreenOrientation(),
                           child: const Icon(

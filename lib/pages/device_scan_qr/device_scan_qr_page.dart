@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/add_device_fill_device_name_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/models/add_device_center.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/reset_device_random_loginName_password_page.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/add_device/add_device_fill_device_name_page.dart';
+import 'package:fcloudsdk_example/pages/add_device/models/add_device_center.dart';
+import 'package:fcloudsdk_example/pages/add_device/reset_device_random_loginName_password_page.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class DeviceScanQrPage extends StatefulWidget {
   final Function(String deviceId, int deviceType) onCompletion;

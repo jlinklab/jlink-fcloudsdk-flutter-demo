@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
+import 'package:fcloudsdk/api/api_center.dart';
 
 import '../../common/code_prase.dart';
 import '../../views/toast/toast.dart';

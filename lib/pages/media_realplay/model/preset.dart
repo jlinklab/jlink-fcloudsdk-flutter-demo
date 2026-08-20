@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:xcloudsdk_flutter/utils/extensions.dart';
+import 'package:fcloudsdk/utils/extensions.dart';
 
 import '../../../common/common_path.dart';
 

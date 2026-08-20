@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:xcloudsdk_flutter/media/download/meida_download_controller.dart';
-import 'package:xcloudsdk_flutter/utils/date_util.dart';
-import 'package:xcloudsdk_flutter/utils/num_util.dart';
-import 'package:xcloudsdk_flutter_example/utils/extentions.dart';
+import 'package:fcloudsdk/media/download/meida_download_controller.dart';
+import 'package:fcloudsdk/utils/date_util.dart';
+import 'package:fcloudsdk/utils/num_util.dart';
+import 'package:fcloudsdk_example/utils/extentions.dart';
 
 class RecordFile {
   DateTime? beginTime;

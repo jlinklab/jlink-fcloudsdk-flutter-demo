@@ -6,11 +6,11 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:xcloudsdk_flutter_example/common/common_path.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/album/album_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/alarm_message/model/model.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk_example/common/common_path.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/album/album_page.dart';
+import 'package:fcloudsdk_example/pages/alarm_message/model/model.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 import '../../common/base_const.dart';
 
 class AlarmMessageDetailPage extends StatefulWidget {

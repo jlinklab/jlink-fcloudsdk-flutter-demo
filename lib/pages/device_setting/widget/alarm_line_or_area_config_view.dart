@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/media/media_player.dart';
+import 'package:fcloudsdk/media/media_player.dart';
 
 import '../../../generated/l10n.dart';
 import '../controller/device_alarm_line_or_area_controller.dart';

@@ -2,21 +2,21 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/api/share_api.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/add_device_fill_device_name_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/models/add_device_center.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/reset_device_random_loginName_password_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/blue_tooth/ble_scan_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/blue_tooth/model/model.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_scan_qr/device_scan_qr_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/scan_qr/scan_qr_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/search_device/model/model.dart';
-import 'package:xcloudsdk_flutter_example/pages/search_device/search_device_page.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/api/share_api.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/manager/device_manager.dart';
+import 'package:fcloudsdk_example/pages/add_device/add_device_fill_device_name_page.dart';
+import 'package:fcloudsdk_example/pages/add_device/models/add_device_center.dart';
+import 'package:fcloudsdk_example/pages/add_device/reset_device_random_loginName_password_page.dart';
+import 'package:fcloudsdk_example/pages/blue_tooth/ble_scan_page.dart';
+import 'package:fcloudsdk_example/pages/blue_tooth/model/model.dart';
+import 'package:fcloudsdk_example/pages/device_scan_qr/device_scan_qr_page.dart';
+import 'package:fcloudsdk_example/pages/scan_qr/scan_qr_page.dart';
+import 'package:fcloudsdk_example/pages/search_device/model/model.dart';
+import 'package:fcloudsdk_example/pages/search_device/search_device_page.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class AddDevicePage extends StatefulWidget {
   const AddDevicePage({Key? key}) : super(key: key);

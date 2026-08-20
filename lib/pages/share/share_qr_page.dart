@@ -8,11 +8,11 @@ import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
-import 'package:xcloudsdk_flutter_example/pages/share/model/model.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/pages/share/model/model.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 import '../../models/user_instance.dart';
 

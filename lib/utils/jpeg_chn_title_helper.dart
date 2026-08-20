@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:screenshot/screenshot.dart';
-import 'package:xcloudsdk_flutter_example/utils/text_width_util.dart';
+import 'package:fcloudsdk_example/utils/text_width_util.dart';
 
 class JpegChnTitleHelper {
   static final JpegChnTitleHelper instance = JpegChnTitleHelper._();

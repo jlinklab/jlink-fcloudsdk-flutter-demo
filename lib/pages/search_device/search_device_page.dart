@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/search_device/model/model.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/search_device/model/model.dart';
 
 class SearchDevicePage extends StatefulWidget {
   const SearchDevicePage({Key? key}) : super(key: key);

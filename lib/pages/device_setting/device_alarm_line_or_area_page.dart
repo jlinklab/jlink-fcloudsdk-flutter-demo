@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:xcloudsdk_flutter/manager/device_config_manager.dart';
+import 'package:fcloudsdk/manager/device_config_manager.dart';
 
 import '../../generated/l10n.dart';
 import 'controller/device_alarm_line_or_area_controller.dart';

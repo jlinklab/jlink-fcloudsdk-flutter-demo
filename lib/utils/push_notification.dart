@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:xcloudsdk_flutter/utils/log_util.dart';
+import 'package:fcloudsdk/utils/log_util.dart';
 
 import 'permission_utils.dart';
 

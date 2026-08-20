@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
+import 'package:fcloudsdk/api/api_center.dart';
 
 ///添加设备的方式
 //wifi、blueTooth、deviceScanCode这总体上都属于配网的

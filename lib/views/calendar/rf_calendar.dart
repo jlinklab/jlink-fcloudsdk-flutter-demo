@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter_example/views/calendar/rf_calendar_month_view.dart';
+import 'package:fcloudsdk_example/views/calendar/rf_calendar_month_view.dart';
 
 showRFCalendar(
     {required BuildContext context,

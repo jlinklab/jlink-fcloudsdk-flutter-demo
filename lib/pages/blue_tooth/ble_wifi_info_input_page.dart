@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/wifi/wifi_platform_interface.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/blue_tooth/ble_distribute_page.dart';
+import 'package:fcloudsdk/wifi/wifi_platform_interface.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/blue_tooth/ble_distribute_page.dart';
 
 ///蓝牙配网 输入WIFI信息
 class BleWifiInfoInputPage extends StatefulWidget {

@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
-import 'package:xcloudsdk_flutter_example/pages/alarm_message/alarm_message_detail_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/alarm_message/alarm_message_video_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/alarm_message/model/model.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/models/user_instance.dart';
+import 'package:fcloudsdk_example/pages/alarm_message/alarm_message_detail_page.dart';
+import 'package:fcloudsdk_example/pages/alarm_message/alarm_message_video_page.dart';
+import 'package:fcloudsdk_example/pages/alarm_message/model/model.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class AlarmMessageListPage extends StatefulWidget {
   final String deviceId;

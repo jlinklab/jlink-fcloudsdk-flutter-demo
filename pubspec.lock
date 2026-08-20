@@ -356,6 +356,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "5.3.3"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: "3bce007a596ff8b3119c45d68aaef631272537c03d30e5d4534dd24bf4c5eaa2"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.1.0"
   event_bus:
     dependency: "direct main"
     description:
@@ -372,6 +380,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.3.1"
+  fcloudsdk:
+    dependency: "direct main"
+    description:
+      name: fcloudsdk
+      sha256: b083059dee0bf03e6d7975879cede1bfc218c76f62921a155c910be58ce2da81
+      url: "https://repo.jftechsoft.com"
+    source: hosted
+    version: "3.1.0"
   ffi:
     dependency: transitive
     description:
@@ -428,6 +444,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.1"
+  fl_chart:
+    dependency: "direct main"
+    description:
+      name: fl_chart
+      sha256: "94307bef3a324a0d329d3ab77b2f0c6e5ed739185ffc029ed28c0f9b019ea7ef"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.69.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -1705,14 +1729,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.5"
-  xcloudsdk_flutter:
-    dependency: "direct main"
-    description:
-      name: xcloudsdk_flutter
-      sha256: d89c6b997490c7fbc0de2ef35db753af8a67e4410ba3043fb20c593afbbd77a4
-      url: "https://repo.jftechsoft.com"
-    source: hosted
-    version: "3.1.0"
   xdg_directories:
     dependency: transitive
     description:

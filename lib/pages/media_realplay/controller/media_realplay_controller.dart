@@ -1,20 +1,22 @@
+import 'package:fcloudsdk/utils/log_util.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/media/controller/media_controller.dart';
-import 'package:xcloudsdk_flutter/media/controller/mixin/media_record_video_mixin.dart';
-import 'package:xcloudsdk_flutter/media/controller/preview_media_controller.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/common/event.dart';
-import 'package:xcloudsdk_flutter_example/event/event.dart';
-import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
-import 'package:xcloudsdk_flutter_example/manager/device_property_manager.dart';
-import 'package:xcloudsdk_flutter_example/manager/idr_property_manager.dart';
-import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_ability/device_ability_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_pwd_setting/device_pwd_find_back_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/device_pwd_input.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/media/controller/media_controller.dart';
+import 'package:fcloudsdk/media/controller/mixin/media_record_video_mixin.dart';
+import 'package:fcloudsdk/media/controller/preview_media_controller.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/common/event.dart';
+import 'package:fcloudsdk_example/event/event.dart';
+import 'package:fcloudsdk_example/manager/device_manager.dart';
+import 'package:fcloudsdk_example/manager/device_property_manager.dart';
+import 'package:fcloudsdk_example/manager/idr_property_manager.dart';
+import 'package:fcloudsdk_example/models/user_instance.dart';
+import 'package:fcloudsdk_example/pages/device_ability/device_ability_manager.dart';
+import 'package:fcloudsdk_example/pages/device_pwd_setting/device_pwd_find_back_page.dart';
+import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/views/toast/device_pwd_input.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class MediaRealplayController extends ChangeNotifier {
   final BuildContext context;
@@ -91,9 +93,9 @@ class MediaRealplayController extends ChangeNotifier {
 
   void _handleSnapshotEvent(SnapshotCallback event) {
     if (event.code >= 0) {
-      KToast.show(status: '抓图成功');
+      KToast.show(status: TR.current.TR_Capture_Success);
     } else {
-      KToast.show(status: '抓图失败 $event.code');
+      KToast.show(status: '${TR.current.TR_Capture_Failed} $event.code');
     }
   }
 
@@ -137,15 +139,26 @@ class MediaRealplayController extends ChangeNotifier {
     }
   }
 
+  Future<void> sleepIfNeed() async {
+    //调休眠接口是不会给回调的
+    await JFApi.xcDevice.xcDeviceSleep(deviceId: deviceId);
+    var result = await JFApi.xcDevice.xcLoginOut(deviceId: deviceId);
+    LogUtils.idr.log('低功耗设备是否休眠?=$result, deviceId=$deviceId');
+  }
+
   @override
   void dispose() {
+    mediaController.dispose();
     if (DevicePropertyManager.instance.isAOV(deviceId: deviceId) ||
         DevicePropertyManager.instance.isLowPower(deviceId: deviceId) ||
         _isSupportBatteryInfo) {
       IDRPropertyManager.instance
           .makeStopUploadProperty(deviceId: deviceId, handle: uploadHandle);
     }
-    mediaController.dispose();
+    if (DevicePropertyManager.instance.isLowPower(deviceId: deviceId)) {
+      //退出预览页就去休眠，登出设备（如果需要退出预览页xx秒再去休眠登出，需要自己加定时器）
+      sleepIfNeed();
+    }
     super.dispose();
   }
 }

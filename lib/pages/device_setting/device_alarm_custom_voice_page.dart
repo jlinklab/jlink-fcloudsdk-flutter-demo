@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/controller/device_alarm_custom_voice_controller.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/device_alarm_custom_audio_page.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/device_setting/controller/device_alarm_custom_voice_controller.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_alarm_custom_audio_page.dart';
 
 class DeviceAlarmCustomVoicePage extends StatefulWidget {
   final String deviceId;

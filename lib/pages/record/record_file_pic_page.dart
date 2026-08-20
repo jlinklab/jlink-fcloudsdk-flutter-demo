@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/controllers/recordfile_pic/model.dart';
-import 'package:xcloudsdk_flutter/controllers/recordfile_pic/record_file_pic_controller.dart';
-import 'package:xcloudsdk_flutter/utils/date_util.dart';
-import 'package:xcloudsdk_flutter/widgets/images_jf.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/common/common_path.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/record/record_file_pic_original_page.dart';
-import 'package:xcloudsdk_flutter_example/views/calendar/rf_calendar.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/controllers/recordfile_pic/model.dart';
+import 'package:fcloudsdk/controllers/recordfile_pic/record_file_pic_controller.dart';
+import 'package:fcloudsdk/utils/date_util.dart';
+import 'package:fcloudsdk/widgets/images_jf.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/common/common_path.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/record/record_file_pic_original_page.dart';
+import 'package:fcloudsdk_example/views/calendar/rf_calendar.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class RecordFilePicturePage extends StatefulWidget {
   const RecordFilePicturePage({Key? key, required this.deviceId})

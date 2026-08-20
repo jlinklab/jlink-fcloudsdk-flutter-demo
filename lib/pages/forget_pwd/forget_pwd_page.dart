@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/common/match.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/forget_pwd/forget_pwd_email_page.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/common/match.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/forget_pwd/forget_pwd_email_page.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class ForgetPwdPage extends StatefulWidget {
   const ForgetPwdPage({Key? key}) : super(key: key);

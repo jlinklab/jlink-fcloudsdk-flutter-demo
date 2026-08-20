@@ -4,9 +4,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/manager/device_config_manager.dart';
-import 'package:xcloudsdk_flutter/media/media_player.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/manager/device_config_manager.dart';
+import 'package:fcloudsdk/media/media_player.dart';
 
 import '../../../common/code_prase.dart';
 import '../../../generated/l10n.dart';

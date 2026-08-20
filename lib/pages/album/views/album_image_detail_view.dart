@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:xcloudsdk_flutter_example/pages/album/models/album_model.dart';
+import 'package:fcloudsdk_example/pages/album/models/album_model.dart';
 void showAlbumImageDetail(BuildContext context, Album album) {
   showDialog(
       useSafeArea: false,

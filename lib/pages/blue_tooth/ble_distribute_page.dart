@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/blue_tooth/controller/main_ble_distribute_controller.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/blue_tooth/controller/main_ble_distribute_controller.dart';
 
 class BleDistributePage extends StatefulWidget {
   const BleDistributePage(

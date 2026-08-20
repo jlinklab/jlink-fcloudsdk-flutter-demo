@@ -1,5 +1,5 @@
 # 鸿蒙 
-name: xcloudsdk_flutter_example
+name: fcloudsdk_example
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -32,8 +32,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  xcloudsdk_flutter:
-    # path: ../xcloudsdk_flutter
+  fcloudsdk:
     hosted: https://repo.jftechsoft.com/
     version: 3.1.0
 
@@ -153,6 +152,8 @@ dependencies:
       url: "https://gitcode.com/openharmony-sig/fluttertpc_mobile_scanner.git"
       ref: "master"
   rxdart: 0.28.0
+    #图表
+  fl_chart: 0.69.0
 
 dependency_overrides:
   http: 0.13.6

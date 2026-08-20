@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/manager/device_config_manager.dart';
-import 'package:xcloudsdk_flutter/media/controller/media_controller.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/utils/map_utils.dart';
+import 'package:fcloudsdk/manager/device_config_manager.dart';
+import 'package:fcloudsdk/media/controller/media_controller.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/utils/map_utils.dart';
 
 ///Wifi 信号展示
 class WifiWidget extends StatefulWidget {
@@ -70,7 +70,7 @@ class _WifiWidgetState extends State<WifiWidget> {
 
     return Positioned(
       top: 20,
-      left: 0,
+      left: 15,
       child: Text(
         TR.current.wifiSignalLevel(wifiLevel),
         style: const TextStyle(fontSize: 13, color: Colors.white),

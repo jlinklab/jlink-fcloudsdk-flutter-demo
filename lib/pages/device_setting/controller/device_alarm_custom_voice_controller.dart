@@ -1,9 +1,9 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_ability/device_ability_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/controller/device_audio_upload_base_controller.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/device_ability/device_ability_manager.dart';
+import 'package:fcloudsdk_example/pages/device_setting/controller/device_audio_upload_base_controller.dart';
 
 class DeviceAlarmCustomVoiceController extends DeviceAudioUploadBaseController {
   DeviceAlarmCustomVoiceController({

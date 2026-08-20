@@ -7,29 +7,29 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/media/audio_player.dart';
-import 'package:xcloudsdk_flutter/media/media_player.dart';
-import 'package:xcloudsdk_flutter/model/talk_param.dart';
-import 'package:xcloudsdk_flutter/utils/num_util.dart';
-import 'package:xcloudsdk_flutter_example/common/common_path.dart';
-import 'package:xcloudsdk_flutter_example/common/event.dart';
-import 'package:xcloudsdk_flutter_example/common/named_route.dart';
-import 'package:xcloudsdk_flutter_example/event/event.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
-import 'package:xcloudsdk_flutter_example/manager/device_property_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_ability/device_ability_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
-import 'package:xcloudsdk_flutter_example/pages/media_realplay/controller/media_realplay_controller.dart';
-import 'package:xcloudsdk_flutter_example/pages/media_realplay/views/4g_widget.dart';
-import 'package:xcloudsdk_flutter_example/pages/media_realplay/views/battery_widget.dart';
-import 'package:xcloudsdk_flutter_example/pages/media_realplay/views/bits_widget.dart';
-import 'package:xcloudsdk_flutter_example/pages/media_realplay/views/dev_pre_set_view.dart';
-import 'package:xcloudsdk_flutter_example/pages/media_realplay/views/wifi_widget.dart';
-import 'package:xcloudsdk_flutter_example/utils/permission_utils.dart';
-import 'package:xcloudsdk_flutter_example/views/play_control_view.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/media/audio_player.dart';
+import 'package:fcloudsdk/media/media_player.dart';
+import 'package:fcloudsdk/model/talk_param.dart';
+import 'package:fcloudsdk/utils/num_util.dart';
+import 'package:fcloudsdk_example/common/common_path.dart';
+import 'package:fcloudsdk_example/common/event.dart';
+import 'package:fcloudsdk_example/common/named_route.dart';
+import 'package:fcloudsdk_example/event/event.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/manager/device_manager.dart';
+import 'package:fcloudsdk_example/manager/device_property_manager.dart';
+import 'package:fcloudsdk_example/pages/device_ability/device_ability_manager.dart';
+import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/pages/media_realplay/controller/media_realplay_controller.dart';
+import 'package:fcloudsdk_example/pages/media_realplay/views/4g_widget.dart';
+import 'package:fcloudsdk_example/pages/media_realplay/views/battery_widget.dart';
+import 'package:fcloudsdk_example/pages/media_realplay/views/bits_widget.dart';
+import 'package:fcloudsdk_example/pages/media_realplay/views/dev_pre_set_view.dart';
+import 'package:fcloudsdk_example/pages/media_realplay/views/wifi_widget.dart';
+import 'package:fcloudsdk_example/utils/permission_utils.dart';
+import 'package:fcloudsdk_example/views/play_control_view.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 import '../record/cloud_record_list_page.dart';
 
@@ -325,31 +325,35 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      _playWidget(widget.orientation),
-      ...widget.orientation == Orientation.landscape
-          ? [const SizedBox()]
-          : [
-              const SizedBox(
-                height: 20,
-              ),
-              Expanded(
-                  child: MediaRealPlayToolView(
-                      onSound: onSound,
-                      onTalk: onTalk,
-                      onStopTalk: onStopTalk,
-                      onSnap: onSnap,
-                      onStarRecord: onStartRecord,
-                      onStopRecord: onStopRecord,
-                      onPTZControl: onPTZControl,
-                      onPictureFlip: onPictureFlip,
-                      onPlayback: onPlayback,
-                      onCloudPlayback: onCloudPlayback,
-                      onChangeStreamType: onChangeStreamType,
-                      previewController: widget.controller.mediaController,
-                      device: device!)),
-            ],
-    ]);
+    return Container(
+        color: widget.orientation == Orientation.landscape
+            ? Colors.black
+            : Colors.white,
+        child: Column(children: [
+          _playWidget(widget.orientation),
+          ...widget.orientation == Orientation.landscape
+              ? [const SizedBox()]
+              : [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Expanded(
+                      child: MediaRealPlayToolView(
+                          onSound: onSound,
+                          onTalk: onTalk,
+                          onStopTalk: onStopTalk,
+                          onSnap: onSnap,
+                          onStarRecord: onStartRecord,
+                          onStopRecord: onStopRecord,
+                          onPTZControl: onPTZControl,
+                          onPictureFlip: onPictureFlip,
+                          onPlayback: onPlayback,
+                          onCloudPlayback: onCloudPlayback,
+                          onChangeStreamType: onChangeStreamType,
+                          previewController: widget.controller.mediaController,
+                          device: device!)),
+                ],
+        ]));
   }
 
   Widget _playWidget(Orientation orientation) {
@@ -357,11 +361,19 @@ class JFMediaRealPlayBodyContentState extends State<JFMediaRealPlayBodyContent>
       alignment: Alignment.center,
       children: [
         IgnorePointer(
-          ignoring: true,
-          child: MediaPlayerWidget(
-            controller: widget.controller.mediaController,
-          ),
-        ),
+            ignoring: true,
+            child: SizedBox(
+              width: orientation == Orientation.landscape
+                  ? MediaQuery.of(context).size.height *
+                      (widget.controller.mediaController.aspectRatio > 0
+                          ? widget.controller.mediaController.aspectRatio
+                          : 16 / 9)
+                  : null,
+              child: MediaPlayerWidget(
+                controller: widget.controller.mediaController,
+                autoDispose: false,
+              ),
+            )),
         Visibility(
             visible: widget.controller.mediaController.isLoading,
             child: const Center(

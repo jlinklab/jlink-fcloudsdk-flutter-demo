@@ -1,9 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 /// 错误码查询页面
 ///
@@ -74,7 +74,7 @@ class _ErrorCodePageState extends State<ErrorCodePage> {
     //开放平台错误码文档链接
     final uri = Uri.parse(
         'https://docs.jftech.com/docs?menusId=ab0ed73834f54368be3e375075e27fb2'
-            '&siderId=39094be901e94a0daae61055787c8b5b&lang=${_isCn ? 'zh' : 'en'}');
+        '&siderId=39094be901e94a0daae61055787c8b5b&lang=${_isCn ? 'zh' : 'en'}');
     try {
       final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
       if (!ok) {
@@ -105,7 +105,8 @@ class _ErrorCodePageState extends State<ErrorCodePage> {
               color: Color(0xFF0091EA),
               decoration: TextDecoration.underline,
             ),
-            recognizer: TapGestureRecognizer()..onTap = _openDocumentationCenter,
+            recognizer: TapGestureRecognizer()
+              ..onTap = _openDocumentationCenter,
           ),
           TextSpan(text: hintText.substring(startIndex + goDocText.length)),
         ],

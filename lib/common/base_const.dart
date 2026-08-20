@@ -3,7 +3,7 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:xcloudsdk_flutter_example/common/scale.dart';
+import 'package:fcloudsdk_example/common/scale.dart';
 
 //###############   scale 尺寸
 double kScale(double px) => KScale.px(px);

@@ -1,10 +1,10 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter_example/common/match.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/add_device_fill_device_name_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/models/add_device_center.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk_example/common/match.dart';
+import 'package:fcloudsdk_example/pages/add_device/add_device_fill_device_name_page.dart';
+import 'package:fcloudsdk_example/pages/add_device/models/add_device_center.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 
 ///重置用户名密码界面
