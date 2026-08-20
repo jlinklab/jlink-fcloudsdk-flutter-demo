@@ -255,7 +255,11 @@ class _DeviceCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () {
-          goPreview(context: context);
+          context.pushNamed('preview', pathParameters: {
+            'devId': device.uuid,
+            'type': type.toString(),
+            'pid': device.pid.isNotEmpty ? device.pid : '-1',
+          });
         },
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -305,7 +309,11 @@ class _DeviceCard extends StatelessWidget {
                     icon: Icons.videocam,
                     label: TR.current.preview,
                     onTap: () {
-                      goPreview(context: context);
+                      context.pushNamed('preview', pathParameters: {
+                        'devId': device.uuid,
+                        'type': type.toString(),
+                        'pid': device.pid.isNotEmpty ? device.pid : '-1',
+                      });
                     },
                   ),
                   const SizedBox(width: 8),
