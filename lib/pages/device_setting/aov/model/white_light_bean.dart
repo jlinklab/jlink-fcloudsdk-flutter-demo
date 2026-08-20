@@ -13,10 +13,14 @@ class WhiteLightBean {
   });
 
   factory WhiteLightBean.fromJson(Map<String, dynamic> json) => WhiteLightBean(
-        brightness: json["Brightness"],
-        moveTrigLight: MoveTrigLight.fromJson(json["MoveTrigLight"]),
-        workMode: json["WorkMode"],
-        workPeriod: WorkPeriod.fromJson(json["WorkPeriod"]),
+        brightness: json["Brightness"] ?? 0,
+        moveTrigLight: json["MoveTrigLight"] != null
+            ? MoveTrigLight.fromJson(json["MoveTrigLight"])
+            : MoveTrigLight(duration: 0, level: 0),
+        workMode: json["WorkMode"] ?? "Close",
+        workPeriod: json["WorkPeriod"] != null
+            ? WorkPeriod.fromJson(json["WorkPeriod"])
+            : WorkPeriod(eHour: 0, eMinute: 0, enable: 0, sHour: 0, sMinute: 0),
       );
 
   Map<String, dynamic> toJson() => {
@@ -37,8 +41,8 @@ class MoveTrigLight {
   });
 
   factory MoveTrigLight.fromJson(Map<String, dynamic> json) => MoveTrigLight(
-        duration: json["Duration"],
-        level: json["Level"],
+        duration: json["Duration"] ?? 0,
+        level: json["Level"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
@@ -63,11 +67,11 @@ class WorkPeriod {
   });
 
   factory WorkPeriod.fromJson(Map<String, dynamic> json) => WorkPeriod(
-        eHour: json["EHour"],
-        eMinute: json["EMinute"],
-        enable: json["Enable"],
-        sHour: json["SHour"],
-        sMinute: json["SMinute"],
+        eHour: json["EHour"] ?? 0,
+        eMinute: json["EMinute"] ?? 0,
+        enable: json["Enable"] ?? 0,
+        sHour: json["SHour"] ?? 0,
+        sMinute: json["SMinute"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {

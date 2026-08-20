@@ -269,7 +269,7 @@ class DeviceBatteryManageController extends ChangeNotifier {
       var numList = MapParser.queryList(map, 'numlist', []);
       if (numList.isNotEmpty) {
         var total =
-            numList.map((e) => int.parse(e['count'])).reduce((a, b) => a + b);
+            numList.map((e) => int.tryParse(e['count']?.toString() ?? '') ?? 0).reduce((a, b) => a + b);
         if (onlyToday) {
           todayAlarm = total;
         } else {
@@ -291,10 +291,13 @@ class DeviceBatteryManageController extends ChangeNotifier {
       maxX = 24;
     }
 
-    today4GSpots.clear();
-    weak4GSpots.clear();
-    todayBlSpots.clear();
-    weakBlSpots.clear();
+    if (onlyToday) {
+      todayBlSpots.clear();
+      today4GSpots.clear();
+    } else {
+      weakBlSpots.clear();
+      weak4GSpots.clear();
+    }
 
     var allGet = false;
     var page = 1;
