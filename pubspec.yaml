@@ -152,6 +152,8 @@ dependencies:
       url: "https://gitcode.com/openharmony-sig/fluttertpc_mobile_scanner.git"
       ref: "master"
   rxdart: 0.28.0
+    #图表
+  fl_chart: 0.69.0
 
 dependency_overrides:
   http: 0.13.6
