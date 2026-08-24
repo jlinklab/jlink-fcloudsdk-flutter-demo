@@ -744,5 +744,19 @@
   "auto": "自动",
   "close": "关闭",
   "TR_Keep_On": "一直开启",
-  "TR_Night_VisionLight": "红外夜视灯"
+  "TR_Night_VisionLight": "红外夜视灯",
+  "imageSetting": "图像设置",
+  "aeSensitivity": "AE灵敏度",
+  "sharpness": "清晰度",
+  "backlightCompensation": "背光补偿",
+  "autoInfrared": "自动红外",
+  "whiteLightColor": "白光全彩",
+  "blackWhiteMode": "黑白模式",
+  "smartWarmLight": "智能暖光",
+  "smartInfrared": "智能红外",
+  "wdrSwitch": "宽动态开关",
+  "lightModeSmartIR": "智能红外",
+  "lightModeSmartWarmLight": "智能暖光",
+  "lightModeAutoIR": "自动红外",
+  "lightModeWhiteLightFullColor": "白光全彩"
 }

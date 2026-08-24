@@ -78,8 +78,9 @@ class DeviceRecordSetController extends ChangeNotifier {
         }));
       },
     ));
-
-    notifyListeners();
+    if (context.mounted) {
+      notifyListeners();
+    }
   }
 
   ///请求页面数据
@@ -189,7 +190,8 @@ class DeviceRecordSetController extends ChangeNotifier {
         }
 
         ///录像开关状态
-        bRecordSwitch = pRecordMode == 'ConfigRecord' && (mask == 6 || mask == 7);
+        bRecordSwitch =
+            pRecordMode == 'ConfigRecord' && (mask == 6 || mask == 7);
         if (bRecordSwitch) {
           recordType = mask;
         }
@@ -267,9 +269,13 @@ class DeviceRecordSetController extends ChangeNotifier {
       padding: const EdgeInsets.only(top: 36),
       child: Row(
         children: [
-          Expanded(child: buildRecordTypeItem(RECORD_TYPE_ALL_DAY, TR.current.allDayRecording)),
+          Expanded(
+              child: buildRecordTypeItem(
+                  RECORD_TYPE_ALL_DAY, TR.current.allDayRecording)),
           const SizedBox(width: 10),
-          Expanded(child: buildRecordTypeItem(RECORD_TYPE_ALARM, TR.current.alarmRecording)),
+          Expanded(
+              child: buildRecordTypeItem(
+                  RECORD_TYPE_ALARM, TR.current.alarmRecording)),
         ],
       ),
     );
@@ -293,7 +299,9 @@ class DeviceRecordSetController extends ChangeNotifier {
             color: isSelected ? Colors.blueAccent : Colors.grey.shade300,
             width: isSelected ? 1.5 : 1,
           ),
-          color: isSelected ? Colors.blueAccent.withOpacity(0.08) : Colors.transparent,
+          color: isSelected
+              ? Colors.blueAccent.withOpacity(0.08)
+              : Colors.transparent,
         ),
         child: Text(
           name,

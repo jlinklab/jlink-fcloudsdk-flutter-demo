@@ -226,7 +226,8 @@ class DeviceBasicController extends ChangeNotifier {
       }
       Map<String, dynamic>? chanelTitleAttr = videoWidget
           .firstWhereOrNull((e) => e.containsKey('ChannelTitleAttribute'));
-      if (chanelTitleAttr != null && chanelTitleAttr['ChannelTitleAttribute'] != null) {
+      if (chanelTitleAttr != null &&
+          chanelTitleAttr['ChannelTitleAttribute'] != null) {
         chanelTitleAttr['ChannelTitleAttribute']['EncodeBlend'] = true;
         chanelTitleAttr['ChannelTitleAttribute']['PreviewBlend'] = true;
       }
@@ -506,7 +507,8 @@ class DeviceBasicController extends ChangeNotifier {
         type: DeviceAbilityType.bOtherFunctionSupportSetVolume);
     if (!supportSetVolume) return;
     try {
-      final result = await DeviceConfigManager.getConfigToObject<Map<String, dynamic>>(
+      final result =
+          await DeviceConfigManager.getConfigToObject<Map<String, dynamic>>(
         deviceId: deviceId,
         commandName: DeviceJsonName.alarmVolume,
       );
@@ -549,7 +551,8 @@ class DeviceBasicController extends ChangeNotifier {
         type: DeviceAbilityType.bOtherFunctionSupportSetInVolume);
     if (!supportSetInVolume) return;
     try {
-      final result = await DeviceConfigManager.getConfigToObject<Map<String, dynamic>>(
+      final result =
+          await DeviceConfigManager.getConfigToObject<Map<String, dynamic>>(
         deviceId: deviceId,
         commandName: DeviceJsonName.alarmVolumeIn,
       );
@@ -711,6 +714,8 @@ class DeviceBasicController extends ChangeNotifier {
           }),
     ));
 
-    notifyListeners();
+    if (context.mounted) {
+      notifyListeners();
+    }
   }
 }

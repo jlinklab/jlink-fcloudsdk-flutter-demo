@@ -744,5 +744,19 @@
   "auto": "Auto",
   "close": "Close",
   "TR_Keep_On": "Always On",
-  "TR_Night_VisionLight": "IR Night Vision Light"
+  "TR_Night_VisionLight": "IR Night Vision Light",
+  "imageSetting": "Image Settings",
+  "aeSensitivity": "AE Sensitivity",
+  "sharpness": "Sharpness",
+  "backlightCompensation": "Backlight Compensation",
+  "autoInfrared": "Auto Infrared",
+  "whiteLightColor": "White Light Color",
+  "blackWhiteMode": "Black & White",
+  "smartWarmLight": "Smart Warm Light",
+  "smartInfrared": "Smart Infrared",
+  "wdrSwitch": "WDR Switch",
+  "lightModeSmartIR": "Smart IR",
+  "lightModeSmartWarmLight": "Smart Warm Light",
+  "lightModeAutoIR": "Auto IR",
+  "lightModeWhiteLightFullColor": "White Light Full Color"
 }

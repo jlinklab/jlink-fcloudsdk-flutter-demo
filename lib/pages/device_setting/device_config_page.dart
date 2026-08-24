@@ -14,6 +14,7 @@ import 'package:fcloudsdk_example/pages/device_setting/device_alarm_page.dart';
 import 'package:fcloudsdk_example/pages/device_setting/device_basic_page.dart';
 import 'package:fcloudsdk_example/pages/device_setting/device_info_page.dart';
 import 'package:fcloudsdk_example/pages/device_setting/device_record_set_page.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_image_setting_page.dart';
 import 'package:fcloudsdk_example/pages/device_setting/device_storage_manage_page.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/pages/device_setting/device_firmware_upgrade_page.dart';
@@ -40,6 +41,7 @@ class DeviceConfigPage extends StatefulWidget {
     (context) => TR.current.resetDevPwd,
     (context) => TR.current.storageManagement,
     (context) => TR.current.recordSetting,
+    (context) => TR.current.imageSetting,
     (context) => TR.current.alarm,
     (context) => TR.current.devInfo,
     (context) => TR.current.deviceRestart,
@@ -170,6 +172,12 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
           deviceId: widget.deviceId,
           pid: widget.pid != '-1' ? widget.pid : '',
         );
+      }));
+    } else if (title == TR.current.imageSetting) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (BuildContext context) {
+        return DeviceImageSettingPage(
+            deviceId: widget.deviceId, channel: widget.channel);
       }));
     } else if (title == TR.current.TR_Setting_AOV_Device_Config) {
       Navigator.of(context)
