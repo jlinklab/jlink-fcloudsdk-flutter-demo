@@ -239,6 +239,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "album": MessageLookupByLibrary.simpleMessage("Album"),
         "allDayRecording":
             MessageLookupByLibrary.simpleMessage("All-day Recording"),
+        "alreadyOpen": MessageLookupByLibrary.simpleMessage("Opened"),
         "areaCode": MessageLookupByLibrary.simpleMessage("Choose Area Code"),
         "audio_ability_unsupport": MessageLookupByLibrary.simpleMessage(
             "Microphone permission is not enabled"),
@@ -455,6 +456,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "noSharedAccount":
             MessageLookupByLibrary.simpleMessage("No shared accounts"),
         "normalAlarm": MessageLookupByLibrary.simpleMessage("Normal Alarm"),
+        "notOpen": MessageLookupByLibrary.simpleMessage("Not Opened"),
         "nothing": MessageLookupByLibrary.simpleMessage("Nothing!"),
         "on": MessageLookupByLibrary.simpleMessage("open"),
         "onlyFactoryReset":
@@ -1392,6 +1394,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "voiceTipSwitch": MessageLookupByLibrary.simpleMessage("Voice Prompt"),
         "waiting_buffering":
             MessageLookupByLibrary.simpleMessage("Buffering..."),
+        "wdrConfig": MessageLookupByLibrary.simpleMessage("WDR Config"),
+        "wdrConfigTips": MessageLookupByLibrary.simpleMessage(
+            "This function can help the device take high-quality images in high-contrast light conditions. The image effect is as follows:"),
         "wdrSwitch": MessageLookupByLibrary.simpleMessage("WDR Switch"),
         "whiteLightColor":
             MessageLookupByLibrary.simpleMessage("White Light Color"),

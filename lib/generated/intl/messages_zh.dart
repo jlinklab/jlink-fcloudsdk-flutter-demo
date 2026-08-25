@@ -195,6 +195,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "alarmSubscription": MessageLookupByLibrary.simpleMessage("报警订阅"),
         "album": MessageLookupByLibrary.simpleMessage("相册"),
         "allDayRecording": MessageLookupByLibrary.simpleMessage("全天录像"),
+        "alreadyOpen": MessageLookupByLibrary.simpleMessage("已开启"),
         "areaCode": MessageLookupByLibrary.simpleMessage("区号选择"),
         "audio_ability_unsupport":
             MessageLookupByLibrary.simpleMessage("麦克风权限未开启"),
@@ -370,6 +371,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "noSDCardTips": MessageLookupByLibrary.simpleMessage("未检测到SD卡无法进行全天录像"),
         "noSharedAccount": MessageLookupByLibrary.simpleMessage("暂无已分享账号"),
         "normalAlarm": MessageLookupByLibrary.simpleMessage("普通报警"),
+        "notOpen": MessageLookupByLibrary.simpleMessage("未开启"),
         "nothing": MessageLookupByLibrary.simpleMessage("什么也没有！"),
         "on": MessageLookupByLibrary.simpleMessage("开启"),
         "onlyFactoryReset": MessageLookupByLibrary.simpleMessage("仅恢复出厂设置"),
@@ -1069,6 +1071,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("前往开放平台文档中心"),
         "voiceTipSwitch": MessageLookupByLibrary.simpleMessage("提示音"),
         "waiting_buffering": MessageLookupByLibrary.simpleMessage("缓冲中..."),
+        "wdrConfig": MessageLookupByLibrary.simpleMessage("宽动态配置"),
+        "wdrConfigTips": MessageLookupByLibrary.simpleMessage(
+            "此功能可帮助设备在高对比度光照条件下拍摄高质量图像，图像效果如下："),
         "wdrSwitch": MessageLookupByLibrary.simpleMessage("宽动态开关"),
         "whiteLightColor": MessageLookupByLibrary.simpleMessage("白光全彩"),
         "wifi": MessageLookupByLibrary.simpleMessage("快速wifi配网"),

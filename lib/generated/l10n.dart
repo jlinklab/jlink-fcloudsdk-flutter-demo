@@ -7641,6 +7641,46 @@ class TR {
       args: [],
     );
   }
+
+  /// `宽动态配置`
+  String get wdrConfig {
+    return Intl.message(
+      '宽动态配置',
+      name: 'wdrConfig',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `此功能可帮助设备在高对比度光照条件下拍摄高质量图像，图像效果如下：`
+  String get wdrConfigTips {
+    return Intl.message(
+      '此功能可帮助设备在高对比度光照条件下拍摄高质量图像，图像效果如下：',
+      name: 'wdrConfigTips',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已开启`
+  String get alreadyOpen {
+    return Intl.message(
+      '已开启',
+      name: 'alreadyOpen',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未开启`
+  String get notOpen {
+    return Intl.message(
+      '未开启',
+      name: 'notOpen',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

@@ -758,5 +758,9 @@
   "lightModeSmartIR": "Smart IR",
   "lightModeSmartWarmLight": "Smart Warm Light",
   "lightModeAutoIR": "Auto IR",
-  "lightModeWhiteLightFullColor": "White Light Full Color"
+  "lightModeWhiteLightFullColor": "White Light Full Color",
+  "wdrConfig": "WDR Config",
+  "wdrConfigTips": "This function can help the device take high-quality images in high-contrast light conditions. The image effect is as follows:",
+  "alreadyOpen": "Opened",
+  "notOpen": "Not Opened"
 }

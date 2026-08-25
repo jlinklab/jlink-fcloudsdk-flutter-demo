@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fcloudsdk/api/api_center.dart';
-import 'package:fcloudsdk/manager/device_config_manager.dart';
 import 'package:fcloudsdk_example/common/code_prase.dart';
 import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/pages/device_ability/device_ability_manager.dart';
@@ -40,11 +38,10 @@ class DeviceImageSettingController extends ChangeNotifier {
   bool pictureMirror = false; // 左右翻转
   bool blcMode = false; // 背光补偿
   int dayNightColor = 0; // 日夜模式
-  bool wdrEnabled = false; // 宽动态
 
   // 能力集
   bool supportSoftPhotosensitive = false; // 是否支持软光敏（决定日夜模式3档或5档）
-  bool supportBT = false; // 是否支持宽动态
+  bool supportBT = false; // 是否支持宽动态（决定宽动态入口是否显示）
   bool _supportHidePictureFlip = false; // 是否隐藏上下翻转
   bool _supportHidePictureMirror = false; // 是否隐藏左右翻转
 
@@ -53,10 +50,6 @@ class DeviceImageSettingController extends ChangeNotifier {
 
   // 原始数据
   Map<String, dynamic> _mapCameraParam = {};
-  Map<String, dynamic>? _mapCameraParamEx;
-
-  /// 查询到的原始宽动态状态，用于保存时判断是否需要发起WDR请求
-  bool _originalWdrEnabled = false;
 
   /// 最近一次保存失败的错误信息
   String? _saveErrorMsg;
@@ -77,9 +70,6 @@ class DeviceImageSettingController extends ChangeNotifier {
   void _queryAllConfig() async {
     await _queryAbilities();
     await _queryCameraParam();
-    if (supportBT) {
-      await _queryCameraParamEx();
-    }
   }
 
   /// 查询设备能力
@@ -151,27 +141,6 @@ class DeviceImageSettingController extends ChangeNotifier {
     dayNightColor = _parseHexValue(dnValue);
   }
 
-  /// 获取Camera.ParamEx配置（宽动态）
-  Future<void> _queryCameraParamEx() async {
-    try {
-      _mapCameraParamEx =
-          await DeviceConfigManager.getConfigToObject<Map<String, dynamic>>(
-        deviceId: deviceId,
-        commandName: DeviceJsonName.cameraParamEx,
-      );
-      if (_mapCameraParamEx != null) {
-        final broadTrends = _mapCameraParamEx!['BroadTrends'];
-        if (broadTrends != null && broadTrends is Map) {
-          wdrEnabled = broadTrends['AutoGain'] == 'Open';
-        }
-        _originalWdrEnabled = wdrEnabled;
-      }
-      notifyListeners();
-    } catch (e) {
-      debugPrint('查询宽动态参数失败: ${kErrorMsg(e)}');
-    }
-  }
-
   /// 解析hex字符串为int
   int _parseHexValue(dynamic value) {
     if (value is int) return value;
@@ -216,47 +185,16 @@ class DeviceImageSettingController extends ChangeNotifier {
     }
   }
 
-  /// 保存宽动态WDR（Camera.ParamEx），返回是否成功
-  Future<bool> _setWdrConfig() async {
-    if (_mapCameraParamEx == null) return false;
-    _mapCameraParamEx!['BroadTrends'] = {
-      ...?(_mapCameraParamEx!['BroadTrends'] as Map?),
-      'AutoGain': wdrEnabled ? 'Open' : 'Close',
-    };
-    final jsonStr = jsonEncode([_mapCameraParamEx]);
-    try {
-      await DeviceConfigManager.setConfig(
-        deviceId: deviceId,
-        commandName: DeviceJsonName.cameraParamEx,
-        config: jsonStr,
-        configLength: jsonStr.length,
-      );
-      return true;
-    } catch (e) {
-      _saveErrorMsg = kErrorMsg(e);
-      debugPrint('保存宽动态参数失败: $_saveErrorMsg');
-      return false;
-    }
-  }
-
   // ==================== 统一保存 ====================
 
   /// 统一保存：参考Android DevCameraSetActivity.tryToSaveConfig的交互，
   /// 收集所有控件状态后一次性发起保存请求，成功后返回true，由页面退出
   Future<bool> tryToSaveConfig() async {
     KToast.show();
-    // 1. 保存Camera.Param（AE灵敏度、翻转、背光补偿、日夜模式）
+    // 保存Camera.Param（AE灵敏度、翻转、背光补偿、日夜模式）
     if (!await _setCameraParam()) {
       await _restoreConfigAfterSaveFailed();
       return false;
-    }
-    // 2. 宽动态状态有变化时保存Camera.ParamEx
-    if (supportBT && wdrEnabled != _originalWdrEnabled) {
-      if (!await _setWdrConfig()) {
-        await _restoreConfigAfterSaveFailed();
-        return false;
-      }
-      _originalWdrEnabled = wdrEnabled;
     }
     KToast.show(status: TR.current.saveSuccess);
     return true;
@@ -265,9 +203,6 @@ class DeviceImageSettingController extends ChangeNotifier {
   /// 保存失败后重新查询设备配置恢复页面状态，并提示错误
   Future<void> _restoreConfigAfterSaveFailed() async {
     await _queryCameraParam();
-    if (supportBT) {
-      await _queryCameraParamEx();
-    }
     KToast.show(status: _saveErrorMsg ?? TR.current.saveFailed);
   }
 
@@ -302,12 +237,6 @@ class DeviceImageSettingController extends ChangeNotifier {
   /// 设置日夜模式
   void setDayNightColor(int value) {
     dayNightColor = value;
-    notifyListeners();
-  }
-
-  /// 设置宽动态
-  void setWdrEnabled(bool value) {
-    wdrEnabled = value;
     notifyListeners();
   }
 

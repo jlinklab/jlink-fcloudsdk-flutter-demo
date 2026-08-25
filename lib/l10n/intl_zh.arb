@@ -758,5 +758,9 @@
   "lightModeSmartIR": "智能红外",
   "lightModeSmartWarmLight": "智能暖光",
   "lightModeAutoIR": "自动红外",
-  "lightModeWhiteLightFullColor": "白光全彩"
+  "lightModeWhiteLightFullColor": "白光全彩",
+  "wdrConfig": "宽动态配置",
+  "wdrConfigTips": "此功能可帮助设备在高对比度光照条件下拍摄高质量图像，图像效果如下：",
+  "alreadyOpen": "已开启",
+  "notOpen": "未开启"
 }

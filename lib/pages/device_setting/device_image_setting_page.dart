@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/pages/device_setting/controller/device_image_setting_controller.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_wide_dynamic_page.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class DeviceImageSettingPage extends StatefulWidget {
@@ -42,22 +43,21 @@ class _DeviceImageSettingPageState extends State<DeviceImageSettingPage> {
             appBar: AppBar(
               title: Text(TR.current.imageSetting),
               actions: [
-                TextButton(
-                  onPressed: _onSave,
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Theme.of(context).primaryColor,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(9),
-                    ),
-                  ),
-                  child: Text(
-                    TR.current.save,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                GestureDetector(
+                  onTap: () {
+                    _onSave.call();
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 15),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(9),
+                        color: Colors.white),
+                    child: Icon(
+                      color: Theme.of(context).primaryColor,
+                      Icons.save,
+                      size: 24,
                     ),
                   ),
                 ),
@@ -113,17 +113,13 @@ class _DeviceImageSettingPageState extends State<DeviceImageSettingPage> {
                   onTap: () => controller
                       .showDayNightColorDialog(controller.pageContextSafe),
                 ),
-                // 6. 宽动态WDR（仅supportBT时显示）
+                // 6. 宽动态WDR（仅supportBT时显示，点击进入宽动态配置页面）
                 Visibility(
                     visible: controller.supportBT,
                     child: ListTile(
                       title: Text(TR.current.wdrSwitch),
-                      trailing: CupertinoSwitch(
-                        value: controller.wdrEnabled,
-                        onChanged: (value) {
-                          controller.setWdrEnabled(value);
-                        },
-                      ),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: _openWideDynamicPage,
                     )),
               ],
             ),
@@ -147,5 +143,16 @@ class _DeviceImageSettingPageState extends State<DeviceImageSettingPage> {
     if (success && mounted) {
       Navigator.of(context).pop();
     }
+  }
+
+  /// 跳转宽动态配置页面
+  void _openWideDynamicPage() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (BuildContext context) {
+      return DeviceWideDynamicPage(
+        deviceId: widget.deviceId,
+        channel: widget.channel,
+      );
+    }));
   }
 }
