@@ -297,8 +297,7 @@
   "channelSleep": "休眠",
   "channelUnknown": "未知",
   "loadingChannelInfo": "正在加载通道信息...",
-  "loadChannelFailed": "加载通道信息失败"
-  "micVolume": "麦克风音量",
+  "loadChannelFailed": "加载通道信息失败",
   "errorCode": "错误码",
   "enterErrorCode": "请输入错误码",
   "inputRightErrorCode": "请输入正确的错误码",

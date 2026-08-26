@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:xcloudsdk_flutter_example/home_page.dart';
-import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/add_device_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/channel_list/channel_list_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/device_config_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/wifi_config_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/login/login_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/media_realplay/media_realplay_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/play_back/play_back_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/record/record_list_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/register/register_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/setting/setting_page.dart';
+import 'package:fcloudsdk_example/home_page.dart';
+import 'package:fcloudsdk_example/models/user_instance.dart';
+import 'package:fcloudsdk_example/pages/add_device/add_device_page.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_config_page.dart';
+import 'package:fcloudsdk_example/pages/add_device/wifi_config_page.dart';
+import 'package:fcloudsdk_example/pages/login/login_page.dart';
+import 'package:fcloudsdk_example/pages/media_realplay/media_realplay_page.dart';
+import 'package:fcloudsdk_example/pages/play_back/play_back_page.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_alarm_line_or_area_page.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_alarm_smart_rule_page.dart';
+import 'package:fcloudsdk_example/pages/record/record_list_page.dart';
+import 'package:fcloudsdk_example/pages/register/register_page.dart';
+import 'package:fcloudsdk_example/pages/setting/setting_page.dart';
+
+import '../pages/channel_list/channel_list_page.dart';
 
 final GoRouter goRouter = GoRouter(
   routes: <GoRoute>[

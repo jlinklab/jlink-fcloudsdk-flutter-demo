@@ -1,12 +1,6 @@
 import 'dart:async';
 
-import 'package:xcloudsdk_flutter/manager/device_config_manager.dart';
-import 'package:xcloudsdk_flutter/utils/extensions.dart';
-import 'package:xcloudsdk_flutter_example/api/add_device_api.dart';
-import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_ability/device_ability_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
-import 'package:xcloudsdk_flutter_example/utils/sp_utils.dart';
+import 'package:fcloudsdk/manager/device_config_manager.dart';
 import 'package:fcloudsdk/utils/extensions.dart';
 import 'package:fcloudsdk_example/api/add_device_api.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';

@@ -2024,6 +2024,4594 @@ class TR {
       args: [],
     );
   }
+
+  /// `错误码`
+  String get errorCode {
+    return Intl.message('错误码', name: 'errorCode', desc: '', args: []);
+  }
+
+  /// `请输入错误码`
+  String get enterErrorCode {
+    return Intl.message('请输入错误码', name: 'enterErrorCode', desc: '', args: []);
+  }
+
+  /// `请输入正确的错误码`
+  String get inputRightErrorCode {
+    return Intl.message(
+      '请输入正确的错误码',
+      name: 'inputRightErrorCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请在下方查询错误码或前往开放平台文档中心`
+  String get pleaseCheckErrorCode {
+    return Intl.message(
+      '请在下方查询错误码或前往开放平台文档中心',
+      name: 'pleaseCheckErrorCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `前往开放平台文档中心`
+  String get visitOpenPlatformDocumentationCenter {
+    return Intl.message(
+      '前往开放平台文档中心',
+      name: 'visitOpenPlatformDocumentationCenter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `打开链接失败`
+  String get openLinkFailed {
+    return Intl.message('打开链接失败', name: 'openLinkFailed', desc: '', args: []);
+  }
+
+  /// `网络错误`
+  String get tr_error_code_1000 {
+    return Intl.message('网络错误', name: 'tr_error_code_1000', desc: '', args: []);
+  }
+
+  /// `发送缓冲区已满`
+  String get tr_error_code_1001 {
+    return Intl.message(
+      '发送缓冲区已满',
+      name: 'tr_error_code_1001',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `网络发送失败`
+  String get tr_error_code_1002 {
+    return Intl.message(
+      '网络发送失败',
+      name: 'tr_error_code_1002',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `网络接收失败`
+  String get tr_error_code_1003 {
+    return Intl.message(
+      '网络接收失败',
+      name: 'tr_error_code_1003',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `网络超时`
+  String get tr_error_code_1004 {
+    return Intl.message('网络超时', name: 'tr_error_code_1004', desc: '', args: []);
+  }
+
+  /// `没有对象`
+  String get tr_error_code_1005 {
+    return Intl.message('没有对象', name: 'tr_error_code_1005', desc: '', args: []);
+  }
+
+  /// `创建失败`
+  String get tr_error_code_1006 {
+    return Intl.message('创建失败', name: 'tr_error_code_1006', desc: '', args: []);
+  }
+
+  /// `连接失败`
+  String get tr_error_code_1007 {
+    return Intl.message('连接失败', name: 'tr_error_code_1007', desc: '', args: []);
+  }
+
+  /// `超时`
+  String get tr_error_code_1008 {
+    return Intl.message('超时', name: 'tr_error_code_1008', desc: '', args: []);
+  }
+
+  /// `无连接`
+  String get tr_error_code_1009 {
+    return Intl.message('无连接', name: 'tr_error_code_1009', desc: '', args: []);
+  }
+
+  /// `socket异常`
+  String get tr_error_code_1010 {
+    return Intl.message(
+      'socket异常',
+      name: 'tr_error_code_1010',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `socket关闭异常`
+  String get tr_error_code_1011 {
+    return Intl.message(
+      'socket关闭异常',
+      name: 'tr_error_code_1011',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `创建缓存失败`
+  String get tr_error_code_1012 {
+    return Intl.message(
+      '创建缓存失败',
+      name: 'tr_error_code_1012',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `网络忙`
+  String get tr_error_code_1013 {
+    return Intl.message('网络忙', name: 'tr_error_code_1013', desc: '', args: []);
+  }
+
+  /// `监听异常`
+  String get tr_error_code_1014 {
+    return Intl.message('监听异常', name: 'tr_error_code_1014', desc: '', args: []);
+  }
+
+  /// `接收异常`
+  String get tr_error_code_1015 {
+    return Intl.message('接收异常', name: 'tr_error_code_1015', desc: '', args: []);
+  }
+
+  /// `无缓冲区`
+  String get tr_error_code_1016 {
+    return Intl.message('无缓冲区', name: 'tr_error_code_1016', desc: '', args: []);
+  }
+
+  /// `网络错误或DNS配置错误`
+  String get tr_error_code_1017 {
+    return Intl.message(
+      '网络错误或DNS配置错误',
+      name: 'tr_error_code_1017',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `开发者账号未鉴权`
+  String get tr_error_code_1018 {
+    return Intl.message(
+      '开发者账号未鉴权',
+      name: 'tr_error_code_1018',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未初始化`
+  String get tr_error_code_1019 {
+    return Intl.message('未初始化', name: 'tr_error_code_1019', desc: '', args: []);
+  }
+
+  /// `设备深度休眠中`
+  String get tr_error_code_1020 {
+    return Intl.message(
+      '设备深度休眠中',
+      name: 'tr_error_code_1020',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `服务器发生错误`
+  String get tr_error_code_1021 {
+    return Intl.message(
+      '服务器发生错误',
+      name: 'tr_error_code_1021',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `HTTPS通讯错误`
+  String get tr_error_code_1022 {
+    return Intl.message(
+      'HTTPS通讯错误',
+      name: 'tr_error_code_1022',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `本机系统忙，请稍后再试`
+  String get tr_error_code_1023 {
+    return Intl.message(
+      '本机系统忙，请稍后再试',
+      name: 'tr_error_code_1023',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `本机网络忙，请稍后再试`
+  String get tr_error_code_1024 {
+    return Intl.message(
+      '本机网络忙，请稍后再试',
+      name: 'tr_error_code_1024',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `CPU忙，请稍后再试`
+  String get tr_error_code_1025 {
+    return Intl.message(
+      'CPU忙，请稍后再试',
+      name: 'tr_error_code_1025',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `内存使用过高，请稍后再试`
+  String get tr_error_code_1026 {
+    return Intl.message(
+      '内存使用过高，请稍后再试',
+      name: 'tr_error_code_1026',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `并发任务过多，请稍后再试`
+  String get tr_error_code_1027 {
+    return Intl.message(
+      '并发任务过多，请稍后再试',
+      name: 'tr_error_code_1027',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---内存不足`
+  String get tr_error_code_70001 {
+    return Intl.message(
+      '设备升级---内存不足',
+      name: 'tr_error_code_70001',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---文件格式不对`
+  String get tr_error_code_70002 {
+    return Intl.message(
+      '设备升级---文件格式不对',
+      name: 'tr_error_code_70002',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---某个分区升级失败`
+  String get tr_error_code_70003 {
+    return Intl.message(
+      '设备升级---某个分区升级失败',
+      name: 'tr_error_code_70003',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---硬件型号不匹配`
+  String get tr_error_code_70004 {
+    return Intl.message(
+      '设备升级---硬件型号不匹配',
+      name: 'tr_error_code_70004',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---客户信息不匹配`
+  String get tr_error_code_70005 {
+    return Intl.message(
+      '设备升级---客户信息不匹配',
+      name: 'tr_error_code_70005',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---要升级的版本低于设备目前版本，不允许升级`
+  String get tr_error_code_70006 {
+    return Intl.message(
+      '设备升级---要升级的版本低于设备目前版本，不允许升级',
+      name: 'tr_error_code_70006',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---非法的版本`
+  String get tr_error_code_70007 {
+    return Intl.message(
+      '设备升级---非法的版本',
+      name: 'tr_error_code_70007',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---升级程序里wifi驱动和设备当前在使用的wifi网卡不匹配`
+  String get tr_error_code_70008 {
+    return Intl.message(
+      '设备升级---升级程序里wifi驱动和设备当前在使用的wifi网卡不匹配',
+      name: 'tr_error_code_70008',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---网络错误`
+  String get tr_error_code_70009 {
+    return Intl.message(
+      '设备升级---网络错误',
+      name: 'tr_error_code_70009',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---升级程序不支持设备使用的Flash`
+  String get tr_error_code_70010 {
+    return Intl.message(
+      '设备升级---升级程序不支持设备使用的Flash',
+      name: 'tr_error_code_70010',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---升级文件被修改，不能通过外网升级`
+  String get tr_error_code_70011 {
+    return Intl.message(
+      '设备升级---升级文件被修改，不能通过外网升级',
+      name: 'tr_error_code_70011',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---升级此固件需要特殊能力支持`
+  String get tr_error_code_70012 {
+    return Intl.message(
+      '设备升级---升级此固件需要特殊能力支持',
+      name: 'tr_error_code_70012',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知错误`
+  String get tr_error_code_70101 {
+    return Intl.message(
+      '未知错误',
+      name: 'tr_error_code_70101',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `版本不支持`
+  String get tr_error_code_70102 {
+    return Intl.message(
+      '版本不支持',
+      name: 'tr_error_code_70102',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `非法请求`
+  String get tr_error_code_70103 {
+    return Intl.message(
+      '非法请求',
+      name: 'tr_error_code_70103',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户已登录`
+  String get tr_error_code_70104 {
+    return Intl.message(
+      '用户已登录',
+      name: 'tr_error_code_70104',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户未登录`
+  String get tr_error_code_70105 {
+    return Intl.message(
+      '用户未登录',
+      name: 'tr_error_code_70105',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户名或密码不正确`
+  String get tr_error_code_70106 {
+    return Intl.message(
+      '用户名或密码不正确',
+      name: 'tr_error_code_70106',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `无设备功能权限`
+  String get tr_error_code_70107 {
+    return Intl.message(
+      '无设备功能权限',
+      name: 'tr_error_code_70107',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `超时`
+  String get tr_error_code_70108 {
+    return Intl.message('超时', name: 'tr_error_code_70108', desc: '', args: []);
+  }
+
+  /// `搜索失败，未找到相应的文件`
+  String get tr_error_code_70109 {
+    return Intl.message(
+      '搜索失败，未找到相应的文件',
+      name: 'tr_error_code_70109',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `搜索成功，返回所有文件`
+  String get tr_error_code_70110 {
+    return Intl.message(
+      '搜索成功，返回所有文件',
+      name: 'tr_error_code_70110',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `搜索成功，返回部分文件`
+  String get tr_error_code_70111 {
+    return Intl.message(
+      '搜索成功，返回部分文件',
+      name: 'tr_error_code_70111',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户已存在`
+  String get tr_error_code_70112 {
+    return Intl.message(
+      '用户已存在',
+      name: 'tr_error_code_70112',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户不存在`
+  String get tr_error_code_70113 {
+    return Intl.message(
+      '用户不存在',
+      name: 'tr_error_code_70113',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户组已存在`
+  String get tr_error_code_70114 {
+    return Intl.message(
+      '用户组已存在',
+      name: 'tr_error_code_70114',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户组不存在`
+  String get tr_error_code_70115 {
+    return Intl.message(
+      '用户组不存在',
+      name: 'tr_error_code_70115',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `盗版软件`
+  String get tr_error_code_70116 {
+    return Intl.message(
+      '盗版软件',
+      name: 'tr_error_code_70116',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `消息格式不正确`
+  String get tr_error_code_70117 {
+    return Intl.message(
+      '消息格式不正确',
+      name: 'tr_error_code_70117',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未设置云台协议`
+  String get tr_error_code_70118 {
+    return Intl.message(
+      '未设置云台协议',
+      name: 'tr_error_code_70118',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未找到录像文件`
+  String get tr_error_code_70119 {
+    return Intl.message(
+      '未找到录像文件',
+      name: 'tr_error_code_70119',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `配置未启用`
+  String get tr_error_code_70120 {
+    return Intl.message(
+      '配置未启用',
+      name: 'tr_error_code_70120',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `数字通道未连接`
+  String get tr_error_code_70121 {
+    return Intl.message(
+      '数字通道未连接',
+      name: 'tr_error_code_70121',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `NAT视频连接数达到最大值，不允许新的NAT连接`
+  String get tr_error_code_70122 {
+    return Intl.message(
+      'NAT视频连接数达到最大值，不允许新的NAT连接',
+      name: 'tr_error_code_70122',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `TCP视频连接数达到最大值，不允许新的TCP视频连接`
+  String get tr_error_code_70123 {
+    return Intl.message(
+      'TCP视频连接数达到最大值，不允许新的TCP视频连接',
+      name: 'tr_error_code_70123',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `不支持此种登录功能（用户名和密码的加密算法不正确）`
+  String get tr_error_code_70124 {
+    return Intl.message(
+      '不支持此种登录功能（用户名和密码的加密算法不正确）',
+      name: 'tr_error_code_70124',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已创建其他用户，无法再使用管理员登录`
+  String get tr_error_code_70125 {
+    return Intl.message(
+      '已创建其他用户，无法再使用管理员登录',
+      name: 'tr_error_code_70125',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AES加密数据格式错误`
+  String get tr_error_code_70126 {
+    return Intl.message(
+      'AES加密数据格式错误',
+      name: 'tr_error_code_70126',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户通过一键遮蔽等功能关闭了视频录像和预览功能`
+  String get tr_error_code_70127 {
+    return Intl.message(
+      '用户通过一键遮蔽等功能关闭了视频录像和预览功能',
+      name: 'tr_error_code_70127',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `禁止4G远程看视频`
+  String get tr_error_code_70128 {
+    return Intl.message(
+      '禁止4G远程看视频',
+      name: 'tr_error_code_70128',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `禁止使用admin用户名远程登录`
+  String get tr_error_code_70129 {
+    return Intl.message(
+      '禁止使用admin用户名远程登录',
+      name: 'tr_error_code_70129',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `NAS地址已存在`
+  String get tr_error_code_70130 {
+    return Intl.message(
+      'NAS地址已存在',
+      name: 'tr_error_code_70130',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `路径正在使用，无法操作`
+  String get tr_error_code_70131 {
+    return Intl.message(
+      '路径正在使用，无法操作',
+      name: 'tr_error_code_70131',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `NAS已达到支持的最大值，不允许进一步添加`
+  String get tr_error_code_70132 {
+    return Intl.message(
+      'NAS已达到支持的最大值，不允许进一步添加',
+      name: 'tr_error_code_70132',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `CGI格式错误`
+  String get tr_error_code_70136 {
+    return Intl.message(
+      'CGI格式错误',
+      name: 'tr_error_code_70136',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备登录Token错误`
+  String get tr_error_code_70137 {
+    return Intl.message(
+      '设备登录Token错误',
+      name: 'tr_error_code_70137',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `消费类产品绑定了错误的密钥`
+  String get tr_error_code_70140 {
+    return Intl.message(
+      '消费类产品绑定了错误的密钥',
+      name: 'tr_error_code_70140',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `成功，设备需要重启`
+  String get tr_error_code_70150 {
+    return Intl.message(
+      '成功，设备需要重启',
+      name: 'tr_error_code_70150',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文件没有删除成功`
+  String get tr_error_code_70151 {
+    return Intl.message(
+      '文件没有删除成功',
+      name: 'tr_error_code_70151',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `容量不足`
+  String get tr_error_code_70152 {
+    return Intl.message(
+      '容量不足',
+      name: 'tr_error_code_70152',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `没有SD卡或硬盘`
+  String get tr_error_code_70153 {
+    return Intl.message(
+      '没有SD卡或硬盘',
+      name: 'tr_error_code_70153',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `视频备份失败`
+  String get tr_error_code_70160 {
+    return Intl.message(
+      '视频备份失败',
+      name: 'tr_error_code_70160',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `没有录像设备或设备没有进行录像`
+  String get tr_error_code_70161 {
+    return Intl.message(
+      '没有录像设备或设备没有进行录像',
+      name: 'tr_error_code_70161',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `正在添加设备`
+  String get tr_error_code_70162 {
+    return Intl.message(
+      '正在添加设备',
+      name: 'tr_error_code_70162',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备返回了错误的密码`
+  String get tr_error_code_70163 {
+    return Intl.message(
+      '设备返回了错误的密码',
+      name: 'tr_error_code_70163',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备空间不足`
+  String get tr_error_code_70164 {
+    return Intl.message(
+      '设备空间不足',
+      name: 'tr_error_code_70164',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备忙，当前不提供服务/(IOT设备)对端连接数已达上限`
+  String get tr_error_code_70165 {
+    return Intl.message(
+      '设备忙，当前不提供服务/(IOT设备)对端连接数已达上限',
+      name: 'tr_error_code_70165',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `功能未启用`
+  String get tr_error_code_70170 {
+    return Intl.message(
+      '功能未启用',
+      name: 'tr_error_code_70170',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `连接服务器失败`
+  String get tr_error_code_70173 {
+    return Intl.message(
+      '连接服务器失败',
+      name: 'tr_error_code_70173',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `检测不到内存`
+  String get tr_error_code_70174 {
+    return Intl.message(
+      '检测不到内存',
+      name: 'tr_error_code_70174',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `功能已经启动`
+  String get tr_error_code_70180 {
+    return Intl.message(
+      '功能已经启动',
+      name: 'tr_error_code_70180',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `网络初始化失败`
+  String get tr_error_code_70181 {
+    return Intl.message(
+      '网络初始化失败',
+      name: 'tr_error_code_70181',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `系统错误`
+  String get tr_error_code_70182 {
+    return Intl.message(
+      '系统错误',
+      name: 'tr_error_code_70182',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `操作失败`
+  String get tr_error_code_70183 {
+    return Intl.message(
+      '操作失败',
+      name: 'tr_error_code_70183',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `低功耗模式切换到常电模式失败`
+  String get tr_error_code_70184 {
+    return Intl.message(
+      '低功耗模式切换到常电模式失败',
+      name: 'tr_error_code_70184',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未登录`
+  String get tr_error_code_70202 {
+    return Intl.message('未登录', name: 'tr_error_code_70202', desc: '', args: []);
+  }
+
+  /// `登录设备密码错误`
+  String get tr_error_code_70203 {
+    return Intl.message(
+      '登录设备密码错误',
+      name: 'tr_error_code_70203',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `非法用户`
+  String get tr_error_code_70205 {
+    return Intl.message(
+      '非法用户',
+      name: 'tr_error_code_70205',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `帐户被锁定，登录错误`
+  String get tr_error_code_70206 {
+    return Intl.message(
+      '帐户被锁定，登录错误',
+      name: 'tr_error_code_70206',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `帐户已列入黑名单`
+  String get tr_error_code_70207 {
+    return Intl.message(
+      '帐户已列入黑名单',
+      name: 'tr_error_code_70207',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户已使用`
+  String get tr_error_code_70208 {
+    return Intl.message(
+      '用户已使用',
+      name: 'tr_error_code_70208',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `输入无效`
+  String get tr_error_code_70209 {
+    return Intl.message(
+      '输入无效',
+      name: 'tr_error_code_70209',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `如果要添加的用户已经存在，则索引重复`
+  String get tr_error_code_70210 {
+    return Intl.message(
+      '如果要添加的用户已经存在，则索引重复',
+      name: 'tr_error_code_70210',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用于查询时对象不存在`
+  String get tr_error_code_70211 {
+    return Intl.message(
+      '用于查询时对象不存在',
+      name: 'tr_error_code_70211',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `对象不存在`
+  String get tr_error_code_70212 {
+    return Intl.message(
+      '对象不存在',
+      name: 'tr_error_code_70212',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `目标正在使用中`
+  String get tr_error_code_70213 {
+    return Intl.message(
+      '目标正在使用中',
+      name: 'tr_error_code_70213',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `子集超出范围`
+  String get tr_error_code_70214 {
+    return Intl.message(
+      '子集超出范围',
+      name: 'tr_error_code_70214',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `密码不正确`
+  String get tr_error_code_70215 {
+    return Intl.message(
+      '密码不正确',
+      name: 'tr_error_code_70215',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `密码不匹配`
+  String get tr_error_code_70216 {
+    return Intl.message(
+      '密码不匹配',
+      name: 'tr_error_code_70216',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `保留帐户`
+  String get tr_error_code_70217 {
+    return Intl.message(
+      '保留帐户',
+      name: 'tr_error_code_70217',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `系统维护期间无法登录`
+  String get tr_error_code_70218 {
+    return Intl.message(
+      '系统维护期间无法登录',
+      name: 'tr_error_code_70218',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `试用期已结束，解锁密码不正确`
+  String get tr_error_code_70219 {
+    return Intl.message(
+      '试用期已结束，解锁密码不正确',
+      name: 'tr_error_code_70219',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `安全问题答案错误`
+  String get tr_error_code_70220 {
+    return Intl.message(
+      '安全问题答案错误',
+      name: 'tr_error_code_70220',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `重置密码功能，恢复默认验证码尝试次数太多`
+  String get tr_error_code_70221 {
+    return Intl.message(
+      '重置密码功能，恢复默认验证码尝试次数太多',
+      name: 'tr_error_code_70221',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `恢复默认验证码错误`
+  String get tr_error_code_70222 {
+    return Intl.message(
+      '恢复默认验证码错误',
+      name: 'tr_error_code_70222',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户名不可用`
+  String get tr_error_code_70223 {
+    return Intl.message(
+      '用户名不可用',
+      name: 'tr_error_code_70223',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `存储达到上限，不能再增加新用户了`
+  String get tr_error_code_70224 {
+    return Intl.message(
+      '存储达到上限，不能再增加新用户了',
+      name: 'tr_error_code_70224',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `命令不合法`
+  String get tr_error_code_70502 {
+    return Intl.message(
+      '命令不合法',
+      name: 'tr_error_code_70502',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备对讲已经开启`
+  String get tr_error_code_70503 {
+    return Intl.message(
+      '设备对讲已经开启',
+      name: 'tr_error_code_70503',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `对讲未开启`
+  String get tr_error_code_70504 {
+    return Intl.message(
+      '对讲未开启',
+      name: 'tr_error_code_70504',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---已经开始升级`
+  String get tr_error_code_70511 {
+    return Intl.message(
+      '设备升级---已经开始升级',
+      name: 'tr_error_code_70511',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---未开始升级`
+  String get tr_error_code_70512 {
+    return Intl.message(
+      '设备升级---未开始升级',
+      name: 'tr_error_code_70512',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---升级数据错误`
+  String get tr_error_code_70513 {
+    return Intl.message(
+      '设备升级---升级数据错误',
+      name: 'tr_error_code_70513',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---升级失败`
+  String get tr_error_code_70514 {
+    return Intl.message(
+      '设备升级---升级失败',
+      name: 'tr_error_code_70514',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---设备忙或云升级服务器忙`
+  String get tr_error_code_70516 {
+    return Intl.message(
+      '设备升级---设备忙或云升级服务器忙',
+      name: 'tr_error_code_70516',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---该升级由其他连接开启，无法停止`
+  String get tr_error_code_70517 {
+    return Intl.message(
+      '设备升级---该升级由其他连接开启，无法停止',
+      name: 'tr_error_code_70517',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---当前已是最新版本`
+  String get tr_error_code_70518 {
+    return Intl.message(
+      '设备升级---当前已是最新版本',
+      name: 'tr_error_code_70518',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---升级文件不匹配`
+  String get tr_error_code_70519 {
+    return Intl.message(
+      '设备升级---升级文件不匹配',
+      name: 'tr_error_code_70519',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---前端设备不在线`
+  String get tr_error_code_70520 {
+    return Intl.message(
+      '设备升级---前端设备不在线',
+      name: 'tr_error_code_70520',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---还原默认失败`
+  String get tr_error_code_70521 {
+    return Intl.message(
+      '设备升级---还原默认失败',
+      name: 'tr_error_code_70521',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---需要重启设备`
+  String get tr_error_code_70522 {
+    return Intl.message(
+      '设备升级---需要重启设备',
+      name: 'tr_error_code_70522',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备升级---默认配置非法`
+  String get tr_error_code_70523 {
+    return Intl.message(
+      '设备升级---默认配置非法',
+      name: 'tr_error_code_70523',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `蓝牙配对已经开始`
+  String get tr_error_code_70524 {
+    return Intl.message(
+      '蓝牙配对已经开始',
+      name: 'tr_error_code_70524',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `蓝牙配对添加到达上限`
+  String get tr_error_code_70525 {
+    return Intl.message(
+      '蓝牙配对添加到达上限',
+      name: 'tr_error_code_70525',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `低电量不支持操控云台`
+  String get tr_error_code_70526 {
+    return Intl.message(
+      '低电量不支持操控云台',
+      name: 'tr_error_code_70526',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `消息发给主控失败了`
+  String get tr_error_code_70527 {
+    return Intl.message(
+      '消息发给主控失败了',
+      name: 'tr_error_code_70527',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `获取升级文件信息失败`
+  String get tr_error_code_70528 {
+    return Intl.message(
+      '获取升级文件信息失败',
+      name: 'tr_error_code_70528',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未启动在线升级`
+  String get tr_error_code_70529 {
+    return Intl.message(
+      '未启动在线升级',
+      name: 'tr_error_code_70529',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `忽略版本信息提示`
+  String get tr_error_code_70530 {
+    return Intl.message(
+      '忽略版本信息提示',
+      name: 'tr_error_code_70530',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `远程人脸录入功能未启用`
+  String get tr_error_code_70531 {
+    return Intl.message(
+      '远程人脸录入功能未启用',
+      name: 'tr_error_code_70531',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `需要重新启动应用程序`
+  String get tr_error_code_70602 {
+    return Intl.message(
+      '需要重新启动应用程序',
+      name: 'tr_error_code_70602',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `需要重新启动设备`
+  String get tr_error_code_70603 {
+    return Intl.message(
+      '需要重新启动设备',
+      name: 'tr_error_code_70603',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `写入文件失败`
+  String get tr_error_code_70604 {
+    return Intl.message(
+      '写入文件失败',
+      name: 'tr_error_code_70604',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `功能不支持`
+  String get tr_error_code_70605 {
+    return Intl.message(
+      '功能不支持',
+      name: 'tr_error_code_70605',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `验证失败`
+  String get tr_error_code_70606 {
+    return Intl.message(
+      '验证失败',
+      name: 'tr_error_code_70606',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `配置解析错误`
+  String get tr_error_code_70607 {
+    return Intl.message(
+      '配置解析错误',
+      name: 'tr_error_code_70607',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `配置不存在`
+  String get tr_error_code_70609 {
+    return Intl.message(
+      '配置不存在',
+      name: 'tr_error_code_70609',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Json解析异常`
+  String get tr_error_code_69999 {
+    return Intl.message(
+      'Json解析异常',
+      name: 'tr_error_code_69999',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `打开音频失败`
+  String get tr_error_code_79998 {
+    return Intl.message(
+      '打开音频失败',
+      name: 'tr_error_code_79998',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `YUV数据异常`
+  String get tr_error_code_79999 {
+    return Intl.message(
+      'YUV数据异常',
+      name: 'tr_error_code_79999',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户取消`
+  String get tr_error_code_90000 {
+    return Intl.message(
+      '用户取消',
+      name: 'tr_error_code_90000',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `非法文件`
+  String get tr_error_code_90001 {
+    return Intl.message(
+      '非法文件',
+      name: 'tr_error_code_90001',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `账号未启用`
+  String get tr_error_code_90002 {
+    return Intl.message(
+      '账号未启用',
+      name: 'tr_error_code_90002',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `功能超期`
+  String get tr_error_code_90003 {
+    return Intl.message(
+      '功能超期',
+      name: 'tr_error_code_90003',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `达到最大连接数`
+  String get tr_error_code_90004 {
+    return Intl.message(
+      '达到最大连接数',
+      name: 'tr_error_code_90004',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `功能未初始化`
+  String get tr_error_code_90005 {
+    return Intl.message(
+      '功能未初始化',
+      name: 'tr_error_code_90005',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `唤醒设备失败`
+  String get tr_error_code_99967 {
+    return Intl.message(
+      '唤醒设备失败',
+      name: 'tr_error_code_99967',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备深度休眠`
+  String get tr_error_code_99968 {
+    return Intl.message(
+      '设备深度休眠',
+      name: 'tr_error_code_99968',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备准备休眠中`
+  String get tr_error_code_99969 {
+    return Intl.message(
+      '设备准备休眠中',
+      name: 'tr_error_code_99969',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文件读取失败`
+  String get tr_error_code_99970 {
+    return Intl.message(
+      '文件读取失败',
+      name: 'tr_error_code_99970',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文件下载失败`
+  String get tr_error_code_99971 {
+    return Intl.message(
+      '文件下载失败',
+      name: 'tr_error_code_99971',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文件不存在`
+  String get tr_error_code_99972 {
+    return Intl.message(
+      '文件不存在',
+      name: 'tr_error_code_99972',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `目录不存在`
+  String get tr_error_code_99973 {
+    return Intl.message(
+      '目录不存在',
+      name: 'tr_error_code_99973',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `初始化时未设置临时文件目录`
+  String get tr_error_code_99974 {
+    return Intl.message(
+      '初始化时未设置临时文件目录',
+      name: 'tr_error_code_99974',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `离线状态`
+  String get tr_error_code_99975 {
+    return Intl.message(
+      '离线状态',
+      name: 'tr_error_code_99975',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户在黑名单中`
+  String get tr_error_code_99976 {
+    return Intl.message(
+      '用户在黑名单中',
+      name: 'tr_error_code_99976',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户被锁定`
+  String get tr_error_code_99977 {
+    return Intl.message(
+      '用户被锁定',
+      name: 'tr_error_code_99977',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户已在其他地方登录`
+  String get tr_error_code_99978 {
+    return Intl.message(
+      '用户已在其他地方登录',
+      name: 'tr_error_code_99978',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户名或密码错误`
+  String get tr_error_code_99979 {
+    return Intl.message(
+      '用户名或密码错误',
+      name: 'tr_error_code_99979',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `协议解析错误`
+  String get tr_error_code_99980 {
+    return Intl.message(
+      '协议解析错误',
+      name: 'tr_error_code_99980',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `缓冲区大小不够或缓冲区满`
+  String get tr_error_code_99981 {
+    return Intl.message(
+      '缓冲区大小不够或缓冲区满',
+      name: 'tr_error_code_99981',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `发送缓冲区已满`
+  String get tr_error_code_99982 {
+    return Intl.message(
+      '发送缓冲区已满',
+      name: 'tr_error_code_99982',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `监听服务器启动失败`
+  String get tr_error_code_99983 {
+    return Intl.message(
+      '监听服务器启动失败',
+      name: 'tr_error_code_99983',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `监听端口绑定失败（端口被占用）`
+  String get tr_error_code_99984 {
+    return Intl.message(
+      '监听端口绑定失败（端口被占用）',
+      name: 'tr_error_code_99984',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `服务器内部错误`
+  String get tr_error_code_99985 {
+    return Intl.message(
+      '服务器内部错误',
+      name: 'tr_error_code_99985',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `对象正忙`
+  String get tr_error_code_99986 {
+    return Intl.message(
+      '对象正忙',
+      name: 'tr_error_code_99986',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `网络发送错误`
+  String get tr_error_code_99987 {
+    return Intl.message(
+      '网络发送错误',
+      name: 'tr_error_code_99987',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `网络接受错误`
+  String get tr_error_code_99988 {
+    return Intl.message(
+      '网络接受错误',
+      name: 'tr_error_code_99988',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `创建缓冲区失败`
+  String get tr_error_code_99989 {
+    return Intl.message(
+      '创建缓冲区失败',
+      name: 'tr_error_code_99989',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未找到`
+  String get tr_error_code_99990 {
+    return Intl.message('未找到', name: 'tr_error_code_99990', desc: '', args: []);
+  }
+
+  /// `超时`
+  String get tr_error_code_99991 {
+    return Intl.message('超时', name: 'tr_error_code_99991', desc: '', args: []);
+  }
+
+  /// `对象已存在`
+  String get tr_error_code_99992 {
+    return Intl.message(
+      '对象已存在',
+      name: 'tr_error_code_99992',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `网络错误`
+  String get tr_error_code_99993 {
+    return Intl.message(
+      '网络错误',
+      name: 'tr_error_code_99993',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `不支持`
+  String get tr_error_code_99994 {
+    return Intl.message('不支持', name: 'tr_error_code_99994', desc: '', args: []);
+  }
+
+  /// `读取文件失败`
+  String get tr_error_code_99995 {
+    return Intl.message(
+      '读取文件失败',
+      name: 'tr_error_code_99995',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `写入文件失败`
+  String get tr_error_code_99996 {
+    return Intl.message(
+      '写入文件失败',
+      name: 'tr_error_code_99996',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `打开文件失败`
+  String get tr_error_code_99997 {
+    return Intl.message(
+      '打开文件失败',
+      name: 'tr_error_code_99997',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `创建文件失败`
+  String get tr_error_code_99998 {
+    return Intl.message(
+      '创建文件失败',
+      name: 'tr_error_code_99998',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `参数异常`
+  String get tr_error_code_99999 {
+    return Intl.message(
+      '参数异常',
+      name: 'tr_error_code_99999',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `错误`
+  String get tr_error_code_100000 {
+    return Intl.message('错误', name: 'tr_error_code_100000', desc: '', args: []);
+  }
+
+  /// `对象不存在`
+  String get tr_error_code_1239510 {
+    return Intl.message(
+      '对象不存在',
+      name: 'tr_error_code_1239510',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `值不存在`
+  String get tr_error_code_1239511 {
+    return Intl.message(
+      '值不存在',
+      name: 'tr_error_code_1239511',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `报警相关功能授权失败`
+  String get tr_error_code_221201 {
+    return Intl.message(
+      '报警相关功能授权失败',
+      name: 'tr_error_code_221201',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未填写鉴权信息`
+  String get tr_error_code_225400 {
+    return Intl.message(
+      '未填写鉴权信息',
+      name: 'tr_error_code_225400',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `鉴权码校验失败`
+  String get tr_error_code_225401 {
+    return Intl.message(
+      '鉴权码校验失败',
+      name: 'tr_error_code_225401',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `消息类型不合法`
+  String get tr_error_code_225402 {
+    return Intl.message(
+      '消息类型不合法',
+      name: 'tr_error_code_225402',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `服务器解析失败`
+  String get tr_error_code_225000 {
+    return Intl.message(
+      '服务器解析失败',
+      name: 'tr_error_code_225000',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户名或密码错误`
+  String get tr_error_code_225501 {
+    return Intl.message(
+      '用户名或密码错误',
+      name: 'tr_error_code_225501',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `获取redis的ip、port失败`
+  String get tr_error_code_225502 {
+    return Intl.message(
+      '获取redis的ip、port失败',
+      name: 'tr_error_code_225502',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Redis建立连接失败`
+  String get tr_error_code_225503 {
+    return Intl.message(
+      'Redis建立连接失败',
+      name: 'tr_error_code_225503',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Redis操作失败`
+  String get tr_error_code_225504 {
+    return Intl.message(
+      'Redis操作失败',
+      name: 'tr_error_code_225504',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `获取MySQL地址失败`
+  String get tr_error_code_225505 {
+    return Intl.message(
+      '获取MySQL地址失败',
+      name: 'tr_error_code_225505',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `参数错误`
+  String get tr_error_code_225506 {
+    return Intl.message(
+      '参数错误',
+      name: 'tr_error_code_225506',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SQL操作失败`
+  String get tr_error_code_225507 {
+    return Intl.message(
+      'SQL操作失败',
+      name: 'tr_error_code_225507',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `缩略图URL检索失败`
+  String get tr_error_code_225508 {
+    return Intl.message(
+      '缩略图URL检索失败',
+      name: 'tr_error_code_225508',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `时间格式验证失败`
+  String get tr_error_code_225509 {
+    return Intl.message(
+      '时间格式验证失败',
+      name: 'tr_error_code_225509',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `云存储包信息异常`
+  String get tr_error_code_225510 {
+    return Intl.message(
+      '云存储包信息异常',
+      name: 'tr_error_code_225510',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `查询类型无效`
+  String get tr_error_code_225511 {
+    return Intl.message(
+      '查询类型无效',
+      name: 'tr_error_code_225511',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `查询的开始时间和结束时间不在同一天`
+  String get tr_error_code_225512 {
+    return Intl.message(
+      '查询的开始时间和结束时间不在同一天',
+      name: 'tr_error_code_225512',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SN格式不合法`
+  String get tr_error_code_225513 {
+    return Intl.message(
+      'SN格式不合法',
+      name: 'tr_error_code_225513',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `清除类型非法`
+  String get tr_error_code_225514 {
+    return Intl.message(
+      '清除类型非法',
+      name: 'tr_error_code_225514',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知的订阅查询协议格式`
+  String get tr_error_code_225515 {
+    return Intl.message(
+      '未知的订阅查询协议格式',
+      name: 'tr_error_code_225515',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `非白名单IP请求`
+  String get tr_error_code_225516 {
+    return Intl.message(
+      '非白名单IP请求',
+      name: 'tr_error_code_225516',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `此用户没有查询权限`
+  String get tr_error_code_225517 {
+    return Intl.message(
+      '此用户没有查询权限',
+      name: 'tr_error_code_225517',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知取消订阅方法`
+  String get tr_error_code_225518 {
+    return Intl.message(
+      '未知取消订阅方法',
+      name: 'tr_error_code_225518',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `参数格式解析错误`
+  String get tr_error_code_225519 {
+    return Intl.message(
+      '参数格式解析错误',
+      name: 'tr_error_code_225519',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `MongoDB操作错误`
+  String get tr_error_code_225520 {
+    return Intl.message(
+      'MongoDB操作错误',
+      name: 'tr_error_code_225520',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `MongoDB和MySQL同时运行失败`
+  String get tr_error_code_225521 {
+    return Intl.message(
+      'MongoDB和MySQL同时运行失败',
+      name: 'tr_error_code_225521',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `查询的设置结果无效，无法解析`
+  String get tr_error_code_225522 {
+    return Intl.message(
+      '查询的设置结果无效，无法解析',
+      name: 'tr_error_code_225522',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知消息，无法解析`
+  String get tr_error_code_225523 {
+    return Intl.message(
+      '未知消息，无法解析',
+      name: 'tr_error_code_225523',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `无法获取重要级别的事件`
+  String get tr_error_code_225524 {
+    return Intl.message(
+      '无法获取重要级别的事件',
+      name: 'tr_error_code_225524',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知状态`
+  String get tr_error_code_225525 {
+    return Intl.message(
+      '未知状态',
+      name: 'tr_error_code_225525',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `该设备已被此帐户解除绑定，不允许订阅`
+  String get tr_error_code_225526 {
+    return Intl.message(
+      '该设备已被此帐户解除绑定，不允许订阅',
+      name: 'tr_error_code_225526',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `video id不合法`
+  String get tr_error_code_225527 {
+    return Intl.message(
+      'video id不合法',
+      name: 'tr_error_code_225527',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备密码不正确`
+  String get tr_error_code_101 {
+    return Intl.message(
+      '设备密码不正确',
+      name: 'tr_error_code_101',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备账号不存在`
+  String get tr_error_code_102 {
+    return Intl.message(
+      '设备账号不存在',
+      name: 'tr_error_code_102',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备登录超时(网络连接失败)`
+  String get tr_error_code_103 {
+    return Intl.message(
+      '设备登录超时(网络连接失败)',
+      name: 'tr_error_code_103',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备账号在其他地方登录`
+  String get tr_error_code_104 {
+    return Intl.message(
+      '设备账号在其他地方登录',
+      name: 'tr_error_code_104',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备账号被锁定`
+  String get tr_error_code_105 {
+    return Intl.message(
+      '设备账号被锁定',
+      name: 'tr_error_code_105',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备账号被列入黑名单`
+  String get tr_error_code_106 {
+    return Intl.message(
+      '设备账号被列入黑名单',
+      name: 'tr_error_code_106',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备资源不足`
+  String get tr_error_code_107 {
+    return Intl.message(
+      '设备资源不足',
+      name: 'tr_error_code_107',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备找不到网络主机`
+  String get tr_error_code_109 {
+    return Intl.message(
+      '设备找不到网络主机',
+      name: 'tr_error_code_109',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备不存在(设备被删除)`
+  String get tr_error_code_120 {
+    return Intl.message(
+      '设备不存在(设备被删除)',
+      name: 'tr_error_code_120',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备Token不合法`
+  String get tr_error_code_137 {
+    return Intl.message(
+      '设备Token不合法',
+      name: 'tr_error_code_137',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `参数编码格式不是UTF8`
+  String get tr_error_code_500000 {
+    return Intl.message(
+      '参数编码格式不是UTF8',
+      name: 'tr_error_code_500000',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `参数不是JSON格式`
+  String get tr_error_code_500001 {
+    return Intl.message(
+      '参数不是JSON格式',
+      name: 'tr_error_code_500001',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `对讲通道被占用`
+  String get tr_error_code_514100 {
+    return Intl.message(
+      '对讲通道被占用',
+      name: 'tr_error_code_514100',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `回放通道已被占用`
+  String get tr_error_code_514053 {
+    return Intl.message(
+      '回放通道已被占用',
+      name: 'tr_error_code_514053',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备离线`
+  String get tr_error_code_515000 {
+    return Intl.message(
+      '设备离线',
+      name: 'tr_error_code_515000',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备未注册`
+  String get tr_error_code_515001 {
+    return Intl.message(
+      '设备未注册',
+      name: 'tr_error_code_515001',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `通道不存在`
+  String get tr_error_code_515002 {
+    return Intl.message(
+      '通道不存在',
+      name: 'tr_error_code_515002',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `通道不在线`
+  String get tr_error_code_515003 {
+    return Intl.message(
+      '通道不在线',
+      name: 'tr_error_code_515003',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `账号错误`
+  String get tr_error_code_515004 {
+    return Intl.message(
+      '账号错误',
+      name: 'tr_error_code_515004',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `密码错误`
+  String get tr_error_code_515005 {
+    return Intl.message(
+      '密码错误',
+      name: 'tr_error_code_515005',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `国标或onvif登入异常`
+  String get tr_error_code_515006 {
+    return Intl.message(
+      '国标或onvif登入异常',
+      name: 'tr_error_code_515006',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `获取设备信息失败`
+  String get tr_error_code_515104 {
+    return Intl.message(
+      '获取设备信息失败',
+      name: 'tr_error_code_515104',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `国标设备超负载或正在维护`
+  String get tr_error_code_515200 {
+    return Intl.message(
+      '国标设备超负载或正在维护',
+      name: 'tr_error_code_515200',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备无录像`
+  String get tr_error_code_515201 {
+    return Intl.message(
+      '设备无录像',
+      name: 'tr_error_code_515201',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `播放失败，请重试`
+  String get tr_error_code_515202 {
+    return Intl.message(
+      '播放失败，请重试',
+      name: 'tr_error_code_515202',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备未响应`
+  String get tr_error_code_515203 {
+    return Intl.message(
+      '设备未响应',
+      name: 'tr_error_code_515203',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备协议不兼容`
+  String get tr_error_code_515204 {
+    return Intl.message(
+      '设备协议不兼容',
+      name: 'tr_error_code_515204',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备未授权`
+  String get tr_error_code_515205 {
+    return Intl.message(
+      '设备未授权',
+      name: 'tr_error_code_515205',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `URL格式错误`
+  String get tr_error_code_516101 {
+    return Intl.message(
+      'URL格式错误',
+      name: 'tr_error_code_516101',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `没有录像`
+  String get tr_error_code_516102 {
+    return Intl.message(
+      '没有录像',
+      name: 'tr_error_code_516102',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `URL过期`
+  String get tr_error_code_516103 {
+    return Intl.message(
+      'URL过期',
+      name: 'tr_error_code_516103',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `URL鉴权失败`
+  String get tr_error_code_516104 {
+    return Intl.message(
+      'URL鉴权失败',
+      name: 'tr_error_code_516104',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `账号无流量（请联系服务商）`
+  String get tr_error_code_516105 {
+    return Intl.message(
+      '账号无流量（请联系服务商）',
+      name: 'tr_error_code_516105',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `校验URL超时，请重试`
+  String get tr_error_code_516106 {
+    return Intl.message(
+      '校验URL超时，请重试',
+      name: 'tr_error_code_516106',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `打开播放失败，请重试`
+  String get tr_error_code_516107 {
+    return Intl.message(
+      '打开播放失败，请重试',
+      name: 'tr_error_code_516107',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `查询录像失败`
+  String get tr_error_code_516108 {
+    return Intl.message(
+      '查询录像失败',
+      name: 'tr_error_code_516108',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `时间参数超范围`
+  String get tr_error_code_516109 {
+    return Intl.message(
+      '时间参数超范围',
+      name: 'tr_error_code_516109',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `非法URL`
+  String get tr_error_code_516110 {
+    return Intl.message(
+      '非法URL',
+      name: 'tr_error_code_516110',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请求太频繁`
+  String get tr_error_code_516116 {
+    return Intl.message(
+      '请求太频繁',
+      name: 'tr_error_code_516116',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未找到i帧`
+  String get tr_error_code_2046401 {
+    return Intl.message(
+      '未找到i帧',
+      name: 'tr_error_code_2046401',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备无流超2s`
+  String get tr_error_code_2046402 {
+    return Intl.message(
+      '设备无流超2s',
+      name: 'tr_error_code_2046402',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备无流超20s`
+  String get tr_error_code_2046403 {
+    return Intl.message(
+      '设备无流超20s',
+      name: 'tr_error_code_2046403',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `获取数据源失败`
+  String get tr_error_code_2046404 {
+    return Intl.message(
+      '获取数据源失败',
+      name: 'tr_error_code_2046404',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `URL并发受限`
+  String get tr_error_code_2046405 {
+    return Intl.message(
+      'URL并发受限',
+      name: 'tr_error_code_2046405',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `等待gwm的校验结果超时`
+  String get tr_error_code_2046406 {
+    return Intl.message(
+      '等待gwm的校验结果超时',
+      name: 'tr_error_code_2046406',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Http解析错误`
+  String get tr_error_code_2046407 {
+    return Intl.message(
+      'Http解析错误',
+      name: 'tr_error_code_2046407',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `客户端不支持，请使用chrome`
+  String get tr_error_code_2046408 {
+    return Intl.message(
+      '客户端不支持，请使用chrome',
+      name: 'tr_error_code_2046408',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I帧无SPS`
+  String get tr_error_code_2046409 {
+    return Intl.message(
+      'I帧无SPS',
+      name: 'tr_error_code_2046409',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `协议报文解析错误`
+  String get tr_error_code_2046410 {
+    return Intl.message(
+      '协议报文解析错误',
+      name: 'tr_error_code_2046410',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `连接期间没有收到帧数据`
+  String get tr_error_code_2046411 {
+    return Intl.message(
+      '连接期间没有收到帧数据',
+      name: 'tr_error_code_2046411',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `断开前2秒内没有收到帧数据`
+  String get tr_error_code_2046412 {
+    return Intl.message(
+      '断开前2秒内没有收到帧数据',
+      name: 'tr_error_code_2046412',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `断开前2秒内没有收到视频帧数据`
+  String get tr_error_code_2046413 {
+    return Intl.message(
+      '断开前2秒内没有收到视频帧数据',
+      name: 'tr_error_code_2046413',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `实际视频帧帧率太小`
+  String get tr_error_code_2046414 {
+    return Intl.message(
+      '实际视频帧帧率太小',
+      name: 'tr_error_code_2046414',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `跳转错误的时间`
+  String get tr_error_code_2046415 {
+    return Intl.message(
+      '跳转错误的时间',
+      name: 'tr_error_code_2046415',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `账户欠费，访问流量服务失败`
+  String get tr_error_code_2051000 {
+    return Intl.message(
+      '账户欠费，访问流量服务失败',
+      name: 'tr_error_code_2051000',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `服务校验时服务异常`
+  String get tr_error_code_2051001 {
+    return Intl.message(
+      '服务校验时服务异常',
+      name: 'tr_error_code_2051001',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `服务器校验时服务出现超时`
+  String get tr_error_code_2051002 {
+    return Intl.message(
+      '服务器校验时服务出现超时',
+      name: 'tr_error_code_2051002',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `服务校验时本机网络出现异常`
+  String get tr_error_code_2051003 {
+    return Intl.message(
+      '服务校验时本机网络出现异常',
+      name: 'tr_error_code_2051003',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户名或密码错误`
+  String get tr_error_code_604000 {
+    return Intl.message(
+      '用户名或密码错误',
+      name: 'tr_error_code_604000',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `验证码错误`
+  String get tr_error_code_604010 {
+    return Intl.message(
+      '验证码错误',
+      name: 'tr_error_code_604010',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `密码不一致`
+  String get tr_error_code_604011 {
+    return Intl.message(
+      '密码不一致',
+      name: 'tr_error_code_604011',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户名已被注册`
+  String get tr_error_code_604012 {
+    return Intl.message(
+      '用户名已被注册',
+      name: 'tr_error_code_604012',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户名为空`
+  String get tr_error_code_604013 {
+    return Intl.message(
+      '用户名为空',
+      name: 'tr_error_code_604013',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `密码为空`
+  String get tr_error_code_604014 {
+    return Intl.message(
+      '密码为空',
+      name: 'tr_error_code_604014',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `确认密码为空`
+  String get tr_error_code_604015 {
+    return Intl.message(
+      '确认密码为空',
+      name: 'tr_error_code_604015',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `手机号为空`
+  String get tr_error_code_604016 {
+    return Intl.message(
+      '手机号为空',
+      name: 'tr_error_code_604016',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户名格式不正确`
+  String get tr_error_code_604017 {
+    return Intl.message(
+      '用户名格式不正确',
+      name: 'tr_error_code_604017',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `密码格式不正确`
+  String get tr_error_code_604018 {
+    return Intl.message(
+      '密码格式不正确',
+      name: 'tr_error_code_604018',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `确认密码格式不正确`
+  String get tr_error_code_604019 {
+    return Intl.message(
+      '确认密码格式不正确',
+      name: 'tr_error_code_604019',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `手机号格式不正确`
+  String get tr_error_code_604020 {
+    return Intl.message(
+      '手机号格式不正确',
+      name: 'tr_error_code_604020',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `手机号已存在`
+  String get tr_error_code_604021 {
+    return Intl.message(
+      '手机号已存在',
+      name: 'tr_error_code_604021',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `手机号不存在`
+  String get tr_error_code_604022 {
+    return Intl.message(
+      '手机号不存在',
+      name: 'tr_error_code_604022',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `邮箱已存在`
+  String get tr_error_code_604023 {
+    return Intl.message(
+      '邮箱已存在',
+      name: 'tr_error_code_604023',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `邮箱不存在`
+  String get tr_error_code_604024 {
+    return Intl.message(
+      '邮箱不存在',
+      name: 'tr_error_code_604024',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `原始密码错误`
+  String get tr_error_code_604026 {
+    return Intl.message(
+      '原始密码错误',
+      name: 'tr_error_code_604026',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `修改密码失败`
+  String get tr_error_code_604027 {
+    return Intl.message(
+      '修改密码失败',
+      name: 'tr_error_code_604027',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户找回密码链接过期`
+  String get tr_error_code_604028 {
+    return Intl.message(
+      '用户找回密码链接过期',
+      name: 'tr_error_code_604028',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户ID为空`
+  String get tr_error_code_604029 {
+    return Intl.message(
+      '用户ID为空',
+      name: 'tr_error_code_604029',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `验证码为空`
+  String get tr_error_code_604030 {
+    return Intl.message(
+      '验证码为空',
+      name: 'tr_error_code_604030',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `邮箱为空`
+  String get tr_error_code_604031 {
+    return Intl.message(
+      '邮箱为空',
+      name: 'tr_error_code_604031',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `邮箱格式不正确`
+  String get tr_error_code_604032 {
+    return Intl.message(
+      '邮箱格式不正确',
+      name: 'tr_error_code_604032',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `无权限不允许用户`
+  String get tr_error_code_604033 {
+    return Intl.message(
+      '无权限不允许用户',
+      name: 'tr_error_code_604033',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户未绑定`
+  String get tr_error_code_604034 {
+    return Intl.message(
+      '用户未绑定',
+      name: 'tr_error_code_604034',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户绑定失败`
+  String get tr_error_code_604035 {
+    return Intl.message(
+      '用户绑定失败',
+      name: 'tr_error_code_604035',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `手机绑定失败`
+  String get tr_error_code_604036 {
+    return Intl.message(
+      '手机绑定失败',
+      name: 'tr_error_code_604036',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `邮箱绑定失败`
+  String get tr_error_code_604037 {
+    return Intl.message(
+      '邮箱绑定失败',
+      name: 'tr_error_code_604037',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `发送验证码超过最大次数`
+  String get tr_error_code_604038 {
+    return Intl.message(
+      '发送验证码超过最大次数',
+      name: 'tr_error_code_604038',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `注册失败`
+  String get tr_error_code_604039 {
+    return Intl.message(
+      '注册失败',
+      name: 'tr_error_code_604039',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `微信已绑定用户`
+  String get tr_error_code_604040 {
+    return Intl.message(
+      '微信已绑定用户',
+      name: 'tr_error_code_604040',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `没有修改用户名的权限`
+  String get tr_error_code_604041 {
+    return Intl.message(
+      '没有修改用户名的权限',
+      name: 'tr_error_code_604041',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户没有绑定facebook`
+  String get tr_error_code_604042 {
+    return Intl.message(
+      '用户没有绑定facebook',
+      name: 'tr_error_code_604042',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户绑定facebook失败`
+  String get tr_error_code_604043 {
+    return Intl.message(
+      '用户绑定facebook失败',
+      name: 'tr_error_code_604043',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户没有google绑定`
+  String get tr_error_code_604044 {
+    return Intl.message(
+      '用户没有google绑定',
+      name: 'tr_error_code_604044',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户绑定google失败`
+  String get tr_error_code_604045 {
+    return Intl.message(
+      '用户绑定google失败',
+      name: 'tr_error_code_604045',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Line账户未绑定`
+  String get tr_error_code_604046 {
+    return Intl.message(
+      'Line账户未绑定',
+      name: 'tr_error_code_604046',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Line账户绑定失败`
+  String get tr_error_code_604047 {
+    return Intl.message(
+      'Line账户绑定失败',
+      name: 'tr_error_code_604047',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户验证码错误次数太多，验证码失效`
+  String get tr_error_code_604048 {
+    return Intl.message(
+      '用户验证码错误次数太多，验证码失效',
+      name: 'tr_error_code_604048',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户错误登陆次数太多，锁定账户十分钟`
+  String get tr_error_code_604049 {
+    return Intl.message(
+      '用户错误登陆次数太多，锁定账户十分钟',
+      name: 'tr_error_code_604049',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请求太频繁，请稍后尝试`
+  String get tr_error_code_604050 {
+    return Intl.message(
+      '请求太频繁，请稍后尝试',
+      name: 'tr_error_code_604050',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户未激活`
+  String get tr_error_code_604056 {
+    return Intl.message(
+      '用户未激活',
+      name: 'tr_error_code_604056',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户未找回密码，app端应继续监听`
+  String get tr_error_code_604065 {
+    return Intl.message(
+      '用户未找回密码，app端应继续监听',
+      name: 'tr_error_code_604065',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备非法不允许添加`
+  String get tr_error_code_604100 {
+    return Intl.message(
+      '设备非法不允许添加',
+      name: 'tr_error_code_604100',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备已经存在`
+  String get tr_error_code_604101 {
+    return Intl.message(
+      '设备已经存在',
+      name: 'tr_error_code_604101',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `删除设备失败`
+  String get tr_error_code_604102 {
+    return Intl.message(
+      '删除设备失败',
+      name: 'tr_error_code_604102',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备信息修改失败`
+  String get tr_error_code_604103 {
+    return Intl.message(
+      '设备信息修改失败',
+      name: 'tr_error_code_604103',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备uuid参数异常`
+  String get tr_error_code_604104 {
+    return Intl.message(
+      '设备uuid参数异常',
+      name: 'tr_error_code_604104',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备用户名参数异常`
+  String get tr_error_code_604105 {
+    return Intl.message(
+      '设备用户名参数异常',
+      name: 'tr_error_code_604105',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备密码参数异常`
+  String get tr_error_code_604106 {
+    return Intl.message(
+      '设备密码参数异常',
+      name: 'tr_error_code_604106',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备端口参数异常`
+  String get tr_error_code_604107 {
+    return Intl.message(
+      '设备端口参数异常',
+      name: 'tr_error_code_604107',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备扩展字段参数异常`
+  String get tr_error_code_604108 {
+    return Intl.message(
+      '设备扩展字段参数异常',
+      name: 'tr_error_code_604108',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `新密码校验失败`
+  String get tr_error_code_604110 {
+    return Intl.message(
+      '新密码校验失败',
+      name: 'tr_error_code_604110',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `确认密码校验失败`
+  String get tr_error_code_604111 {
+    return Intl.message(
+      '确认密码校验失败',
+      name: 'tr_error_code_604111',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备别名校验失败`
+  String get tr_error_code_604112 {
+    return Intl.message(
+      '设备别名校验失败',
+      name: 'tr_error_code_604112',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `云存储支持`
+  String get tr_error_code_604114 {
+    return Intl.message(
+      '云存储支持',
+      name: 'tr_error_code_604114',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `云存储不支持`
+  String get tr_error_code_604115 {
+    return Intl.message(
+      '云存储不支持',
+      name: 'tr_error_code_604115',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `将设备主账户移交给其他用户失败，检查用户是否拥有设备并且拥有设备主账户权限`
+  String get tr_error_code_604116 {
+    return Intl.message(
+      '将设备主账户移交给其他用户失败，检查用户是否拥有设备并且拥有设备主账户权限',
+      name: 'tr_error_code_604116',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前账户不是当前设备的主账户`
+  String get tr_error_code_604117 {
+    return Intl.message(
+      '当前账户不是当前设备的主账户',
+      name: 'tr_error_code_604117',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备不存在了 已经被移除了`
+  String get tr_error_code_604118 {
+    return Intl.message(
+      '设备不存在了 已经被移除了',
+      name: 'tr_error_code_604118',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `添加设备不唯一，其他账户已添加`
+  String get tr_error_code_604119 {
+    return Intl.message(
+      '添加设备不唯一，其他账户已添加',
+      name: 'tr_error_code_604119',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `添加设备达到最大数量限制`
+  String get tr_error_code_604120 {
+    return Intl.message(
+      '添加设备达到最大数量限制',
+      name: 'tr_error_code_604120',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备支持令牌、只能由一个账户添加`
+  String get tr_error_code_604126 {
+    return Intl.message(
+      '设备支持令牌、只能由一个账户添加',
+      name: 'tr_error_code_604126',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `缺少设备令牌`
+  String get tr_error_code_604127 {
+    return Intl.message(
+      '缺少设备令牌',
+      name: 'tr_error_code_604127',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `添加授权失败`
+  String get tr_error_code_604200 {
+    return Intl.message(
+      '添加授权失败',
+      name: 'tr_error_code_604200',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `修改授权失败`
+  String get tr_error_code_604201 {
+    return Intl.message(
+      '修改授权失败',
+      name: 'tr_error_code_604201',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `删除授权失败`
+  String get tr_error_code_604202 {
+    return Intl.message(
+      '删除授权失败',
+      name: 'tr_error_code_604202',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `单个授权同步失败`
+  String get tr_error_code_604203 {
+    return Intl.message(
+      '单个授权同步失败',
+      name: 'tr_error_code_604203',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `发送失败`
+  String get tr_error_code_604300 {
+    return Intl.message(
+      '发送失败',
+      name: 'tr_error_code_604300',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `邮箱签名失败`
+  String get tr_error_code_604301 {
+    return Intl.message(
+      '邮箱签名失败',
+      name: 'tr_error_code_604301',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `注销账号需要验证码`
+  String get tr_error_code_604302 {
+    return Intl.message(
+      '注销账号需要验证码',
+      name: 'tr_error_code_604302',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `注册邮件发送超过次数，每个邮箱一天只能发送五次`
+  String get tr_error_code_604303 {
+    return Intl.message(
+      '注册邮件发送超过次数，每个邮箱一天只能发送五次',
+      name: 'tr_error_code_604303',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `找回密码邮件发送超过次数，每个邮箱一天只能发送五次`
+  String get tr_error_code_604304 {
+    return Intl.message(
+      '找回密码邮件发送超过次数，每个邮箱一天只能发送五次',
+      name: 'tr_error_code_604304',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `短信接口验证失败，请联系我们`
+  String get tr_error_code_604400 {
+    return Intl.message(
+      '短信接口验证失败，请联系我们',
+      name: 'tr_error_code_604400',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `短信接口参数错误，请联系我们`
+  String get tr_error_code_604401 {
+    return Intl.message(
+      '短信接口参数错误，请联系我们',
+      name: 'tr_error_code_604401',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `短信发送超过次数，每个手机号一天只能发送三次`
+  String get tr_error_code_604402 {
+    return Intl.message(
+      '短信发送超过次数，每个手机号一天只能发送三次',
+      name: 'tr_error_code_604402',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `发送失败，请稍后再试`
+  String get tr_error_code_604403 {
+    return Intl.message(
+      '发送失败，请稍后再试',
+      name: 'tr_error_code_604403',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `发送太频繁了，请间隔120秒`
+  String get tr_error_code_604404 {
+    return Intl.message(
+      '发送太频繁了，请间隔120秒',
+      name: 'tr_error_code_604404',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `发送失败`
+  String get tr_error_code_604405 {
+    return Intl.message(
+      '发送失败',
+      name: 'tr_error_code_604405',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未查到用户列表或用户列表为空`
+  String get tr_error_code_604500 {
+    return Intl.message(
+      '未查到用户列表或用户列表为空',
+      name: 'tr_error_code_604500',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未查到设备列表或设备列表为空`
+  String get tr_error_code_604502 {
+    return Intl.message(
+      '未查到设备列表或设备列表为空',
+      name: 'tr_error_code_604502',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `重置 app secret 失败`
+  String get tr_error_code_604503 {
+    return Intl.message(
+      '重置 app secret 失败',
+      name: 'tr_error_code_604503',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `微信报警打开失败`
+  String get tr_error_code_604600 {
+    return Intl.message(
+      '微信报警打开失败',
+      name: 'tr_error_code_604600',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `微信报警关闭失败`
+  String get tr_error_code_604601 {
+    return Intl.message(
+      '微信报警关闭失败',
+      name: 'tr_error_code_604601',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `服务器故障`
+  String get tr_error_code_605000 {
+    return Intl.message(
+      '服务器故障',
+      name: 'tr_error_code_605000',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `证书不存在`
+  String get tr_error_code_605001 {
+    return Intl.message(
+      '证书不存在',
+      name: 'tr_error_code_605001',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请求头信息错误`
+  String get tr_error_code_605002 {
+    return Intl.message(
+      '请求头信息错误',
+      name: 'tr_error_code_605002',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `证书失效`
+  String get tr_error_code_605003 {
+    return Intl.message(
+      '证书失效',
+      name: 'tr_error_code_605003',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `生成密钥校验错误`
+  String get tr_error_code_605004 {
+    return Intl.message(
+      '生成密钥校验错误',
+      name: 'tr_error_code_605004',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `参数异常`
+  String get tr_error_code_605005 {
+    return Intl.message(
+      '参数异常',
+      name: 'tr_error_code_605005',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `连接失败`
+  String get tr_error_code_605006 {
+    return Intl.message(
+      '连接失败',
+      name: 'tr_error_code_605006',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知错误`
+  String get tr_error_code_605007 {
+    return Intl.message(
+      '未知错误',
+      name: 'tr_error_code_605007',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ip地址不允许接入`
+  String get tr_error_code_605008 {
+    return Intl.message(
+      'ip地址不允许接入',
+      name: 'tr_error_code_605008',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `解密错误，说明用户名密码非法 微信code错误、AES加解密错误`
+  String get tr_error_code_605009 {
+    return Intl.message(
+      '解密错误，说明用户名密码非法 微信code错误、AES加解密错误',
+      name: 'tr_error_code_605009',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `token已过期`
+  String get tr_error_code_605010 {
+    return Intl.message(
+      'token已过期',
+      name: 'tr_error_code_605010',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `token错误`
+  String get tr_error_code_605011 {
+    return Intl.message(
+      'token错误',
+      name: 'tr_error_code_605011',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `token无权限`
+  String get tr_error_code_605012 {
+    return Intl.message(
+      'token无权限',
+      name: 'tr_error_code_605012',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `不支持`
+  String get tr_error_code_605013 {
+    return Intl.message(
+      '不支持',
+      name: 'tr_error_code_605013',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `操作太频繁`
+  String get tr_error_code_605014 {
+    return Intl.message(
+      '操作太频繁',
+      name: 'tr_error_code_605014',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `无效登录方式`
+  String get tr_error_code_606000 {
+    return Intl.message(
+      '无效登录方式',
+      name: 'tr_error_code_606000',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `WiFi信号等级【{level}】`
+  String wifiSignalLevel(Object level) {
+    return Intl.message(
+      'WiFi信号等级【$level】',
+      name: 'wifiSignalLevel',
+      desc: '',
+      args: [level],
+    );
+  }
+
+  /// `电量等级【{level}】,是否充电中【{isCharging}】`
+  String batteryInfo(Object level, Object isCharging) {
+    return Intl.message(
+      '电量等级【$level】,是否充电中【$isCharging】',
+      name: 'batteryInfo',
+      desc: '',
+      args: [level, isCharging],
+    );
+  }
+
+  /// `4G信号等级【{level}】`
+  String signal4GLevel(Object level) {
+    return Intl.message(
+      '4G信号等级【$level】',
+      name: 'signal4GLevel',
+      desc: '',
+      args: [level],
+    );
+  }
+
+  /// `是`
+  String get chargingYes {
+    return Intl.message('是', name: 'chargingYes', desc: '', args: []);
+  }
+
+  /// `否`
+  String get chargingNo {
+    return Intl.message('否', name: 'chargingNo', desc: '', args: []);
+  }
+
+  /// `选择播放倍速`
+  String get selectPlaybackSpeed {
+    return Intl.message(
+      '选择播放倍速',
+      name: 'selectPlaybackSpeed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `报警设置`
+  String get dynamic_alarm {
+    return Intl.message('报警设置', name: 'dynamic_alarm', desc: '', args: []);
+  }
+
+  /// `高级设置`
+  String get advanced_set {
+    return Intl.message('高级设置', name: 'advanced_set', desc: '', args: []);
+  }
+
+  /// `消息推送`
+  String get push_setting {
+    return Intl.message('消息推送', name: 'push_setting', desc: '', args: []);
+  }
+
+  /// `智能规则设置`
+  String get TR_Rule_Setting {
+    return Intl.message('智能规则设置', name: 'TR_Rule_Setting', desc: '', args: []);
+  }
+
+  /// `智能警戒开关`
+  String get TR_Intelligent_Warning_Switch {
+    return Intl.message(
+      '智能警戒开关',
+      name: 'TR_Intelligent_Warning_Switch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `警戒线`
+  String get type_alert_line {
+    return Intl.message('警戒线', name: 'type_alert_line', desc: '', args: []);
+  }
+
+  /// `警戒区域`
+  String get type_alert_area {
+    return Intl.message('警戒区域', name: 'type_alert_area', desc: '', args: []);
+  }
+
+  /// `显示智能踪迹`
+  String get Show_traces {
+    return Intl.message('显示智能踪迹', name: 'Show_traces', desc: '', args: []);
+  }
+
+  /// `视频中出现人时，会对人做画框或画线标记`
+  String get TR_Show_Traces_Tip {
+    return Intl.message(
+      '视频中出现人时，会对人做画框或画线标记',
+      name: 'TR_Show_Traces_Tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `从左到右`
+  String get smart_analyze_line_left {
+    return Intl.message(
+      '从左到右',
+      name: 'smart_analyze_line_left',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `从右到左`
+  String get smart_analyze_line_right {
+    return Intl.message(
+      '从右到左',
+      name: 'smart_analyze_line_right',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `双向`
+  String get smart_analyze_line_middle {
+    return Intl.message(
+      '双向',
+      name: 'smart_analyze_line_middle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `三角形`
+  String get smart_analyze_shape_triangle {
+    return Intl.message(
+      '三角形',
+      name: 'smart_analyze_shape_triangle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `矩形`
+  String get smart_analyze_shape_rectangle {
+    return Intl.message(
+      '矩形',
+      name: 'smart_analyze_shape_rectangle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `五边形`
+  String get smart_analyze_shape_pentagram {
+    return Intl.message(
+      '五边形',
+      name: 'smart_analyze_shape_pentagram',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `L型`
+  String get smart_analyze_shape_l_sel {
+    return Intl.message(
+      'L型',
+      name: 'smart_analyze_shape_l_sel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `凹型`
+  String get smart_analyze_shape_concave {
+    return Intl.message(
+      '凹型',
+      name: 'smart_analyze_shape_concave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `还原`
+  String get smart_analyze_restore {
+    return Intl.message(
+      '还原',
+      name: 'smart_analyze_restore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `撤销`
+  String get smart_analyze_revoke {
+    return Intl.message('撤销', name: 'smart_analyze_revoke', desc: '', args: []);
+  }
+
+  /// `请设置警戒线，拖动两端调整位置`
+  String get TR_Alert_Set_Alert_Line_Tip {
+    return Intl.message(
+      '请设置警戒线，拖动两端调整位置',
+      name: 'TR_Alert_Set_Alert_Line_Tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `区域边线存在交叉，请重新绘制`
+  String get tr_settings_alarm_alert_have_intersection {
+    return Intl.message(
+      '区域边线存在交叉，请重新绘制',
+      name: 'tr_settings_alarm_alert_have_intersection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `修改成功`
+  String get TR_Modify_S {
+    return Intl.message('修改成功', name: 'TR_Modify_S', desc: '', args: []);
+  }
+
+  /// `完成`
+  String get Done {
+    return Intl.message('完成', name: 'Done', desc: '', args: []);
+  }
+
+  /// `缓冲中...`
+  String get waiting_buffering {
+    return Intl.message(
+      '缓冲中...',
+      name: 'waiting_buffering',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `全天录像`
+  String get allDayRecording {
+    return Intl.message('全天录像', name: 'allDayRecording', desc: '', args: []);
+  }
+
+  /// `AOV设备配置`
+  String get TR_Setting_AOV_Device_Config {
+    return Intl.message(
+      'AOV设备配置',
+      name: 'TR_Setting_AOV_Device_Config',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AOV工作模式`
+  String get TR_Setting_AOV_Work_Mode {
+    return Intl.message(
+      'AOV工作模式',
+      name: 'TR_Setting_AOV_Work_Mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AOV帧率`
+  String get TR_AOV_Fps {
+    return Intl.message('AOV帧率', name: 'TR_AOV_Fps', desc: '', args: []);
+  }
+
+  /// `AOV报警间隔`
+  String get TR_AOV_Alarm_interval {
+    return Intl.message(
+      'AOV报警间隔',
+      name: 'TR_AOV_Alarm_interval',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `事件录像最大时长`
+  String get TR_Setting_Aov_RecordLength {
+    return Intl.message(
+      '事件录像最大时长',
+      name: 'TR_Setting_Aov_RecordLength',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AOV帧率{param0}，AOV报警间隔{param1}，事件录像最大时长{param2}`
+  String TR_Setting_AOV_BlackLight_Blance_Tips(
+    Object param0,
+    Object param1,
+    Object param2,
+  ) {
+    return Intl.message(
+      'AOV帧率$param0，AOV报警间隔$param1，事件录像最大时长$param2',
+      name: 'TR_Setting_AOV_BlackLight_Blance_Tips',
+      desc: '',
+      args: [param0, param1, param2],
+    );
+  }
+
+  /// `AOV帧率{param0}，AOV报警间隔{param1}，事件录像最大时长{param2}，红外补光`
+  String TR_Setting_Aov_Blance_tips(
+    Object param0,
+    Object param1,
+    Object param2,
+  ) {
+    return Intl.message(
+      'AOV帧率$param0，AOV报警间隔$param1，事件录像最大时长$param2，红外补光',
+      name: 'TR_Setting_Aov_Blance_tips',
+      desc: '',
+      args: [param0, param1, param2],
+    );
+  }
+
+  /// `AOV帧率{param0}fps，带卡录像`
+  String TR_Setting_AOV_BlackLight_FPS_Description(Object param0) {
+    return Intl.message(
+      'AOV帧率${param0}fps，带卡录像',
+      name: 'TR_Setting_AOV_BlackLight_FPS_Description',
+      desc: '',
+      args: [param0],
+    );
+  }
+
+  /// `AOV帧率{param0}fps,红外补光，带卡录像`
+  String TR_Setting_AOV_FPS_Description(Object param0) {
+    return Intl.message(
+      'AOV帧率${param0}fps,红外补光，带卡录像',
+      name: 'TR_Setting_AOV_FPS_Description',
+      desc: '',
+      args: [param0],
+    );
+  }
+
+  /// `表示{param0}秒展示{param1}个画面`
+  String TR_Set_Aov_Fps_Tips(Object param0, Object param1) {
+    return Intl.message(
+      '表示$param0秒展示$param1个画面',
+      name: 'TR_Set_Aov_Fps_Tips',
+      desc: '',
+      args: [param0, param1],
+    );
+  }
+
+  /// `目前电量低于{param0}，处于低电量模式 会停止录像和报警推送，只能通过APP远程唤醒进行预览`
+  String TR_Setting_AOV_Low_Battery_Mode_Description(Object param0) {
+    return Intl.message(
+      '目前电量低于$param0，处于低电量模式 会停止录像和报警推送，只能通过APP远程唤醒进行预览',
+      name: 'TR_Setting_AOV_Low_Battery_Mode_Description',
+      desc: '',
+      args: [param0],
+    );
+  }
+
+  /// `微光开关`
+  String get TR_Low_Light_Control {
+    return Intl.message(
+      '微光开关',
+      name: 'TR_Low_Light_Control',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `微光开关开启后，在AOV状态下，夜晚场景会进行微补光`
+  String get TR_Low_Light_Control_Tip {
+    return Intl.message(
+      '微光开关开启后，在AOV状态下，夜晚场景会进行微补光',
+      name: 'TR_Low_Light_Control_Tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `光线不足时，AOV模式下录像画面黑白，实时画面红外灯亮起画面黑白，检测到人形白光灯亮起画面彩色`
+  String get TR_Setting_AOV_Low_Light_Human_Detected_White_Light_Color {
+    return Intl.message(
+      '光线不足时，AOV模式下录像画面黑白，实时画面红外灯亮起画面黑白，检测到人形白光灯亮起画面彩色',
+      name: 'TR_Setting_AOV_Low_Light_Human_Detected_White_Light_Color',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `光线不足时，AOV模式下录像画面黑白，实时画面红外灯亮起画面黑白`
+  String get TR_Setting_AOV_Low_Light_IR_BlackWhite {
+    return Intl.message(
+      '光线不足时，AOV模式下录像画面黑白，实时画面红外灯亮起画面黑白',
+      name: 'TR_Setting_AOV_Low_Light_IR_BlackWhite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `光线不足时，AOV模式下录像画面黑白，实时画面白光灯亮起画面彩色`
+  String get TR_Setting_AOV_Low_Light_White_Light_Color {
+    return Intl.message(
+      '光线不足时，AOV模式下录像画面黑白，实时画面白光灯亮起画面彩色',
+      name: 'TR_Setting_AOV_Low_Light_White_Light_Color',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `电量阈值`
+  String get TR_Setting_BatteryThreshold {
+    return Intl.message(
+      '电量阈值',
+      name: 'TR_Setting_BatteryThreshold',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `电量低于 {param0} 自动进入AOV工作模式`
+  String TR_Setting_BatteryThreshold_Desc(Object param0) {
+    return Intl.message(
+      '电量低于 $param0 自动进入AOV工作模式',
+      name: 'TR_Setting_BatteryThreshold_Desc',
+      desc: '',
+      args: [param0],
+    );
+  }
+
+  /// `电池管理`
+  String get TR_Setting_Battery_Management {
+    return Intl.message(
+      '电池管理',
+      name: 'TR_Setting_Battery_Management',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `工作模式`
+  String get TR_Setting_Mode_Of_Work {
+    return Intl.message(
+      '工作模式',
+      name: 'TR_Setting_Mode_Of_Work',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `灯光设置`
+  String get TR_Light_Settings {
+    return Intl.message('灯光设置', name: 'TR_Light_Settings', desc: '', args: []);
+  }
+
+  /// `4G网络切换`
+  String get TR_Setting_4G_Network_Switching {
+    return Intl.message(
+      '4G网络切换',
+      name: 'TR_Setting_4G_Network_Switching',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `省电模式`
+  String get TR_Setting_Power_Saving_Mode {
+    return Intl.message(
+      '省电模式',
+      name: 'TR_Setting_Power_Saving_Mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `性能模式`
+  String get TR_Setting_Performance {
+    return Intl.message(
+      '性能模式',
+      name: 'TR_Setting_Performance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `自定义模式`
+  String get mode_customize {
+    return Intl.message('自定义模式', name: 'mode_customize', desc: '', args: []);
+  }
+
+  /// `供电方式`
+  String get TR_Setting_Power_Supply_Mode {
+    return Intl.message(
+      '供电方式',
+      name: 'TR_Setting_Power_Supply_Mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `电池`
+  String get TR_Setting_Battery {
+    return Intl.message('电池', name: 'TR_Setting_Battery', desc: '', args: []);
+  }
+
+  /// `当前电量`
+  String get TR_Setting_Current_Battery_Level {
+    return Intl.message(
+      '当前电量',
+      name: 'TR_Setting_Current_Battery_Level',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `低电量模式`
+  String get TR_Setting_Low_Power_Mode {
+    return Intl.message(
+      '低电量模式',
+      name: 'TR_Setting_Low_Power_Mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当电量小于所设阈值时， 设备工作模式 会自动切换为低电量状态下工作模式`
+  String get TR_Setting_Low_Power_Mode_Description {
+    return Intl.message(
+      '当电量小于所设阈值时， 设备工作模式 会自动切换为低电量状态下工作模式',
+      name: 'TR_Setting_Low_Power_Mode_Description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `电池统计`
+  String get TR_Setting_Battery_Statistic {
+    return Intl.message(
+      '电池统计',
+      name: 'TR_Setting_Battery_Statistic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `今天`
+  String get TR_Today {
+    return Intl.message('今天', name: 'TR_Today', desc: '', args: []);
+  }
+
+  /// `最近一周`
+  String get TR_Setting_Last_Week {
+    return Intl.message(
+      '最近一周',
+      name: 'TR_Setting_Last_Week',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `电量`
+  String get TR_Setting_Power_Level {
+    return Intl.message(
+      '电量',
+      name: 'TR_Setting_Power_Level',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `信号`
+  String get TR_Setting_Signal {
+    return Intl.message('信号', name: 'TR_Setting_Signal', desc: '', args: []);
+  }
+
+  /// `预览时间`
+  String get TR_Setting_Preview_Time {
+    return Intl.message(
+      '预览时间',
+      name: 'TR_Setting_Preview_Time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `唤醒时间`
+  String get TR_Setting_Wake_Up_Time {
+    return Intl.message(
+      '唤醒时间',
+      name: 'TR_Setting_Wake_Up_Time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `报警次数`
+  String get TR_Setting_Number_Of_Alarms {
+    return Intl.message(
+      '报警次数',
+      name: 'TR_Setting_Number_Of_Alarms',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `天`
+  String get days {
+    return Intl.message('天', name: 'days', desc: '', args: []);
+  }
+
+  /// `时`
+  String get sHour {
+    return Intl.message('时', name: 'sHour', desc: '', args: []);
+  }
+
+  /// `分`
+  String get sMin {
+    return Intl.message('分', name: 'sMin', desc: '', args: []);
+  }
+
+  /// `秒`
+  String get sSec {
+    return Intl.message('秒', name: 'sSec', desc: '', args: []);
+  }
+
+  /// `唤醒中...`
+  String get TR_Wakeup_In_Progress {
+    return Intl.message(
+      '唤醒中...',
+      name: 'TR_Wakeup_In_Progress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `唤醒成功`
+  String get TR_Wakeup_Success {
+    return Intl.message('唤醒成功', name: 'TR_Wakeup_Success', desc: '', args: []);
+  }
+
+  /// `唤醒失败`
+  String get TR_Wakeup_Failed {
+    return Intl.message('唤醒失败', name: 'TR_Wakeup_Failed', desc: '', args: []);
+  }
+
+  /// `抓图成功`
+  String get TR_Capture_Success {
+    return Intl.message('抓图成功', name: 'TR_Capture_Success', desc: '', args: []);
+  }
+
+  /// `抓图失败`
+  String get TR_Capture_Failed {
+    return Intl.message('抓图失败', name: 'TR_Capture_Failed', desc: '', args: []);
+  }
+
+  /// `白光灯开关`
+  String get TR_White_Light_Switch {
+    return Intl.message(
+      '白光灯开关',
+      name: 'TR_White_Light_Switch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `亮度`
+  String get Bright {
+    return Intl.message('亮度', name: 'Bright', desc: '', args: []);
+  }
+
+  /// `自动灯光`
+  String get TR_AutoLight {
+    return Intl.message('自动灯光', name: 'TR_AutoLight', desc: '', args: []);
+  }
+
+  /// `通过环境自动开启和关闭灯光`
+  String get TR_AutoLightDetail {
+    return Intl.message(
+      '通过环境自动开启和关闭灯光',
+      name: 'TR_AutoLightDetail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `定时灯光`
+  String get TR_TimingLight {
+    return Intl.message('定时灯光', name: 'TR_TimingLight', desc: '', args: []);
+  }
+
+  /// `自定义你的开灯时间`
+  String get TR_TimingLightDetail {
+    return Intl.message(
+      '自定义你的开灯时间',
+      name: 'TR_TimingLightDetail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备指示灯`
+  String get TR_Setting_Device_Indicator_Light {
+    return Intl.message(
+      '设备指示灯',
+      name: 'TR_Setting_Device_Indicator_Light',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `开始时间`
+  String get start_time {
+    return Intl.message('开始时间', name: 'start_time', desc: '', args: []);
+  }
+
+  /// `结束时间`
+  String get set_finish {
+    return Intl.message('结束时间', name: 'set_finish', desc: '', args: []);
+  }
+
+  /// `智能灵敏度`
+  String get Intelligent_sensitivity {
+    return Intl.message(
+      '智能灵敏度',
+      name: 'Intelligent_sensitivity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ``
+  String get TR_LightSensitivitySubTitle {
+    return Intl.message(
+      '',
+      name: 'TR_LightSensitivitySubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `最低`
+  String get TR_PIR_lowest {
+    return Intl.message('最低', name: 'TR_PIR_lowest', desc: '', args: []);
+  }
+
+  /// `较低`
+  String get TR_PIR_Lower {
+    return Intl.message('较低', name: 'TR_PIR_Lower', desc: '', args: []);
+  }
+
+  /// `中等`
+  String get level_middle {
+    return Intl.message('中等', name: 'level_middle', desc: '', args: []);
+  }
+
+  /// `较高`
+  String get TR_PIR_Higher {
+    return Intl.message('较高', name: 'TR_PIR_Higher', desc: '', args: []);
+  }
+
+  /// `最高`
+  String get TR_PIR_Hightext {
+    return Intl.message('最高', name: 'TR_PIR_Hightext', desc: '', args: []);
+  }
+
+  /// `未知`
+  String get TR_Unknow {
+    return Intl.message('未知', name: 'TR_Unknow', desc: '', args: []);
+  }
+
+  /// `保存成功`
+  String get Save_Success {
+    return Intl.message('保存成功', name: 'Save_Success', desc: '', args: []);
+  }
+
+  /// `开始和结束时间不能相同`
+  String get Start_And_End_Time_Unable_Equal {
+    return Intl.message(
+      '开始和结束时间不能相同',
+      name: 'Start_And_End_Time_Unable_Equal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `红外夜视`
+  String get General_Night_Vision {
+    return Intl.message(
+      '红外夜视',
+      name: 'General_Night_Vision',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `星光全彩`
+  String get Full_Color_Vision {
+    return Intl.message('星光全彩', name: 'Full_Color_Vision', desc: '', args: []);
+  }
+
+  /// `双光警戒`
+  String get Double_Light_Vision {
+    return Intl.message(
+      '双光警戒',
+      name: 'Double_Light_Vision',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `自动`
+  String get auto {
+    return Intl.message('自动', name: 'auto', desc: '', args: []);
+  }
+
+  /// `关闭`
+  String get close {
+    return Intl.message('关闭', name: 'close', desc: '', args: []);
+  }
+
+  /// `一直开启`
+  String get TR_Keep_On {
+    return Intl.message('一直开启', name: 'TR_Keep_On', desc: '', args: []);
+  }
+
+  /// `红外夜视灯`
+  String get TR_Night_VisionLight {
+    return Intl.message(
+      '红外夜视灯',
+      name: 'TR_Night_VisionLight',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

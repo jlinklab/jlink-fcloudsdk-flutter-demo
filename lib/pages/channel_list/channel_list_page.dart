@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:xcloudsdk_flutter/manager/device_config_manager.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/manager/device_property_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk/manager/device_config_manager.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/manager/device_property_manager.dart';
+import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
 
 /// NVR 通道列表页面
 /// 显示 NVR 设备的通道列表，包括通道号、通道名、通道状态

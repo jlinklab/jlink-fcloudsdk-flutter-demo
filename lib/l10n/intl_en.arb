@@ -297,8 +297,7 @@
   "channelSleep": "Sleep",
   "channelUnknown": "Unknown",
   "loadingChannelInfo": "Loading channel info...",
-  "loadChannelFailed": "Failed to load channel info"
-  "micVolume": "Microphone Volume",
+  "loadChannelFailed": "Failed to load channel info",
   "errorCode": "Error Code",
   "enterErrorCode": "Enter Error Code",
   "inputRightErrorCode": "Please enter the correct error code",
