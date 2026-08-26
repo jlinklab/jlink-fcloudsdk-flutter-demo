@@ -2380,6 +2380,66 @@ class TR {
     );
   }
 
+  /// `主模块`
+  String get firmwareMainModule {
+    return Intl.message(
+      '主模块',
+      name: 'firmwareMainModule',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `转发/穿透连接模式下不支持本地固件升级`
+  String get firmwareP2PNotSupportTip {
+    return Intl.message(
+      '转发/穿透连接模式下不支持本地固件升级',
+      name: 'firmwareP2PNotSupportTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `升级完成，等待设备重启`
+  String get firmwareUpgradeWaitReboot {
+    return Intl.message(
+      '升级完成，等待设备重启',
+      name: 'firmwareUpgradeWaitReboot',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `新版本可升级`
+  String get firmwareNewVersionUpgradable {
+    return Intl.message(
+      '新版本可升级',
+      name: 'firmwareNewVersionUpgradable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未找到本地固件，请将 .bin/.img 固件文件放入目录：{path}`
+  String firmwareFirmwareDirTip(Object path) {
+    return Intl.message(
+      '未找到本地固件，请将 .bin/.img 固件文件放入目录：$path',
+      name: 'firmwareFirmwareDirTip',
+      desc: '',
+      args: [path],
+    );
+  }
+
+  /// `返回`
+  String get back {
+    return Intl.message(
+      '返回',
+      name: 'back',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `通用配置`
   String get commonConfig {
     return Intl.message(

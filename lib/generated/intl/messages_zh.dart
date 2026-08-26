@@ -45,17 +45,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m10(count) => "${count}秒后重新发送";
 
-  static String m11(mail) => "将发送验证码到邮箱:${mail}中";
+  static String m11(path) => "未找到本地固件，请将 .bin/.img 固件文件放入目录：${path}";
 
-  static String m12(mail, phone) => "将发送验证码到邮箱:${mail}中和手机:${phone}上,填入其中一个即可";
+  static String m12(mail) => "将发送验证码到邮箱:${mail}中";
 
-  static String m13(phone) => "将发送验证码到${phone}上";
+  static String m13(mail, phone) => "将发送验证码到邮箱:${mail}中和手机:${phone}上,填入其中一个即可";
 
-  static String m14(deviceId) => "${deviceId} 回放列表";
+  static String m14(phone) => "将发送验证码到${phone}上";
 
-  static String m15(level) => "4G信号等级【${level}】";
+  static String m15(deviceId) => "${deviceId} 回放列表";
 
-  static String m16(level) => "WiFi信号等级【${level}】";
+  static String m16(level) => "4G信号等级【${level}】";
+
+  static String m17(level) => "WiFi信号等级【${level}】";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -201,6 +203,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("麦克风权限未开启"),
         "auto": MessageLookupByLibrary.simpleMessage("自动"),
         "autoInfrared": MessageLookupByLibrary.simpleMessage("自动红外"),
+        "back": MessageLookupByLibrary.simpleMessage("返回"),
         "backlightCompensation": MessageLookupByLibrary.simpleMessage("背光补偿"),
         "baseStationHumanDetectionSwitch":
             MessageLookupByLibrary.simpleMessage("人形检测开关"),
@@ -291,12 +294,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("固件下载完成"),
         "firmwareDownloadingToFirmware":
             MessageLookupByLibrary.simpleMessage("正在下载固件文件到本地"),
+        "firmwareFirmwareDirTip": m11,
         "firmwareLatest": MessageLookupByLibrary.simpleMessage("已是最新版本"),
         "firmwareLocalUpgrade": MessageLookupByLibrary.simpleMessage("本地升级"),
+        "firmwareMainModule": MessageLookupByLibrary.simpleMessage("主模块"),
         "firmwareNewVersion": MessageLookupByLibrary.simpleMessage("新版本"),
+        "firmwareNewVersionUpgradable":
+            MessageLookupByLibrary.simpleMessage("新版本可升级"),
         "firmwareNoLocalFile":
             MessageLookupByLibrary.simpleMessage("未找到本地固件文件"),
         "firmwareOnlineUpgrade": MessageLookupByLibrary.simpleMessage("在线升级"),
+        "firmwareP2PNotSupportTip":
+            MessageLookupByLibrary.simpleMessage("转发/穿透连接模式下不支持本地固件升级"),
         "firmwarePidFail":
             MessageLookupByLibrary.simpleMessage("未获取到pid，无法执行检测更新"),
         "firmwareSelectLocalFile":
@@ -312,6 +321,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("升级成功，重启中..."),
         "firmwareUpgradeTip":
             MessageLookupByLibrary.simpleMessage("升级过程中请勿断开设备电源"),
+        "firmwareUpgradeWaitReboot":
+            MessageLookupByLibrary.simpleMessage("升级完成，等待设备重启"),
         "firmwareUpgrading": MessageLookupByLibrary.simpleMessage("正在升级"),
         "firmwareVersionCheckFailed":
             MessageLookupByLibrary.simpleMessage("版本检查失败"),
@@ -349,7 +360,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mailHint": MessageLookupByLibrary.simpleMessage("邮箱"),
         "mailPhone": MessageLookupByLibrary.simpleMessage("邮箱/手机号"),
         "mailRegister": MessageLookupByLibrary.simpleMessage("邮箱注册"),
-        "mailTip": m11,
+        "mailTip": m12,
         "mediaType": MessageLookupByLibrary.simpleMessage("媒体类型"),
         "memoryCardError": MessageLookupByLibrary.simpleMessage("存储卡异常"),
         "message": MessageLookupByLibrary.simpleMessage("消息"),
@@ -384,11 +395,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "permIntercom": MessageLookupByLibrary.simpleMessage("对讲"),
         "permSdRecord": MessageLookupByLibrary.simpleMessage("SD卡录像"),
         "phone": MessageLookupByLibrary.simpleMessage("手机号"),
-        "phoneMailTip": m12,
+        "phoneMailTip": m13,
         "phoneRegister": MessageLookupByLibrary.simpleMessage("手机号注册"),
         "phoneRule":
             MessageLookupByLibrary.simpleMessage("国外手机号要加区号，如：+1:80998098979"),
-        "phoneTip": m13,
+        "phoneTip": m14,
         "pleaseCheckErrorCode":
             MessageLookupByLibrary.simpleMessage("请在下方查询错误码或前往开放平台文档中心"),
         "preview": MessageLookupByLibrary.simpleMessage("预览"),
@@ -408,7 +419,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "rebootSuccess": MessageLookupByLibrary.simpleMessage("设备重启中..."),
         "recordAudio": MessageLookupByLibrary.simpleMessage("录像音频"),
         "recordClip": MessageLookupByLibrary.simpleMessage("录像段"),
-        "recordList": m14,
+        "recordList": m15,
         "recordMode": MessageLookupByLibrary.simpleMessage("录像开关"),
         "recordQuality": MessageLookupByLibrary.simpleMessage("录像画质"),
         "recordQualityBad": MessageLookupByLibrary.simpleMessage("较差"),
@@ -462,7 +473,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareTo": MessageLookupByLibrary.simpleMessage("分享给"),
         "sharedAccounts": MessageLookupByLibrary.simpleMessage("已分享账号"),
         "sharpness": MessageLookupByLibrary.simpleMessage("清晰度"),
-        "signal4GLevel": m15,
+        "signal4GLevel": m16,
         "smartInfrared": MessageLookupByLibrary.simpleMessage("智能红外"),
         "smartWarmLight": MessageLookupByLibrary.simpleMessage("智能暖光"),
         "smart_analyze_line_left": MessageLookupByLibrary.simpleMessage("从左到右"),
@@ -1082,6 +1093,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "whiteLightColor": MessageLookupByLibrary.simpleMessage("白光全彩"),
         "wifi": MessageLookupByLibrary.simpleMessage("快速wifi配网"),
         "wifiPwdHint": MessageLookupByLibrary.simpleMessage("输入WIFI密码"),
-        "wifiSignalLevel": m16
+        "wifiSignalLevel": m17
       };
 }

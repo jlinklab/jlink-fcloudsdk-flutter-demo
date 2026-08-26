@@ -50,18 +50,21 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m10(count) => "resend after ${count} seconds";
 
-  static String m11(mail) => "will send verification code to ${mail}";
+  static String m11(path) =>
+      "No local firmware found, please put the .bin/.img firmware file into: ${path}";
 
-  static String m12(mail, phone) =>
+  static String m12(mail) => "will send verification code to ${mail}";
+
+  static String m13(mail, phone) =>
       "you can choose either ${phone} or ${mail}, verification code will be sent to";
 
-  static String m13(phone) => "will send verification code to ${phone}";
+  static String m14(phone) => "will send verification code to ${phone}";
 
-  static String m14(deviceId) => "${deviceId} Record List";
+  static String m15(deviceId) => "${deviceId} Record List";
 
-  static String m15(level) => "4G signal level [${level}]";
+  static String m16(level) => "4G signal level [${level}]";
 
-  static String m16(level) => "WiFi signal level [${level}]";
+  static String m17(level) => "WiFi signal level [${level}]";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -245,6 +248,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Microphone permission is not enabled"),
         "auto": MessageLookupByLibrary.simpleMessage("Auto"),
         "autoInfrared": MessageLookupByLibrary.simpleMessage("Auto Infrared"),
+        "back": MessageLookupByLibrary.simpleMessage("Back"),
         "backlightCompensation":
             MessageLookupByLibrary.simpleMessage("Backlight Compensation"),
         "baseStationHumanDetectionSwitch":
@@ -354,16 +358,23 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Firmware download complete"),
         "firmwareDownloadingToFirmware": MessageLookupByLibrary.simpleMessage(
             "Downloading firmware file to local"),
+        "firmwareFirmwareDirTip": m11,
         "firmwareLatest":
             MessageLookupByLibrary.simpleMessage("Already up to date"),
         "firmwareLocalUpgrade":
             MessageLookupByLibrary.simpleMessage("Local Upgrade"),
+        "firmwareMainModule":
+            MessageLookupByLibrary.simpleMessage("Main Module"),
         "firmwareNewVersion":
             MessageLookupByLibrary.simpleMessage("New Version"),
+        "firmwareNewVersionUpgradable": MessageLookupByLibrary.simpleMessage(
+            "The new version can be upgraded"),
         "firmwareNoLocalFile": MessageLookupByLibrary.simpleMessage(
             "No local firmware file found"),
         "firmwareOnlineUpgrade":
             MessageLookupByLibrary.simpleMessage("Online Upgrade"),
+        "firmwareP2PNotSupportTip": MessageLookupByLibrary.simpleMessage(
+            "Local firmware upgrade is not supported in forward/penetration connection mode"),
         "firmwarePidFail": MessageLookupByLibrary.simpleMessage(
             "Failed to get PID, unable to check for updates"),
         "firmwareSelectLocalFile":
@@ -382,6 +393,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Upgrade successful, restarting..."),
         "firmwareUpgradeTip": MessageLookupByLibrary.simpleMessage(
             "Do not disconnect device power during upgrade"),
+        "firmwareUpgradeWaitReboot": MessageLookupByLibrary.simpleMessage(
+            "Upgrade completed, waiting for device reboot"),
         "firmwareUpgrading": MessageLookupByLibrary.simpleMessage("Upgrading"),
         "firmwareVersionCheckFailed":
             MessageLookupByLibrary.simpleMessage("Version check failed"),
@@ -428,7 +441,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mailHint": MessageLookupByLibrary.simpleMessage("mail"),
         "mailPhone": MessageLookupByLibrary.simpleMessage("mail/phone"),
         "mailRegister": MessageLookupByLibrary.simpleMessage("Mail Register"),
-        "mailTip": m11,
+        "mailTip": m12,
         "mediaType": MessageLookupByLibrary.simpleMessage("media type"),
         "memoryCardError":
             MessageLookupByLibrary.simpleMessage("Abnormal storage card"),
@@ -474,11 +487,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "permIntercom": MessageLookupByLibrary.simpleMessage("Intercom"),
         "permSdRecord": MessageLookupByLibrary.simpleMessage("SD Card Record"),
         "phone": MessageLookupByLibrary.simpleMessage("phone no"),
-        "phoneMailTip": m12,
+        "phoneMailTip": m13,
         "phoneRegister": MessageLookupByLibrary.simpleMessage("Phone Register"),
         "phoneRule": MessageLookupByLibrary.simpleMessage(
             "Overseas mobile phone numbers need to add area code. eg:+1:80998098979"),
-        "phoneTip": m13,
+        "phoneTip": m14,
         "pleaseCheckErrorCode": MessageLookupByLibrary.simpleMessage(
             "Please check the error code below or visit the Open Platform Documentation Center"),
         "preview": MessageLookupByLibrary.simpleMessage("preview"),
@@ -502,7 +515,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Device restarting..."),
         "recordAudio": MessageLookupByLibrary.simpleMessage("Audio Recording"),
         "recordClip": MessageLookupByLibrary.simpleMessage("Video Segment"),
-        "recordList": m14,
+        "recordList": m15,
         "recordMode": MessageLookupByLibrary.simpleMessage("REC Button"),
         "recordQuality":
             MessageLookupByLibrary.simpleMessage("Recording Quality"),
@@ -572,7 +585,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "sharedAccounts":
             MessageLookupByLibrary.simpleMessage("Shared Accounts"),
         "sharpness": MessageLookupByLibrary.simpleMessage("Sharpness"),
-        "signal4GLevel": m15,
+        "signal4GLevel": m16,
         "smartInfrared": MessageLookupByLibrary.simpleMessage("Smart Infrared"),
         "smartWarmLight":
             MessageLookupByLibrary.simpleMessage("Smart Warm Light"),
@@ -1407,6 +1420,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("White Light Color"),
         "wifi": MessageLookupByLibrary.simpleMessage("add via wifi"),
         "wifiPwdHint": MessageLookupByLibrary.simpleMessage("Wifi Password"),
-        "wifiSignalLevel": m16
+        "wifiSignalLevel": m17
       };
 }

@@ -3,18 +3,38 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/api/device_upgrade/model.dart';
 import 'package:fcloudsdk_example/common/code_prase.dart';
 import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/utils/common_path.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
+import 'package:fcloudsdk_example/views/x_single_selector.dart';
+
+/// 本地固件文件信息
+class FirmWareContent {
+  /// 文件路径
+  final String path;
+
+  /// 文件大小（MB）
+  final double fileLength;
+
+  /// 文件名称
+  String get fileName => path.split('/').last;
+
+  FirmWareContent({required this.path, required this.fileLength});
+}
 
 /// 设备固件升级页面
 /// 支持两种升级方式：
-/// 1. 在线升级：调用 xcDeviceUpgradeBySelf，设备自行从云端下载固件并升级
-/// 2. 本地文件升级：先调用 xcDeviceDownloadFile 下载固件到本地，
-///    再调用 xcDeviceUpgradeByFile 将本地固件发送给设备升级
+/// 1. 在线升级：进入页面自动检测新版本，检测到新版本后红点标记，
+///    点击"最新版本"行触发升级。根据检测结果 CheckFrom 自动判定升级通道：
+///    - device：调用 xcDeviceUpgradeBySelf，设备自行从云端下载固件并升级
+///    - application（CheckFrom == 'App'）：先调用 xcDeviceDownloadFile 下载固件到本地，
+///      再复用本地升级通道 xcDeviceUpgradeByFile 发送给设备升级
+/// 2. 本地升级：点击右上角"本地升级"入口，扫描 App 固件接收目录
+///    （upgrade_receive_files）中的 .bin/.img 固件包，选择后调用
+///    xcDeviceUpgradeByFile 发送给设备升级
 class DeviceFirmwareUpgradePage extends StatefulWidget {
   const DeviceFirmwareUpgradePage(
       {Key? key, required this.deviceId, required this.pid})
@@ -29,14 +49,17 @@ class DeviceFirmwareUpgradePage extends StatefulWidget {
 }
 
 class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
-  /// 升级状态
-  _UpgradeStatus _status = _UpgradeStatus.idle;
+  /// 页面状态
+  _UpgradeStatus _status = _UpgradeStatus.checking;
 
   /// 当前软件版本（从设备 SystemInfo 获取）
   String _currentVersion = '';
 
   /// 版本检测结果
   DeviceVersionCheckResponse? _checkResponse;
+
+  /// 是否检测到新版本（可在线升级）
+  bool _upgradeAvailable = false;
 
   /// 升级进度 (0-100)
   int _progress = 0;
@@ -50,7 +73,10 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
   /// 当前升级模式
   _UpgradeMode _upgradeMode = _UpgradeMode.online;
 
-  /// 本地下载的固件文件路径
+  /// 设备网络模式，2 为转发/穿透模式（P2P）
+  int _netType = -1;
+
+  /// App 下载到本地的固件文件路径（App 代理升级模式使用）
   String? _localFilePath;
 
   /// 升级进度流订阅
@@ -59,6 +85,7 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
   @override
   void initState() {
     super.initState();
+    _queryNetType();
     _checkVersion();
   }
 
@@ -67,6 +94,19 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
     _upgradeSubscription?.cancel();
     KToast.dismissInDispose();
     super.dispose();
+  }
+
+  /// p2p模式（转发和穿透）不支持本地升级和 App 代理升级（固件上传链路不可用）
+  bool get _supportUpgradeByLocalOrApp => _netType != 2;
+
+  /// 查询设备当前网络模式
+  Future<void> _queryNetType() async {
+    try {
+      _netType =
+          await JFApi.xcDevice.xcDevGetCurNetType(deviceId: widget.deviceId);
+    } catch (_) {
+      _netType = -1;
+    }
   }
 
   /// 检查设备版本
@@ -91,10 +131,7 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
         Map<String, dynamic>? infoMap = result['SystemInfo'];
         Map? systemInfoMap = infoMap;
         if (systemInfoMap == null) {
-          setState(() {
-            _status = _UpgradeStatus.error;
-            _errorMsg = TR.current.firmwareVersionCheckFailed;
-          });
+          _showCheckFailed(TR.current.firmwareVersionCheckFailed);
           return;
         }
         // 获取当前软件版本
@@ -116,40 +153,93 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
             code: response.code, versionInfo: response.versionInfo);
 
         if (response.code < 0) {
-          setState(() {
-            _status = _UpgradeStatus.error;
-            _errorMsg = kErrorMsg(
-                XCloudAPIException(code: response.code, commandId: 13400));
-          });
+          _showCheckFailed(
+              kErrorMsg(XCloudAPIException(code: response.code, commandId: 13400)));
           return;
         }
 
-        setState(() {
-          if (_checkResponse!.info != null) {
-            _status = _UpgradeStatus.upgradeAvailable;
-          } else {
-            _status = _UpgradeStatus.latest;
-          }
-        });
+        // code == 0 且有 versionInfo 视为可升级，红点标记
+        _upgradeAvailable = _checkResponse!.info != null;
+        if (mounted) {
+          setState(() {
+            _status = _UpgradeStatus.normal;
+          });
+        }
       } else {
-        setState(() {
-          _status = _UpgradeStatus.error;
-          _errorMsg = TR.current.firmwareVersionCheckFailed;
-        });
+        _showCheckFailed(TR.current.firmwareVersionCheckFailed);
       }
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _status = _UpgradeStatus.error;
-          _errorMsg = kErrorMsg(e);
-        });
-      }
+      _showCheckFailed(kErrorMsg(e));
     }
   }
 
+  /// 版本检测失败处理
+  void _showCheckFailed(String? msg) {
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _status = _UpgradeStatus.error;
+      _errorMsg = msg;
+    });
+  }
+
+  /// 本地升级入口
+  /// 扫描 App 固件接收目录中的 .bin/.img 固件包，弹列表选择后执行升级
+  Future<void> _onLocalUpgradeTap() async {
+    // p2p转发/穿透模式不支持本地固件上传
+    if (!_p2pProxyCheck()) {
+      return;
+    }
+
+    final List<FirmWareContent> firmWareList = await _scanFirmwareFiles();
+    if (!mounted) {
+      return;
+    }
+    if (firmWareList.isEmpty) {
+      // 提示固件存放目录，引导用户将固件包放入 App 固件接收目录
+      final Directory receiveDir = await _getFirmwareReceiveDir();
+      KToast.show(
+          status: TR.current.firmwareFirmwareDirTip(receiveDir.path),
+          duration: const Duration(seconds: 4));
+      return;
+    }
+
+    XSingleSelector.show(
+      context: context,
+      title: TR.current.firmwareSelectLocalFile,
+      dataList: firmWareList.map((e) => e.fileName).toList(),
+      onSelect: (index) async {
+        await Future.delayed(const Duration(microseconds: 100));
+        if (!mounted) {
+          return;
+        }
+        _showUpgradeConfirmDialog(_UpgradeMode.local,
+            filePath: firmWareList[index].path);
+      },
+    );
+  }
+
+  /// 在线升级入口
+  /// 检测到新版本（红点标记）时点击触发在线升级
+  void _onOnlineUpgradeTap() {
+    if (!_upgradeAvailable) {
+      return;
+    }
+    _showUpgradeConfirmDialog(_UpgradeMode.online);
+  }
+
+  /// p2p模式（转发和穿透）不支持固件上传
+  bool _p2pProxyCheck() {
+    if (!_supportUpgradeByLocalOrApp) {
+      KToast.show(status: TR.current.firmwareP2PNotSupportTip);
+      return false;
+    }
+    return true;
+  }
+
   /// 显示升级确认弹窗
-  void _showUpgradeConfirmDialog(_UpgradeMode mode) {
-    _upgradeMode = mode;
+  void _showUpgradeConfirmDialog(_UpgradeMode mode, {String? filePath}) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -165,11 +255,7 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
-                if (mode == _UpgradeMode.online) {
-                  _startOnlineUpgrade();
-                } else {
-                  _startLocalUpgrade();
-                }
+                _execUpgrade(mode, filePath: filePath);
               },
               child: Text(TR.current.confirmBtn),
             ),
@@ -179,8 +265,28 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
     );
   }
 
-  /// 在线升级
-  /// 通过 xcDeviceUpgradeBySelf 让设备自行下载固件并升级
+  /// 执行升级
+  /// 在线升级根据检测结果 CheckFrom 自动判定升级通道：
+  /// App 表示 App 代理下载升级，否则设备自升级
+  Future<void> _execUpgrade(_UpgradeMode mode, {String? filePath}) async {
+    if (mode == _UpgradeMode.local) {
+      _startLocalUpgrade(filePath!);
+      return;
+    }
+
+    if (_checkResponse?.info?.checkFrom == 'App') {
+      // App 代理下载升级需要走本地上传通道，p2p模式不可用
+      if (!_p2pProxyCheck()) {
+        return;
+      }
+      _startAppDownloadUpgrade();
+    } else {
+      _startOnlineUpgrade();
+    }
+  }
+
+  /// 在线升级（设备自升级）
+  /// 通过 xcDeviceUpgradeBySelf 让设备自行从云端下载固件并升级
   /// 同时监听 deviceUpgradeStream 获取升级进度
   Future<void> _startOnlineUpgrade() async {
     setState(() {
@@ -188,6 +294,7 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
       _progress = 0;
       _stepText = TR.current.firmwareUpgrading;
       _errorMsg = null;
+      _upgradeMode = _UpgradeMode.online;
     });
 
     // 监听升级进度流
@@ -199,54 +306,47 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
 
       await JFApi.xcDeviceUpgrade.xcDeviceUpgradeBySelf(
         deviceId: widget.deviceId,
-        timeout: 300000,
+        timeout: 40000,
         bodyJson: bodyJson,
       );
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _status = _UpgradeStatus.error;
-          _errorMsg = kErrorMsg(e);
-        });
-      }
-      _upgradeSubscription?.cancel();
+      _onUpgradeFailed(kErrorMsg(e));
     }
   }
 
-  /// 本地文件升级
-  /// 1. 调用 xcDeviceDownloadFile 下载固件到本地目录
-  /// 2. 调用 xcDeviceUpgradeByFile 将本地固件文件发送给设备
-  /// 3. 监听 deviceUpgradeStream 获取升级进度
-  Future<void> _startLocalUpgrade() async {
+  /// App 代理下载升级
+  /// 1. 清空固件下载目录
+  /// 2. 调用 xcDeviceDownloadFile 下载固件到本地下载目录
+  /// 3. 复用本地升级通道 xcDeviceUpgradeByFile 上传给设备
+  /// 4. 升级结束后删除本地下载的固件
+  Future<void> _startAppDownloadUpgrade() async {
+    // 升级前清空下载目录
+    await _clearDownloadDirectory();
+
     setState(() {
       _status = _UpgradeStatus.downloading;
       _progress = 0;
       _stepText = TR.current.firmwareDownloadingToFirmware;
       _errorMsg = null;
+      _upgradeMode = _UpgradeMode.online;
     });
 
     try {
-      // 获取本地存储目录
-      final directory = await _getLocalDirectory();
-      final dirPath = directory.path;
+      final dir = await _getFirmwareDownloadDir();
 
       // 下载固件到本地
-      final downloadResult =
-          await JFApi.xcDeviceUpgrade.xcDeviceDownloadFile(
+      final downloadResult = await JFApi.xcDeviceUpgrade.xcDeviceDownloadFile(
         commandBody: _checkResponse!.versionInfo!,
-        fileSavePath: dirPath,
+        fileSavePath: dir.path,
       );
 
       if (downloadResult.code < 0) {
-        setState(() {
-          _status = _UpgradeStatus.error;
-          _errorMsg = '${TR.current.firmwareDownloadFailed} (code: ${downloadResult.code})';
-        });
+        _onUpgradeFailed(
+            '${TR.current.firmwareDownloadFailed} (code: ${downloadResult.code})');
         return;
       }
 
       _localFilePath = downloadResult.filePath;
-      KToast.show(status: TR.current.firmwareDownloadSuccess);
 
       // 开始发送固件到设备
       setState(() {
@@ -258,27 +358,36 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
       _startUpgradeProgressListener();
 
       // 调用 xcDeviceUpgradeByFile 发送本地固件到设备
-      final code = await JFApi.xcDeviceUpgrade.xcDeviceUpgradeByFile(
+      await JFApi.xcDeviceUpgrade.xcDeviceUpgradeByFile(
         deviceId: widget.deviceId,
         filePath: _localFilePath!,
       );
-
-      if (code < 0) {
-        setState(() {
-          _status = _UpgradeStatus.error;
-          _errorMsg = kErrorMsg(
-              XCloudAPIException(code: code, commandId: 1306));
-        });
-        _upgradeSubscription?.cancel();
-        _deleteLocalFile();
-      }
     } catch (e) {
-      setState(() {
-        _status = _UpgradeStatus.error;
-        _errorMsg = kErrorMsg(e);
-      });
-      _upgradeSubscription?.cancel();
-      _deleteLocalFile();
+      _onUpgradeFailed(kErrorMsg(e));
+    }
+  }
+
+  /// 本地升级
+  /// 将用户选择的本地固件包通过 xcDeviceUpgradeByFile 发送给设备升级
+  Future<void> _startLocalUpgrade(String filePath) async {
+    setState(() {
+      _status = _UpgradeStatus.upgrading;
+      _progress = 0;
+      _stepText = TR.current.firmwareSendFile;
+      _errorMsg = null;
+      _upgradeMode = _UpgradeMode.local;
+    });
+
+    // 监听升级进度流
+    _startUpgradeProgressListener();
+
+    try {
+      await JFApi.xcDeviceUpgrade.xcDeviceUpgradeByFile(
+        deviceId: widget.deviceId,
+        filePath: filePath,
+      );
+    } catch (e) {
+      _onUpgradeFailed(kErrorMsg(e));
     }
   }
 
@@ -289,12 +398,7 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
         JFApi.xcDeviceUpgrade.deviceUpgradeStream.listen((response) {
       _handleUpgradeProgress(response);
     }, onError: (error) {
-      setState(() {
-        _status = _UpgradeStatus.error;
-        _errorMsg = kErrorMsg(error);
-      });
-      _upgradeSubscription?.cancel();
-      _deleteLocalFile();
+      _onUpgradeFailed(kErrorMsg(error));
     });
   }
 
@@ -302,13 +406,8 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
   void _handleUpgradeProgress(DeviceUpgradeProgressResponse response) {
     // 如果 error < 0，表示升级失败
     if (response.error < 0) {
-      setState(() {
-        _status = _UpgradeStatus.error;
-        _errorMsg =
-            '${TR.current.firmwareUpgradeFailed} (code: ${response.error})';
-      });
-      _upgradeSubscription?.cancel();
-      _deleteLocalFile();
+      _onUpgradeFailed(
+          '${TR.current.firmwareUpgradeFailed} (code: ${response.error})');
       return;
     }
 
@@ -321,31 +420,21 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
         stepText = TR.current.firmwareDownloadFile;
         break;
       case UpgradeState.sendFileToDevice:
-        stepText = TR.current.firmwareSendFile;
-        break;
       case UpgradeState.sendFileToDeviceComplete:
         stepText = TR.current.firmwareSendFile;
         break;
       case UpgradeState.upgrading:
-        stepText = TR.current.firmwareUpgrading;
-        break;
       case UpgradeState.upgradeComplete:
         stepText = TR.current.firmwareUpgrading;
         break;
       case UpgradeState.over:
         if (response.progress == 100) {
-          // 设备重启成功
-          setState(() {
-            _status = _UpgradeStatus.success;
-            _progress = 100;
-          });
-          _upgradeSubscription?.cancel();
-          _deleteLocalFile();
-          KToast.show(status: TR.current.firmwareUpgradeSuccess);
+          // 设备重启成功，升级完成
+          _onUpgradeSuccess();
           return;
         } else if (response.progress == 1) {
           // 升级结束，等待设备重启
-          stepText = TR.current.firmwareUpgrading;
+          stepText = TR.current.firmwareUpgradeWaitReboot;
         } else {
           // 小于0表示失败，已在上面处理
           return;
@@ -353,35 +442,102 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
         break;
     }
 
+    if (!mounted) {
+      return;
+    }
     setState(() {
       _progress = response.progress;
       _stepText = stepText;
     });
   }
 
-  /// 获取本地存储目录
-  Future<Directory> _getLocalDirectory() async {
-    if (Platform.isIOS) {
-      return await getApplicationDocumentsDirectory();
-    } else if (Platform.isAndroid) {
-      return await getExternalStorageDirectory() ??
-          await getApplicationDocumentsDirectory();
-    } else {
-      // OHOS 等
-      return await getApplicationDocumentsDirectory();
+  /// 升级失败处理
+  void _onUpgradeFailed(String? msg) {
+    _upgradeSubscription?.cancel();
+    _deleteDownloadedFile();
+    if (!mounted) {
+      return;
     }
+    setState(() {
+      _status = _UpgradeStatus.error;
+      _errorMsg = msg;
+    });
   }
 
-  /// 删除本地下载的固件文件
-  void _deleteLocalFile() {
-    if (_localFilePath != null) {
-      try {
-        final file = File(_localFilePath!);
-        if (file.existsSync()) {
-          file.deleteSync();
-        }
-      } catch (_) {}
+  /// 升级成功处理
+  void _onUpgradeSuccess() {
+    _upgradeSubscription?.cancel();
+    _deleteDownloadedFile();
+    if (!mounted) {
+      return;
     }
+    setState(() {
+      _status = _UpgradeStatus.success;
+      _progress = 100;
+    });
+    KToast.show(status: TR.current.firmwareUpgradeSuccess);
+  }
+
+  /// 扫描本地固件接收目录，仅保留 .bin/.img 固件包
+  Future<List<FirmWareContent>> _scanFirmwareFiles() async {
+    final List<FirmWareContent> list = [];
+    final Directory dir = await _getFirmwareReceiveDir();
+    if (!dir.existsSync()) {
+      dir.createSync(recursive: true);
+      return list;
+    }
+    for (FileSystemEntity entity in dir.listSync()) {
+      if (entity is! File) {
+        continue;
+      }
+      if (entity.path.endsWith('.bin') || entity.path.endsWith('.img')) {
+        final int fileLength = await entity.length();
+        list.add(FirmWareContent(
+            path: entity.path, fileLength: fileLength / (1024 * 1024)));
+      }
+    }
+    return list;
+  }
+
+  /// 本地固件接收目录（App 内部，Android/iOS/鸿蒙三端统一）
+  Future<Directory> _getFirmwareReceiveDir() async {
+    final String basePath = await kDirectoryPath();
+    return Directory('$basePath/upgrade_receive_files');
+  }
+
+  /// App 下载固件目录
+  Future<Directory> _getFirmwareDownloadDir() async {
+    final String basePath = await kDirectoryPath();
+    return Directory('$basePath/upgrade_download_files');
+  }
+
+  /// 清空固件下载目录（App 代理升级前调用）
+  Future<void> _clearDownloadDirectory() async {
+    try {
+      final Directory dir = await _getFirmwareDownloadDir();
+      if (!dir.existsSync()) {
+        return;
+      }
+      for (FileSystemEntity entity in dir.listSync()) {
+        if (entity is File) {
+          entity.deleteSync();
+        }
+      }
+    } catch (_) {}
+  }
+
+  /// 删除 App 下载的固件文件（App 代理升级结束后调用）
+  void _deleteDownloadedFile() {
+    if (_localFilePath == null) {
+      return;
+    }
+    try {
+      final file = File(_localFilePath!);
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
+    } catch (_) {}
+    _localFilePath = null;
   }
 
   @override
@@ -397,13 +553,10 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
 
   Widget _buildBody() {
     switch (_status) {
-      case _UpgradeStatus.idle:
       case _UpgradeStatus.checking:
         return _buildCheckingView();
-      case _UpgradeStatus.latest:
-        return _buildLatestView();
-      case _UpgradeStatus.upgradeAvailable:
-        return _buildUpgradeAvailableView();
+      case _UpgradeStatus.normal:
+        return _buildContentView();
       case _UpgradeStatus.downloading:
         return _buildDownloadingView();
       case _UpgradeStatus.upgrading:
@@ -429,90 +582,131 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
     );
   }
 
-  /// 已是最新版本视图
-  Widget _buildLatestView() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.check_circle, size: 64, color: Colors.green),
-          const SizedBox(height: 16),
-          Text(
-            TR.current.firmwareLatest,
-            style: const TextStyle(fontSize: 18),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '${TR.current.firmwareCurrentVersion}: $_currentVersion',
-            style: const TextStyle(color: Colors.grey),
-          ),
-        ],
+  /// 版本信息视图
+  /// 显示当前版本、最新版本检测结果（红点标记可升级），
+  /// 右上角提供本地升级入口
+  Widget _buildContentView() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 主模块标题 + 本地升级入口
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, top: 14, right: 16),
+                    child: Row(
+                      children: [
+                        Text(
+                          TR.current.firmwareMainModule,
+                          style: TextStyle(
+                              fontSize: 12, color: Colors.grey.shade500),
+                        ),
+                        const Spacer(),
+                        InkWell(
+                          onTap: _onLocalUpgradeTap,
+                          child: Text(
+                            TR.current.firmwareLocalUpgrade,
+                            style: const TextStyle(
+                              color: Color(0xFFFF7F38),
+                              fontSize: 12,
+                              decoration: TextDecoration.underline,
+                              decorationColor: Color(0xFFFF7F38),
+                              decorationThickness: 1,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // 当前版本
+                  _buildConfigItem(
+                    title: TR.current.firmwareCurrentVersion,
+                    subTitle: _currentVersion,
+                  ),
+                  // 新版本：可升级时红点标记，点击触发在线升级
+                  _buildConfigItem(
+                    title: TR.current.firmwareNewVersion,
+                    subTitle: _upgradeAvailable
+                        ? TR.current.firmwareNewVersionUpgradable
+                        : TR.current.firmwareLatest,
+                    showRedDot: _upgradeAvailable,
+                    onTap: _onOnlineUpgradeTap,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              TR.current.firmwareUpgradeTip,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.orange, fontSize: 12),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  /// 发现新版本视图 - 提供在线升级和本地升级两种方式
-  Widget _buildUpgradeAvailableView() {
-    final info = _checkResponse?.info;
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 24),
-          Icon(Icons.system_update, size: 64, color: Colors.blue.shade300),
-          const SizedBox(height: 16),
-          Text(
-            TR.current.firmwareUpgradeAvailable,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 24),
-          _buildInfoRow(TR.current.firmwareCurrentVersion, _currentVersion),
-          const SizedBox(height: 12),
-          _buildInfoRow(
-            TR.current.firmwareNewVersion,
-            info?.upgradeVersion?.toString() ?? '',
-          ),
-          if (info?.date != null) ...[
-            const SizedBox(height: 12),
-            _buildInfoRow('Date', info!.date!),
-          ],
-          if (info?.changeLog != null &&
-              info!.changeLog!.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            _buildInfoRow('ChangeLog', info.changeLog!),
-          ],
-          const SizedBox(height: 32),
-          Text(
-            TR.current.firmwareUpgradeTip,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.orange, fontSize: 13),
-          ),
-          const SizedBox(height: 16),
-          // 在线升级按钮
-          ElevatedButton(
-            onPressed: () => _showUpgradeConfirmDialog(_UpgradeMode.online),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
+  /// 配置行组件（粗体标题 + 红点 + 灰色等宽副标题，右对齐可多行）
+  Widget _buildConfigItem({
+    required String title,
+    required String subTitle,
+    bool showRedDot = false,
+    VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 15,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            child: Text(TR.current.firmwareOnlineUpgrade),
-          ),
-          const SizedBox(height: 12),
-          // 本地文件升级按钮
-          OutlinedButton(
-            onPressed: () => _showUpgradeConfirmDialog(_UpgradeMode.local),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
+            const Spacer(),
+            if (showRedDot)
+              Container(
+                margin: const EdgeInsets.only(right: 5),
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            Flexible(
+              child: Text(
+                subTitle,
+                textAlign: TextAlign.end,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey.shade600,
+                  // 数字等宽，版本号对齐显示
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
+              ),
             ),
-            child: Text(TR.current.firmwareLocalUpgrade),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  /// 下载固件到本地视图（本地升级第一步）
+  /// 下载固件到本地视图（App 代理升级第一步）
   Widget _buildDownloadingView() {
     return Padding(
       padding: const EdgeInsets.all(24.0),
@@ -620,51 +814,34 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _checkVersion,
-              child: Text(TR.current.firmwareCheckUpdate),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: _checkVersion,
+                  child: Text(TR.current.firmwareCheckUpdate),
+                ),
+                const SizedBox(width: 12),
+                OutlinedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(TR.current.back),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
   }
-
-  /// 信息行组件
-  Widget _buildInfoRow(String label, String value) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '$label: ',
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Expanded(
-            child: Text(value),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
-/// 升级状态枚举
+/// 页面状态枚举
 enum _UpgradeStatus {
-  /// 空闲
-  idle,
   /// 检查版本中
   checking,
-  /// 已是最新版本
-  latest,
-  /// 发现新版本
-  upgradeAvailable,
-  /// 正在下载固件到本地（本地升级专用）
+  /// 正常（显示版本信息）
+  normal,
+  /// 正在下载固件到本地（App 代理升级专用）
   downloading,
   /// 升级中
   upgrading,
@@ -676,8 +853,8 @@ enum _UpgradeStatus {
 
 /// 升级模式
 enum _UpgradeMode {
-  /// 在线升级（设备自行下载固件）
+  /// 在线升级（设备自升级 / App 代理下载）
   online,
-  /// 本地文件升级（先下载固件到本地，再发送给设备）
+  /// 本地固件升级（选择手机本地固件包上传）
   local,
 }
