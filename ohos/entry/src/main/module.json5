@@ -21,6 +21,11 @@
     "deviceTypes": [
       "phone"
     ],
+    // 声明允许通过隐式Want打开的URL scheme（NEXT上打开http/https链接必需，否则系统拦截）
+    "querySchemes": [
+      "https",
+      "http"
+    ],
     "deliveryWithInstall": true,
     "installationFree": false,
     "pages": "$profile:main_pages",
@@ -113,6 +118,16 @@
       },
       {
         "name": "ohos.permission.READ_IMAGEVIDEO",
+        "reason": "$string:album_reason",
+        "usedScene": {
+          "when": "inuse",
+          "abilities": [
+            "EntryAbility"
+          ]
+        }
+      },
+      {
+        "name": "ohos.permission.WRITE_IMAGEVIDEO",
         "reason": "$string:album_reason",
         "usedScene": {
           "when": "inuse",

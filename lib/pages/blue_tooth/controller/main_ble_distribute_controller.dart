@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/api/util/util_api.dart';
-import 'package:xcloudsdk_flutter/ble_by_sdk/ble_device.dart';
-import 'package:xcloudsdk_flutter/ble_by_sdk/ble_distribute.dart';
-import 'package:xcloudsdk_flutter/wifi/wifi_config.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/add_device_fill_device_name_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/models/add_device_center.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/util/util_api.dart';
+import 'package:fcloudsdk/ble_by_sdk/ble_device.dart';
+import 'package:fcloudsdk/ble_by_sdk/ble_distribute.dart';
+import 'package:fcloudsdk/wifi/wifi_config.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/add_device/add_device_fill_device_name_page.dart';
+import 'package:fcloudsdk_example/pages/add_device/models/add_device_center.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class MainBleDistributeController extends ChangeNotifier {
   final BuildContext context;

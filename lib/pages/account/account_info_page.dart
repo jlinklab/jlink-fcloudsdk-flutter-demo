@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
-import 'package:xcloudsdk_flutter_example/pages/account/model/model.dart';
-import 'package:xcloudsdk_flutter_example/pages/setting/setting_page.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/models/user_instance.dart';
+import 'package:fcloudsdk_example/pages/account/model/model.dart';
+import 'package:fcloudsdk_example/pages/setting/setting_page.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class AccountInfoPage extends StatefulWidget {
   const AccountInfoPage({Key? key}) : super(key: key);

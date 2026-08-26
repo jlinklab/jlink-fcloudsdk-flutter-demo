@@ -5,24 +5,24 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/media/media_player.dart';
-import 'package:xcloudsdk_flutter/model/dev_record.dart';
-import 'package:xcloudsdk_flutter/utils/date_util.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/media/media_player.dart';
+import 'package:fcloudsdk/model/dev_record.dart';
+import 'package:fcloudsdk/utils/date_util.dart';
 import 'package:time/time.dart';
-import 'package:xcloudsdk_flutter/utils/logger.dart';
-import 'package:xcloudsdk_flutter/utils/num_util.dart';
-import 'package:xcloudsdk_flutter/widgets/images_jf.dart';
-import 'package:xcloudsdk_flutter_example/common/named_route.dart';
-import 'package:xcloudsdk_flutter_example/common/common_path.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/download_manage/download_manage_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/download_manage/model/record_file.dart';
-import 'package:xcloudsdk_flutter_example/pages/record/record_file_pic_page.dart';
-import 'package:xcloudsdk_flutter_example/views/calendar/rf_calendar.dart';
+import 'package:fcloudsdk/utils/logger.dart';
+import 'package:fcloudsdk/utils/num_util.dart';
+import 'package:fcloudsdk/widgets/images_jf.dart';
+import 'package:fcloudsdk_example/common/named_route.dart';
+import 'package:fcloudsdk_example/common/common_path.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/download_manage/download_manage_page.dart';
+import 'package:fcloudsdk_example/pages/download_manage/model/record_file.dart';
+import 'package:fcloudsdk_example/pages/record/record_file_pic_page.dart';
+import 'package:fcloudsdk_example/views/calendar/rf_calendar.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:xcloudsdk_flutter_example/views/play_control_view.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk_example/views/play_control_view.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 import '../../common/code_prase.dart';
 
@@ -136,7 +136,9 @@ class _RecordListPageState extends State<RecordListPage>
   void initMediaPlay() async {
     controller = CardMediaController(deviceId: widget.deviceId);
     controller.addListener(() {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
     controller.addStatusListener((status) {
       if (mounted) {
@@ -214,9 +216,7 @@ class _RecordListPageState extends State<RecordListPage>
         _existRecord = false;
       }
     } catch (error) {
-      if (error is XCloudAPIException) {
-        KToast.show(status: kErrorMsg(error.code));
-      }
+      KToast.show(status: kErrorMsg(error));
       _isLoading = false;
       records = [];
       _existRecord = false;
@@ -392,9 +392,9 @@ class _RecordListPageState extends State<RecordListPage>
     KToast.show();
     int code = await controller.snapshot(imagePath);
     if (code >= 0) {
-      KToast.show(status: '抓图成功');
+      KToast.show(status: TR.current.TR_Capture_Success);
     } else {
-      KToast.show(status: '抓图失败 $code');
+      KToast.show(status: '${TR.current.TR_Capture_Failed} $code');
     }
   }
 
@@ -408,6 +408,39 @@ class _RecordListPageState extends State<RecordListPage>
     setState(() {
       _isMute = !_isMute;
     });
+  }
+
+  String _playbackSpeedText(PlaybackSpeed speed) {
+    if (speed == PlaybackSpeed.x4_) return '-4X';
+    if (speed == PlaybackSpeed.x2_) return '-2X';
+    if (speed == PlaybackSpeed.x2) return '2X';
+    if (speed == PlaybackSpeed.x4) return '4X';
+    return '1X';
+  }
+
+  void _showPlaybackSpeedDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(TR.current.selectPlaybackSpeed),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: PlaybackSpeed.values.reversed.map((speed) {
+                return ListTile(
+                  title: Text(_playbackSpeedText(speed)),
+                  onTap: () {
+                    controller.setPlaybackSpeed(speed: speed);
+                    Navigator.of(context).pop();
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   ///录像
@@ -586,6 +619,15 @@ class _RecordListPageState extends State<RecordListPage>
                                         ? Colors.red
                                         : Colors.white,
                                   )),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10.0),
+                              child: ElevatedButton(
+                                  onPressed: () {
+                                    _showPlaybackSpeedDialog();
+                                  },
+                                  child: Text(_playbackSpeedText(
+                                      controller.playbackSpeed))),
                             ),
                           ],
                         ),

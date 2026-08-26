@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/controllers/recordfile_pic/model.dart';
-import 'package:xcloudsdk_flutter/utils/date_util.dart';
-import 'package:xcloudsdk_flutter/widgets/images_jf.dart';
+import 'package:fcloudsdk/controllers/recordfile_pic/model.dart';
+import 'package:fcloudsdk/utils/date_util.dart';
+import 'package:fcloudsdk/widgets/images_jf.dart';
 
 import '../../common/common_path.dart';
 

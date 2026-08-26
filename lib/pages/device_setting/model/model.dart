@@ -1,4 +1,4 @@
-import 'package:xcloudsdk_flutter/utils/extensions.dart';
+import 'package:fcloudsdk/utils/extensions.dart';
 
 import '../../cloud/device_cloud_service_manager.dart';
 import '../../cloud/model/device_cloud.dart';

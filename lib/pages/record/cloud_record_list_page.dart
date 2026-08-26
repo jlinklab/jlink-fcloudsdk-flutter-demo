@@ -6,9 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/media/media_player.dart';
-import 'package:xcloudsdk_flutter_example/pages/record/alarmplaytoolbar/alarmplaytoolbar.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/media/media_player.dart';
+import 'package:fcloudsdk_example/pages/record/alarmplaytoolbar/alarmplaytoolbar.dart';
 
 import '../../common/code_prase.dart';
 import '../../common/named_route.dart';
@@ -89,6 +89,39 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
 
   void _onStop() {
     _context.read<CloudRecordController>().onStop();
+  }
+
+  String _playbackSpeedText(PlaybackSpeed speed) {
+    if (speed == PlaybackSpeed.x4_) return '-4X';
+    if (speed == PlaybackSpeed.x2_) return '-2X';
+    if (speed == PlaybackSpeed.x2) return '2X';
+    if (speed == PlaybackSpeed.x4) return '4X';
+    return '1X';
+  }
+
+  void _showPlaybackSpeedDialog(MediaController mediaController) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(TR.current.selectPlaybackSpeed),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: PlaybackSpeed.values.reversed.map((speed) {
+                return ListTile(
+                  title: Text(_playbackSpeedText(speed)),
+                  onTap: () {
+                    mediaController.setPlaybackSpeed(speed: speed);
+                    Navigator.of(context).pop();
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _onResume() {
@@ -293,6 +326,18 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
                                                 : Colors.white,
                                           )),
                                     ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
+                                      child: ElevatedButton(
+                                          onPressed: () {
+                                            _showPlaybackSpeedDialog(
+                                                controller.mediaController);
+                                          },
+                                          child: Text(_playbackSpeedText(
+                                              controller.mediaController
+                                                  .playbackSpeed))),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -485,7 +530,9 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
       final hasDataDateList = await JFApi.xcAlarmMessage.xcAlarmVideoCalendar(
           deviceId: widget.deviceId,
           userId: UserInfo.instance.userId,
-          monthDateTime: dateTime);
+          monthDateTime: dateTime,
+          //是否需要USERID鉴权
+          needAuth: false);
       for (String dateStr in hasDataDateList) {
         DateTime dateTime = DateTime.parse(dateStr);
         hasDataDateMap[dateTime] = 1;

@@ -4,14 +4,14 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/media/media_player.dart';
-import 'package:xcloudsdk_flutter/utils/extensions.dart';
-import 'package:xcloudsdk_flutter_example/common/common_path.dart';
-import 'package:xcloudsdk_flutter_example/common/match.dart';
-import 'package:xcloudsdk_flutter_example/pages/media_realplay/model/preset.dart';
-import 'package:xcloudsdk_flutter_example/views/dialog/edit_text_widget.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/media/media_player.dart';
+import 'package:fcloudsdk/utils/extensions.dart';
+import 'package:fcloudsdk_example/common/common_path.dart';
+import 'package:fcloudsdk_example/common/match.dart';
+import 'package:fcloudsdk_example/pages/media_realplay/model/preset.dart';
+import 'package:fcloudsdk_example/views/dialog/edit_text_widget.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 import '../../../common/code_prase.dart';
 

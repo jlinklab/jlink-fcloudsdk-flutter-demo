@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import '../../common/base_const.dart';
 
 class KToast {
@@ -66,7 +67,7 @@ class KToast {
   void _dissmiss() {
     _w = null;
     _cancelTimer();
-    _update();
+    _updateWhenSafe();
   }
 
   //仅文案
@@ -123,7 +124,7 @@ class KToast {
     );
 
     _w = w;
-    _update();
+    _updateWhenSafe();
 
     //延时关闭
     if (duration != null) {
@@ -143,6 +144,21 @@ class KToast {
   //强制刷新显示
   void _update() {
     overlayEntry?.markNeedsBuild();
+  }
+
+  ///在安全时机刷新：
+  ///若在帧构建阶段（build/layout/paint）调用 markNeedsBuild 会触发断言失败，
+  ///统一延迟到当前帧结束后刷新，调用方无需关心调用时机。
+  void _updateWhenSafe() {
+    if (SchedulerBinding.instance.schedulerPhase != SchedulerPhase.idle) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (w != null) {
+          _update();
+        }
+      });
+    } else {
+      _update();
+    }
   }
 }
 

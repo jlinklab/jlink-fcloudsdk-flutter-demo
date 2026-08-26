@@ -7,15 +7,15 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:xcloudsdk_flutter/api/sdk_init/model.dart';
-import 'package:xcloudsdk_flutter/xcloud.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
+import 'package:fcloudsdk/api/sdk_init/model.dart';
+import 'package:fcloudsdk/xcloud.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
 
-import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
-import 'package:xcloudsdk_flutter_example/utils/app_config.dart';
-import 'package:xcloudsdk_flutter_example/utils/push_notification.dart';
-import 'package:xcloudsdk_flutter_example/utils/sp_utils.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk_example/models/user_instance.dart';
+import 'package:fcloudsdk_example/utils/app_config.dart';
+import 'package:fcloudsdk_example/utils/push_notification.dart';
+import 'package:fcloudsdk_example/utils/sp_utils.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 import 'common/named_route.dart';
 import 'pages/device_setting/viewmodel/device_list_view_model.dart';

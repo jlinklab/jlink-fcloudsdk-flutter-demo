@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:intl/intl.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
+import 'package:fcloudsdk/api/api_center.dart';
 
 class DeviceSyncTime {
   ///同步设备时间

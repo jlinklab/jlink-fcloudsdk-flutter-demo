@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_pwd_setting/model/model.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/pages/device_pwd_setting/model/model.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 typedef InputCompletion = void Function(String name, String pwd);
 

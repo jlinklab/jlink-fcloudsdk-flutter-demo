@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter_example/pages/play_back/views/time_slider/time_fragment.dart';
+import 'package:fcloudsdk_example/pages/play_back/views/time_slider/time_fragment.dart';
 
 class TimeSlider extends StatefulWidget {
   const TimeSlider({Key? key}) : super(key: key);

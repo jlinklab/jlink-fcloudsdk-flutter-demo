@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/utils/log_util.dart';
+import 'package:fcloudsdk_example/manager/device_property_manager.dart';
 import 'package:flutter/material.dart';
-
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
+
 import '../../api/share_api.dart';
 import '../../common/code_prase.dart';
 import '../../common/event.dart';
@@ -943,6 +945,38 @@ class _DeviceCard extends StatelessWidget {
       KToast.dismiss();
     } catch (error) {
       KToast.show(status: kErrorMsg(error));
+    }
+  }
+
+  ///跳转预览需要很多前置请求，直接调这个方法，不使用pushName
+  Future<void> goPreview({
+    required BuildContext context,
+  }) async {
+    KToast.show();
+    LogUtils.device.log('goPreview ${device.uuid} 点击预览');
+    try {
+      //检查是否为低功耗设备,低功耗设备进行唤醒
+      if (await DevicePropertyManager.instance
+          .isLowPowerAsync(deviceId: device.uuid)) {
+        var result = await JFApi.xcDevice
+            .xcDeviceWakeup(deviceId: device.uuid, timeout: 10000);
+        if (result < 0) {
+          KToast.show(status: TR.current.TR_Wakeup_Failed);
+          return;
+        }
+        LogUtils.device.log('goPreview ${device.uuid} 唤醒成功');
+      }
+      //设备登录校验
+      await JFApi.xcDevice.xcDeviceLogin(deviceId: device.uuid);
+      LogUtils.device.log('goPreview ${device.uuid} 设备登录成功');
+      context.pushNamed('preview', pathParameters: {
+        'devId': device.uuid,
+        'type': type.toString(),
+        'pid': device.pid.isNotEmpty ? device.pid : '-1'
+      });
+      KToast.dismiss();
+    } catch (e) {
+      KToast.show(status: kErrorMsg(e));
     }
   }
 }

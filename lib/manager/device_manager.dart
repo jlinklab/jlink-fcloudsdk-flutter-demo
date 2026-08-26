@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/utils/extensions.dart';
-import 'package:xcloudsdk_flutter_example/manager/push_manager.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/utils/extensions.dart';
+import 'package:fcloudsdk_example/manager/push_manager.dart';
 
 import '../models/user_instance.dart';
 import '../pages/cloud/device_cloud_service_manager.dart';
@@ -183,6 +183,7 @@ class DeviceManager {
 
   /// 释放资源
   void dispose() {
+    stopDeviceStateListener();
     mineDeviceList.clear();
     shareDeviceList.clear();
     sharedNotAgreeDeviceList.clear();

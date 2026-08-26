@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:xcloudsdk_flutter_example/common/common_path.dart';
-import 'package:xcloudsdk_flutter_example/pages/album/views/album_Item_list_view.dart';
-import 'package:xcloudsdk_flutter_example/pages/album/views/album_bottom_tool_view.dart';
-import 'package:xcloudsdk_flutter_example/pages/album/models/album_model.dart';
-import 'package:xcloudsdk_flutter_example/pages/album/views/album_date_picker.dart';
-import 'package:xcloudsdk_flutter_example/pages/album/views/album_device_picker.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk_example/common/common_path.dart';
+import 'package:fcloudsdk_example/pages/album/views/album_Item_list_view.dart';
+import 'package:fcloudsdk_example/pages/album/views/album_bottom_tool_view.dart';
+import 'package:fcloudsdk_example/pages/album/models/album_model.dart';
+import 'package:fcloudsdk_example/pages/album/views/album_date_picker.dart';
+import 'package:fcloudsdk_example/pages/album/views/album_device_picker.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class AlbumPage extends StatefulWidget {
   // ignore: library_private_types_in_public_api

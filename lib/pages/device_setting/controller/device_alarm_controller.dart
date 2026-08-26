@@ -5,15 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/api/mobile_systeminfo/MobileSystemInfo_api.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
-import 'package:xcloudsdk_flutter_example/manager/push_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/device_alarm_custom_voice_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
-import 'package:xcloudsdk_flutter_example/views/x_single_selector.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/api/mobile_systeminfo/MobileSystemInfo_api.dart';
+import 'package:fcloudsdk/manager/device_config_manager.dart';
+import 'package:fcloudsdk/xcloud.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/manager/device_manager.dart';
+import 'package:fcloudsdk_example/manager/push_manager.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_alarm_custom_voice_page.dart';
+import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/views/x_single_selector.dart';
 
 import '../../../models/user_instance.dart';
 import '../../../views/toast/toast.dart';
@@ -25,7 +27,7 @@ class DeviceAlarmController extends ChangeNotifier {
   final String deviceId;
   int channel = 0;
 
-  List<ListTile> dataSource = [];
+  List<AlarmSettingSection> dataSource = [];
 
   ///是否-报警订阅
   bool isAlarmSubscribe = false;
@@ -61,15 +63,20 @@ class DeviceAlarmController extends ChangeNotifier {
   }
 
   void _init() {
-    _queryData();
     _configDeviceSetItemMoleList();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _queryData();
+    });
   }
 
   _queryData() async {
+    KToast.show();
     await _queryMoveMotionConfig();
     await _queryAlarmSubscribe();
     await _queryConfigHumanDetect();
+    await _queryConfigHumanRuleLimit();
     await _queryConfigAlarmBeep();
+    KToast.dismiss();
     _configDeviceSetItemMoleList();
   }
 
@@ -126,6 +133,21 @@ class DeviceAlarmController extends ChangeNotifier {
   ///人形检测开关
   bool bStatusHumanDetect = false;
 
+  ///是否支持警戒线
+  bool bSupportLine = false;
+
+  ///是否支持警戒区域
+  bool bSupportArea = false;
+
+  ///智能踪迹开关
+  bool bStatusShowTrack = false;
+
+  ///是否支持智能踪迹
+  bool bShowTrack = false;
+
+  ///智能警戒规则限制配置
+  Map? mapHumanRuleLimit;
+
   Future _queryConfigHumanDetect({bool bShowLoading = false}) async {
     final bAlarmFunctionPEAInHumanPed = await DeviceAbilityManager.queryAbility(
         deviceId: deviceId,
@@ -156,10 +178,47 @@ class DeviceAlarmController extends ChangeNotifier {
         Map? humanDectionConfig = resultMap['Detect.HumanDetection.[0]'];
 
         bStatusHumanDetect = humanDectionConfig?['Enable'] as bool;
+
+        ///读取智能踪迹开关
+        if (humanDectionConfig?['ShowTrack'] != null) {
+          if (humanDectionConfig?['ShowTrack'].runtimeType == int) {
+            bStatusShowTrack = humanDectionConfig?['ShowTrack'] == 1;
+          } else {
+            bStatusShowTrack = humanDectionConfig?['ShowTrack'] as bool;
+          }
+        }
       }
     } catch (e) {
       debugPrint('debug  human 获取失败${e.toString()}');
       KToast.dismiss();
+    }
+    return;
+  }
+
+  Future _queryConfigHumanRuleLimit({bool bShowLoading = false}) async {
+    if (bSupportLine || bSupportArea) {
+      //已经查询过能力，不再重复查询
+    }
+    final bAlarmFunctionPEAInHumanPed = await DeviceAbilityManager.queryAbility(
+        deviceId: deviceId,
+        type: DeviceAbilityType.bAlarmFunctionPEAInHumanPed);
+    if (bAlarmFunctionPEAInHumanPed == false) {
+      return;
+    }
+    try {
+      final resultMap = await JFApi.xcDevice.xcDevGetSysConfig(
+          deviceId: deviceId,
+          commandName: DeviceJsonName.humanRuleLimit,
+          command: 1360,
+          timeout: 20000);
+      if (resultMap['Ret'] == 100 && resultMap['HumanRuleLimit'] != null) {
+        mapHumanRuleLimit = resultMap['HumanRuleLimit'];
+        bSupportLine = mapHumanRuleLimit!['SupportLine'] as bool? ?? false;
+        bSupportArea = mapHumanRuleLimit!['SupportArea'] as bool? ?? false;
+        bShowTrack = mapHumanRuleLimit!['ShowTrack'] as bool? ?? false;
+      }
+    } catch (e) {
+      debugPrint('debug  humanRuleLimit 获取失败${e.toString()}');
     }
     return;
   }
@@ -239,7 +298,11 @@ class DeviceAlarmController extends ChangeNotifier {
   _configDeviceSetItemMoleList() {
     dataSource.clear();
 
-    dataSource.add(ListTile(
+    List<ListTile> alarmSectionItems = [];
+    List<ListTile> pushSectionItems = [];
+    List<ListTile> advancedSectionItems = [];
+
+    alarmSectionItems.add(ListTile(
         title: Text(TR.current.on),
         trailing: CupertinoSwitch(
             value: isMoveMotion,
@@ -249,87 +312,140 @@ class DeviceAlarmController extends ChangeNotifier {
               tempMap[moveMotionName]['Enable'] = isMoveMotion;
               _onSetMoveMotion(tempMap, bShowLoading: true);
             })));
-    if (!isMoveMotion) {
-      notifyListeners();
-      return;
+
+    if (isMoveMotion) {
+      alarmSectionItems.add(ListTile(
+          title: Text(TR.current.baseStationHumanDetectionSwitch),
+          trailing: CupertinoSwitch(
+              value: bStatusHumanDetect,
+              onChanged: (value) {
+                bStatusHumanDetect = value;
+                Map tempMap = Map.from(mapHumanDetect ?? {});
+                tempMap['Detect.HumanDetection.[0]']['Enable'] =
+                    bStatusHumanDetect;
+                _onSetHumanDetect(requestMap: tempMap, bShowLoading: true);
+              })));
+
+      if (bStatusHumanDetect && bShowTrack) {
+        advancedSectionItems.add(ListTile(
+          title: Text(TR.current.Show_traces),
+          subtitle: Text(TR.current.TR_Show_Traces_Tip),
+          trailing: CupertinoSwitch(
+            value: bStatusShowTrack,
+            onChanged: (value) {
+              bStatusShowTrack = value;
+              final tempMap = Map.from(mapHumanDetect ?? {});
+              final humanDetectConfig = tempMap['Detect.HumanDetection.[0]'];
+              if (humanDetectConfig != null) {
+                humanDetectConfig['ShowTrack'] = bStatusShowTrack;
+                _onSetHumanDetect(requestMap: tempMap, bShowLoading: true);
+              }
+            },
+          ),
+        ));
+      }
+
+      if (bStatusHumanDetect && (bSupportLine || bSupportArea)) {
+        advancedSectionItems.add(ListTile(
+          title: Text(TR.current.TR_Rule_Setting),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () {
+            context.pushNamed('deviceAlarmSmartRule', queryParameters: {
+              'deviceId': deviceId,
+            }).then((_) {
+              _queryConfigHumanDetect();
+              _queryConfigHumanRuleLimit();
+              _configDeviceSetItemMoleList();
+            });
+          },
+        ));
+      }
+
+      pushSectionItems.add(ListTile(
+          title: Text(TR.current.alarmSubscription),
+          trailing: CupertinoSwitch(
+              value: isAlarmSubscribe,
+              onChanged: (value) {
+                isAlarmSubscribe = value;
+                _onSetAlarmSubscribe(bShowLoading: true);
+              })));
+
+      advancedSectionItems.add(ListTile(
+          title: Text(TR.current.alarmRecording),
+          trailing: CupertinoSwitch(
+              value: isMoveMotionRecord,
+              onChanged: (value) {
+                isMoveMotionRecord = value;
+                Map tempMap = Map.from(motionDataSource);
+                tempMap[moveMotionName]['EventHandler']['RecordEnable'] =
+                    isMoveMotionRecord;
+                _onSetMoveMotion(tempMap, bShowLoading: true);
+              })));
+
+      advancedSectionItems.add(ListTile(
+          title: Text(TR.current.alarmScreenshot),
+          trailing: CupertinoSwitch(
+              value: isMoveMotionSnap,
+              onChanged: (value) {
+                isMoveMotionSnap = value;
+                Map tempMap = Map.from(motionDataSource);
+                tempMap[moveMotionName]['EventHandler']['SnapEnable'] =
+                    isMoveMotionSnap;
+                _onSetMoveMotion(tempMap, bShowLoading: true);
+              })));
+
+      advancedSectionItems.add(ListTile(
+          title: Text(TR.current.tr_settings_alarm_beep),
+          trailing: CupertinoSwitch(
+              value: isAlarmBeep,
+              onChanged: (value) {
+                isAlarmBeep = value;
+                _configDeviceSetItemMoleList();
+                Map tempMap = Map.from(motionDataSource);
+                tempMap[moveMotionName]['EventHandler']['VoiceEnable'] =
+                    isAlarmBeep;
+                _onSetMoveMotion(tempMap, bShowLoading: true);
+              })));
+      if (isAlarmBeep) {
+        advancedSectionItems.add(ListTile(
+          title: Text(TR.current.tr_settings_alarm_bell_select),
+          onTap: () {
+            onChooseBeepVoice();
+          },
+        ));
+      }
+
+      alarmSectionItems.add(ListTile(
+          title: Text(TR.current.messageReporting),
+          trailing: CupertinoSwitch(
+              value: isMoveMotionMessage,
+              onChanged: (value) {
+                isMoveMotionMessage = value;
+                Map tempMap = Map.from(motionDataSource);
+                tempMap[moveMotionName]['EventHandler']['MessageEnable'] =
+                    isMoveMotionMessage;
+                _onSetMoveMotion(tempMap, bShowLoading: true);
+              })));
     }
 
-    dataSource.add(ListTile(
-        title: Text(TR.current.baseStationHumanDetectionSwitch),
-        trailing: CupertinoSwitch(
-            value: bStatusHumanDetect,
-            onChanged: (value) {
-              bStatusHumanDetect = value;
-              Map tempMap = Map.from(mapHumanDetect ?? {});
-              tempMap['Detect.HumanDetection.[0]']['Enable'] =
-                  bStatusHumanDetect;
-              _onSetHumanDetect(requestMap: tempMap, bShowLoading: true);
-            })));
+    dataSource.add(AlarmSettingSection(
+      title: TR.current.dynamic_alarm,
+      items: alarmSectionItems,
+    ));
 
-    dataSource.add(ListTile(
-        title: Text(TR.current.alarmSubscription),
-        trailing: CupertinoSwitch(
-            value: isAlarmSubscribe,
-            onChanged: (value) {
-              isAlarmSubscribe = value;
-              _onSetAlarmSubscribe(bShowLoading: true);
-            })));
-
-    dataSource.add(ListTile(
-        title: Text(TR.current.alarmRecording),
-        trailing: CupertinoSwitch(
-            value: isMoveMotionRecord,
-            onChanged: (value) {
-              isMoveMotionRecord = value;
-              Map tempMap = Map.from(motionDataSource);
-              tempMap[moveMotionName]['EventHandler']['RecordEnable'] =
-                  isMoveMotionRecord;
-              _onSetMoveMotion(tempMap, bShowLoading: true);
-            })));
-
-    dataSource.add(ListTile(
-        title: Text(TR.current.alarmScreenshot),
-        trailing: CupertinoSwitch(
-            value: isMoveMotionSnap,
-            onChanged: (value) {
-              isMoveMotionSnap = value;
-              Map tempMap = Map.from(motionDataSource);
-              tempMap[moveMotionName]['EventHandler']['SnapEnable'] =
-                  isMoveMotionSnap;
-              _onSetMoveMotion(tempMap, bShowLoading: true);
-            })));
-
-    dataSource.add(ListTile(
-        title: Text(TR.current.tr_settings_alarm_beep),
-        trailing: CupertinoSwitch(
-            value: isAlarmBeep,
-            onChanged: (value) {
-              isAlarmBeep = value;
-              _configDeviceSetItemMoleList();
-              Map tempMap = Map.from(motionDataSource);
-              tempMap[moveMotionName]['EventHandler']['VoiceEnable'] =
-                  isAlarmBeep;
-              _onSetMoveMotion(tempMap, bShowLoading: true);
-            })));
-    if (isAlarmBeep) {
-      dataSource.add(ListTile(
-        title: Text(TR.current.tr_settings_alarm_bell_select),
-        onTap: () {
-          onChooseBeepVoice();
-        },
+    if (pushSectionItems.isNotEmpty) {
+      dataSource.add(AlarmSettingSection(
+        title: TR.current.push_setting,
+        items: pushSectionItems,
       ));
     }
-    dataSource.add(ListTile(
-        title: Text(TR.current.messageReporting),
-        trailing: CupertinoSwitch(
-            value: isMoveMotionMessage,
-            onChanged: (value) {
-              isMoveMotionMessage = value;
-              Map tempMap = Map.from(motionDataSource);
-              tempMap[moveMotionName]['EventHandler']['MessageEnable'] =
-                  isMoveMotionMessage;
-              _onSetMoveMotion(tempMap, bShowLoading: true);
-            })));
+
+    if (advancedSectionItems.isNotEmpty) {
+      dataSource.add(AlarmSettingSection(
+        title: TR.current.advanced_set,
+        items: advancedSectionItems,
+      ));
+    }
 
     notifyListeners();
   }
@@ -462,4 +578,14 @@ class DeviceAlarmController extends ChangeNotifier {
     tempMap[moveMotionName]['EventHandler']['VoiceType'] = beepVoiceEnum;
     _onSetMoveMotion(tempMap, bShowLoading: true);
   }
+}
+
+class AlarmSettingSection {
+  final String? title;
+  final List<ListTile> items;
+
+  AlarmSettingSection({
+    this.title,
+    required this.items,
+  });
 }

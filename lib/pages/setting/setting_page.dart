@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
-import 'package:xcloudsdk_flutter_example/pages/account/account_cancellation_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/reset_pwd/reset_pwd_page.dart';
-import 'package:xcloudsdk_flutter_example/utils/common_path.dart';
-import 'package:xcloudsdk_flutter_example/utils/upload_log_utils.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/models/user_instance.dart';
+import 'package:fcloudsdk_example/pages/account/account_cancellation_page.dart';
+import 'package:fcloudsdk_example/pages/reset_pwd/reset_pwd_page.dart';
+import 'package:fcloudsdk_example/utils/common_path.dart';
+import 'package:fcloudsdk_example/utils/upload_log_utils.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);

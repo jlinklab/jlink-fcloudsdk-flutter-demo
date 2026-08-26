@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/api/share_api.dart';
-import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
-import 'package:xcloudsdk_flutter_example/utils/push_notification.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/api/share_api.dart';
+import 'package:fcloudsdk_example/manager/device_manager.dart';
+import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/utils/push_notification.dart';
 
 /// 低功耗设备状态类型
 const int _kLowPowerStateType = 8;

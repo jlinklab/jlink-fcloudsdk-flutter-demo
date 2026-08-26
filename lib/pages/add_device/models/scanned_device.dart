@@ -1,7 +1,7 @@
-import 'package:xcloudsdk_flutter/ble_by_sdk/ble_device.dart';
-import 'package:xcloudsdk_flutter_example/api/add_device_api.dart';
-import 'package:xcloudsdk_flutter_example/api/core/dio_config.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
+import 'package:fcloudsdk/ble_by_sdk/ble_device.dart';
+import 'package:fcloudsdk_example/api/add_device_api.dart';
+import 'package:fcloudsdk_example/api/core/dio_config.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
 
 ///蓝牙扫描到的设备，需要显示到发现以下设备组件中
 class ScannedDevice {

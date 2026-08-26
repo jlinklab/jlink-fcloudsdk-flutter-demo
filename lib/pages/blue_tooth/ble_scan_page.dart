@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/pages/add_device/models/scanned_device.dart';
-import 'package:xcloudsdk_flutter_example/pages/blue_tooth/ble_wifi_info_input_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/blue_tooth/controller/main_ble_scan_controller.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/add_device/models/scanned_device.dart';
+import 'package:fcloudsdk_example/pages/blue_tooth/ble_wifi_info_input_page.dart';
+import 'package:fcloudsdk_example/pages/blue_tooth/controller/main_ble_scan_controller.dart';
 
 class BleScanPage extends StatefulWidget {
   const BleScanPage({Key? key}) : super(key: key);

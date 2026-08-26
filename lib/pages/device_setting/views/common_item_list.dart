@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
 
 typedef InputCallBack = void Function(int index);
 

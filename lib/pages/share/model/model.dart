@@ -1,4 +1,4 @@
-import 'package:xcloudsdk_flutter_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
 
 class SharedUser {
   String? id;

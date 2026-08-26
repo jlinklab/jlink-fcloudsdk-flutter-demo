@@ -7,19 +7,19 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter/media/media_download.dart';
-import 'package:xcloudsdk_flutter/media/media_player.dart';
-import 'package:xcloudsdk_flutter/model/dev_record.dart';
-import 'package:xcloudsdk_flutter/utils/date_util.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/common/common_path.dart';
-import 'package:xcloudsdk_flutter_example/generated/l10n.dart';
-import 'package:xcloudsdk_flutter_example/models/user_instance.dart';
-import 'package:xcloudsdk_flutter_example/pages/alarm_message/model/model.dart';
-import 'package:xcloudsdk_flutter_example/pages/album/album_page.dart';
-import 'package:xcloudsdk_flutter_example/pages/record/alarmplaytoolbar/alarmplaytoolbar.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/media/media_download.dart';
+import 'package:fcloudsdk/media/media_player.dart';
+import 'package:fcloudsdk/model/dev_record.dart';
+import 'package:fcloudsdk/utils/date_util.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/common/common_path.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/models/user_instance.dart';
+import 'package:fcloudsdk_example/pages/alarm_message/model/model.dart';
+import 'package:fcloudsdk_example/pages/album/album_page.dart';
+import 'package:fcloudsdk_example/pages/record/alarmplaytoolbar/alarmplaytoolbar.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 import '../../views/play_control_view.dart';
 import '../record/model/model.dart';
@@ -188,7 +188,7 @@ class _AlarmMsgVideoState extends State<AlarmMsgVideo>
       String userid = context.read<UserInfo>().userId;
 
       CloudRecordByTime model = CloudRecordByTime(
-          msg: needUserCheck ? 'short_video_query_user' : 'video_query',
+          msg: needUserCheck ? 'short_video_query_user' : 'short_video_query',
           userId: userid,
           sn: widget.deviceId,
           startTime: startDateTime,

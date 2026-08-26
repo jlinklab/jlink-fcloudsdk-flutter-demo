@@ -412,7 +412,7 @@
 					"\"${PODS_ROOT}/Headers/Public/qr_code_scanner\"",
 					"\"${PODS_ROOT}/Headers/Public/sqflite\"",
 					"\"${PODS_ROOT}/Headers/Public/video_thumbnail\"",
-					"\"${PODS_ROOT}/Headers/Public/xcloudsdk_flutter\"",
+					"\"${PODS_ROOT}/Headers/Public/fcloudsdk\"",
 					"\"${PODS_ROOT}/Headers/Public/XCloudSDK\"",
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -438,7 +438,7 @@
 					"-l\"resolv\"",
 					"-l\"shared_preferences_foundation\"",
 					"-l\"sqlite3\"",
-					"-l\"xcloudsdk_flutter\"",
+					"-l\"fcloudsdk\"",
 					"-l\"z\"",
 					"-framework",
 					"\"AVFoundation\"",
@@ -611,7 +611,7 @@
 					"\"${PODS_ROOT}/Headers/Public/qr_code_scanner\"",
 					"\"${PODS_ROOT}/Headers/Public/sqflite\"",
 					"\"${PODS_ROOT}/Headers/Public/video_thumbnail\"",
-					"\"${PODS_ROOT}/Headers/Public/xcloudsdk_flutter\"",
+					"\"${PODS_ROOT}/Headers/Public/fcloudsdk\"",
 					"\"${PODS_ROOT}/Headers/Public/XCloudSDK\"",
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -637,7 +637,7 @@
 					"-l\"resolv\"",
 					"-l\"shared_preferences_foundation\"",
 					"-l\"sqlite3\"",
-					"-l\"xcloudsdk_flutter\"",
+					"-l\"fcloudsdk\"",
 					"-l\"z\"",
 					"-framework",
 					"\"AVFoundation\"",
@@ -707,7 +707,7 @@
 					"\"${PODS_ROOT}/Headers/Public/qr_code_scanner\"",
 					"\"${PODS_ROOT}/Headers/Public/sqflite\"",
 					"\"${PODS_ROOT}/Headers/Public/video_thumbnail\"",
-					"\"${PODS_ROOT}/Headers/Public/xcloudsdk_flutter\"",
+					"\"${PODS_ROOT}/Headers/Public/fcloudsdk\"",
 					"\"${PODS_ROOT}/Headers/Public/XCloudSDK\"",
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -733,7 +733,7 @@
 					"-l\"resolv\"",
 					"-l\"shared_preferences_foundation\"",
 					"-l\"sqlite3\"",
-					"-l\"xcloudsdk_flutter\"",
+					"-l\"fcloudsdk\"",
 					"-l\"z\"",
 					"-framework",
 					"\"AVFoundation\"",

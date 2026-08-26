@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xcloudsdk_flutter/api/api_center.dart';
-import 'package:xcloudsdk_flutter_example/common/code_prase.dart';
-import 'package:xcloudsdk_flutter_example/manager/device_manager.dart';
-import 'package:xcloudsdk_flutter_example/manager/push_manager.dart';
-import 'package:xcloudsdk_flutter_example/pages/account/model/model.dart';
-import 'package:xcloudsdk_flutter_example/views/toast/toast.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/manager/device_manager.dart';
+import 'package:fcloudsdk_example/manager/idr_property_manager.dart';
+import 'package:fcloudsdk_example/manager/push_manager.dart';
+import 'package:fcloudsdk_example/pages/account/model/model.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 class UpdateUserInfoDetail {
   final bool isSuccess;
@@ -205,6 +206,8 @@ class UserInfo extends ChangeNotifier {
 
     ///调SDK内部的登出方法
     await JFApi.xcAccount.xcLoginOut();
+    // 释放设备属性相关Stream和缓存
+    await IDRPropertyManager.instance.dispose();
     // 清空设备管理器中的设备数据
     DeviceManager.instance.dispose();
     notifyListeners();

@@ -86,6 +86,21 @@ final GoRouter goRouter = GoRouter(
         deviceId: state.pathParameters['devId'] ?? '',
       ),
     ),
+    GoRoute(
+      name: 'deviceAlarmSmartRule',
+      path: '/deviceAlarmSmartRule',
+      builder: (context, state) => DeviceAlarmSmartRulePage(
+        deviceId: state.queryParameters['deviceId'] ?? '',
+      ),
+    ),
+    GoRoute(
+      name: 'deviceAlarmLineOrArea',
+      path: '/deviceAlarmLineOrArea',
+      builder: (context, state) => DeviceAlarmLineOrAreaPage(
+        deviceId: state.queryParameters['deviceId'] ?? '',
+        alarmType: state.queryParameters['alarmType'] ?? '0',
+      ),
+    ),
   ],
 
   // redirect to the login page if the user is not logged in

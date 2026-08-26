@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:xcloudsdk_flutter/api/mobile_systeminfo/MobileSystemInfo_api.dart';
+import 'package:fcloudsdk/api/mobile_systeminfo/MobileSystemInfo_api.dart';
 
 Future<String> kDirectoryPath() async {
   Directory? directory;
