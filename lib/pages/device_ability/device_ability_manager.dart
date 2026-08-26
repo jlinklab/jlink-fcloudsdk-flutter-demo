@@ -85,6 +85,9 @@ enum DeviceAbilityType {
 
   /// 是否支持微光控制
   bOtherFunctionMicroFillLight,
+
+  /// 是否支持图片水印
+  bOtherFunctionJpegChnTitleOSD,
 }
 
 class DeviceAbilityManager {
@@ -311,6 +314,14 @@ class DeviceAbilityManager {
             abilityMap['OtherFunction']!['MicroFillLight'] != null) {
           isSupport =
               abilityMap['OtherFunction']!['MicroFillLight']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionJpegChnTitleOSD:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['JpegChnTitleOSD'] != null) {
+          isSupport =
+              abilityMap['OtherFunction']!['JpegChnTitleOSD']! as bool;
         }
         break;
 

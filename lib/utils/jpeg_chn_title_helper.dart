@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:screenshot/screenshot.dart';
+import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/manager/device_config_manager.dart';
+import 'package:fcloudsdk/utils/extensions.dart';
 import 'package:fcloudsdk_example/utils/text_width_util.dart';
 
 class JpegChnTitleHelper {
@@ -12,6 +16,156 @@ class JpegChnTitleHelper {
   static const double _legacyOutlineOpacity = 0.55;
 
   JpegChnTitleHelper._();
+
+  /// 新图片水印流程入口：
+  /// 查询水印字符参数（ChnTitleOSDCharParam，command 1360），
+  /// 根据参数渲染主/辅码流通道标题 JPG 图片下发到设备（JpegChnTitleOSD，command 1046）
+  Future<void> getJpegChnTitle(String deviceId, String editName) async {
+    final res = await DeviceConfigManager.getConfigToObject<Map<String, dynamic>>(
+      deviceId: deviceId,
+      commandName: DeviceJsonName.chnTitleOSDCharParam,
+      command: 1360,
+      throwError: true,
+    );
+    await jpegChnTitleOSD(deviceId, res, editName);
+  }
+
+  /// 图片水印处理：
+  /// 渲染水印文字为主/辅码流 JPG 并下发，成功后修改通道标题
+  Future<void> jpegChnTitleOSD(
+      String deviceId, Map jpegMap, String editName) async {
+    if (jpegMap.isEmpty) {
+      return;
+    }
+    double mainStreamHeight = (jpegMap['MainStreamHeight'] as num).toDouble();
+    double subStreamHeight = (jpegMap['SubStreamHeight'] as num).toDouble();
+    Color textColor = _intToColor(jpegMap['TextColor']);
+    Color bgColor = _intToColor(jpegMap['BackColor']);
+    final screenshotController = ScreenshotController();
+
+    // 主码流通道标题
+    double mainFontSize = TextWidthUtil.getMaxFontSize(
+        text: editName, containerHeight: mainStreamHeight);
+    double mainWidth = TextWidthUtil.calculateContainerWidth(
+        text: editName, fontSize: mainFontSize);
+    final adjustedMainWidth = _adjustToMultipleOf8(mainWidth);
+    final Widget mainScreenWidget = Container(
+      height: mainStreamHeight,
+      color: bgColor,
+      child: Center(
+          child: Text(editName,
+              style: TextStyle(
+                  fontSize: mainFontSize,
+                  color: textColor,
+                  fontWeight: _watermarkFontWeight))),
+    );
+
+    // 辅码流通道标题
+    double subFontSize = TextWidthUtil.getMaxFontSize(
+        text: editName,
+        containerHeight: subStreamHeight,
+        fontWeight: _watermarkFontWeight);
+    double subWidth = TextWidthUtil.calculateContainerWidth(
+        text: editName,
+        fontSize: subFontSize,
+        fontWeight: _watermarkFontWeight);
+    final adjustedSubWidth = _adjustToMultipleOf8(subWidth);
+    final Widget subScreenWidget = Container(
+      height: subStreamHeight,
+      color: bgColor,
+      child: Center(
+          child: Text(editName,
+              style: TextStyle(
+                  fontSize: subFontSize,
+                  color: textColor,
+                  fontWeight: _watermarkFontWeight))),
+    );
+
+    // 主码流base64
+    Uint8List mainImageBytes = await screenshotController.captureFromWidget(
+      mainScreenWidget,
+      targetSize: Size(adjustedMainWidth, mainStreamHeight),
+    );
+    String mainBase64String = '';
+    Uint8List? jpgMainBytes =
+        convertPngToJpgWithLibrary(mainImageBytes, quality: 80);
+    if (jpgMainBytes != null) {
+      mainBase64String = base64Encode(jpgMainBytes);
+    }
+
+    // 辅码流base64
+    Uint8List subImageBytes = await screenshotController.captureFromWidget(
+      subScreenWidget,
+      targetSize: Size(adjustedSubWidth, subStreamHeight),
+    );
+    String subBase64String = '';
+    Uint8List? jpgSubBytes =
+        convertPngToJpgWithLibrary(subImageBytes, quality: 80);
+    if (jpgSubBytes != null) {
+      subBase64String = base64Encode(jpgSubBytes);
+    }
+
+    if (mainBase64String.isEmpty || subBase64String.isEmpty) {
+      throw XCloudAPIException(
+          code: -1, commandId: 1046, message: 'jpeg base64 empty');
+    }
+
+    Map map = {
+      'Channel': 0,
+      'MainStreamJpegBase64': mainBase64String,
+      'SubStreamJpegBase64': subBase64String
+    };
+    await DeviceConfigManager.setConfig(
+      deviceId: deviceId,
+      command: 1046,
+      commandName: DeviceJsonName.jpegChnTitleOSD,
+      config: jsonEncode(map),
+    );
+
+    /// 下发图片成功后再修改通道标题
+    await changeDeviceChannelTitle(editName, deviceId);
+  }
+
+  /// 修改通道标题：
+  /// 图片水印流程会先下发给设备图片水印，成功后再修改通道标题
+  Future<void> changeDeviceChannelTitle(String editName, String deviceId) async {
+    var videoWidget = await DeviceConfigManager.getConfigToObject<
+            List<Map<String, dynamic>>>(
+        deviceId: deviceId, commandName: DeviceJsonName.aVEncVideoWidget);
+    Map<String, dynamic>? chanelTitle =
+        videoWidget.firstWhereOrNull((e) => e.containsKey('ChannelTitle'));
+    if (chanelTitle != null && chanelTitle['ChannelTitle'] != null) {
+      chanelTitle['ChannelTitle']['Name'] = editName;
+    }
+    Map<String, dynamic>? chanelTitleAttr = videoWidget
+        .firstWhereOrNull((e) => e.containsKey('ChannelTitleAttribute'));
+    if (chanelTitleAttr != null &&
+        chanelTitleAttr['ChannelTitleAttribute'] != null) {
+      chanelTitleAttr['ChannelTitleAttribute']['EncodeBlend'] = true;
+      chanelTitleAttr['ChannelTitleAttribute']['PreviewBlend'] = true;
+    }
+    await DeviceConfigManager.setConfig(
+        deviceId: deviceId,
+        commandName: DeviceJsonName.aVEncVideoWidget,
+        config: jsonEncode(videoWidget));
+  }
+
+  /// 数字转Color（等价 JFConvert.decimalToColor/numberToColor）
+  Color _intToColor(dynamic value) {
+    final int num = value is int ? value : int.tryParse('$value') ?? 0;
+    return Color(0xFF000000 | num);
+  }
+
+  /// 调整到最接近的 8 的倍数
+  double _adjustToMultipleOf8(double width) {
+    double ceilValue = ((width + 7) / 8).floor() * 8;
+    double floorValue = (width / 8).floor() * 8;
+
+    if ((ceilValue - width).abs() < (width - floorValue).abs()) {
+      return ceilValue;
+    }
+    return floorValue;
+  }
 
   Future<String> buildLegacyWatermarkMark(
       {required String deviceId, required String editName}) async {

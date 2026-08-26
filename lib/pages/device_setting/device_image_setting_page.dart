@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/pages/device_setting/controller/device_image_setting_controller.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_water_mark_page.dart';
 import 'package:fcloudsdk_example/pages/device_setting/device_wide_dynamic_page.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 
@@ -43,24 +44,11 @@ class _DeviceImageSettingPageState extends State<DeviceImageSettingPage> {
             appBar: AppBar(
               title: Text(TR.current.imageSetting),
               actions: [
-                GestureDetector(
-                  onTap: () {
-                    _onSave.call();
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 15),
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(9),
-                        color: Colors.white),
-                    child: Icon(
-                      color: Theme.of(context).primaryColor,
-                      Icons.save,
-                      size: 24,
-                    ),
-                  ),
-                ),
+                IconButton(
+                    onPressed: () {
+                      _onSave.call();
+                    },
+                    icon: const Icon(Icons.save)),
               ],
             ),
             body: Column(
@@ -121,6 +109,14 @@ class _DeviceImageSettingPageState extends State<DeviceImageSettingPage> {
                       trailing: const Icon(Icons.chevron_right),
                       onTap: _openWideDynamicPage,
                     )),
+                // 7. 水印（仅支持图片水印能力时显示，点击进入水印配置页面）
+                Visibility(
+                    visible: controller.supportJpegChnTitleOSD,
+                    child: ListTile(
+                      title: Text(TR.current.waterMark),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: _openWaterMarkPage,
+                    )),
               ],
             ),
           );
@@ -150,6 +146,17 @@ class _DeviceImageSettingPageState extends State<DeviceImageSettingPage> {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (BuildContext context) {
       return DeviceWideDynamicPage(
+        deviceId: widget.deviceId,
+        channel: widget.channel,
+      );
+    }));
+  }
+
+  /// 跳转水印配置页面
+  void _openWaterMarkPage() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (BuildContext context) {
+      return DeviceWaterMarkPage(
         deviceId: widget.deviceId,
         channel: widget.channel,
       );

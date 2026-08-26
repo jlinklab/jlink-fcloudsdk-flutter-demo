@@ -42,6 +42,7 @@ class DeviceImageSettingController extends ChangeNotifier {
   // 能力集
   bool supportSoftPhotosensitive = false; // 是否支持软光敏（决定日夜模式3档或5档）
   bool supportBT = false; // 是否支持宽动态（决定宽动态入口是否显示）
+  bool supportJpegChnTitleOSD = false; // 是否支持图片水印（决定水印入口是否显示）
   bool _supportHidePictureFlip = false; // 是否隐藏上下翻转
   bool _supportHidePictureMirror = false; // 是否隐藏左右翻转
 
@@ -91,6 +92,11 @@ class DeviceImageSettingController extends ChangeNotifier {
           otherFunction['SupportSoftPhotosensitive'] == true;
       supportBT = otherFunction['SupportBT'] == true;
     }
+
+    // 查询图片水印能力（先查缓存，无缓存则实时更新）
+    supportJpegChnTitleOSD = await DeviceAbilityManager.getAbilityEnableIfNeed(
+        deviceId: deviceId,
+        type: DeviceAbilityType.bOtherFunctionJpegChnTitleOSD);
     notifyListeners();
   }
 

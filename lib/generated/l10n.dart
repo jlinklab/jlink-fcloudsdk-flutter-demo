@@ -7681,6 +7681,36 @@ class TR {
       args: [],
     );
   }
+
+  /// `水印`
+  String get waterMark {
+    return Intl.message(
+      '水印',
+      name: 'waterMark',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `水印配置`
+  String get waterMarkConfig {
+    return Intl.message(
+      '水印配置',
+      name: 'waterMarkConfig',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `修改设备名称将同步更新视频通道标题水印，实时画面效果如下：`
+  String get waterMarkTips {
+    return Intl.message(
+      '修改设备名称将同步更新视频通道标题水印，实时画面效果如下：',
+      name: 'waterMarkTips',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

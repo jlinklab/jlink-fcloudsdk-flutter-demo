@@ -1394,6 +1394,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "voiceTipSwitch": MessageLookupByLibrary.simpleMessage("Voice Prompt"),
         "waiting_buffering":
             MessageLookupByLibrary.simpleMessage("Buffering..."),
+        "waterMark": MessageLookupByLibrary.simpleMessage("Watermark"),
+        "waterMarkConfig":
+            MessageLookupByLibrary.simpleMessage("Watermark Config"),
+        "waterMarkTips": MessageLookupByLibrary.simpleMessage(
+            "Editing the device name will update the channel title watermark. Live preview effect:"),
         "wdrConfig": MessageLookupByLibrary.simpleMessage("WDR Config"),
         "wdrConfigTips": MessageLookupByLibrary.simpleMessage(
             "This function can help the device take high-quality images in high-contrast light conditions. The image effect is as follows:"),

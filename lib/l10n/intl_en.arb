@@ -762,5 +762,8 @@
   "wdrConfig": "WDR Config",
   "wdrConfigTips": "This function can help the device take high-quality images in high-contrast light conditions. The image effect is as follows:",
   "alreadyOpen": "Opened",
-  "notOpen": "Not Opened"
+  "notOpen": "Not Opened",
+  "waterMark": "Watermark",
+  "waterMarkConfig": "Watermark Config",
+  "waterMarkTips": "Editing the device name will update the channel title watermark. Live preview effect:"
 }

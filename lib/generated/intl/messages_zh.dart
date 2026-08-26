@@ -1071,6 +1071,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("前往开放平台文档中心"),
         "voiceTipSwitch": MessageLookupByLibrary.simpleMessage("提示音"),
         "waiting_buffering": MessageLookupByLibrary.simpleMessage("缓冲中..."),
+        "waterMark": MessageLookupByLibrary.simpleMessage("水印"),
+        "waterMarkConfig": MessageLookupByLibrary.simpleMessage("水印配置"),
+        "waterMarkTips": MessageLookupByLibrary.simpleMessage(
+            "修改设备名称将同步更新视频通道标题水印，实时画面效果如下："),
         "wdrConfig": MessageLookupByLibrary.simpleMessage("宽动态配置"),
         "wdrConfigTips": MessageLookupByLibrary.simpleMessage(
             "此功能可帮助设备在高对比度光照条件下拍摄高质量图像，图像效果如下："),
