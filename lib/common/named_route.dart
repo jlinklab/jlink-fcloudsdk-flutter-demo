@@ -16,6 +16,8 @@ import 'package:fcloudsdk_example/pages/record/record_list_page.dart';
 import 'package:fcloudsdk_example/pages/register/register_page.dart';
 import 'package:fcloudsdk_example/pages/setting/setting_page.dart';
 
+import '../pages/channel_list/channel_list_page.dart';
+
 final GoRouter goRouter = GoRouter(
   // 接收分享文件后回调跳转使用
   navigatorKey: receiveFileNavigatorKey,
@@ -62,6 +64,16 @@ final GoRouter goRouter = GoRouter(
         deviceId: state.pathParameters['devId'] ?? '',
         type: int.tryParse(state.pathParameters['type']!) ?? 0,
         pid: state.pathParameters['pid'] ?? '',
+      ),
+    ),
+    /// NVR 通道列表页面
+    GoRoute(
+      name: 'channel_list',
+      path: '/channel_list/:devId/:type/:pid',
+      builder: (context, state) => ChannelListPage(
+        deviceId: state.pathParameters['devId'] ?? '',
+        type: int.tryParse(state.pathParameters['type']!) ?? 0,
+        pid: state.pathParameters['pid'] ?? '-1',
       ),
     ),
     GoRoute(

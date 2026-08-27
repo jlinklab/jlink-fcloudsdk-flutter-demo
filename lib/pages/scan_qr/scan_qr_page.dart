@@ -20,7 +20,8 @@ class ScanQrPage extends StatefulWidget {
 }
 
 class _ScanQrPageState extends State<ScanQrPage> with TickerProviderStateMixin {
-  final MobileScannerController _qrController = MobileScannerController();
+  final MobileScannerController _qrController =
+      MobileScannerController(autoStart: false);
   bool _isHandled = false;
 
   late Animation<double> _animation;
@@ -47,6 +48,10 @@ class _ScanQrPageState extends State<ScanQrPage> with TickerProviderStateMixin {
       });
 
     _controller.repeat();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _qrController.stop();
+      await _qrController.start();
+    });
     super.initState();
   }
 
