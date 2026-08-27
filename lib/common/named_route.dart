@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:fcloudsdk_example/common/channel_config.dart';
 import 'package:fcloudsdk_example/home_page.dart';
 import 'package:fcloudsdk_example/models/user_instance.dart';
 import 'package:fcloudsdk_example/pages/add_device/add_device_page.dart';
@@ -16,6 +17,8 @@ import 'package:fcloudsdk_example/pages/register/register_page.dart';
 import 'package:fcloudsdk_example/pages/setting/setting_page.dart';
 
 final GoRouter goRouter = GoRouter(
+  // 接收分享文件后回调跳转使用
+  navigatorKey: receiveFileNavigatorKey,
   routes: <GoRoute>[
     GoRoute(
       path: '/',

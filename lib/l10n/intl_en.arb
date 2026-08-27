@@ -773,5 +773,9 @@
   "notOpen": "Not Opened",
   "waterMark": "Watermark",
   "waterMarkConfig": "Watermark Config",
-  "waterMarkTips": "Editing the device name will update the channel title watermark. Live preview effect:"
+  "waterMarkTips": "Editing the device name will update the channel title watermark. Live preview effect:",
+  "receiveFileSuccessTip": "Firmware file received successfully",
+  "receiveFileNotSupportTip": "File type not supported, only .bin/.img firmware files are allowed",
+  "receiveFileFailedTip": "Firmware file receive failed, please share again",
+  "receiveFileNoPermissionTip": "No file read permission, unable to receive firmware file"
 }

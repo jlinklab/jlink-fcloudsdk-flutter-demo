@@ -7791,6 +7791,46 @@ class TR {
       args: [],
     );
   }
+
+  /// `固件文件接收成功`
+  String get receiveFileSuccessTip {
+    return Intl.message(
+      '固件文件接收成功',
+      name: 'receiveFileSuccessTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `文件类型不支持，仅支持 .bin/.img 固件文件`
+  String get receiveFileNotSupportTip {
+    return Intl.message(
+      '文件类型不支持，仅支持 .bin/.img 固件文件',
+      name: 'receiveFileNotSupportTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `固件文件接收失败，请重新分享`
+  String get receiveFileFailedTip {
+    return Intl.message(
+      '固件文件接收失败，请重新分享',
+      name: 'receiveFileFailedTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `没有文件读取权限，无法接收固件文件`
+  String get receiveFileNoPermissionTip {
+    return Intl.message(
+      '没有文件读取权限，无法接收固件文件',
+      name: 'receiveFileNoPermissionTip',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

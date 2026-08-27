@@ -4,6 +4,7 @@ import 'package:fcloudsdk_example/manager/device_property_manager.dart';
 import 'package:fcloudsdk_example/pages/device_setting/aov/device_aov_setting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk_example/common/channel_config.dart';
 import 'package:fcloudsdk_example/common/code_prase.dart';
 import 'package:fcloudsdk_example/common/event.dart';
 import 'package:fcloudsdk_example/generated/l10n.dart';
@@ -48,7 +49,7 @@ class DeviceConfigPage extends StatefulWidget {
     (context) => TR.current.deviceRestart,
     (context) => TR.current.deviceReset,
     (context) => TR.current.deviceFirmwareUpgrade,
-    (context) => TR.current.firmwareManageTitle,
+    // (context) => TR.current.firmwareManageTitle,
   ];
 
   @override
@@ -177,7 +178,10 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
       }));
     } else if (title == TR.current.firmwareManageTitle) {
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (BuildContext context) {
+          .push(MaterialPageRoute(
+              // 标记路由名，分享文件回调用于判断当前是否已在固件管理页
+              settings: const RouteSettings(name: kFirmwareManageRouteName),
+              builder: (BuildContext context) {
         return DeviceFirmwareManagePage(deviceId: widget.deviceId);
       }));
     } else if (title == TR.current.imageSetting) {

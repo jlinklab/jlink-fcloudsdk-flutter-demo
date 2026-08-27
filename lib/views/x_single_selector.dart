@@ -1,4 +1,7 @@
+import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:flutter/material.dart';
+
+import 'rf_divider.dart';
 
 class XSingleSelector extends StatefulWidget {
   static show({
@@ -7,6 +10,7 @@ class XSingleSelector extends StatefulWidget {
     required List<String> dataList,
     required Function(int index) onSelect,
     int? curIndex,
+    Color? accentColor,
   }) {
     showModalBottomSheet(
         context: context,
@@ -17,6 +21,7 @@ class XSingleSelector extends StatefulWidget {
             dataList: dataList,
             onSelect: onSelect,
             curIndex: curIndex,
+            accentColor: accentColor ?? const Color(0xFFFF7F38),
           );
         });
   }
@@ -24,14 +29,16 @@ class XSingleSelector extends StatefulWidget {
   final String title;
   final List<String> dataList;
   final Function(int index) onSelect;
-  int? curIndex;
+  final Color accentColor;
+  final int? curIndex;
 
-  XSingleSelector(
+  const XSingleSelector(
       {Key? key,
       required this.title,
       required this.dataList,
       required this.onSelect,
-      this.curIndex})
+      this.curIndex,
+      this.accentColor = const Color(0xFFFF7F38)})
       : super(key: key);
 
   @override
@@ -42,7 +49,6 @@ class _XSingleSelectorState extends State<XSingleSelector> {
   int _currentIndex = 0;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _currentIndex = widget.curIndex ?? 0;
   }
@@ -55,10 +61,54 @@ class _XSingleSelectorState extends State<XSingleSelector> {
             topLeft: Radius.circular(10), topRight: Radius.circular(10)),
         color: Colors.white,
       ),
-      height: 200 + MediaQuery.of(context).padding.bottom,
+      height: 400 + MediaQuery.of(context).padding.bottom,
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
+          // 顶部标题栏：取消 / 标题 / 确定
+          SizedBox(
+            height: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    // 取消：仅关闭弹窗，不触发回调
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    TR.current.cancel,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Color(0xFF333333),
+                    ),
+                  ),
+                ),
+                Text(
+                  widget.title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFF333333),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    // 确定：关闭弹窗并回调当前选中项
+                    Navigator.of(context).pop();
+                    widget.onSelect(_currentIndex);
+                  },
+                  child: Text(
+                    TR.current.check,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: widget.accentColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           Expanded(
             child: ListView.separated(
               itemBuilder: (BuildContext context, index) {
@@ -78,16 +128,18 @@ class _XSingleSelectorState extends State<XSingleSelector> {
                       child: Container(
                         alignment: Alignment.center,
                         constraints: const BoxConstraints(
-                          minHeight: 40,
+                          minHeight: 45,
                         ),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
                               child: Text(widget.dataList[index],
                                   style: const TextStyle(
-                                    color: Colors.black,
+                                    color: Color(0xFF333333),
                                     fontSize: 16,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                   softWrap: true, // 允许自动换行
                                   maxLines: 99, // 设置最大行数为2
@@ -97,9 +149,10 @@ class _XSingleSelectorState extends State<XSingleSelector> {
                               width: 30,
                               child: Visibility(
                                   visible: index == _currentIndex,
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.check,
                                     size: 30,
+                                    color: widget.accentColor,
                                   )),
                             )
                           ],
@@ -110,14 +163,11 @@ class _XSingleSelectorState extends State<XSingleSelector> {
                 );
               },
               separatorBuilder: (BuildContext context, index) {
-                return const SizedBox();
+                return const RFDivider(height: 0.5, color: Color(0xFFEFEFF0));
               },
               itemCount: widget.dataList.length,
             ),
           ),
-          // SizedBox(
-          //   height: MediaQuery.of(context).padding.bottom,
-          // )
         ],
       ),
     );
@@ -130,7 +180,6 @@ class _XSingleSelectorState extends State<XSingleSelector> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 }

@@ -276,7 +276,7 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
 
     XSingleSelector.show(
       context: context,
-      title: TR.current.firmwareSelectLocalFile,
+      title: TR.current.firmwareManageTitle,
       dataList: firmWareList.map((e) => e.fileName).toList(),
       onSelect: (index) async {
         await Future.delayed(const Duration(microseconds: 100));

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/api/device_upgrade/model.dart';
 import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/common/event.dart';
 import 'package:fcloudsdk_example/common/firmware_upgrade_service.dart';
 import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
@@ -50,6 +51,9 @@ class _DeviceFirmwareManagePageState extends State<DeviceFirmwareManagePage> {
   /// 升级进度流订阅
   StreamSubscription<DeviceUpgradeProgressResponse>? _upgradeSubscription;
 
+  /// 接收固件文件事件订阅（原生分享文件后刷新列表）
+  StreamSubscription<ReceiveFileEvent>? _receiveFileSub;
+
   /// p2p模式（转发和穿透）不支持本地固件上传
   bool get _supportUpgradeByLocalOrApp => _netType != 2;
 
@@ -58,10 +62,17 @@ class _DeviceFirmwareManagePageState extends State<DeviceFirmwareManagePage> {
     super.initState();
     _queryNetType();
     _scanFiles();
+    // 监听原生拦截分享文件事件，接收成功后刷新列表
+    _receiveFileSub = eventBus.on<ReceiveFileEvent>().listen((event) {
+      if (event.code == 0 && mounted) {
+        _scanFiles();
+      }
+    });
   }
 
   @override
   void dispose() {
+    _receiveFileSub?.cancel();
     _upgradeSubscription?.cancel();
     KToast.dismissInDispose();
     super.dispose();

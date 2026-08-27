@@ -214,8 +214,18 @@ class DeviceBasicController extends ChangeNotifier {
   }
 
   ///修改通道水印
+  /// 支持图片水印时走 JPG 图片水印流程（内部含通道标题下发），
+  /// 否则走老式流程（通道标题 + 点阵水印）
   Future<void> changeDeviceWaterMark(String editName) async {
     try {
+      final supportJpegChnTitleOSD =
+          await DeviceAbilityManager.getAbilityEnableIfNeed(
+              deviceId: deviceId,
+              type: DeviceAbilityType.bOtherFunctionJpegChnTitleOSD);
+      if (supportJpegChnTitleOSD) {
+        await JpegChnTitleHelper.instance.getJpegChnTitle(deviceId, editName);
+        return;
+      }
       var videoWidget = await DeviceConfigManager.getConfigToObject<
               List<Map<String, dynamic>>>(
           deviceId: deviceId, commandName: DeviceJsonName.aVEncVideoWidget);

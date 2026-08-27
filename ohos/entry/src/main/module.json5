@@ -47,6 +47,24 @@
             "actions": [
               "action.system.home"
             ]
+          },
+          {
+            // 拦截系统分享面板分享文件（"分享到 Flycam"）
+            "actions": [
+              "ohos.want.action.sendData"
+            ],
+            "uris": [
+              {
+                "scheme": "file",
+                "utd": "general.object",
+                "maxFileSupported": 1
+              },
+              {
+                "scheme": "file",
+                "utd": "general.entity",
+                "maxFileSupported": 1
+              }
+            ]
           }
         ]
       }

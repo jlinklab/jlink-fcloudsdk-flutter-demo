@@ -17,11 +17,13 @@ import 'package:fcloudsdk_example/utils/push_notification.dart';
 import 'package:fcloudsdk_example/utils/sp_utils.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 
+import 'common/channel_config.dart';
 import 'common/named_route.dart';
 import 'pages/device_setting/viewmodel/device_list_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  kChannelConfig();
   UserInfo.instance.init();
   await SPUtils.init();
   await _sdkInit();

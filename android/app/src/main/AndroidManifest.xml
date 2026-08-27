@@ -93,6 +93,26 @@ xmlns:tools="http://schemas.android.com/tools"
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- 拦截第三方应用“打开方式”分享固件文件（.bin/.img） -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="content" />
+                <!-- 只接收固件文件 -->
+                <data android:mimeType="application/octet-stream" />
+            </intent-filter>
+            <!-- 拦截第三方应用分享面板（ACTION_SEND） -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/octet-stream" />
+            </intent-filter>
         </activity>
         <service android:name="com.lib.push.HWReceiveMessageService"
             android:exported="false" android:directBootAware="true">

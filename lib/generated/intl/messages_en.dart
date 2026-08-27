@@ -517,6 +517,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "rebootFailed": MessageLookupByLibrary.simpleMessage("Restart failed"),
         "rebootSuccess":
             MessageLookupByLibrary.simpleMessage("Device restarting..."),
+        "receiveFileFailedTip": MessageLookupByLibrary.simpleMessage(
+            "Firmware file receive failed, please share again"),
+        "receiveFileNoPermissionTip": MessageLookupByLibrary.simpleMessage(
+            "No file read permission, unable to receive firmware file"),
+        "receiveFileNotSupportTip": MessageLookupByLibrary.simpleMessage(
+            "File type not supported, only .bin/.img firmware files are allowed"),
+        "receiveFileSuccessTip": MessageLookupByLibrary.simpleMessage(
+            "Firmware file received successfully"),
         "recordAudio": MessageLookupByLibrary.simpleMessage("Audio Recording"),
         "recordClip": MessageLookupByLibrary.simpleMessage("Video Segment"),
         "recordList": m15,

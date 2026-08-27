@@ -419,6 +419,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "qrScan": MessageLookupByLibrary.simpleMessage("请对准二维码"),
         "rebootFailed": MessageLookupByLibrary.simpleMessage("重启失败"),
         "rebootSuccess": MessageLookupByLibrary.simpleMessage("设备重启中..."),
+        "receiveFileFailedTip":
+            MessageLookupByLibrary.simpleMessage("固件文件接收失败，请重新分享"),
+        "receiveFileNoPermissionTip":
+            MessageLookupByLibrary.simpleMessage("没有文件读取权限，无法接收固件文件"),
+        "receiveFileNotSupportTip":
+            MessageLookupByLibrary.simpleMessage("文件类型不支持，仅支持 .bin/.img 固件文件"),
+        "receiveFileSuccessTip":
+            MessageLookupByLibrary.simpleMessage("固件文件接收成功"),
         "recordAudio": MessageLookupByLibrary.simpleMessage("录像音频"),
         "recordClip": MessageLookupByLibrary.simpleMessage("录像段"),
         "recordList": m15,

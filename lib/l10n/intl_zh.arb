@@ -773,5 +773,9 @@
   "notOpen": "未开启",
   "waterMark": "水印",
   "waterMarkConfig": "水印配置",
-  "waterMarkTips": "修改设备名称将同步更新视频通道标题水印，实时画面效果如下："
+  "waterMarkTips": "修改设备名称将同步更新视频通道标题水印，实时画面效果如下：",
+  "receiveFileSuccessTip": "固件文件接收成功",
+  "receiveFileNotSupportTip": "文件类型不支持，仅支持 .bin/.img 固件文件",
+  "receiveFileFailedTip": "固件文件接收失败，请重新分享",
+  "receiveFileNoPermissionTip": "没有文件读取权限，无法接收固件文件"
 }
