@@ -6,24 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/api/device_upgrade/model.dart';
 import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/common/firmware_upgrade_service.dart';
 import 'package:fcloudsdk_example/generated/l10n.dart';
-import 'package:fcloudsdk_example/utils/common_path.dart';
+import 'package:fcloudsdk_example/pages/device_ability/device_ability_manager.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 import 'package:fcloudsdk_example/views/x_single_selector.dart';
-
-/// 本地固件文件信息
-class FirmWareContent {
-  /// 文件路径
-  final String path;
-
-  /// 文件大小（MB）
-  final double fileLength;
-
-  /// 文件名称
-  String get fileName => path.split('/').last;
-
-  FirmWareContent({required this.path, required this.fileLength});
-}
 
 /// 设备固件升级页面
 /// 支持两种升级方式：
@@ -35,6 +22,8 @@ class FirmWareContent {
 /// 2. 本地升级：点击右上角"本地升级"入口，扫描 App 固件接收目录
 ///    （upgrade_receive_files）中的 .bin/.img 固件包，选择后调用
 ///    xcDeviceUpgradeByFile 发送给设备升级
+/// 3. MCU 扩展模块：设备能力集支持 SupportGetMcuVersion 时展示扩展模块卡片，
+///    支持 MCU 固件本地升级（xcDeviceUpgradeByFileEx）与在线升级
 class DeviceFirmwareUpgradePage extends StatefulWidget {
   const DeviceFirmwareUpgradePage(
       {Key? key, required this.deviceId, required this.pid})
@@ -79,6 +68,18 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
   /// App 下载到本地的固件文件路径（App 代理升级模式使用）
   String? _localFilePath;
 
+  /// MCU 扩展模块检测结果
+  DeviceVersionCheckResponse? _mcuCheckResponse;
+
+  /// MCU 扩展模块名称（设备返回，如 "MCU"）
+  String _mcuModuleName = '';
+
+  /// MCU 扩展模块当前分区版本文案（partition_curVersion）
+  String _mcuCurVersionText = '';
+
+  /// MCU 扩展模块是否可升级
+  bool _mcuUpgradeAvailable = false;
+
   /// 升级进度流订阅
   StreamSubscription<DeviceUpgradeProgressResponse>? _upgradeSubscription;
 
@@ -87,6 +88,7 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
     super.initState();
     _queryNetType();
     _checkVersion();
+    _checkMcuVersion();
   }
 
   @override
@@ -184,6 +186,72 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
     });
   }
 
+  /// 检查 MCU 扩展模块版本
+  /// 1. 能力集查询 OtherFunction/SupportGetMcuVersion，不支持则跳过
+  /// 2. 获取 SystemInfoEx 解析 ExModules（仅取第一个模块，与参考工程产品决策一致）
+  /// 3. DeviceVersionCheck.forMCU 发起版本检测，modules 非空视为可升级
+  Future<void> _checkMcuVersion() async {
+    try {
+      // 能力集判断
+      final bool support = await DeviceAbilityManager.queryAbility(
+          deviceId: widget.deviceId,
+          type: DeviceAbilityType.bOtherFunctionSupportGetMcuVersion);
+      if (!support) {
+        return;
+      }
+
+      // 获取 SystemInfoEx
+      final result = await JFApi.xcDevice.xcDevGetSysConfig(
+        deviceId: widget.deviceId,
+        commandName: 'SystemInfoEx',
+        command: 1020,
+      );
+      if (result['Ret'] == null || result['Ret'] != 100) {
+        return;
+      }
+      final mapSystemInfoEx = result['SystemInfoEx'];
+      if (mapSystemInfoEx == null) {
+        return;
+      }
+      final exModules = mapSystemInfoEx['ExModules'];
+      if (exModules is! List || exModules.isEmpty) {
+        return;
+      }
+
+      // 版本信息暂时只取第一个模块
+      final module = exModules.first;
+      final name = module['Name'];
+      if (name == null || name.isEmpty) {
+        return;
+      }
+      final subModules = module['Modules'];
+      if (subModules is List && subModules.isNotEmpty) {
+        final firstPart = subModules.first;
+        _mcuCurVersionText =
+            '${firstPart['Partition']}_${firstPart['CurVersion']}';
+      }
+      _mcuModuleName = name;
+
+      // forMCU 版本检测
+      final verCheckMCU = DeviceVersionCheck.forMCU(
+          pid: widget.pid, UUID: widget.deviceId, systemInfoEx: mapSystemInfoEx);
+      final response = await JFApi.xcDeviceUpgrade.xcDeviceVersionCheck(
+        deviceId: widget.deviceId,
+        devVerCheck: verCheckMCU,
+      );
+      _mcuCheckResponse = DeviceVersionCheckResponse(
+          code: response.code, versionInfo: response.versionInfo);
+      // modules 非空视为可升级
+      _mcuUpgradeAvailable =
+          _mcuCheckResponse?.info?.modules?.isNotEmpty ?? false;
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (_) {
+      // MCU 检测失败静默忽略，不影响主模块升级
+    }
+  }
+
   /// 本地升级入口
   /// 扫描 App 固件接收目录中的 .bin/.img 固件包，弹列表选择后执行升级
   Future<void> _onLocalUpgradeTap() async {
@@ -198,7 +266,8 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
     }
     if (firmWareList.isEmpty) {
       // 提示固件存放目录，引导用户将固件包放入 App 固件接收目录
-      final Directory receiveDir = await _getFirmwareReceiveDir();
+      final Directory receiveDir =
+          await FirmwareUpgradeService.getFirmwareReceiveDir();
       KToast.show(
           status: TR.current.firmwareFirmwareDirTip(receiveDir.path),
           duration: const Duration(seconds: 4));
@@ -229,6 +298,52 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
     _showUpgradeConfirmDialog(_UpgradeMode.online);
   }
 
+  /// MCU 本地升级入口
+  /// 扫描 App 固件接收目录中的 .bin/.img 固件包，选择后走 xcDeviceUpgradeByFileEx
+  Future<void> _onMcuLocalUpgradeTap() async {
+    // p2p转发/穿透模式不支持本地固件上传
+    if (!_p2pProxyCheck()) {
+      return;
+    }
+
+    final List<FirmWareContent> firmWareList = await _scanFirmwareFiles();
+    if (!mounted) {
+      return;
+    }
+    if (firmWareList.isEmpty) {
+      // 提示固件存放目录，引导用户将固件包放入 App 固件接收目录
+      final Directory receiveDir =
+          await FirmwareUpgradeService.getFirmwareReceiveDir();
+      KToast.show(
+          status: TR.current.firmwareFirmwareDirTip(receiveDir.path),
+          duration: const Duration(seconds: 4));
+      return;
+    }
+
+    XSingleSelector.show(
+      context: context,
+      title: TR.current.firmwareSelectLocalFile,
+      dataList: firmWareList.map((e) => e.fileName).toList(),
+      onSelect: (index) async {
+        await Future.delayed(const Duration(microseconds: 100));
+        if (!mounted) {
+          return;
+        }
+        _showUpgradeConfirmDialog(_UpgradeMode.local,
+            filePath: firmWareList[index].path, mcU: true);
+      },
+    );
+  }
+
+  /// MCU 在线升级入口
+  /// 检测到新版本（红点标记）时点击触发在线升级
+  void _onMcuOnlineUpgradeTap() {
+    if (!_mcuUpgradeAvailable) {
+      return;
+    }
+    _showUpgradeConfirmDialog(_UpgradeMode.online, mcU: true);
+  }
+
   /// p2p模式（转发和穿透）不支持固件上传
   bool _p2pProxyCheck() {
     if (!_supportUpgradeByLocalOrApp) {
@@ -239,7 +354,9 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
   }
 
   /// 显示升级确认弹窗
-  void _showUpgradeConfirmDialog(_UpgradeMode mode, {String? filePath}) {
+  /// [mcU] 为 true 时升级 MCU 扩展模块，否则升级主模块
+  void _showUpgradeConfirmDialog(_UpgradeMode mode,
+      {String? filePath, bool mcU = false}) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -255,7 +372,7 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
-                _execUpgrade(mode, filePath: filePath);
+                _execUpgrade(mode, filePath: filePath, mcU: mcU);
               },
               child: Text(TR.current.confirmBtn),
             ),
@@ -268,27 +385,35 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
   /// 执行升级
   /// 在线升级根据检测结果 CheckFrom 自动判定升级通道：
   /// App 表示 App 代理下载升级，否则设备自升级
-  Future<void> _execUpgrade(_UpgradeMode mode, {String? filePath}) async {
+  /// [mcU] 为 true 时使用 MCU 扩展模块的检测结果与升级通道
+  Future<void> _execUpgrade(_UpgradeMode mode,
+      {String? filePath, bool mcU = false}) async {
     if (mode == _UpgradeMode.local) {
-      _startLocalUpgrade(filePath!);
+      if (mcU) {
+        _startMcuLocalUpgrade(filePath!);
+      } else {
+        _startLocalUpgrade(filePath!);
+      }
       return;
     }
 
-    if (_checkResponse?.info?.checkFrom == 'App') {
+    final checkResponse = mcU ? _mcuCheckResponse : _checkResponse;
+    if (checkResponse?.info?.checkFrom == 'App') {
       // App 代理下载升级需要走本地上传通道，p2p模式不可用
       if (!_p2pProxyCheck()) {
         return;
       }
-      _startAppDownloadUpgrade();
+      _startAppDownloadUpgrade(mcU: mcU);
     } else {
-      _startOnlineUpgrade();
+      _startOnlineUpgrade(mcU: mcU);
     }
   }
 
   /// 在线升级（设备自升级）
   /// 通过 xcDeviceUpgradeBySelf 让设备自行从云端下载固件并升级
   /// 同时监听 deviceUpgradeStream 获取升级进度
-  Future<void> _startOnlineUpgrade() async {
+  /// [mcU] 为 true 时使用 MCU 扩展模块的检测结果
+  Future<void> _startOnlineUpgrade({bool mcU = false}) async {
     setState(() {
       _status = _UpgradeStatus.upgrading;
       _progress = 0;
@@ -302,7 +427,8 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
 
     try {
       // 构造升级请求体
-      final bodyJson = jsonEncode(_checkResponse!.info!);
+      final checkResponse = mcU ? _mcuCheckResponse : _checkResponse;
+      final bodyJson = jsonEncode(checkResponse!.info!);
 
       await JFApi.xcDeviceUpgrade.xcDeviceUpgradeBySelf(
         deviceId: widget.deviceId,
@@ -317,11 +443,13 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
   /// App 代理下载升级
   /// 1. 清空固件下载目录
   /// 2. 调用 xcDeviceDownloadFile 下载固件到本地下载目录
-  /// 3. 复用本地升级通道 xcDeviceUpgradeByFile 上传给设备
+  /// 3. 复用本地升级通道上传给设备（MCU 走 xcDeviceUpgradeByFileEx）
   /// 4. 升级结束后删除本地下载的固件
-  Future<void> _startAppDownloadUpgrade() async {
+  /// [mcU] 为 true 时使用 MCU 扩展模块的检测结果与升级通道
+  Future<void> _startAppDownloadUpgrade({bool mcU = false}) async {
     // 升级前清空下载目录
-    await _clearDownloadDirectory();
+    await FirmwareUpgradeService.clearDirectory(
+        await FirmwareUpgradeService.getFirmwareDownloadDir());
 
     setState(() {
       _status = _UpgradeStatus.downloading;
@@ -332,11 +460,12 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
     });
 
     try {
-      final dir = await _getFirmwareDownloadDir();
+      final dir = await FirmwareUpgradeService.getFirmwareDownloadDir();
+      final checkResponse = mcU ? _mcuCheckResponse : _checkResponse;
 
       // 下载固件到本地
       final downloadResult = await JFApi.xcDeviceUpgrade.xcDeviceDownloadFile(
-        commandBody: _checkResponse!.versionInfo!,
+        commandBody: checkResponse!.versionInfo!,
         fileSavePath: dir.path,
       );
 
@@ -357,10 +486,46 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
       // 监听升级进度流
       _startUpgradeProgressListener();
 
-      // 调用 xcDeviceUpgradeByFile 发送本地固件到设备
-      await JFApi.xcDeviceUpgrade.xcDeviceUpgradeByFile(
+      if (mcU) {
+        // MCU 扩展模块走多模块上传通道
+        await JFApi.xcDeviceUpgrade.xcDeviceUpgradeByFileEx(
+          deviceId: widget.deviceId,
+          jsonString: jsonEncode([
+            {'FileName': _localFilePath!, 'ModuleType': 'Mcu'}
+          ]),
+        );
+      } else {
+        // 调用 xcDeviceUpgradeByFile 发送本地固件到设备
+        await JFApi.xcDeviceUpgrade.xcDeviceUpgradeByFile(
+          deviceId: widget.deviceId,
+          filePath: _localFilePath!,
+        );
+      }
+    } catch (e) {
+      _onUpgradeFailed(kErrorMsg(e));
+    }
+  }
+
+  /// MCU 本地升级
+  /// 将用户选择的本地固件包通过 xcDeviceUpgradeByFileEx 发送给设备升级
+  Future<void> _startMcuLocalUpgrade(String filePath) async {
+    setState(() {
+      _status = _UpgradeStatus.upgrading;
+      _progress = 0;
+      _stepText = TR.current.firmwareSendFile;
+      _errorMsg = null;
+      _upgradeMode = _UpgradeMode.local;
+    });
+
+    // 监听升级进度流
+    _startUpgradeProgressListener();
+
+    try {
+      await JFApi.xcDeviceUpgrade.xcDeviceUpgradeByFileEx(
         deviceId: widget.deviceId,
-        filePath: _localFilePath!,
+        jsonString: jsonEncode([
+          {'FileName': filePath, 'ModuleType': 'Mcu'}
+        ]),
       );
     } catch (e) {
       _onUpgradeFailed(kErrorMsg(e));
@@ -480,50 +645,13 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
 
   /// 扫描本地固件接收目录，仅保留 .bin/.img 固件包
   Future<List<FirmWareContent>> _scanFirmwareFiles() async {
-    final List<FirmWareContent> list = [];
-    final Directory dir = await _getFirmwareReceiveDir();
+    final Directory dir =
+        await FirmwareUpgradeService.getFirmwareReceiveDir();
     if (!dir.existsSync()) {
       dir.createSync(recursive: true);
-      return list;
+      return [];
     }
-    for (FileSystemEntity entity in dir.listSync()) {
-      if (entity is! File) {
-        continue;
-      }
-      if (entity.path.endsWith('.bin') || entity.path.endsWith('.img')) {
-        final int fileLength = await entity.length();
-        list.add(FirmWareContent(
-            path: entity.path, fileLength: fileLength / (1024 * 1024)));
-      }
-    }
-    return list;
-  }
-
-  /// 本地固件接收目录（App 内部，Android/iOS/鸿蒙三端统一）
-  Future<Directory> _getFirmwareReceiveDir() async {
-    final String basePath = await kDirectoryPath();
-    return Directory('$basePath/upgrade_receive_files');
-  }
-
-  /// App 下载固件目录
-  Future<Directory> _getFirmwareDownloadDir() async {
-    final String basePath = await kDirectoryPath();
-    return Directory('$basePath/upgrade_download_files');
-  }
-
-  /// 清空固件下载目录（App 代理升级前调用）
-  Future<void> _clearDownloadDirectory() async {
-    try {
-      final Directory dir = await _getFirmwareDownloadDir();
-      if (!dir.existsSync()) {
-        return;
-      }
-      for (FileSystemEntity entity in dir.listSync()) {
-        if (entity is File) {
-          entity.deleteSync();
-        }
-      }
-    } catch (_) {}
+    return FirmwareUpgradeService.scanFirmwareFiles(dir.path);
   }
 
   /// 删除 App 下载的固件文件（App 代理升级结束后调用）
@@ -547,7 +675,133 @@ class _DeviceFirmwareUpgradePageState extends State<DeviceFirmwareUpgradePage> {
         title: Text(TR.current.deviceFirmwareUpgrade),
         centerTitle: true,
       ),
-      body: _buildBody(),
+      // body: _buildBody(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 主模块标题 + 本地升级入口
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16, top: 14, right: 16),
+                      child: Row(
+                        children: [
+                          Text(
+                            TR.current.firmwareMainModule,
+                            style: TextStyle(
+                                fontSize: 12, color: Colors.grey.shade500),
+                          ),
+                          const Spacer(),
+                          InkWell(
+                            onTap: _onLocalUpgradeTap,
+                            child: Text(
+                              TR.current.firmwareLocalUpgrade,
+                              style: const TextStyle(
+                                color: Color(0xFFFF7F38),
+                                fontSize: 12,
+                                decoration: TextDecoration.underline,
+                                decorationColor: Color(0xFFFF7F38),
+                                decorationThickness: 1,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // 当前版本
+                    _buildConfigItem(
+                      title: TR.current.firmwareCurrentVersion,
+                      subTitle: _currentVersion,
+                    ),
+                    // 新版本：可升级时红点标记，点击触发在线升级
+                    _buildConfigItem(
+                      title: TR.current.firmwareNewVersion,
+                      subTitle: _upgradeAvailable
+                          ? TR.current.firmwareNewVersionUpgradable
+                          : TR.current.firmwareLatest,
+                      showRedDot: _upgradeAvailable,
+                      onTap: _onOnlineUpgradeTap,
+                    ),
+                  ],
+                ),
+              ),
+              // MCU 扩展模块卡片（设备能力集支持时展示）
+              if (_mcuModuleName.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // MCU 模块名 + 本地升级入口
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 16, top: 14, right: 16),
+                        child: Row(
+                          children: [
+                            Text(
+                              _mcuModuleName,
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey.shade500),
+                            ),
+                            const Spacer(),
+                            InkWell(
+                              onTap: _onMcuLocalUpgradeTap,
+                              child: Text(
+                                TR.current.firmwareLocalUpgrade,
+                                style: const TextStyle(
+                                  color: Color(0xFFFF7F38),
+                                  fontSize: 12,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Color(0xFFFF7F38),
+                                  decorationThickness: 1,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // MCU 当前分区版本
+                      _buildConfigItem(
+                        title: TR.current.firmwareCurrentVersion,
+                        subTitle: _mcuCurVersionText,
+                      ),
+                      // MCU 新版本：可升级时红点标记，点击触发在线升级
+                      _buildConfigItem(
+                        title: TR.current.firmwareNewVersion,
+                        subTitle: _mcuUpgradeAvailable
+                            ? TR.current.firmwareNewVersionUpgradable
+                            : TR.current.firmwareLatest,
+                        showRedDot: _mcuUpgradeAvailable,
+                        onTap: _onMcuOnlineUpgradeTap,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              const SizedBox(height: 16),
+              Text(
+                TR.current.firmwareUpgradeTip,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.orange, fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

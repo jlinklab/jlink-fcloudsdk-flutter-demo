@@ -17,6 +17,7 @@ import 'package:fcloudsdk_example/pages/device_setting/device_record_set_page.da
 import 'package:fcloudsdk_example/pages/device_setting/device_image_setting_page.dart';
 import 'package:fcloudsdk_example/pages/device_setting/device_storage_manage_page.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
+import 'package:fcloudsdk_example/pages/device_setting/device_firmware_manage_page.dart';
 import 'package:fcloudsdk_example/pages/device_setting/device_firmware_upgrade_page.dart';
 
 typedef GetTitle = String Function(BuildContext context);
@@ -47,6 +48,7 @@ class DeviceConfigPage extends StatefulWidget {
     (context) => TR.current.deviceRestart,
     (context) => TR.current.deviceReset,
     (context) => TR.current.deviceFirmwareUpgrade,
+    (context) => TR.current.firmwareManageTitle,
   ];
 
   @override
@@ -172,6 +174,11 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
           deviceId: widget.deviceId,
           pid: widget.pid != '-1' ? widget.pid : '',
         );
+      }));
+    } else if (title == TR.current.firmwareManageTitle) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (BuildContext context) {
+        return DeviceFirmwareManagePage(deviceId: widget.deviceId);
       }));
     } else if (title == TR.current.imageSetting) {
       Navigator.of(context)

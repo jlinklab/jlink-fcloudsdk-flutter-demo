@@ -238,6 +238,8 @@
   "firmwareUpgradeWaitReboot": "升级完成，等待设备重启",
   "firmwareNewVersionUpgradable": "新版本可升级",
   "firmwareFirmwareDirTip": "未找到本地固件，请将 .bin/.img 固件文件放入目录：{path}",
+  "firmwareManageTitle": "固件管理",
+  "firmwareEmptyTip": "暂无固件文件",
   "back": "返回",
   "commonConfig": "通用配置",
   "imageConfig": "图像配置",

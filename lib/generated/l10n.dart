@@ -2430,6 +2430,26 @@ class TR {
     );
   }
 
+  /// `固件管理`
+  String get firmwareManageTitle {
+    return Intl.message(
+      '固件管理',
+      name: 'firmwareManageTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `暂无固件文件`
+  String get firmwareEmptyTip {
+    return Intl.message(
+      '暂无固件文件',
+      name: 'firmwareEmptyTip',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `返回`
   String get back {
     return Intl.message(

@@ -294,10 +294,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("固件下载完成"),
         "firmwareDownloadingToFirmware":
             MessageLookupByLibrary.simpleMessage("正在下载固件文件到本地"),
+        "firmwareEmptyTip": MessageLookupByLibrary.simpleMessage("暂无固件文件"),
         "firmwareFirmwareDirTip": m11,
         "firmwareLatest": MessageLookupByLibrary.simpleMessage("已是最新版本"),
         "firmwareLocalUpgrade": MessageLookupByLibrary.simpleMessage("本地升级"),
         "firmwareMainModule": MessageLookupByLibrary.simpleMessage("主模块"),
+        "firmwareManageTitle": MessageLookupByLibrary.simpleMessage("固件管理"),
         "firmwareNewVersion": MessageLookupByLibrary.simpleMessage("新版本"),
         "firmwareNewVersionUpgradable":
             MessageLookupByLibrary.simpleMessage("新版本可升级"),

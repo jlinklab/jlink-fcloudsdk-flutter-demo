@@ -358,6 +358,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Firmware download complete"),
         "firmwareDownloadingToFirmware": MessageLookupByLibrary.simpleMessage(
             "Downloading firmware file to local"),
+        "firmwareEmptyTip":
+            MessageLookupByLibrary.simpleMessage("No firmware file"),
         "firmwareFirmwareDirTip": m11,
         "firmwareLatest":
             MessageLookupByLibrary.simpleMessage("Already up to date"),
@@ -365,6 +367,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Local Upgrade"),
         "firmwareMainModule":
             MessageLookupByLibrary.simpleMessage("Main Module"),
+        "firmwareManageTitle":
+            MessageLookupByLibrary.simpleMessage("Firmware Management"),
         "firmwareNewVersion":
             MessageLookupByLibrary.simpleMessage("New Version"),
         "firmwareNewVersionUpgradable": MessageLookupByLibrary.simpleMessage(

@@ -88,6 +88,9 @@ enum DeviceAbilityType {
 
   /// 是否支持图片水印
   bOtherFunctionJpegChnTitleOSD,
+
+  /// 是否支持获取MCU扩展模块版本
+  bOtherFunctionSupportGetMcuVersion,
 }
 
 class DeviceAbilityManager {
@@ -322,6 +325,14 @@ class DeviceAbilityManager {
             abilityMap['OtherFunction']!['JpegChnTitleOSD'] != null) {
           isSupport =
               abilityMap['OtherFunction']!['JpegChnTitleOSD']! as bool;
+        }
+        break;
+
+      case DeviceAbilityType.bOtherFunctionSupportGetMcuVersion:
+        if (abilityMap['OtherFunction'] != null &&
+            abilityMap['OtherFunction']!['SupportGetMcuVersion'] != null) {
+          isSupport =
+              abilityMap['OtherFunction']!['SupportGetMcuVersion']! as bool;
         }
         break;
 

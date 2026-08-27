@@ -238,6 +238,8 @@
   "firmwareUpgradeWaitReboot": "Upgrade completed, waiting for device reboot",
   "firmwareNewVersionUpgradable": "The new version can be upgraded",
   "firmwareFirmwareDirTip": "No local firmware found, please put the .bin/.img firmware file into: {path}",
+  "firmwareManageTitle": "Firmware Management",
+  "firmwareEmptyTip": "No firmware file",
   "back": "Back",
   "commonConfig": "Common Settings",
   "imageConfig": "Image Settings",
