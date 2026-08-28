@@ -47,7 +47,7 @@ class DeviceManager {
 
   ///根据设备序列号获取设备名字
   String? getDeviceName({required String deviceId}) {
-    return mineDeviceList.firstWhereOrNull((e) => e.uuid == deviceId)?.nickname;
+    return allDevices.firstWhereOrNull((e) => e.uuid == deviceId)?.nickname;
   }
 
   /// 同步设备列表（APP 的设备列表不一定从 SDK 获取，主动同步到 DeviceManager）
@@ -140,7 +140,7 @@ class DeviceManager {
 
   ///订阅设备列表
   Future<void> subscribeAllDevice() async {
-    var needs = DeviceManager.instance.mineDeviceList
+    var needs = DeviceManager.instance.allDevices
         .where((e) =>
             e.hasPermission(permission: DevicePermission.DP_ModifyConfig) ||
             e.hasPermission(permission: DevicePermission.DP_AlarmPush))

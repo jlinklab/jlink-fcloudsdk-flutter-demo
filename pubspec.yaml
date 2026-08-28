@@ -147,6 +147,7 @@ dependencies:
   #二维码扫描
   #不可升级，因为6.x版本iOS最低要求15，7.x iOS最低要求改回12了，但是flutter sdk需要3.29
   #当前版本也有问题，鸿蒙进扫码页会有上次扫码的残留帧
+  #可自行选择别的扫码库使用
   mobile_scanner: 
     git:
       url: "https://gitcode.com/openharmony-sig/fluttertpc_mobile_scanner.git"
