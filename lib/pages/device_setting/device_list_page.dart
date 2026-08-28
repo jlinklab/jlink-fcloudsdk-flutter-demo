@@ -10,14 +10,20 @@ import 'package:provider/provider.dart';
 import '../../api/share_api.dart';
 import '../../common/code_prase.dart';
 import '../../common/event.dart';
+import '../../common/match.dart';
 import '../../generated/l10n.dart';
 import '../../manager/device_manager.dart';
 import '../../manager/push_manager.dart';
+import '../../models/user_instance.dart';
+import '../../manager/device_property_manager.dart';
 import '../../views/toast/toast.dart';
+import '../../views/toast/device_pwd_input.dart';
+import '../device_pwd_setting/device_pwd_find_back_page.dart';
 import '../alarm_message/alarm_message_list_page.dart';
 import '../cloud/device_cloud_service_manager.dart';
 import '../cloud/model/device_cloud.dart';
 import '../share/device_share_page.dart';
+import '../device_ability/device_ability_page.dart';
 import 'model/model.dart';
 import 'viewmodel/device_list_view_model.dart';
 
@@ -241,11 +247,282 @@ class _DeviceCard extends StatelessWidget {
   const _DeviceCard({Key? key, required this.device, required this.type})
       : super(key: key);
 
+  static const int _stateOffline = 0;
+  static const int _stateOnline = 1;
+  static const int _stateSleep = 2; // 浅度休眠
+  static const int _stateWakingUp = 3; // 唤醒中
+  static const int _stateAwakened = 4; // 已唤醒
+  static const int _stateDeepSleep = 5; // 深度休眠（不可唤醒）
+  static const int _statePrepareSleep = 6; // 准备休眠
+
+  /// 获取低功耗设备的详细状态（从 ViewModel 查询，而非 device.state）
+  int _getLowPowerState(BuildContext context) {
+    if (!device.isLowPowerType) return device.state;
+    final viewModel = context.read<DevListViewModel>();
+    return viewModel.getLowPowerDevState(device.uuid);
+  }
+
+  /// 获取设备状态信息（颜色、文本）
+  ({Color color, String? text}) _getDeviceStateInfo(int lpState) {
+    final isLowPower = device.isLowPowerType;
+
+    if (!isLowPower) {
+      // 非低功耗设备：仅显示在线/离线
+      final state = device.state;
+      return (
+        color: state > 0 ? Colors.green : Colors.grey,
+        text: null,
+      );
+    }
+
+    // 低功耗设备：细分休眠状态（使用接口查询的状态）
+    switch (lpState) {
+      case _stateOffline:
+        return (color: Colors.grey, text: null);
+      case _stateOnline:
+      case _stateAwakened:
+        return (color: Colors.green, text: TR.current.deviceAwakened);
+      case _stateSleep:
+        return (color: Colors.orange, text: TR.current.deviceSleeping);
+      case _stateWakingUp:
+        return (color: Colors.blue, text: TR.current.deviceWakingUp);
+      case _stateDeepSleep:
+        return (color: Colors.red, text: TR.current.deviceDeepSleep);
+      case _statePrepareSleep:
+        return (color: Colors.orange, text: TR.current.devicePrepareSleep);
+      default:
+        return (color: Colors.grey, text: null);
+    }
+  }
+
+  /// 判断设备是否处于休眠状态（需要唤醒才能预览）
+  bool _isSleeping(int lpState) =>
+      device.isLowPowerType &&
+      (lpState == _stateSleep || lpState == _statePrepareSleep);
+
+  /// 判断设备是否深度休眠（不可唤醒）
+  bool _isDeepSleep(int lpState) =>
+      device.isLowPowerType && lpState == _stateDeepSleep;
+
+  /// 导航到预览页面（低功耗设备需先唤醒）
+  void _navigateToPreview(BuildContext context) async {
+    if(device.isLowPowerType){
+      final lpState = _getLowPowerState(context);
+
+      // 离线状态，无法预览
+      if (lpState == _stateOffline || lpState < 0) {
+        KToast.show(status: TR.current.deviceOffline);
+        return;
+      }
+
+      // 深度休眠，无法唤醒
+      if (_isDeepSleep(lpState)) {
+        KToast.show(status: TR.current.deviceDeepSleepCannotWake);
+        return;
+      }
+
+      // 休眠状态，需要先唤醒
+      if (_isSleeping(lpState)) {
+        _showWakeUpDialog(context);
+        return;
+      }
+
+    } else {
+      // 离线状态，无法预览
+      if (device.state <= _stateOffline) {
+        KToast.show(status: TR.current.deviceOffline);
+        return;
+      }
+    }
+
+    // 正常导航到预览
+    _goToPreview(context);
+  }
+
+  /// 跳转到预览页面
+  /// 对于 NVR 多通道设备，先登录设备，成功后跳转到通道列表
+  /// 对于普通设备，直接跳转到预览
+  void _goToPreview(BuildContext context) async {
+    // 检查是否是 NVR 多通道设备
+    final bool isNVR = await _checkIsNVR();
+
+    if (isNVR) {
+      // NVR 设备先登录，成功后跳转到通道列表
+      _loginAndGoToChannelList(context);
+    } else {
+      // 普通设备直接跳转预览
+      context.pushNamed('preview', pathParameters: {
+        'devId': device.uuid,
+        'type': type.toString(),
+        'pid': device.pid.isNotEmpty ? device.pid : '-1'
+      });
+    }
+  }
+
+  /// 登录设备并跳转到通道列表
+  /// 登录失败时弹出密码错误弹窗（复用预览页的 DevicePwdInput）
+  void _loginAndGoToChannelList(BuildContext context) async {
+    // 显示加载中
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) => const AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('正在登录设备...'),
+          ],
+        ),
+      ),
+    );
+
+    await _doLoginDevice(context);
+  }
+
+  /// 执行设备登录，失败时弹出密码错误弹窗
+  Future<void> _doLoginDevice(BuildContext context) async {
+    try {
+      final result = await JFApi.xcDevice.xcDeviceLogin(deviceId: device.uuid);
+      if (!context.mounted) return;
+      // 关闭加载弹窗
+      Navigator.of(context).pop();
+
+      if (result) {
+        // 登录成功，跳转到通道列表
+        context.pushNamed('channel_list', pathParameters: {
+          'devId': device.uuid,
+          'type': type.toString(),
+          'pid': device.pid.isNotEmpty ? device.pid : '-1'
+        });
+      } else {
+        KToast.show(status: TR.current.loadChannelFailed);
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      // 关闭加载弹窗
+      Navigator.of(context).pop();
+
+      // 解析错误码
+      int code = 0;
+      if (e is XCloudAPIException) {
+        code = e.code;
+      } else if (e is int) {
+        code = e;
+      }
+
+      // 密码错误错误码：-70106, -70163, -70203, -70205
+      if (code == -70106 || code == -70163 || code == -70203 || code == -70205) {
+        _showDevicePwdErrorDialog(context);
+      } else if (code < 0) {
+        KToast.show(status: kErrorMsg(code));
+      } else {
+        _loginAndGoToChannelList(context);
+      }
+    }
+  }
+
+  /// 显示设备密码错误弹窗（复用预览页的 DevicePwdInput）
+  void _showDevicePwdErrorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogCtx) {
+        return Material(
+          color: Colors.black26,
+          child: Center(
+            child: DevicePwdInput(
+              deviceId: device.uuid,
+              completion: (name, password) async {
+                Navigator.of(dialogCtx).pop();
+                // 保存设备信息到本地缓存
+                UserInfo.instance.saveDeviceInfo(device.uuid, name, password);
+                // 调用SDK接口将账号密码缓存到本地
+                await JFApi.xcDevice.xcSetLocalUserNameAndPwd(
+                  deviceId: device.uuid,
+                  userName: name,
+                  pwd: password,
+                );
+                // 重新登录设备
+                _doLoginDevice(context);
+              },
+              onFindPwd: () {
+                Navigator.of(dialogCtx).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (BuildContext ctx) {
+                    return DevicePwdFindBackPage(deviceId: device.uuid);
+                  }),
+                );
+              },
+              onCancel: () {
+                // DevicePwdInput 内部已经 Navigator.pop，这里不需要再 pop
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// 检查设备是否是 NVR（多通道设备）
+  /// 使用 DevicePropertyManager 的 isNVRAsync 方法判断
+  Future<bool> _checkIsNVR() async {
+    return DevicePropertyManager.instance.isNVRAsync(deviceId: device.uuid);
+  }
+
+  /// 显示唤醒对话框
+  void _showWakeUpDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 24),
+              Text(TR.current.wakingUpPleaseWait),
+            ],
+          ),
+        );
+      },
+    );
+
+    // 执行唤醒操作
+    _doWakeUp(context);
+  }
+
+  /// 执行唤醒操作
+  void _doWakeUp(BuildContext context) async {
+    try {
+      final result = await JFApi.xcDevice.xcDeviceWakeup(
+        deviceId: device.uuid,
+        timeout: 15000,
+      );
+
+      if (!context.mounted) return;
+      Navigator.of(context).pop(); // 关闭唤醒对话框
+
+      if (result >= 0) {
+        // 唤醒成功，跳转到预览
+        _goToPreview(context);
+      } else {
+        KToast.show(status: TR.current.wakeUpFailed);
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      Navigator.of(context).pop(); // 关闭唤醒对话框
+      KToast.show(status: TR.current.wakeUpFailed);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cloudService = DeviceCloudServiceManager.instance
         .getCloudService(deviceId: device.uuid);
-    final isOnline = device.state > 0;
+    final lpState = _getLowPowerState(context);
+    final stateInfo = _getDeviceStateInfo(lpState);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -253,19 +530,13 @@ class _DeviceCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () {
-          context.pushNamed('preview', pathParameters: {
-            'devId': device.uuid,
-            'type': type.toString(),
-            'pid': device.pid.isNotEmpty ? device.pid : '-1',
-          });
-        },
+        onTap: () => _navigateToPreview(context),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 第一行：设备名称 + 在线状态
+              // 第一行：设备名称 + 状态指示
               Row(
                 children: [
                   Container(
@@ -273,7 +544,7 @@ class _DeviceCard extends StatelessWidget {
                     height: 10,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: isOnline ? Colors.green : Colors.grey,
+                      color: stateInfo.color,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -290,8 +561,39 @@ class _DeviceCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  // 低功耗设备状态标签
+                  if (stateInfo.text != null)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: stateInfo.color.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        stateInfo.text!,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: stateInfo.color,
+                        ),
+                      ),
+                    ),
+                  if (stateInfo.text != null) const SizedBox(width: 4),
                   if (cloudService != null)
                     _buildCloudBadge(cloudService.cloudServerStatus),
+                  const SizedBox(width: 4),
+                  // 更多按钮
+                  GestureDetector(
+                    onTap: () => _showDeviceMoreMenu(context),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Icon(
+                        Icons.more_horiz,
+                        size: 20,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -307,13 +609,7 @@ class _DeviceCard extends StatelessWidget {
                   _ActionButton(
                     icon: Icons.videocam,
                     label: TR.current.preview,
-                    onTap: () {
-                      context.pushNamed('preview', pathParameters: {
-                        'devId': device.uuid,
-                        'type': type.toString(),
-                        'pid': device.pid.isNotEmpty ? device.pid : '-1',
-                      });
-                    },
+                    onTap: () => _navigateToPreview(context),
                   ),
                   const SizedBox(width: 8),
                   _ActionButton(
@@ -390,6 +686,207 @@ class _DeviceCard extends StatelessWidget {
         size: 16,
       ),
     );
+  }
+
+  /// 显示设备更多设置弹窗
+  void _showDeviceMoreMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Text(
+                  device.nickname ?? device.uuid,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const Divider(height: 1),
+              ListTile(
+                leading: const Icon(Icons.developer_board_outlined),
+                title: Text(TR.current.viewDeviceAbility),
+                subtitle: Text(TR.current.viewDeviceAbilityDesc),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _showDeviceAbility(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.vpn_key_outlined),
+                title: Text(TR.current.getDeviceToken),
+                subtitle: Text(TR.current.getDeviceTokenDesc),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _getDeviceTokenFromServer(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.edit_outlined),
+                title: Text(TR.current.modifyDeviceInfo),
+                subtitle: Text(TR.current.deviceLoginName),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _showModifyDeviceInfo(context);
+                },
+              ),
+              // 后续可在此处添加更多设置项目
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  /// 查看设备能力集（跳转到能力集页面）
+  void _showDeviceAbility(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => DeviceAbilityPage(
+          deviceId: device.uuid,
+          deviceName: device.nickname ?? device.uuid,
+        ),
+      ),
+    );
+  }
+
+  /// 从服务器获取设备最新Token
+  void _getDeviceTokenFromServer(BuildContext context) async {
+    KToast.show();
+    try {
+      // 从服务器获取设备最新Token
+      final token = await JFApi.xcDevice.xcGetDeviceTokenFromNet(
+        deviceId: device.uuid,
+      );
+      //如果设备Token不为空，需要将设备同步给SDK
+      if (token.isNotEmpty) {
+        await JFApi.xcDevice.xcSetDeviceToken(deviceId: device.uuid, token: token);
+      }
+      KToast.dismiss();
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(TR.current.deviceToken),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('${TR.current.device}: ${device.nickname ?? device.uuid}'),
+                const SizedBox(height: 8),
+                Text(TR.current.tokenLabel, style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                SelectableText(
+                  token.isNotEmpty ? token : '(${TR.current.empty})',
+                  style: const TextStyle(fontSize: 12, fontFamily: 'monospace'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(TR.current.cancel),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      KToast.dismiss();
+      KToast.show(status: kErrorMsg(e));
+    }
+  }
+
+  /// 修改设备登录名和密码弹窗（仅修改本地缓存，参考Android demo）
+  void _showModifyDeviceInfo(BuildContext context) async {
+    // 先获取当前本地保存的登录名和密码
+    final String curUserName =
+        await JFApi.xcDevice.xcDevGetLocalUserName(deviceId: device.uuid);
+    final String curPassword =
+        await JFApi.xcDevice.xcDevGetLocalPassword(deviceId: device.uuid);
+
+    final nameController = TextEditingController(text: curUserName);
+    final pwdController = TextEditingController(text: curPassword);
+
+    showDialog(
+      context: context,
+      builder: (dialogCtx) {
+        return AlertDialog(
+          title: Text(TR.current.modifyDeviceInfo),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                device.uuid,
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: TR.current.deviceLoginName,
+                  hintText: TR.current.inputDeviceLoginName,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: pwdController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: TR.current.deviceLoginPassword,
+                  hintText: TR.current.inputDeviceLoginPassword,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogCtx),
+              child: Text(TR.current.cancelBtn),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                _doModifyDeviceInfo(
+                  context,
+                  nameController.text.trim(),
+                  pwdController.text.trim(),
+                );
+              },
+              child: Text(TR.current.confirmBtn),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// 执行修改设备登录名和密码（仅保存到本地SDK，不下发到设备）
+  void _doModifyDeviceInfo(
+      BuildContext context, String loginName, String loginPwd) async {
+    if (loginName.isEmpty && loginPwd.isEmpty) return;
+
+    try {
+      // 仅保存到本地SDK缓存
+      await JFApi.xcDevice.xcSetLocalUserNameAndPwd(
+        deviceId: device.uuid,
+        userName: loginName,
+        pwd: loginPwd,
+      );
+      KToast.show(status: TR.current.modifySuccess);
+    } catch (e) {
+      KToast.show(status: kErrorMsg(e));
+    }
   }
 
   void onDeleteDialog(BuildContext context) {

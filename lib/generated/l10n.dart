@@ -1740,6 +1740,291 @@ class TR {
     return Intl.message('麦克风音量', name: 'micVolume', desc: '', args: []);
   }
 
+  /// `设备能力集`
+  String get deviceAbility {
+    return Intl.message('设备能力集', name: 'deviceAbility', desc: '', args: []);
+  }
+
+  /// `重试`
+  String get retry {
+    return Intl.message('重试', name: 'retry', desc: '', args: []);
+  }
+
+  /// `暂无能力数据`
+  String get noAbilityData {
+    return Intl.message('暂无能力数据', name: 'noAbilityData', desc: '', args: []);
+  }
+
+  /// `查看设备能力集`
+  String get viewDeviceAbility {
+    return Intl.message(
+      '查看设备能力集',
+      name: 'viewDeviceAbility',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `查看设备支持的功能特性`
+  String get viewDeviceAbilityDesc {
+    return Intl.message(
+      '查看设备支持的功能特性',
+      name: 'viewDeviceAbilityDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `获取设备最新Token`
+  String get getDeviceToken {
+    return Intl.message(
+      '获取设备最新Token',
+      name: 'getDeviceToken',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `从服务器获取设备最新Token`
+  String get getDeviceTokenDesc {
+    return Intl.message(
+      '从服务器获取设备最新Token',
+      name: 'getDeviceTokenDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备Token`
+  String get deviceToken {
+    return Intl.message('设备Token', name: 'deviceToken', desc: '', args: []);
+  }
+
+  /// `Token:`
+  String get tokenLabel {
+    return Intl.message('Token:', name: 'tokenLabel', desc: '', args: []);
+  }
+
+  /// `(空)`
+  String get empty {
+    return Intl.message('(空)', name: 'empty', desc: '', args: []);
+  }
+
+  /// `修改设备信息`
+  String get modifyDeviceInfo {
+    return Intl.message('修改设备信息', name: 'modifyDeviceInfo', desc: '', args: []);
+  }
+
+  /// `设备登录名`
+  String get deviceLoginName {
+    return Intl.message('设备登录名', name: 'deviceLoginName', desc: '', args: []);
+  }
+
+  /// `设备登录密码`
+  String get deviceLoginPassword {
+    return Intl.message(
+      '设备登录密码',
+      name: 'deviceLoginPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请输入设备登录名`
+  String get inputDeviceLoginName {
+    return Intl.message(
+      '请输入设备登录名',
+      name: 'inputDeviceLoginName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请输入设备登录密码`
+  String get inputDeviceLoginPassword {
+    return Intl.message(
+      '请输入设备登录密码',
+      name: 'inputDeviceLoginPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `修改成功`
+  String get modifySuccess {
+    return Intl.message('修改成功', name: 'modifySuccess', desc: '', args: []);
+  }
+
+  /// `修改失败`
+  String get modifyFailed {
+    return Intl.message('修改失败', name: 'modifyFailed', desc: '', args: []);
+  }
+
+  /// `设备登录名格式不正确`
+  String get deviceLoginNameInvalid {
+    return Intl.message(
+      '设备登录名格式不正确',
+      name: 'deviceLoginNameInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备登录密码格式不正确`
+  String get devicePwdInvalid {
+    return Intl.message(
+      '设备登录密码格式不正确',
+      name: 'devicePwdInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `低功耗设备`
+  String get lowPowerDevice {
+    return Intl.message('低功耗设备', name: 'lowPowerDevice', desc: '', args: []);
+  }
+
+  /// `休眠中`
+  String get deviceSleeping {
+    return Intl.message('休眠中', name: 'deviceSleeping', desc: '', args: []);
+  }
+
+  /// `唤醒中...`
+  String get deviceWakingUp {
+    return Intl.message('唤醒中...', name: 'deviceWakingUp', desc: '', args: []);
+  }
+
+  /// `已唤醒`
+  String get deviceAwakened {
+    return Intl.message('已唤醒', name: 'deviceAwakened', desc: '', args: []);
+  }
+
+  /// `深度休眠`
+  String get deviceDeepSleep {
+    return Intl.message('深度休眠', name: 'deviceDeepSleep', desc: '', args: []);
+  }
+
+  /// `准备休眠`
+  String get devicePrepareSleep {
+    return Intl.message('准备休眠', name: 'devicePrepareSleep', desc: '', args: []);
+  }
+
+  /// `设备处于深度休眠状态，无法唤醒`
+  String get deviceDeepSleepCannotWake {
+    return Intl.message(
+      '设备处于深度休眠状态，无法唤醒',
+      name: 'deviceDeepSleepCannotWake',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `唤醒失败`
+  String get wakeUpFailed {
+    return Intl.message('唤醒失败', name: 'wakeUpFailed', desc: '', args: []);
+  }
+
+  /// `唤醒超时`
+  String get wakeUpTimeout {
+    return Intl.message('唤醒超时', name: 'wakeUpTimeout', desc: '', args: []);
+  }
+
+  /// `正在唤醒设备，请稍候...`
+  String get wakingUpPleaseWait {
+    return Intl.message(
+      '正在唤醒设备，请稍候...',
+      name: 'wakingUpPleaseWait',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备已离线，无法预览`
+  String get deviceOffline {
+    return Intl.message(
+      '设备已离线，无法预览',
+      name: 'deviceOffline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `通道列表`
+  String get channelList {
+    return Intl.message('通道列表', name: 'channelList', desc: '', args: []);
+  }
+
+  /// `通道`
+  String get channel {
+    return Intl.message('通道', name: 'channel', desc: '', args: []);
+  }
+
+  /// `在线`
+  String get channelOnline {
+    return Intl.message('在线', name: 'channelOnline', desc: '', args: []);
+  }
+
+  /// `离线`
+  String get channelOffline {
+    return Intl.message('离线', name: 'channelOffline', desc: '', args: []);
+  }
+
+  /// `未配置`
+  String get channelNoConfig {
+    return Intl.message('未配置', name: 'channelNoConfig', desc: '', args: []);
+  }
+
+  /// `未登录`
+  String get channelNoLogin {
+    return Intl.message('未登录', name: 'channelNoLogin', desc: '', args: []);
+  }
+
+  /// `未连接`
+  String get channelNoConnect {
+    return Intl.message('未连接', name: 'channelNoConnect', desc: '', args: []);
+  }
+
+  /// `登录失败`
+  String get channelLoginFailed {
+    return Intl.message('登录失败', name: 'channelLoginFailed', desc: '', args: []);
+  }
+
+  /// `IP受限`
+  String get channelIpLimit {
+    return Intl.message('IP受限', name: 'channelIpLimit', desc: '', args: []);
+  }
+
+  /// `休眠`
+  String get channelSleep {
+    return Intl.message('休眠', name: 'channelSleep', desc: '', args: []);
+  }
+
+  /// `未知`
+  String get channelUnknown {
+    return Intl.message('未知', name: 'channelUnknown', desc: '', args: []);
+  }
+
+  /// `正在加载通道信息...`
+  String get loadingChannelInfo {
+    return Intl.message(
+      '正在加载通道信息...',
+      name: 'loadingChannelInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `加载通道信息失败`
+  String get loadChannelFailed {
+    return Intl.message(
+      '加载通道信息失败',
+      name: 'loadChannelFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `错误码`
   String get errorCode {
     return Intl.message('错误码', name: 'errorCode', desc: '', args: []);
