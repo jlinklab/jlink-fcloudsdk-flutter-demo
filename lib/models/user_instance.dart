@@ -180,6 +180,10 @@ class UserInfo extends ChangeNotifier {
       rethrow;
     }
 
+    ///调SDK内部的登出方法
+    await JFApi.xcAccount.xcLoginOut();
+
+    // SDK登出成功后，清除本地持久化数据
     if (isCancel) {
       await SharedPreferences.getInstance().then((preference) {
         List<String> nameList =
@@ -189,23 +193,22 @@ class UserInfo extends ChangeNotifier {
       });
     }
 
+    await SharedPreferences.getInstance().then((preference) {
+      preference.remove(userInfo);
+    });
+
+    await SharedPreferences.getInstance().then((preference) {
+      preference.setString(deviceInfo, json.encode(_devices));
+    });
+
     //清空用户数据
     _userId = '';
     _userName = '';
     _userPwd = '';
 
-    await SharedPreferences.getInstance().then((preference) {
-      preference.remove(userInfo);
-    });
-
     //清空设备数据
     _devices = {};
-    await SharedPreferences.getInstance().then((preference) {
-      preference.setString(deviceInfo, json.encode(_devices));
-    });
 
-    ///调SDK内部的登出方法
-    await JFApi.xcAccount.xcLoginOut();
     // 释放设备属性相关Stream和缓存
     await IDRPropertyManager.instance.dispose();
     // 清空设备管理器中的设备数据
