@@ -1,18 +1,19 @@
 // ignore_for_file: depend_on_referenced_packages
 
-import 'package:fcloudsdk_example/generated/l10n.dart';
-import 'package:flutter/foundation.dart';
 import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/media/media_player.dart';
 import 'package:fcloudsdk/model/dev_record.dart';
 import 'package:fcloudsdk/utils/date_util.dart';
 import 'package:fcloudsdk/utils/extensions.dart';
 import 'package:fcloudsdk_example/common/common_path.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/models/user_instance.dart';
 import 'package:fcloudsdk_example/pages/record/model/model.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:time/time.dart';
-import 'package:fcloudsdk/media/media_player.dart';
+
 import '../../../common/code_prase.dart';
 
 class CloudRecordController extends ChangeNotifier {
@@ -79,6 +80,21 @@ class CloudRecordController extends ChangeNotifier {
       notifyListeners();
       if (_status == MediaStatus.completed) {
         _playNext();
+      }
+    });
+
+    ///抓图回调
+    mediaController.snapshoEvent.listen((event) {
+      if (event.controllerId != mediaController.controllerId) {
+        return;
+      }
+      if (event.snapshotKey == 'preset') {
+        return;
+      }
+      if (event.code >= 0) {
+        KToast.show(status: TR.current.TR_Capture_Success);
+      } else {
+        KToast.show(status: '${TR.current.TR_Capture_Failed} $event.code');
       }
     });
   }
@@ -223,12 +239,7 @@ class CloudRecordController extends ChangeNotifier {
     String channel = 'channel0'; //预留通道位置
     String imagePath =
         '/$directoryPath/$kPrefixImage$devId $timeStr $channel.jpg';
-    int code = await mediaController.snapshot(imagePath);
-    if (code >= 0) {
-      KToast.show(status: TR.current.TR_Capture_Success);
-    } else {
-      KToast.show(status: TR.current.TR_Capture_Failed);
-    }
+    await mediaController.snapshot(imagePath);
   }
 
   bool isRecording = false;
@@ -245,12 +256,12 @@ class CloudRecordController extends ChangeNotifier {
       String channel = 'channel$currentChannel'; //预留通道位置
       String videoPath =
           '/$directoryPath/$kPrefixVideo$devId $timeStr $channel.mp4';
-      int code = await mediaController.startRecord(videoPath);
-      KToast.show(status: '开始录像');
+      await mediaController.startRecord(videoPath);
+      isRecording = true;
     } else {
       //结束录像
-      int code = await mediaController.stopRecord();
-      KToast.show(status: "录像成功");
+      await mediaController.stopRecord();
+      isRecording = false;
     }
   }
 
