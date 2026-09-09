@@ -170,12 +170,12 @@ class _DeviceScanQrPageState extends State<DeviceScanQrPage>
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (BuildContext context) {
                   return ResetDeviceRandomLoginNameAndPasswordPage(
-                      model: model);
+                      model: deviceAddModel);
                 }));
                 return;
               }
               //配置绑定关系
-              _addDeviceWithConfigBind(model);
+              _addDeviceWithConfigBind(deviceAddModel);
             });
   }
 
@@ -190,9 +190,8 @@ class _DeviceScanQrPageState extends State<DeviceScanQrPage>
           ///去设备设备名称
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (BuildContext context) {
-            DeviceAddModel model = DeviceAddModel();
             return AddDeviceFillDeviceNamePage(
-              model: model,
+              model: pModel,
             );
           }));
         });

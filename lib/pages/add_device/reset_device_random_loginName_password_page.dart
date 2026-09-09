@@ -6,21 +6,23 @@ import 'package:fcloudsdk_example/pages/add_device/add_device_fill_device_name_p
 import 'package:fcloudsdk_example/pages/add_device/models/add_device_center.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 
-
 ///重置用户名密码界面
 class ResetDeviceRandomLoginNameAndPasswordPage extends StatefulWidget {
   final DeviceAddModel model;
-  const ResetDeviceRandomLoginNameAndPasswordPage({Key? key, required this.model}) : super(key: key);
+  const ResetDeviceRandomLoginNameAndPasswordPage(
+      {Key? key, required this.model})
+      : super(key: key);
 
   @override
-  State<ResetDeviceRandomLoginNameAndPasswordPage> createState() => _ResetDeviceRandomLoginNameAndPasswordPageState();
+  State<ResetDeviceRandomLoginNameAndPasswordPage> createState() =>
+      _ResetDeviceRandomLoginNameAndPasswordPageState();
 }
 
-class _ResetDeviceRandomLoginNameAndPasswordPageState extends State<ResetDeviceRandomLoginNameAndPasswordPage> {
+class _ResetDeviceRandomLoginNameAndPasswordPageState
+    extends State<ResetDeviceRandomLoginNameAndPasswordPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
   final TextEditingController _pwdAgainController = TextEditingController();
-
 
   @override
   void initState() {
@@ -31,7 +33,9 @@ class _ResetDeviceRandomLoginNameAndPasswordPageState extends State<ResetDeviceR
     final deviceLoginName = _nameController.text;
     final deviceLoginPwd = _pwdController.text;
     final deviceLoginPwdAgain = _pwdAgainController.text;
-    if (deviceLoginName.isEmpty || deviceLoginPwd.isEmpty || deviceLoginPwdAgain.isEmpty) {
+    if (deviceLoginName.isEmpty ||
+        deviceLoginPwd.isEmpty ||
+        deviceLoginPwdAgain.isEmpty) {
       KToast.show(status: '请完善用户信息');
       return;
     }
@@ -56,10 +60,15 @@ class _ResetDeviceRandomLoginNameAndPasswordPageState extends State<ResetDeviceR
       return;
     }
 
+    DeviceAddModel model = widget.model;
+    model.loginName = deviceLoginName;
+    model.loginPassword = deviceLoginPwd;
 
-    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
-      DeviceAddModel model = DeviceAddModel();
-      return AddDeviceFillDeviceNamePage(model: model,);
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (BuildContext context) {
+      return AddDeviceFillDeviceNamePage(
+        model: model,
+      );
     }));
   }
 
@@ -77,18 +86,19 @@ class _ResetDeviceRandomLoginNameAndPasswordPageState extends State<ResetDeviceR
             TextField(
               controller: _nameController,
               decoration: const InputDecoration(
-                icon:  Icon(Icons.book),
+                icon: Icon(Icons.book),
                 hintText: '请填写设备登录名',
               ),
             ),
-            const Text('4-15位长度 包含数字和字母, 不支持下列的字符 admin、root、system、user、guest、select、delete'),
+            const Text(
+                '4-15位长度 包含数字和字母, 不支持下列的字符 admin、root、system、user、guest、select、delete'),
             const SizedBox(
               height: 10,
             ),
             TextField(
               controller: _pwdController,
               decoration: const InputDecoration(
-                icon:  Icon(Icons.password),
+                icon: Icon(Icons.password),
                 hintText: '请填写设备密码',
               ),
             ),
@@ -98,7 +108,7 @@ class _ResetDeviceRandomLoginNameAndPasswordPageState extends State<ResetDeviceR
             TextField(
               controller: _pwdAgainController,
               decoration: const InputDecoration(
-                icon:  Icon(Icons.password),
+                icon: Icon(Icons.password),
                 hintText: '请再次填写设备密码',
               ),
             ),
@@ -118,12 +128,12 @@ class _ResetDeviceRandomLoginNameAndPasswordPageState extends State<ResetDeviceR
                   color: Colors.blue,
                   borderRadius: BorderRadius.circular(12.0),
                 ),
-                child: const Text('修改',
+                child: const Text(
+                  '修改',
                   style: TextStyle(color: Colors.white, fontSize: 22.0),
                 ),
               ),
             ),
-
           ],
         ),
       ),

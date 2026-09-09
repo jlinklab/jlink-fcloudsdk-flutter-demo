@@ -56,7 +56,7 @@ class JFMatch {
       return false;
     }
 
-    final RegExp regex = RegExp(r"^([\\[\\]\{\\}\\*\\'#%+=_|~<>•.,?!-/:;()$&@\\s]|\\w){4,15}$");
+    final RegExp regex = RegExp(r"^([\[\]{}*'#%+=_|~<>•.,?!/:;()$&@\s\-]|\w){4,15}$");
     if (regex.hasMatch(str) == false) {
       return false;
     }

@@ -33,7 +33,7 @@ class DevListViewModel extends ChangeNotifier {
 
   /// 初始化报警服务
   Future<void> _initAlarm() async {
-    // 下面的参数目前版本的XCloudSDK都不再校验了，传空即可，报警初始化也可以提前不需要等拿到账号密码
+    // 下面的参数目前版本的fCloudSDK都不再校验了，传空即可，报警初始化也可以提前不需要等拿到账号密码
     // {
     //     "user": "",
     //     "pwd": "",

@@ -10,20 +10,18 @@ import 'package:provider/provider.dart';
 import '../../api/share_api.dart';
 import '../../common/code_prase.dart';
 import '../../common/event.dart';
-import '../../common/match.dart';
 import '../../generated/l10n.dart';
 import '../../manager/device_manager.dart';
 import '../../manager/push_manager.dart';
 import '../../models/user_instance.dart';
-import '../../manager/device_property_manager.dart';
-import '../../views/toast/toast.dart';
 import '../../views/toast/device_pwd_input.dart';
-import '../device_pwd_setting/device_pwd_find_back_page.dart';
+import '../../views/toast/toast.dart';
 import '../alarm_message/alarm_message_list_page.dart';
 import '../cloud/device_cloud_service_manager.dart';
 import '../cloud/model/device_cloud.dart';
-import '../share/device_share_page.dart';
 import '../device_ability/device_ability_page.dart';
+import '../device_pwd_setting/device_pwd_find_back_page.dart';
+import '../share/device_share_page.dart';
 import 'model/model.dart';
 import 'viewmodel/device_list_view_model.dart';
 
@@ -306,7 +304,7 @@ class _DeviceCard extends StatelessWidget {
 
   /// 导航到预览页面（低功耗设备需先唤醒）
   void _navigateToPreview(BuildContext context) async {
-    if(device.isLowPowerType){
+    if (device.isLowPowerType) {
       final lpState = _getLowPowerState(context);
 
       // 离线状态，无法预览
@@ -326,7 +324,6 @@ class _DeviceCard extends StatelessWidget {
         _showWakeUpDialog(context);
         return;
       }
-
     } else {
       // 离线状态，无法预览
       if (device.state <= _stateOffline) {
@@ -413,7 +410,10 @@ class _DeviceCard extends StatelessWidget {
       }
 
       // 密码错误错误码：-70106, -70163, -70203, -70205
-      if (code == -70106 || code == -70163 || code == -70203 || code == -70205) {
+      if (code == -70106 ||
+          code == -70163 ||
+          code == -70203 ||
+          code == -70205) {
         _showDevicePwdErrorDialog(context);
       } else if (code < 0) {
         KToast.show(status: kErrorMsg(code));
@@ -766,7 +766,8 @@ class _DeviceCard extends StatelessWidget {
       );
       //如果设备Token不为空，需要将设备同步给SDK
       if (token.isNotEmpty) {
-        await JFApi.xcDevice.xcSetDeviceToken(deviceId: device.uuid, token: token);
+        await JFApi.xcDevice
+            .xcSetDeviceToken(deviceId: device.uuid, token: token);
       }
       KToast.dismiss();
       showDialog(
@@ -781,7 +782,8 @@ class _DeviceCard extends StatelessWidget {
               children: [
                 Text('${TR.current.device}: ${device.nickname ?? device.uuid}'),
                 const SizedBox(height: 8),
-                Text(TR.current.tokenLabel, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(TR.current.tokenLabel,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
                 SelectableText(
                   token.isNotEmpty ? token : '(${TR.current.empty})',

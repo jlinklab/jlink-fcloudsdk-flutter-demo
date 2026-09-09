@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 
@@ -170,7 +171,7 @@ class DeviceAddCenter {
   ///retrun >= 0 添加成功， < 0 失败
   Future<int> addDeviceWithModel(DeviceAddModel model) async {
     if (kDebugMode) {
-      print(
+      LogUtils.addDevice.log(
           'DeviceAddCenter---设备添加之流程 3.最终添加 \n 当前设备信息为：${model.toJsonString()}');
     }
     var map = model.toJsonMapForDefault();
@@ -184,7 +185,7 @@ class DeviceAddCenter {
     _curModel = model;
     _onCompleteCallback = onComplete;
     if (kDebugMode) {
-      print(
+      LogUtils.addDevice.log(
           'DeviceAddCenter---设备添加之流程1.配置随机用户密码 \n 当前设备信息为：${model.toJsonString()}');
     }
 
@@ -472,7 +473,7 @@ class DeviceAddCenter {
       {required DeviceAddModel model,
       required Function(DeviceAddModel deviceConfigInfo) onComplete}) {
     if (kDebugMode) {
-      print(
+      LogUtils.addDevice.log(
           'DeviceAddCenter---设备添加之流程 2.绑定流程  \n 当前设备信息为：${model.toJsonString()}');
     }
     _curModel = model;
@@ -599,6 +600,7 @@ class DeviceAddCenter {
                       } else if (bindStatus == 1) {
                         _curModel.ma = true;
                         if (isSuccess && cryNum.isEmpty) {
+                          ///如果是绑定已经绑定 且 没有获取到特征码 走普通添加流程
                           _addNormal();
                         } else {
                           _addSpecify();
