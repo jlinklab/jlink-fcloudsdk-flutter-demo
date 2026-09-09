@@ -85,7 +85,7 @@ class _RecordListPageState extends State<RecordListPage>
   List<int> recordsOfTime = [];
   DateTime? currentTime;
   bool _isMute = true;
-  final bool _isRecording = false;
+  bool _isRecording = false;
   final ItemScrollController fileScrollController = ItemScrollController();
   bool _scrolling = false;
   Timer? _timer;
@@ -177,6 +177,21 @@ class _RecordListPageState extends State<RecordListPage>
             position.difference(DateUtil.startOfDay(position)).inMinutes;
         progress = minutes.toDouble();
       });
+    });
+
+    ///抓图回调
+    controller.snapshoEvent.listen((event) {
+      if (event.controllerId != controller.controllerId) {
+        return;
+      }
+      if (event.snapshotKey == 'preset') {
+        return;
+      }
+      if (event.code >= 0) {
+        KToast.show(status: TR.current.TR_Capture_Success);
+      } else {
+        KToast.show(status: '${TR.current.TR_Capture_Failed} $event.code');
+      }
     });
   }
 
@@ -390,12 +405,7 @@ class _RecordListPageState extends State<RecordListPage>
     String imagePath =
         '/$directoryPath/$kPrefixImage$deviceId $timeStr $channel.jpg';
     KToast.show();
-    int code = await controller.snapshot(imagePath);
-    if (code >= 0) {
-      KToast.show(status: TR.current.TR_Capture_Success);
-    } else {
-      KToast.show(status: '${TR.current.TR_Capture_Failed} $code');
-    }
+    await controller.snapshot(imagePath);
   }
 
   ///播放/静音
@@ -456,11 +466,11 @@ class _RecordListPageState extends State<RecordListPage>
       String vidoePath =
           '/$directoryPath/$kPrefixVideo$deviceId $timeStr $channel.mp4';
       await controller.startRecord(vidoePath);
-      KToast.show(status: "开始录像");
+      _isRecording = true;
     } else {
       //结束录像
       await controller.stopRecord();
-      KToast.show(status: "录像成功");
+      _isRecording = false;
     }
   }
 
