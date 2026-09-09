@@ -42,6 +42,9 @@ class _AlarmPlayToolBarState extends State<AlarmPlayToolBar> {
     if (widget.videoLength <= 0) {
       return const SizedBox();
     }
+    if (widget.currentTime <= 0) {
+      return const SizedBox();
+    }
     return Row(
       children: [
         Expanded(

@@ -1,6 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'dart:async';
+import 'package:fcloudsdk_example/pages/record/alarmplaytoolbar/alarmplaytoolbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -478,296 +479,319 @@ class _RecordListPageState extends State<RecordListPage>
   Widget build(BuildContext context) {
     return OrientationBuilder(builder: (context, orientation) {
       return Scaffold(
-        key: _key,
-        appBar: orientation == Orientation.portrait
-            ? AppBar(
-                title: Text(TR.current.recordList(widget.deviceId)),
-                actions: [
-                  PopupMenuButton<String>(
-                    onSelected: _onPopMenuItemTap,
-                    itemBuilder: (context) => [
-                      const PopupMenuItem<String>(
-                        value: 'Download',
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.download,
-                              color: Colors.black,
-                            ),
-                            SizedBox(
-                              width: 15.0,
-                            ),
-                            Text('Download')
-                          ],
+          key: _key,
+          appBar: orientation == Orientation.portrait
+              ? AppBar(
+                  title: Text(TR.current.recordList(widget.deviceId)),
+                  actions: [
+                    PopupMenuButton<String>(
+                      onSelected: _onPopMenuItemTap,
+                      itemBuilder: (context) => [
+                        const PopupMenuItem<String>(
+                          value: 'Download',
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.download,
+                                color: Colors.black,
+                              ),
+                              SizedBox(
+                                width: 15.0,
+                              ),
+                              Text('Download')
+                            ],
+                          ),
                         ),
-                      ),
-                      const PopupMenuDivider(),
-                      const PopupMenuItem<String>(
-                        value: 'Calender',
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.calendar_month_rounded,
-                              color: Colors.black,
-                            ),
-                            SizedBox(
-                              width: 15.0,
-                            ),
-                            Text('Calender')
-                          ],
+                        const PopupMenuDivider(),
+                        const PopupMenuItem<String>(
+                          value: 'Calender',
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.calendar_month_rounded,
+                                color: Colors.black,
+                              ),
+                              SizedBox(
+                                width: 15.0,
+                              ),
+                              Text('Calender')
+                            ],
+                          ),
                         ),
-                      ),
-                      // const PopupMenuDivider(),
-                      // const PopupMenuItem<String>(
-                      //   value: 'RecordFile',
-                      //   child: Row(
-                      //     children: [
-                      //       Icon(
-                      //         Icons.picture_as_pdf,
-                      //         color: Colors.black,
-                      //       ),
-                      //       SizedBox(
-                      //         width: 15.0,
-                      //       ),
-                      //       Text('RecordFile')
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                ],
-              )
-            : null,
-        body: Column(
-          children: [
-            Stack(
-              alignment: Alignment.center,
+                        // const PopupMenuDivider(),
+                        // const PopupMenuItem<String>(
+                        //   value: 'RecordFile',
+                        //   child: Row(
+                        //     children: [
+                        //       Icon(
+                        //         Icons.picture_as_pdf,
+                        //         color: Colors.black,
+                        //       ),
+                        //       SizedBox(
+                        //         width: 15.0,
+                        //       ),
+                        //       Text('RecordFile')
+                        //     ],
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                  ],
+                )
+              : null,
+          body: Container(
+            color: orientation == Orientation.landscape
+                ? Colors.black
+                : Colors.white,
+            child: Column(
               children: [
-                MediaPlayerWidget(
-                  controller: controller,
-                ),
-                Visibility(
-                    visible: _isLoading,
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    )),
-                Visibility(
-                    visible: _existRecord,
-                    child: MediaPlayControlView(
-                      orientation: orientation,
-                      mediaController: controller,
-                      mediaType: MediaType.card,
-                      playbackCallback: (playing) {
-                        if (playing) {
-                          controller.pause();
-                        } else {
-                          controller.playback();
-                        }
-                      },
-                    )),
-              ],
-            ),
-            ...orientation == Orientation.landscape
-                ? [const SizedBox()]
-                : [
-                    Offstage(
-                      offstage: !_isShowToolBar,
-                      child: Slider(
-                        value: progress,
-                        min: 0,
-                        max: 1440,
-                        divisions: 1440,
-                        label: getSliderLabel(progress),
-                        onChanged: (double value) {
-                          setState(() {
-                            progress = value;
-                          });
-                        },
-                        onChangeEnd: (value) async {
-                          controller.seekTo(
-                              DateUtil.startOfDay(null) + value.minutes);
-                        },
-                      ),
-                    ),
-                    Visibility(
-                      visible: _isShowToolBar && _isLoading == false,
-                      maintainAnimation: true,
-                      maintainSize: true,
-                      maintainState: true,
-                      child: SizedBox(
-                        height: 50,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: ElevatedButton(
-                                  onPressed: () {
-                                    _onSnap();
-                                  },
-                                  child: const Icon(Icons.photo_camera)),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: ElevatedButton(
-                                  onPressed: () {
-                                    _onMute();
-                                  },
-                                  child: _isMute
-                                      ? const Icon(Icons.volume_off)
-                                      : const Icon(Icons.volume_up)),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: ElevatedButton(
-                                  onPressed: () {
-                                    _onRecord();
-                                  },
-                                  child: Icon(
-                                    Icons.photo_camera_front,
-                                    color: _isRecording
-                                        ? Colors.red
-                                        : Colors.white,
-                                  )),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: ElevatedButton(
-                                  onPressed: () {
-                                    _showPlaybackSpeedDialog();
-                                  },
-                                  child: Text(_playbackSpeedText(
-                                      controller.playbackSpeed))),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
                     SizedBox(
-                      height: 200,
-                      child: NotificationListener<ScrollNotification>(
-                        onNotification: (notification) {
-                          if ((notification is ScrollUpdateNotification &&
-                                  notification.dragDetails != null) ||
-                              (notification is ScrollStartNotification &&
-                                  notification.dragDetails != null)) {
-                            //dragDetails不为null,为手动触发
-                            _scrolling = true;
-                            if (_timer != null && _timer!.isActive) {
-                              _timer!.cancel();
+                        width: orientation == Orientation.landscape
+                            ? MediaQuery.of(context).size.height *
+                                (controller.aspectRatio > 0
+                                    ? controller.aspectRatio
+                                    : 16 / 9)
+                            : null,
+                        child: MediaPlayerWidget(
+                          controller: controller,
+                        )),
+                    Visibility(
+                        visible: _isLoading,
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        )),
+                    Visibility(
+                        visible: _existRecord,
+                        child: MediaPlayControlView(
+                          orientation: orientation,
+                          mediaController: controller,
+                          mediaType: MediaType.card,
+                          playbackCallback: (playing) {
+                            if (playing) {
+                              controller.pause();
+                            } else {
+                              controller.playback();
                             }
-                          } else if (notification is ScrollEndNotification) {
-                            if (_timer != null && _timer!.isActive) {
-                              _timer!.cancel();
-                            }
-                            _timer =
-                                Timer(const Duration(milliseconds: 500), () {
-                              _scrolling = false;
-                            });
-                          }
-                          return false;
-                        },
-                        child: ScrollablePositionedList.builder(
-                            itemCount: records.length,
-                            itemScrollController: fileScrollController,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              DevFileRecord record = records[index];
-                              return GestureDetector(
-                                onTap: () async {
-                                  if (_record == record) {
-                                    return;
-                                  }
-                                  //如果正在录像，那就先停止
-                                  if (_isRecording) {
-                                    await _onRecord();
-                                  }
-                                  toRecordPlay(record, index);
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(16)),
-                                      border: Border.all(
-                                          color: _record == record
-                                              ? Colors.blueAccent
-                                              : Colors.grey)),
-                                  width: 200,
-                                  height: 100,
-                                  child: Column(
-                                    children: [
-                                      Row(
+                          },
+                        )),
+                  ],
+                ),
+                ...orientation == Orientation.landscape
+                    ? [const SizedBox()]
+                    : [
+                        Offstage(
+                          offstage: !_isShowToolBar,
+                          child: AlarmPlayToolBar(
+                              needShowVideoLength: false,
+                              videoLength: _record != null
+                                  ? (_record!.endTime!
+                                      .difference(_record!.beginTime!)
+                                      .inSeconds
+                                      .toDouble())
+                                  : 0.0,
+                              currentTime: _record != null
+                                  ? currentTime!
+                                      .difference(_record!.beginTime!)
+                                      .inSeconds
+                                      .toDouble()
+                                  : 0.0,
+                              onDragStart: () {},
+                              onDragEnd: (double value) {
+                                DateTime time =
+                                    DateTime.fromMillisecondsSinceEpoch(_record!
+                                            .beginTime!.millisecondsSinceEpoch +
+                                        value.toInt() * 1000);
+                                controller.seekTo(time);
+                              }),
+                        ),
+                        Visibility(
+                          visible: _isShowToolBar && _isLoading == false,
+                          maintainAnimation: true,
+                          maintainSize: true,
+                          maintainState: true,
+                          child: SizedBox(
+                            height: 50,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        _onSnap();
+                                      },
+                                      child: const Icon(Icons.photo_camera)),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        _onMute();
+                                      },
+                                      child: _isMute
+                                          ? const Icon(Icons.volume_off)
+                                          : const Icon(Icons.volume_up)),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        _onRecord();
+                                      },
+                                      child: Icon(
+                                        Icons.photo_camera_front,
+                                        color: _isRecording
+                                            ? Colors.red
+                                            : Colors.white,
+                                      )),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        _showPlaybackSpeedDialog();
+                                      },
+                                      child: Text(_playbackSpeedText(
+                                          controller.playbackSpeed))),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 200,
+                          child: NotificationListener<ScrollNotification>(
+                            onNotification: (notification) {
+                              if ((notification is ScrollUpdateNotification &&
+                                      notification.dragDetails != null) ||
+                                  (notification is ScrollStartNotification &&
+                                      notification.dragDetails != null)) {
+                                //dragDetails不为null,为手动触发
+                                _scrolling = true;
+                                if (_timer != null && _timer!.isActive) {
+                                  _timer!.cancel();
+                                }
+                              } else if (notification
+                                  is ScrollEndNotification) {
+                                if (_timer != null && _timer!.isActive) {
+                                  _timer!.cancel();
+                                }
+                                _timer = Timer(
+                                    const Duration(milliseconds: 500), () {
+                                  _scrolling = false;
+                                });
+                              }
+                              return false;
+                            },
+                            child: ScrollablePositionedList.builder(
+                                itemCount: records.length,
+                                itemScrollController: fileScrollController,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  DevFileRecord record = records[index];
+                                  return GestureDetector(
+                                    onTap: () async {
+                                      if (_record == record) {
+                                        return;
+                                      }
+                                      //如果正在录像，那就先停止
+                                      if (_isRecording) {
+                                        await _onRecord();
+                                      }
+                                      toRecordPlay(record, index);
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(16)),
+                                          border: Border.all(
+                                              color: _record == record
+                                                  ? Colors.blueAccent
+                                                  : Colors.grey)),
+                                      width: 200,
+                                      height: 100,
+                                      child: Column(
                                         children: [
-                                          const SizedBox(
-                                            width: 5,
+                                          Row(
+                                            children: [
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              Expanded(
+                                                  child: Text(
+                                                record.fileName ?? '',
+                                                overflow: TextOverflow.fade,
+                                                style: const TextStyle(
+                                                    fontSize: 12),
+                                              )),
+                                              Container(
+                                                width: 50.0,
+                                                height: 42.0,
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.red,
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  16)),
+                                                ),
+                                                child: TextButton(
+                                                  onPressed: () async {
+                                                    _onDownload(
+                                                        context, record);
+                                                  },
+                                                  child: const Text(
+                                                    '下载',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 12),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
                                           ),
                                           Expanded(
-                                              child: Text(
-                                            record.fileName ?? '',
-                                            overflow: TextOverflow.fade,
-                                            style:
-                                                const TextStyle(fontSize: 12),
-                                          )),
-                                          Container(
-                                            width: 50.0,
-                                            height: 42.0,
-                                            decoration: const BoxDecoration(
-                                              color: Colors.red,
-                                              borderRadius: BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(16)),
-                                            ),
-                                            child: TextButton(
-                                              onPressed: () async {
-                                                _onDownload(context, record);
-                                              },
-                                              child: const Text(
-                                                '下载',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12),
-                                              ),
-                                            ),
-                                          )
+                                              child: ClipRRect(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(16)),
+                                            child: JFImage.thumbnailSDCard(
+                                                szDevId: widget.deviceId,
+                                                assetName:
+                                                    'images/monitor_bg.png',
+                                                localPath: record
+                                                    .recordThumbnailLocalPath!,
+                                                beginTime: record.beginTime,
+                                                endTime: record.endTime),
+                                          ))
                                         ],
                                       ),
-                                      Expanded(
-                                          child: ClipRRect(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(16)),
-                                        child: JFImage.thumbnailSDCard(
-                                            szDevId: widget.deviceId,
-                                            assetName: 'images/monitor_bg.png',
-                                            localPath: record
-                                                .recordThumbnailLocalPath!,
-                                            beginTime: record.beginTime,
-                                            endTime: record.endTime),
-                                      ))
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
-                      ),
-                    ),
-                    SizedBox(
-                      child: Visibility(
-                        visible: _existRecord,
-                        child: TimeLineView(
-                          times: recordsOfTime,
-                          currentTime: currentTime,
-                          timeChanged: (_) {
-                            timelineSeekTo(_);
-                          },
+                                    ),
+                                  );
+                                }),
+                          ),
                         ),
-                      ),
-                      // child: TimeLineView(times: times, timeChanged: timeChanged),
-                    )
-                  ],
-          ],
-        ),
-      );
+                        SizedBox(
+                          child: Visibility(
+                            visible: _existRecord,
+                            child: TimeLineView(
+                              times: recordsOfTime,
+                              currentTime: currentTime,
+                              timeChanged: (_) {
+                                timelineSeekTo(_);
+                              },
+                            ),
+                          ),
+                          // child: TimeLineView(times: times, timeChanged: timeChanged),
+                        )
+                      ],
+              ],
+            ),
+          ));
     });
   }
 
