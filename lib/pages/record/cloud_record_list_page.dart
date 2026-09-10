@@ -177,291 +177,319 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
             _context = context;
             return OrientationBuilder(builder: (context, orientation) {
               return Scaffold(
-                appBar: orientation == Orientation.portrait
-                    ? AppBar(
-                        title: Text(TR.current.cloudList),
-                        centerTitle: true,
-                        actions: [
-                          PopupMenuButton<String>(
-                            onSelected: (value) =>
-                                handleMenuClick(context, controller, value),
-                            itemBuilder: (context) => [
-                              const PopupMenuItem<String>(
-                                value: 'Calender',
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.calendar_month_rounded,
-                                      color: Colors.black,
-                                    ),
-                                    SizedBox(
-                                      width: 15.0,
-                                    ),
-                                    Text('Calender')
-                                  ],
+                  appBar: orientation == Orientation.portrait
+                      ? AppBar(
+                          title: Text(TR.current.cloudList),
+                          centerTitle: true,
+                          actions: [
+                            PopupMenuButton<String>(
+                              onSelected: (value) =>
+                                  handleMenuClick(context, controller, value),
+                              itemBuilder: (context) => [
+                                const PopupMenuItem<String>(
+                                  value: 'Calender',
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.calendar_month_rounded,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(
+                                        width: 15.0,
+                                      ),
+                                      Text('Calender')
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const PopupMenuDivider(),
-                              const PopupMenuItem<String>(
-                                value: 'download',
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.download,
-                                      color: Colors.black,
-                                    ),
-                                    SizedBox(
-                                      width: 15.0,
-                                    ),
-                                    Text('下载')
-                                  ],
+                                const PopupMenuDivider(),
+                                const PopupMenuItem<String>(
+                                  value: 'download',
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.download,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(
+                                        width: 15.0,
+                                      ),
+                                      Text('下载')
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
-                    : null,
-                body: Column(
-                  children: [
-                    Stack(
-                      alignment: Alignment.center,
+                              ],
+                            ),
+                          ],
+                        )
+                      : null,
+                  body: Container(
+                    color: orientation == Orientation.landscape
+                        ? Colors.black
+                        : Colors.white,
+                    child: Column(
                       children: [
-                        MediaPlayerWidget(
-                          controller: controller.mediaController,
-                        ),
-                        Visibility(
-                            visible: controller.isLoading,
-                            child: const Center(
-                              child: CircularProgressIndicator(),
-                            )),
-                        Visibility(
-                          visible: _controller.existRecord,
-                          child: MediaPlayControlView(
-                            orientation: orientation,
-                            mediaController: controller.mediaController,
-                            mediaType: MediaType.cloud,
-                            playbackCallback: (playing) {
-                              controller.playOrPause();
-                            },
-                          ),
-                        ),
-                        Positioned(
-                            bottom: 5,
-                            left: 0,
-                            right: 25,
-                            child: Offstage(
-                              offstage: controller.currentPlayRecord == null,
-                              child: AlarmPlayToolBar(
-                                needShowVideoLength: false,
-                                videoLength: controller.currentPlayRecord !=
-                                        null
-                                    ? (controller.currentPlayRecord!.endTime!
-                                        .difference(controller
-                                            .currentPlayRecord!.beginTime!)
-                                        .inSeconds
-                                        .toDouble())
-                                    : 0.0,
-                                currentTime:
-                                    controller.currentPlayRecord != null
-                                        ? controller.position
-                                            .difference(controller
-                                                .currentPlayRecord!.beginTime!)
-                                            .inSeconds
-                                            .toDouble()
-                                        : 0.0,
-                                onDragStart: () {},
-                                onDragEnd: (double value) {
-                                  DateTime time =
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          controller
-                                                  .currentPlayRecord!
-                                                  .beginTime!
-                                                  .millisecondsSinceEpoch +
-                                              value.toInt() * 1000);
-                                  controller.mediaController.seekTo(time);
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            SizedBox(
+                                width: orientation == Orientation.landscape
+                                    ? MediaQuery.of(context).size.height *
+                                        (controller.mediaController
+                                                    .aspectRatio >
+                                                0
+                                            ? controller
+                                                .mediaController.aspectRatio
+                                            : 16 / 9)
+                                    : null,
+                                child: MediaPlayerWidget(
+                                  controller: controller.mediaController,
+                                )),
+                            Visibility(
+                                visible: controller.isLoading,
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                )),
+                            Visibility(
+                              visible: _controller.existRecord,
+                              child: MediaPlayControlView(
+                                orientation: orientation,
+                                mediaController: controller.mediaController,
+                                mediaType: MediaType.cloud,
+                                playbackCallback: (playing) {
+                                  controller.playOrPause();
                                 },
                               ),
-                            )),
+                            ),
+                            Positioned(
+                                bottom: 5,
+                                left: 0,
+                                right: 25,
+                                child: Offstage(
+                                  offstage:
+                                      controller.currentPlayRecord == null,
+                                  child: AlarmPlayToolBar(
+                                    needShowVideoLength: false,
+                                    videoLength:
+                                        controller.currentPlayRecord != null
+                                            ? (controller
+                                                .currentPlayRecord!.endTime!
+                                                .difference(controller
+                                                    .currentPlayRecord!
+                                                    .beginTime!)
+                                                .inSeconds
+                                                .toDouble())
+                                            : 0.0,
+                                    currentTime:
+                                        controller.currentPlayRecord != null
+                                            ? controller.position
+                                                .difference(controller
+                                                    .currentPlayRecord!
+                                                    .beginTime!)
+                                                .inSeconds
+                                                .toDouble()
+                                            : 0.0,
+                                    onDragStart: () {},
+                                    onDragEnd: (double value) {
+                                      DateTime time =
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              controller
+                                                      .currentPlayRecord!
+                                                      .beginTime!
+                                                      .millisecondsSinceEpoch +
+                                                  value.toInt() * 1000);
+                                      controller.mediaController.seekTo(time);
+                                    },
+                                  ),
+                                )),
+                          ],
+                        ),
+                        ...orientation == Orientation.landscape
+                            ? [
+                                const SizedBox(
+                                  height: 0,
+                                )
+                              ]
+                            : [
+                                const SizedBox(height: 10),
+                                SizedBox(
+                                  height: 50,
+                                  child: Visibility(
+                                    visible: _controller.existRecord,
+                                    child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10.0),
+                                          child: ElevatedButton(
+                                              onPressed: () {
+                                                controller.snapImage(
+                                                    devId: widget.deviceId);
+                                              },
+                                              child: const Icon(
+                                                  Icons.photo_camera)),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10.0),
+                                          child: ElevatedButton(
+                                              onPressed: () {
+                                                controller.snapRecord(
+                                                    devId: widget.deviceId);
+                                              },
+                                              child: Icon(
+                                                Icons.photo_camera_front,
+                                                color: controller.isRecording
+                                                    ? Colors.red
+                                                    : Colors.white,
+                                              )),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10.0),
+                                          child: ElevatedButton(
+                                              onPressed: () {
+                                                _showPlaybackSpeedDialog(
+                                                    controller.mediaController);
+                                              },
+                                              child: Text(_playbackSpeedText(
+                                                  controller.mediaController
+                                                      .playbackSpeed))),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 200,
+                                  child:
+                                      NotificationListener<ScrollNotification>(
+                                    onNotification: (notification) {
+                                      if ((notification
+                                                  is ScrollUpdateNotification &&
+                                              notification.dragDetails !=
+                                                  null) ||
+                                          (notification
+                                                  is ScrollStartNotification &&
+                                              notification.dragDetails !=
+                                                  null)) {
+                                        //dragDetails不为null,为手动触发
+                                        _scrolling = true;
+                                        if (_timer != null &&
+                                            _timer!.isActive) {
+                                          _timer!.cancel();
+                                        }
+                                      } else if (notification
+                                          is ScrollEndNotification) {
+                                        if (_timer != null &&
+                                            _timer!.isActive) {
+                                          _timer!.cancel();
+                                        }
+                                        _timer = Timer(
+                                            const Duration(milliseconds: 500),
+                                            () {
+                                          _scrolling = false;
+                                        });
+                                      }
+                                      return false;
+                                    },
+                                    child: ScrollablePositionedList.builder(
+                                        itemCount: controller.records.length,
+                                        itemScrollController:
+                                            fileScrollController,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, index) {
+                                          CloudRecord record =
+                                              controller.records[index];
+                                          return GestureDetector(
+                                            onTap: () {
+                                              if (index == lastIndex) {
+                                                return;
+                                              }
+                                              lastIndex = index;
+                                              controller.currentPlayRecord =
+                                                  null;
+                                              controller.mediaController
+                                                  .startCloudPlayByTime(
+                                                      beginTime:
+                                                          record.beginTime);
+                                            },
+                                            child: Container(
+                                              margin: const EdgeInsets.all(16),
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: record.select
+                                                          ? Colors.blueAccent
+                                                          : Colors.black),
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(16))),
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.68,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(16.0),
+                                                child: Stack(
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 5),
+                                                      child: ListTile(
+                                                        title: Text(
+                                                            '${record.beginTime ?? ''} - ${record.endTime ?? ''}'),
+                                                        subtitle: Text(
+                                                          record.url ?? '',
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Positioned(
+                                                      top: 0.0,
+                                                      right: 0.0,
+                                                      height: 45,
+                                                      width: 45,
+                                                      child: Container(
+                                                        color: Colors.black,
+                                                        child: IconButton(
+                                                          icon: const Icon(
+                                                            Icons
+                                                                .arrow_downward,
+                                                            color: Colors.white,
+                                                          ),
+                                                          onPressed: () {
+                                                            _onDownload(context,
+                                                                record);
+                                                          },
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 80,
+                                  child: Visibility(
+                                    visible: _controller.existRecord,
+                                    child: TimeLineView(
+                                      times: controller.timeline,
+                                      currentTime: controller.position,
+                                      timeChanged: (dateTime) {
+                                        controller.timelineChanged(dateTime);
+                                      },
+                                    ),
+                                  ),
+                                )
+                              ]
                       ],
                     ),
-                    ...orientation == Orientation.landscape
-                        ? [
-                            const SizedBox(
-                              height: 0,
-                            )
-                          ]
-                        : [
-                            const SizedBox(height: 10),
-                            SizedBox(
-                              height: 50,
-                              child: Visibility(
-                                visible: _controller.existRecord,
-                                child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 10.0),
-                                      child: ElevatedButton(
-                                          onPressed: () {
-                                            controller.snapImage(
-                                                devId: widget.deviceId);
-                                          },
-                                          child:
-                                              const Icon(Icons.photo_camera)),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 10.0),
-                                      child: ElevatedButton(
-                                          onPressed: () {
-                                            controller.snapRecord(
-                                                devId: widget.deviceId);
-                                          },
-                                          child: Icon(
-                                            Icons.photo_camera_front,
-                                            color: controller.isRecording
-                                                ? Colors.red
-                                                : Colors.white,
-                                          )),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 10.0),
-                                      child: ElevatedButton(
-                                          onPressed: () {
-                                            _showPlaybackSpeedDialog(
-                                                controller.mediaController);
-                                          },
-                                          child: Text(_playbackSpeedText(
-                                              controller.mediaController
-                                                  .playbackSpeed))),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 200,
-                              child: NotificationListener<ScrollNotification>(
-                                onNotification: (notification) {
-                                  if ((notification
-                                              is ScrollUpdateNotification &&
-                                          notification.dragDetails != null) ||
-                                      (notification
-                                              is ScrollStartNotification &&
-                                          notification.dragDetails != null)) {
-                                    //dragDetails不为null,为手动触发
-                                    _scrolling = true;
-                                    if (_timer != null && _timer!.isActive) {
-                                      _timer!.cancel();
-                                    }
-                                  } else if (notification
-                                      is ScrollEndNotification) {
-                                    if (_timer != null && _timer!.isActive) {
-                                      _timer!.cancel();
-                                    }
-                                    _timer = Timer(
-                                        const Duration(milliseconds: 500), () {
-                                      _scrolling = false;
-                                    });
-                                  }
-                                  return false;
-                                },
-                                child: ScrollablePositionedList.builder(
-                                    itemCount: controller.records.length,
-                                    itemScrollController: fileScrollController,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      CloudRecord record =
-                                          controller.records[index];
-                                      return GestureDetector(
-                                        onTap: () {
-                                          if (index == lastIndex) {
-                                            return;
-                                          }
-                                          lastIndex = index;
-                                          controller.currentPlayRecord = null;
-                                          controller.mediaController
-                                              .startCloudPlayByTime(
-                                                  beginTime: record.beginTime);
-                                        },
-                                        child: Container(
-                                          margin: const EdgeInsets.all(16),
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: record.select
-                                                      ? Colors.blueAccent
-                                                      : Colors.black),
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(16))),
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.68,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(16.0),
-                                            child: Stack(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 5),
-                                                  child: ListTile(
-                                                    title: Text(
-                                                        '${record.beginTime ?? ''} - ${record.endTime ?? ''}'),
-                                                    subtitle: Text(
-                                                      record.url ?? '',
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  top: 0.0,
-                                                  right: 0.0,
-                                                  height: 45,
-                                                  width: 45,
-                                                  child: Container(
-                                                    color: Colors.black,
-                                                    child: IconButton(
-                                                      icon: const Icon(
-                                                        Icons.arrow_downward,
-                                                        color: Colors.white,
-                                                      ),
-                                                      onPressed: () {
-                                                        _onDownload(
-                                                            context, record);
-                                                      },
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 80,
-                              child: Visibility(
-                                visible: _controller.existRecord,
-                                child: TimeLineView(
-                                  times: controller.timeline,
-                                  currentTime: controller.position,
-                                  timeChanged: (dateTime) {
-                                    controller.timelineChanged(dateTime);
-                                  },
-                                ),
-                              ),
-                            )
-                          ]
-                  ],
-                ),
-              );
+                  ));
             });
           },
         );

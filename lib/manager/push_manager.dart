@@ -14,6 +14,7 @@ class PushManager {
   PushManager._();
 
   ///获取杰峰推送token
+  ///如果用的不是我们的JF账号，如果没有userId，可以用别的作为value,只要确保唯一性即可
   Future<String> getJfPushToken() async {
     String userId = UserInfo.instance.userId;
     if (userId.isEmpty) {
