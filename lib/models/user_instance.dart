@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fcloudsdk/api/api_center.dart';
@@ -181,7 +182,11 @@ class UserInfo extends ChangeNotifier {
     }
 
     ///调SDK内部的登出方法
-    await JFApi.xcAccount.xcLoginOut();
+    try {
+      await JFApi.xcAccount.xcLoginOut();
+    } catch (e) {
+      LogUtils.account.log('SDK登出失败: $e');
+    }
 
     // SDK登出成功后，清除本地持久化数据
     if (isCancel) {

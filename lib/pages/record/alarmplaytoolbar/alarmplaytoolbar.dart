@@ -33,11 +33,6 @@ class _AlarmPlayToolBarState extends State<AlarmPlayToolBar> {
   bool dragging = false;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     if (widget.videoLength <= 0) {
       return const SizedBox();

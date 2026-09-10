@@ -78,7 +78,6 @@ class _RecordListPageState extends State<RecordListPage>
   late final CardMediaController controller;
   DateTime _currentDateTime = DateTime.now(); //可以自定义，外界传进来 DateTime(2023,05,07)
   bool _isLoading = true;
-  double progress = 0;
   final int _curChannel = 0;
   final int _curStreamType = 0;
   List<DevFileRecord> records = [];
@@ -173,10 +172,6 @@ class _RecordListPageState extends State<RecordListPage>
           fileScrollController.scrollTo(
               index: index, duration: const Duration(milliseconds: 500));
         }
-        //更新时间滑块
-        int minutes =
-            position.difference(DateUtil.startOfDay(position)).inMinutes;
-        progress = minutes.toDouble();
       });
     });
 
@@ -830,12 +825,6 @@ class _RecordListPageState extends State<RecordListPage>
       _isLoading = true;
     });
     controller.seekTo(devFileRecord.beginTime!);
-  }
-
-  String getSliderLabel(double value) {
-    DateTime startOfDay = DateUtil.startOfDay(null);
-    DateTime currentTime = startOfDay + value.minutes;
-    return '${currentTime.year}-${currentTime.month}-${currentTime.day} ${currentTime.hour}:${currentTime.minute}';
   }
 
   @override
