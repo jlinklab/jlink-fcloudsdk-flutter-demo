@@ -64,6 +64,7 @@ abstract class DeviceAudioUploadBaseController with ChangeNotifier {
   /// 是否支持呼唤音
   bool callVoiceAbility = false;
 
+  ///旧自定义报警音默认对齐原生，固定 3 秒（如果报警音过长设备可能会返回70103，超出文件大小限制）
   int recordFileTimeLenth = 3;
 
   ///0: 男， 1女， -1默认不选
@@ -191,9 +192,9 @@ abstract class DeviceAudioUploadBaseController with ChangeNotifier {
       return;
     }
 
-    int fileSize = fileSizeAtPath(audioFilePath);
+    int fileSize = fileSizeAtPath(uploadAudioFilePath);
     if (kDebugMode) {
-      debugPrint('audio_fileSize:$fileSize');
+      LogUtils.deviceConfig.log('audio_fileSize:$fileSize');
     }
     Map rMap = {
       'Name': 'OPFile',
@@ -218,7 +219,7 @@ abstract class DeviceAudioUploadBaseController with ChangeNotifier {
       await JFApi.xcDevice.xcStartSendFileToDevice(
           deviceId: deviceId,
           paramJsStr: requestJsStr,
-          filePath: audioFilePath,
+          filePath: uploadAudioFilePath,
           timeout: 10000);
 
       KToast.show(status: TR.current.Upload_S);

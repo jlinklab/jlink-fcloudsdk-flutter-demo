@@ -10,7 +10,7 @@ class DeviceAlarmCustomVoiceController extends DeviceAudioUploadBaseController {
     required BuildContext context,
     required String deviceId,
   }) : super(context: context, deviceId: deviceId) {
-    queryRecordTime();
+    // queryRecordTime();
     super.textFeildHintText = TR.current.TR_Please_Enter_Alarm_Tips;
   }
 

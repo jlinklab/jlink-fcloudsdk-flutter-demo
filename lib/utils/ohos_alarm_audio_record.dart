@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:fcloudsdk/api/api_center.dart';
-import 'package:flutter/services.dart';
 
 /// 鸿蒙自定义报警音录制辅助。
 ///
@@ -10,9 +9,6 @@ import 'package:flutter/services.dart';
 /// 这里单独通过宿主通道录制原始 PCM，并在 Flutter 侧包装成标准 WAV 供本地试听。
 class OhosAlarmAudioRecord {
   OhosAlarmAudioRecord._();
-
-  static const MethodChannel _channel =
-      MethodChannel('com.lib.flyCam.ohos.alarm_audio_record');
 
   static const int _maxDeviceAudioSize = 84 * 1024;
   static const int _deviceAudioAlignSize = 32;
