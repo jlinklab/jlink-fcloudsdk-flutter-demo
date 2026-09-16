@@ -4,6 +4,9 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:fcloudsdk/utils/log_util.dart';
+import 'package:fcloudsdk_example/utils/app_config.dart';
+import 'package:fcloudsdk_example/utils/ohos_alarm_audio_record.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -61,7 +64,7 @@ abstract class DeviceAudioUploadBaseController with ChangeNotifier {
   /// 是否支持呼唤音
   bool callVoiceAbility = false;
 
-  int get recordFileTimeLenth => callVoiceAbility ? 10 : 3;
+  int recordFileTimeLenth = 3;
 
   ///0: 男， 1女， -1默认不选
   int _sexType = -1;
@@ -87,6 +90,8 @@ abstract class DeviceAudioUploadBaseController with ChangeNotifier {
   bool permissionMicrophone = false;
 
   ValueNotifier<bool> isCanSubmitByRecord = ValueNotifier(false);
+
+  String _ohosRecordRawFilePath = '';
 
   ValueNotifier<bool> get isCanSubmitByTransform {
     if (sexType != -1 && ttsVoiceText.value.isNotEmpty) {
@@ -149,6 +154,22 @@ abstract class DeviceAudioUploadBaseController with ChangeNotifier {
     });
   }
 
+  /// 鸿蒙旧协议录制提示音需要使用原始 PCM；
+  /// 进入 G711 A-law 转码，确保实际文件与 OPFile 声明的 8bit G711 格式一致。
+  String _resolveUploadAudioFilePath() {
+    if (!isTTS &&
+        isOhos &&
+        _ohosRecordRawFilePath.isNotEmpty &&
+        File(_ohosRecordRawFilePath).existsSync()) {
+      LogUtils.deviceConfig.log(
+          '[DEBUG_ALARM_VOICE] _resolveUploadAudioFilePath ohos raw pcm: $_ohosRecordRawFilePath');
+      return _ohosRecordRawFilePath;
+    }
+    LogUtils.deviceConfig.log(
+        '[DEBUG_ALARM_VOICE] _resolveUploadAudioFilePath audioFilePath=$audioFilePath (record=$_audioFilePathByRecord, transform=$_audioFilePathByTransform)');
+    return audioFilePath;
+  }
+
   ///上传
   onSubmit() async {
     if (isTTS) {
@@ -160,9 +181,16 @@ abstract class DeviceAudioUploadBaseController with ChangeNotifier {
       }
     }
 
-    if (audioFilePath.isEmpty || !File(audioFilePath).existsSync()) {
+    String uploadAudioFilePath = _resolveUploadAudioFilePath();
+    LogUtils.deviceConfig.log(
+        '[DEBUG_ALARM_VOICE] onSubmit filePath=$uploadAudioFilePath, exists=${File(uploadAudioFilePath).existsSync()}');
+    if (uploadAudioFilePath.isEmpty ||
+        !File(uploadAudioFilePath).existsSync()) {
+      LogUtils.deviceConfig
+          .log('[DEBUG_ALARM_VOICE] onSubmit abort: file not exists or empty');
       return;
     }
+
     int fileSize = fileSizeAtPath(audioFilePath);
     if (kDebugMode) {
       debugPrint('audio_fileSize:$fileSize');
@@ -306,20 +334,42 @@ abstract class DeviceAudioUploadBaseController with ChangeNotifier {
       _audioFilePathByRecord = '';
       isCanSubmitByRecord.value = false;
     }
+    if (_ohosRecordRawFilePath.isNotEmpty) {
+      final File tempRawFile = File(_ohosRecordRawFilePath);
+      if (await tempRawFile.exists()) {
+        await tempRawFile.delete();
+      }
+      _ohosRecordRawFilePath = '';
+    }
     _audioFilePathByRecord = await generateRandomVoiceFilePath(
         6, _audioFilePathByRecord,
         record: true);
     try {
       //延时，不然试听时点击录音，会无法录音
       await Future.delayed(const Duration(milliseconds: 200));
-      //用户允许运用麦克风之后开端录音
-      await mRecorder.start(
-          const RecordConfig(
-              encoder: AudioEncoder.wav,
-              bitRate: 128000,
-              sampleRate: 8000,
-              numChannels: 1),
-          path: _audioFilePathByRecord);
+      if (isOhos) {
+        _ohosRecordRawFilePath =
+            OhosAlarmAudioRecord.buildRawPcmPath(_audioFilePathByRecord);
+        KToast.show();
+        final bool started = await OhosAlarmAudioRecord.startRecord(
+          pcmFilePath: _ohosRecordRawFilePath,
+        );
+        if (!started) {
+          KToast.show(status: '开启录音失败');
+          _ohosRecordRawFilePath = '';
+          return;
+        }
+        KToast.dismiss();
+      } else {
+        //用户允许运用麦克风之后开端录音
+        await mRecorder.start(
+            const RecordConfig(
+                encoder: AudioEncoder.wav,
+                bitRate: 128000,
+                sampleRate: 8000,
+                numChannels: 1),
+            path: _audioFilePathByRecord);
+      }
       isRecording = true;
       recordTime = 0;
       recorderTimer?.cancel();
@@ -353,12 +403,31 @@ abstract class DeviceAudioUploadBaseController with ChangeNotifier {
       //防止重复调用（用户在临结束时点击，此时有可能因为时序问题，导致多次调用）
       isRecording = false;
       try {
-        final tempVoiceFilePath = await mRecorder.stop();
-        if (tempVoiceFilePath != null) {
-          isCanSubmitByRecord.value = true;
+        if (isOhos) {
+          final String tempVoiceFilePath =
+              await OhosAlarmAudioRecord.stopRecord();
+          LogUtils.deviceConfig.log(
+              '[DEBUG_ALARM_VOICE] onEndRecord ohos raw pcm: $tempVoiceFilePath');
+          if (tempVoiceFilePath.isNotEmpty) {
+            _ohosRecordRawFilePath = tempVoiceFilePath;
+            await OhosAlarmAudioRecord.normalizePcmFile(tempVoiceFilePath);
+            await OhosAlarmAudioRecord.buildWavFileFromPcm(
+              pcmFilePath: tempVoiceFilePath,
+              wavFilePath: _audioFilePathByRecord,
+            );
+            isCanSubmitByRecord.value = true;
 
-          ///语音录制结束，标记语音时长（最多：[recordFileTimeLenth]）
-          _recordAudioLength = recordTime;
+            ///语音录制结束，标记语音时长（最多：[recordFileTimeLenth]）
+            _recordAudioLength = recordTime;
+          }
+        } else {
+          final tempVoiceFilePath = await mRecorder.stop();
+          if (tempVoiceFilePath != null) {
+            isCanSubmitByRecord.value = true;
+
+            ///语音录制结束，标记语音时长（最多：[recordFileTimeLenth]）
+            _recordAudioLength = recordTime;
+          }
         }
       } catch (e) {
         //

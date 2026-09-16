@@ -35,7 +35,7 @@ class _DeviceAlarmCustomVoicePageState extends State<DeviceAlarmCustomVoicePage>
                 title: Text(TR.current.tr_settings_alarm_bell_customize),
               ),
               body: Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15),
+                padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
                 child: Column(
                   children: [
                     DeviceAlarmCustomAudioPage(

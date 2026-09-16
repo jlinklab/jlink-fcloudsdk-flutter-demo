@@ -76,7 +76,7 @@ class _DeviceSetAlarmCustomAudioPageState
             textAlign: TextAlign.center,
           ),
           const SizedBox(
-            height: 5,
+            height: 20,
           ),
           GestureDetector(
               onTap: () async {
@@ -84,8 +84,10 @@ class _DeviceSetAlarmCustomAudioPageState
                     ? await controller.onStartRecord()
                     : await controller.onEndRecord();
               },
-              child: SizedBox(
+              child: Container(
                   width: double.infinity,
+                  height: 60, //增加点击区域
+                  alignment: Alignment.center,
                   child: Text(
                     extraInfo(controller),
                     style: const TextStyle(fontSize: 13),
