@@ -25,8 +25,12 @@
  ## 2. iOS端快速集成
 ### 2.1 xcode中修改Bundle Id,证书
 
+![Clipboard_Screenshot_1789606652.png](https://jftech-open-platform.obs.cn-east-3.myhuaweicloud.com:443/docs/20260917/1789606657119.png?AccessKeyId=XMEAXHAHSG0HD9WBRXCD&Expires=2420326654&Signature=ojqQl%2FEA1GCXOmCVQNZm8ogMImQ%3D)
+
  ## 3. ohos端快速集成
 ### 3.1 DevEco中修改.p12等，目前项目里用的自动签名
+
+![Clipboard_Screenshot_1789606953.png](https://jftech-open-platform.obs.cn-east-3.myhuaweicloud.com:443/docs/20260917/1789606966678.png?AccessKeyId=XMEAXHAHSG0HD9WBRXCD&Expires=2420326962&Signature=Oa4kPyATd%2FOrGMxRnGu0FfCNaPc%3D)
 
  ## 4. 获取appkey等信息
 ### 4.1 在开放平台账号获取到appkey等信息后，在项目/lib/utils/app_config.dart中修改对应平台等相关信息
