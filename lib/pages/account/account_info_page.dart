@@ -15,6 +15,14 @@ class AccountInfoPage extends StatefulWidget {
 }
 
 class _AccountInfoPageState extends State<AccountInfoPage> {
+  final TextEditingController _nickNameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nickNameController.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     context.read<UserInfo>().updateUserInfoDetail();
@@ -86,8 +94,57 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
                         child: InkWell(
                           onTap: () async {
                             if (item[0] == 'nickname') {
-                              await JFApi.xcAccount
-                                  .xcModifyAccountNickName(nickname: 'aaaaa');
+                              _nickNameController.text = item[1];
+                              _nickNameController.selection =
+                                  TextSelection.fromPosition(
+                                TextPosition(
+                                    offset: _nickNameController.text.length),
+                              );
+                              final result = await showDialog<String>(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  title: Text(TR.current.modifyNickname),
+                                  content: TextField(
+                                    controller: _nickNameController,
+                                    autofocus: true,
+                                    decoration: InputDecoration(
+                                      hintText: TR.current.modifyNickname,
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(ctx).pop(null),
+                                      child: Text(TR.current.cancelBtn),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        final text =
+                                            _nickNameController.text.trim();
+                                        if (text.isNotEmpty) {
+                                          Navigator.of(ctx).pop(text);
+                                        }
+                                      },
+                                      child: Text(TR.current.confirmBtn),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              if (result != null &&
+                                  result.isNotEmpty &&
+                                  context.mounted) {
+                                KToast.show();
+                                try {
+                                  await JFApi.xcAccount.xcModifyAccountNickName(
+                                      nickname: result);
+                                  context
+                                      .read<UserInfo>()
+                                      .updateUserInfoDetail();
+                                  KToast.show(status: TR.current.modifySuccess);
+                                } catch (e) {
+                                  KToast.show(status: TR.current.modifyFailed);
+                                }
+                              }
                             }
                           },
                           child: Column(

@@ -820,5 +820,6 @@
   "receiveFileSuccessTip": "Firmware file received successfully",
   "receiveFileNotSupportTip": "File type not supported, only .bin/.img firmware files are allowed",
   "receiveFileFailedTip": "Firmware file receive failed, please share again",
-  "receiveFileNoPermissionTip": "No file read permission, unable to receive firmware file"
+  "receiveFileNoPermissionTip": "No file read permission, unable to receive firmware file",
+  "modifyNickname": "Modify nickname?"
 }

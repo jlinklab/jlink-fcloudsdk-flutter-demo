@@ -615,6 +615,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Modify Device Info",
     ),
     "modifyFailed": MessageLookupByLibrary.simpleMessage("Modification failed"),
+    "modifyNickname": MessageLookupByLibrary.simpleMessage("Modify nickname?"),
     "modifySuccess": MessageLookupByLibrary.simpleMessage(
       "Modified successfully",
     ),

@@ -53,66 +53,77 @@ class _AlarmMsgVideoState extends State<AlarmMsgVideo>
   Widget build(BuildContext context) {
     return OrientationBuilder(builder: (context, orientation) {
       return Scaffold(
-        appBar: orientation == Orientation.portrait
-            ? AppBar(
-                title: Text(TR.current.cloudVideo),
-                actions: [
-                  if (_record != null)
-                    IconButton(
-                      icon: _isDownloading
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : const Icon(Icons.download),
-                      onPressed: _isDownloading ? null : _downloadVideo,
-                    ),
-                ],
-              )
-            : null,
-        body: Column(
-          children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                MediaPlayerWidget(
-                  controller: controller,
-                ),
-                Visibility(
-                  visible: isLoading,
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-                MediaPlayControlView(
-                  orientation: orientation,
-                  mediaController: controller,
-                  mediaType: MediaType.cloud,
-                  playbackCallback: (playing) {
-                    if (playing) {
-                      controller.pause();
-                    } else {
-                      controller.playback();
-                    }
-                  },
+          appBar: orientation == Orientation.portrait
+              ? AppBar(
+                  title: Text(TR.current.cloudVideo),
+                  actions: [
+                    if (_record != null)
+                      IconButton(
+                        icon: _isDownloading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Icon(Icons.download),
+                        onPressed: _isDownloading ? null : _downloadVideo,
+                      ),
+                  ],
                 )
+              : null,
+          body: Container(
+            color: orientation == Orientation.landscape
+                ? Colors.black
+                : Colors.white,
+            child: Column(
+              children: [
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                        width: orientation == Orientation.landscape
+                            ? MediaQuery.of(context).size.height *
+                                (controller.aspectRatio > 0
+                                    ? controller.aspectRatio
+                                    : 16 / 9)
+                            : null,
+                        child: MediaPlayerWidget(
+                          controller: controller,
+                        )),
+                    Visibility(
+                      visible: isLoading,
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                    MediaPlayControlView(
+                      orientation: orientation,
+                      mediaController: controller,
+                      mediaType: MediaType.cloud,
+                      playbackCallback: (playing) {
+                        if (playing) {
+                          controller.pause();
+                        } else {
+                          controller.playback();
+                        }
+                      },
+                    )
+                  ],
+                ),
+                ...orientation == Orientation.landscape
+                    ? [const SizedBox()]
+                    : [
+                        AlarmPlayToolBar(
+                          videoLength: videoLength,
+                          currentTime: currentTime,
+                        ),
+                      ]
               ],
             ),
-            ...orientation == Orientation.landscape
-                ? [const SizedBox()]
-                : [
-                    AlarmPlayToolBar(
-                      videoLength: videoLength,
-                      currentTime: currentTime,
-                    ),
-                  ]
-          ],
-        ),
-      );
+          ));
     });
   }
 

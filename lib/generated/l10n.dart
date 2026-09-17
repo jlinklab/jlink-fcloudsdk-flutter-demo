@@ -1925,6 +1925,11 @@ class TR {
     return Intl.message('修改失败', name: 'modifyFailed', desc: '', args: []);
   }
 
+  /// `是否修改昵称`
+  String get modifyNickname {
+    return Intl.message('是否修改昵称', name: 'modifyNickname', desc: '', args: []);
+  }
+
   /// `设备登录名格式不正确`
   String get deviceLoginNameInvalid {
     return Intl.message(

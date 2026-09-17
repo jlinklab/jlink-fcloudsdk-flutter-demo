@@ -432,6 +432,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mode_customize": MessageLookupByLibrary.simpleMessage("自定义模式"),
     "modifyDeviceInfo": MessageLookupByLibrary.simpleMessage("修改设备信息"),
     "modifyFailed": MessageLookupByLibrary.simpleMessage("修改失败"),
+    "modifyNickname": MessageLookupByLibrary.simpleMessage("是否修改昵称"),
     "modifySuccess": MessageLookupByLibrary.simpleMessage("修改成功"),
     "myDevice": MessageLookupByLibrary.simpleMessage("我的设备"),
     "name": MessageLookupByLibrary.simpleMessage("用户名"),
