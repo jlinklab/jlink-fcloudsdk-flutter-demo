@@ -3,6 +3,7 @@ import 'package:fcloudsdk_example/api/share_api.dart';
 import 'package:fcloudsdk_example/common/code_prase.dart';
 import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/pages/share/model/model.dart';
 import 'package:fcloudsdk_example/pages/share/share_permission_page.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 
@@ -133,9 +134,22 @@ class _DeviceSharePageState extends State<DeviceSharePage> {
                                 ? item.shareNickname
                                 : item.uuid),
                             subtitle: Text(_getShareStatus(item)),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.close, color: Colors.red),
-                              onPressed: () => _cancelShare(item),
+                            onTap: () => _modifyPermission(item),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.edit,
+                                      color: Colors.blue),
+                                  tooltip: TR.current.modifySharePermission,
+                                  onPressed: () => _modifyPermission(item),
+                                ),
+                                IconButton(
+                                  icon:
+                                      const Icon(Icons.close, color: Colors.red),
+                                  onPressed: () => _cancelShare(item),
+                                ),
+                              ],
                             ),
                           );
                         },
@@ -160,6 +174,101 @@ class _DeviceSharePageState extends State<DeviceSharePage> {
       case 3:
       default:
         return TR.current.sharePending;
+    }
+  }
+
+  /// 获取权限名称
+  String _getPermissionName(String key) {
+    switch (key) {
+      case 'permIntercom':
+        return TR.current.permIntercom;
+      case 'permSdRecord':
+        return TR.current.permSdRecord;
+      case 'permDeviceConfig':
+        return TR.current.permDeviceConfig;
+      case 'permAlarmPush':
+        return TR.current.permAlarmPush;
+      default:
+        return key;
+    }
+  }
+
+  /// 修改分享权限
+  Future<void> _modifyPermission(SharedDevice device) async {
+    /// 根据当前分享已授予的权限初始化勾选状态
+    final List<DevicePermissionUI> permissions = [
+      DevicePermissionUI(
+          nameKey: 'permIntercom',
+          permission: DevicePermission.DP_Intercom,
+          checked:
+              device.hasPermission(permission: DevicePermission.DP_Intercom)),
+      DevicePermissionUI(
+          nameKey: 'permSdRecord',
+          permission: DevicePermission.DP_LocalStorage,
+          checked: device
+              .hasPermission(permission: DevicePermission.DP_LocalStorage)),
+      DevicePermissionUI(
+          nameKey: 'permDeviceConfig',
+          permission: DevicePermission.DP_ModifyConfig,
+          checked: device
+              .hasPermission(permission: DevicePermission.DP_ModifyConfig)),
+      DevicePermissionUI(
+          nameKey: 'permAlarmPush',
+          permission: DevicePermission.DP_AlarmPush,
+          checked:
+              device.hasPermission(permission: DevicePermission.DP_AlarmPush)),
+    ];
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text(TR.current.modifySharePermission),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: permissions
+                  .map((p) => CheckboxListTile(
+                        title: Text(_getPermissionName(p.nameKey)),
+                        value: p.checked,
+                        onChanged: (value) {
+                          setState(() {
+                            p.checked = value ?? false;
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.trailing,
+                        dense: true,
+                      ))
+                  .toList(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(TR.current.cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(TR.current.check),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      final String permissionsStr = permissions
+          .where((e) => e.checked)
+          .map((e) => e.permission.name)
+          .join(',');
+      await shareAPI.changeSharePermission(device.shareId, permissionsStr, null);
+      KToast.show(status: TR.current.modifyPermissionSuccess);
+      _loadSharedList();
+    } catch (e) {
+      KToast.show(status: TR.current.modifyPermissionFailed);
     }
   }
 
