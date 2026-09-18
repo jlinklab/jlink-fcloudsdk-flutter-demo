@@ -123,6 +123,8 @@ class _DeviceSharePageState extends State<DeviceSharePage> {
                         separatorBuilder: (_, __) => const Divider(height: 1),
                         itemBuilder: (context, index) {
                           final item = _sharedList[index];
+                          /// 仅已接受（已同意）的分享可修改权限
+                          final bool canModify = item.ret == 1;
                           return ListTile(
                             leading: CircleAvatar(
                               child: Text((item.shareNickname.isNotEmpty
@@ -134,16 +136,17 @@ class _DeviceSharePageState extends State<DeviceSharePage> {
                                 ? item.shareNickname
                                 : item.uuid),
                             subtitle: Text(_getShareStatus(item)),
-                            onTap: () => _modifyPermission(item),
+                            onTap: canModify ? () => _modifyPermission(item) : null,
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit,
-                                      color: Colors.blue),
-                                  tooltip: TR.current.modifySharePermission,
-                                  onPressed: () => _modifyPermission(item),
-                                ),
+                                if (canModify)
+                                  IconButton(
+                                    icon: const Icon(Icons.edit,
+                                        color: Colors.blue),
+                                    tooltip: TR.current.modifySharePermission,
+                                    onPressed: () => _modifyPermission(item),
+                                  ),
                                 IconButton(
                                   icon:
                                       const Icon(Icons.close, color: Colors.red),
