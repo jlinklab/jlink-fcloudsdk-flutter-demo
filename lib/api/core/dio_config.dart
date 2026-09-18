@@ -8,7 +8,6 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/api/sdk_init/sdk_init_api.dart';
 import 'package:fcloudsdk_example/api/core/api_url.dart';
-import 'package:fcloudsdk_example/api/core/key_filter_util.dart';
 import 'package:fcloudsdk_example/api/core/param_encoder.dart';
 import 'package:fcloudsdk_example/utils/app_config.dart';
 
@@ -103,8 +102,9 @@ class SecurityInterceptor extends Interceptor {
         .replaceAll('{secret}', map['Signature']);
 
     ///  拿到时间戳去取签名和加解密的key
-    /// key 为局部变量，避免并发请求间互相覆盖
-    String key = map['AesKey'];
+    /// key 存入 extra 随请求传递，解密时取回，避免并发请求间互相覆盖
+    final String key = map['AesKey'];
+    options.extra['aesKey'] = key;
 
     //加密数据
     debugPrint('参数类型 ${options.data.runtimeType}');
@@ -128,23 +128,13 @@ class SecurityInterceptor extends Interceptor {
     }
 
     bool needDecrypt = response.requestOptions.headers['decrypt'] ?? true;
-    if (response.data is String && needDecrypt) {
-      // 从响应的 URL 路径中提取 timeMillis，重新推导解密 key
-      List<String> segments = response.requestOptions.uri.pathSegments;
-      String timeMillis = "";
-      if (segments.length > 2) {
-        timeMillis = segments[segments.length - 2];
-      }
-
-      String key =
-          KeyFilterUtil.keyFilterWithTimeAndSecret(timeMillis, AppConfig.appSecret());
-
-      if (key.isNotEmpty) {
-        final encryptedData = response.data;
-        final decryptedData =
-            await UtilAPI.instance.xcAesDecryptToHexString(encryptedData, key);
-        response.data = decryptedData;
-      }
+    /// 直接取当前请求加密时使用的 key，避免从 URL 反推带来的偏差
+    String? key = response.requestOptions.extra['aesKey'];
+    if (response.data is String && key != null && key.isNotEmpty && needDecrypt) {
+      final encryptedData = response.data;
+      final decryptedData =
+          await UtilAPI.instance.xcAesDecryptToHexString(encryptedData, key);
+      response.data = decryptedData;
     }
     super.onResponse(response, handler);
   }

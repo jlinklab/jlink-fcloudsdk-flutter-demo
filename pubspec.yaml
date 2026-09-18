@@ -34,7 +34,7 @@ dependencies:
 
   fcloudsdk:
     hosted: https://repo.jftechsoft.com/
-    version: 3.1.1
+    version: 3.1.2
 
   flutter_localizations:
     sdk: flutter
