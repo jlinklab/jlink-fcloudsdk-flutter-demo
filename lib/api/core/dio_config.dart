@@ -8,6 +8,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/api/sdk_init/sdk_init_api.dart';
 import 'package:fcloudsdk_example/api/core/api_url.dart';
+import 'package:fcloudsdk_example/api/core/key_filter_util.dart';
 import 'package:fcloudsdk_example/api/core/param_encoder.dart';
 import 'package:fcloudsdk_example/utils/app_config.dart';
 
@@ -73,8 +74,6 @@ class HostRedirectInterceptor extends Interceptor {
 }
 
 class SecurityInterceptor extends Interceptor {
-  String key = '';
-
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
@@ -104,7 +103,8 @@ class SecurityInterceptor extends Interceptor {
         .replaceAll('{secret}', map['Signature']);
 
     ///  拿到时间戳去取签名和加解密的key
-    key = map['AesKey'];
+    /// key 为局部变量，避免并发请求间互相覆盖
+    String key = map['AesKey'];
 
     //加密数据
     debugPrint('参数类型 ${options.data.runtimeType}');
@@ -126,15 +126,26 @@ class SecurityInterceptor extends Interceptor {
       super.onResponse(response, handler);
       return;
     }
-    // 分享列表走正常解密流程
-    bool needDecrypt = response.requestOptions.headers['decrypt'] ?? true;
-    if (response.data is String && key.isNotEmpty && needDecrypt) {
-      final encryptedData = response.data;
-      final decryptedData =
-          await UtilAPI.instance.xcAesDecryptToHexString(encryptedData, key);
-      response.data = decryptedData;
-    }
 
+    bool needDecrypt = response.requestOptions.headers['decrypt'] ?? true;
+    if (response.data is String && needDecrypt) {
+      // 从响应的 URL 路径中提取 timeMillis，重新推导解密 key
+      List<String> segments = response.requestOptions.uri.pathSegments;
+      String timeMillis = "";
+      if (segments.length > 2) {
+        timeMillis = segments[segments.length - 2];
+      }
+
+      String key =
+          KeyFilterUtil.keyFilterWithTimeAndSecret(timeMillis, AppConfig.appSecret());
+
+      if (key.isNotEmpty) {
+        final encryptedData = response.data;
+        final decryptedData =
+            await UtilAPI.instance.xcAesDecryptToHexString(encryptedData, key);
+        response.data = decryptedData;
+      }
+    }
     super.onResponse(response, handler);
   }
 }

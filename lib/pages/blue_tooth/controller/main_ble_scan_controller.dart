@@ -96,10 +96,12 @@ class MainBleScanController extends ChangeNotifier {
     ///获取设备数据
     Future.delayed(const Duration(milliseconds: 500), () {
       for (ScannedDevice device in scannedBleDeviceList) {
-        device.queryDeviceDetailTypeInfoIfNeed();
+        device.queryDeviceDetailTypeInfoIfNeed().then((_) {
+          ///数据回来后刷新 UI，否则列表不会显示设备名称和图片
+          _updateView();
+        });
       }
     });
-    _updateView();
   }
 
   _updateView() {
