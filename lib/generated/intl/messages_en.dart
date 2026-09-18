@@ -812,6 +812,21 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tokenLabel": MessageLookupByLibrary.simpleMessage("Token:"),
     "toolsFeedbackLog": MessageLookupByLibrary.simpleMessage("Feedback Log"),
+    "tr_SelectItemTips": MessageLookupByLibrary.simpleMessage(
+      "Please select a file to operate on first",
+    ),
+    "tr_ShareTips1": MessageLookupByLibrary.simpleMessage(
+      "1. Videos and images cannot be shared together\n2. Only one video can be shared at a time",
+    ),
+    "tr_ShareTips2": MessageLookupByLibrary.simpleMessage(
+      "Only one file can be shared",
+    ),
+    "tr_ShareTips3": MessageLookupByLibrary.simpleMessage(
+      "The video needs to be downloaded. Please share after the download is complete",
+    ),
+    "tr_ShareTipsImageMaxNum": MessageLookupByLibrary.simpleMessage(
+      "Images cannot exceed 5 per share",
+    ),
     "tr_common_download_management": MessageLookupByLibrary.simpleMessage(
       "Download management",
     ),

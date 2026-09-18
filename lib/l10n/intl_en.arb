@@ -821,5 +821,10 @@
   "receiveFileNotSupportTip": "File type not supported, only .bin/.img firmware files are allowed",
   "receiveFileFailedTip": "Firmware file receive failed, please share again",
   "receiveFileNoPermissionTip": "No file read permission, unable to receive firmware file",
-  "modifyNickname": "Modify nickname?"
+  "modifyNickname": "Modify nickname?",
+  "tr_SelectItemTips": "Please select a file to operate on first",
+  "tr_ShareTips1": "1. Videos and images cannot be shared together\n2. Only one video can be shared at a time",
+  "tr_ShareTips2": "Only one file can be shared",
+  "tr_ShareTips3": "The video needs to be downloaded. Please share after the download is complete",
+  "tr_ShareTipsImageMaxNum": "Images cannot exceed 5 per share"
 }

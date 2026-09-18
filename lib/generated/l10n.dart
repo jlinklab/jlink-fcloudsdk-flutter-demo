@@ -6852,6 +6852,51 @@ class TR {
       args: [],
     );
   }
+
+  /// `请先选择想要操作的文件`
+  String get tr_SelectItemTips {
+    return Intl.message(
+      '请先选择想要操作的文件',
+      name: 'tr_SelectItemTips',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1.视频图片不能组合分享\n2.视频每次只能分享一个`
+  String get tr_ShareTips1 {
+    return Intl.message(
+      '1.视频图片不能组合分享\n2.视频每次只能分享一个',
+      name: 'tr_ShareTips1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `仅支持分享一个文件`
+  String get tr_ShareTips2 {
+    return Intl.message('仅支持分享一个文件', name: 'tr_ShareTips2', desc: '', args: []);
+  }
+
+  /// `视频需要下载，请在下载完成后再分享`
+  String get tr_ShareTips3 {
+    return Intl.message(
+      '视频需要下载，请在下载完成后再分享',
+      name: 'tr_ShareTips3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `图片分享单次不能超过5张`
+  String get tr_ShareTipsImageMaxNum {
+    return Intl.message(
+      '图片分享单次不能超过5张',
+      name: 'tr_ShareTipsImageMaxNum',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

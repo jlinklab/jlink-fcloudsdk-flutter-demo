@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fcloudsdk_example/common/common_path.dart';
@@ -8,6 +9,7 @@ import 'package:fcloudsdk_example/pages/album/models/album_model.dart';
 import 'package:fcloudsdk_example/pages/album/views/album_date_picker.dart';
 import 'package:fcloudsdk_example/pages/album/views/album_device_picker.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
+import 'package:share_plus/share_plus.dart';
 
 class AlbumPage extends StatefulWidget {
   // ignore: library_private_types_in_public_api
@@ -21,14 +23,14 @@ class AlbumPage extends StatefulWidget {
 
   final Function(bool isEditting) onChangeEditStatus;
 
-  const AlbumPage({Key? key, required this.onChangeEditStatus}) : super(key: key);
+  const AlbumPage({Key? key, required this.onChangeEditStatus})
+      : super(key: key);
 
   @override
   State<AlbumPage> createState() => _AlbumPageState();
 }
 
 class _AlbumPageState extends State<AlbumPage> {
-
   late PageController _pageController;
   int _modeType = 0; //0:图片 1:录像
   bool _isEditing = false;
@@ -66,8 +68,6 @@ class _AlbumPageState extends State<AlbumPage> {
       load();
     });
 
-
-
     super.initState();
     AlbumPage.state = this;
   }
@@ -85,13 +85,13 @@ class _AlbumPageState extends State<AlbumPage> {
               },
               child: _isEditing
                   ? const Text(
-                '取消',
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              )
+                      '取消',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    )
                   : const Text(
-                '编辑',
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              )),
+                      '编辑',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    )),
         ],
       ),
       body: Column(
@@ -172,7 +172,7 @@ class _AlbumPageState extends State<AlbumPage> {
                         style: TextStyle(
                             fontSize: 25,
                             color:
-                            _isShowDatePicker ? Colors.blue : Colors.grey),
+                                _isShowDatePicker ? Colors.blue : Colors.grey),
                       )),
                 ),
                 Expanded(
@@ -208,100 +208,100 @@ class _AlbumPageState extends State<AlbumPage> {
           ),
           Expanded(
               child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: PageView(
-                            controller: _pageController,
-                            scrollDirection: Axis.horizontal, // 设置为水平方向
-                            physics: const NeverScrollableScrollPhysics(), // 禁用滚动
-                            children: [
-                              AlbumItemListView(
-                                // key: ObjectKey(_imageList),
-                                dataList: _imageList,
-                                isEditting: _isEditing,
-                              ),
-                              AlbumItemListView(
-                                // key: ObjectKey(_videoList),
-                                dataList: _videoList,
-                                isEditting: _isEditing,
-                              ),
-                            ],
+            children: [
+              Positioned.fill(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: PageView(
+                        controller: _pageController,
+                        scrollDirection: Axis.horizontal, // 设置为水平方向
+                        physics: const NeverScrollableScrollPhysics(), // 禁用滚动
+                        children: [
+                          AlbumItemListView(
+                            // key: ObjectKey(_imageList),
+                            dataList: _imageList,
+                            isEditting: _isEditing,
                           ),
-                        ),
-                        Offstage(
-                            offstage: !_isEditing,
-                            child: AlbumBottomToolView(
-                              onDelete: () {
-                                _showDeleteDialog(context);
-                              },
-                              onShare: () {
-                                KToast.show(status: '暂未实现');
-                              },
-                              onSelectAll: () {
-                                _onSelectAll();
-                              },
-                              onCancel: () {
-                                _onCancelEdit();
-                              },
-                              isSelectedAll: _isSelectedAll,
-                            ))
-                      ],
+                          AlbumItemListView(
+                            // key: ObjectKey(_videoList),
+                            dataList: _videoList,
+                            isEditting: _isEditing,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  if (_isShowDatePicker)
-                    Positioned.fill(
-                        child: AlbumDatePicker(
-                          onSelectDeviceCallback: (String device) {
-                            //先关了
-                            setState(() {
-                              _isShowDatePicker = !_isShowDatePicker;
-                            });
-                            //再处理数据
-                            if (_modeType == 0) {
-                              if (_imageDay != device) {
-                                _imageDay = device;
-                              }
-                            } else {
-                              if (_videoDay != device) {
-                                _videoDay = device;
-                              }
-                            }
-                            //全局处理数据
-                            _handelData();
+                    Offstage(
+                        offstage: !_isEditing,
+                        child: AlbumBottomToolView(
+                          onDelete: () {
+                            _showDeleteDialog(context);
                           },
-                          dataList: _modeType == 0 ? _imageDayList : _videoDayList,
-                          selectedDevice: _modeType == 0 ? _imageDay : _videoDay,
-                        )),
-                  if (_isShowDevicePicker)
-                    Positioned.fill(
-                        child: AlbumDevicePicker(
-                          onSelectDeviceCallback: (String device) {
-                            //先关了
-                            setState(() {
-                              _isShowDevicePicker = !_isShowDevicePicker;
-                            });
-                            //再处理数据
-                            if (_modeType == 0) {
-                              if (_imageDevice != device) {
-                                _imageDevice = device;
-                              }
-                            } else {
-                              if (_videoDevice != device) {
-                                _videoDevice = device;
-                              }
-                            }
-                            //全局处理数据
-                            _handelData();
+                          onShare: () {
+                            _onShare();
                           },
-                          dataList:
-                          _modeType == 0 ? _imageDeviceList : _videoDeviceList,
-                          selectedDevice: _modeType == 0 ? _imageDevice : _videoDevice,
+                          onSelectAll: () {
+                            _onSelectAll();
+                          },
+                          onCancel: () {
+                            _onCancelEdit();
+                          },
+                          isSelectedAll: _isSelectedAll,
                         ))
-                ],
-              ))
+                  ],
+                ),
+              ),
+              if (_isShowDatePicker)
+                Positioned.fill(
+                    child: AlbumDatePicker(
+                  onSelectDeviceCallback: (String device) {
+                    //先关了
+                    setState(() {
+                      _isShowDatePicker = !_isShowDatePicker;
+                    });
+                    //再处理数据
+                    if (_modeType == 0) {
+                      if (_imageDay != device) {
+                        _imageDay = device;
+                      }
+                    } else {
+                      if (_videoDay != device) {
+                        _videoDay = device;
+                      }
+                    }
+                    //全局处理数据
+                    _handelData();
+                  },
+                  dataList: _modeType == 0 ? _imageDayList : _videoDayList,
+                  selectedDevice: _modeType == 0 ? _imageDay : _videoDay,
+                )),
+              if (_isShowDevicePicker)
+                Positioned.fill(
+                    child: AlbumDevicePicker(
+                  onSelectDeviceCallback: (String device) {
+                    //先关了
+                    setState(() {
+                      _isShowDevicePicker = !_isShowDevicePicker;
+                    });
+                    //再处理数据
+                    if (_modeType == 0) {
+                      if (_imageDevice != device) {
+                        _imageDevice = device;
+                      }
+                    } else {
+                      if (_videoDevice != device) {
+                        _videoDevice = device;
+                      }
+                    }
+                    //全局处理数据
+                    _handelData();
+                  },
+                  dataList:
+                      _modeType == 0 ? _imageDeviceList : _videoDeviceList,
+                  selectedDevice: _modeType == 0 ? _imageDevice : _videoDevice,
+                ))
+            ],
+          ))
         ],
       ),
     );
@@ -406,6 +406,7 @@ class _AlbumPageState extends State<AlbumPage> {
     if (!mounted) {
       return;
     }
+
     ///刷新页面
     setState(() {});
   }
@@ -428,8 +429,8 @@ class _AlbumPageState extends State<AlbumPage> {
 
   ///根据日期转成二维数组并排序
   List<List<Album>> _sortDataList(
-      List<Album> list,
-      ) {
+    List<Album> list,
+  ) {
     //转成二维数组
     Map<String, List<Album>> dateToAlbumsMap = {};
     for (Album album in list) {
@@ -482,6 +483,44 @@ class _AlbumPageState extends State<AlbumPage> {
 
     ///重新处理数据
     _handelData();
+  }
+
+  _onShare() async {
+    //遍历当前图片列表，找到选择的
+    Map selectedAlbumMap = _getSelectedAlbumMap();
+    if (selectedAlbumMap.isEmpty) {
+      KToast.show(status: TR.current.tr_SelectItemTips);
+      return;
+    }
+
+    List<XFile> willShareAlbums = [];
+    int imageNum = 0;
+    int videoNum = 0;
+    for (Album album in selectedAlbumMap.keys) {
+      willShareAlbums.add(XFile(album.path));
+      if (album.type == '0') {
+        imageNum++;
+      } else if (album.type == '1') {
+        videoNum++;
+      }
+    }
+    if (imageNum > 0 && videoNum > 0) {
+      KToast.show(status: TR.current.tr_ShareTips1);
+      return;
+    }
+    if (videoNum > 1) {
+      KToast.show(status: TR.current.tr_ShareTips1);
+      return;
+    }
+    if (imageNum > 5) {
+      KToast.show(status: TR.current.tr_ShareTipsImageMaxNum);
+      return;
+    }
+
+    ShareResult result = await Share.shareXFiles(willShareAlbums);
+    if (result.status == ShareResultStatus.success) {
+      KToast.show(status: TR.current.shareSuccess);
+    }
   }
 
   _onSelectAll() {

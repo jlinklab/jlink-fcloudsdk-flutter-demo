@@ -581,6 +581,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "storageManagement": MessageLookupByLibrary.simpleMessage("存储管理"),
     "tokenLabel": MessageLookupByLibrary.simpleMessage("Token:"),
     "toolsFeedbackLog": MessageLookupByLibrary.simpleMessage("反馈日志"),
+    "tr_SelectItemTips": MessageLookupByLibrary.simpleMessage("请先选择想要操作的文件"),
+    "tr_ShareTips1": MessageLookupByLibrary.simpleMessage(
+      "1.视频图片不能组合分享\n2.视频每次只能分享一个",
+    ),
+    "tr_ShareTips2": MessageLookupByLibrary.simpleMessage("仅支持分享一个文件"),
+    "tr_ShareTips3": MessageLookupByLibrary.simpleMessage("视频需要下载，请在下载完成后再分享"),
+    "tr_ShareTipsImageMaxNum": MessageLookupByLibrary.simpleMessage(
+      "图片分享单次不能超过5张",
+    ),
     "tr_common_download_management": MessageLookupByLibrary.simpleMessage(
       "下载管理",
     ),

@@ -821,5 +821,10 @@
   "receiveFileSuccessTip": "固件文件接收成功",
   "receiveFileNotSupportTip": "文件类型不支持，仅支持 .bin/.img 固件文件",
   "receiveFileFailedTip": "固件文件接收失败，请重新分享",
-  "receiveFileNoPermissionTip": "没有文件读取权限，无法接收固件文件"
+  "receiveFileNoPermissionTip": "没有文件读取权限，无法接收固件文件",
+  "tr_SelectItemTips": "请先选择想要操作的文件",
+  "tr_ShareTips1": "1.视频图片不能组合分享\n2.视频每次只能分享一个",
+  "tr_ShareTips2": "仅支持分享一个文件",
+  "tr_ShareTips3": "视频需要下载，请在下载完成后再分享",
+  "tr_ShareTipsImageMaxNum": "图片分享单次不能超过5张"
 }
