@@ -394,7 +394,7 @@ class _RecordListPageState extends State<RecordListPage>
     refreshRecord();
 
     ///停止播放
-    controller.stop();
+    await controller.stop();
 
     ///再请求数据
     getRecordToPlay();
