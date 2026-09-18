@@ -826,5 +826,8 @@
   "tr_ShareTips1": "1.视频图片不能组合分享\n2.视频每次只能分享一个",
   "tr_ShareTips2": "仅支持分享一个文件",
   "tr_ShareTips3": "视频需要下载，请在下载完成后再分享",
-  "tr_ShareTipsImageMaxNum": "图片分享单次不能超过5张"
+  "tr_ShareTipsImageMaxNum": "图片分享单次不能超过5张",
+  "selectRecordType": "选择录像类型",
+  "recordTypeAll": "全部录像",
+  "recordTypeAlarm": "报警录像"
 }

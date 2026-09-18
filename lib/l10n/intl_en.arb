@@ -826,5 +826,8 @@
   "tr_ShareTips1": "1. Videos and images cannot be shared together\n2. Only one video can be shared at a time",
   "tr_ShareTips2": "Only one file can be shared",
   "tr_ShareTips3": "The video needs to be downloaded. Please share after the download is complete",
-  "tr_ShareTipsImageMaxNum": "Images cannot exceed 5 per share"
+  "tr_ShareTipsImageMaxNum": "Images cannot exceed 5 per share",
+  "selectRecordType": "Select Record Type",
+  "recordTypeAll": "All Recordings",
+  "recordTypeAlarm": "Alarm Recordings"
 }

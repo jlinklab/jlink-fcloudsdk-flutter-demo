@@ -202,14 +202,6 @@ class _DeviceScanQrPageState extends State<DeviceScanQrPage>
     return Scaffold(
       appBar: AppBar(
         title: const Text('二维码配网'),
-        actions: [
-          ElevatedButton(
-              onPressed: () async {
-                _addDeviceWithConfigRandomDeviceLoginNameAndPassword(
-                    '0e84af23427f9c7c');
-              },
-              child: const Icon(Icons.dangerous)),
-        ],
       ),
       body: _isShowQrCode
           ? Column(

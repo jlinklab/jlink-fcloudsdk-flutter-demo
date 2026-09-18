@@ -158,24 +158,6 @@ class _WIFIConfigPageState extends State<WIFIConfigPage>
     return Scaffold(
       appBar: AppBar(
         title: Text(TR.current.wifi),
-        actions: [
-          ElevatedButton(
-              onPressed: () {
-                // Map pMap = {"randomUser":"","hostName":"IPC","type":24,"pid":"A908007CF000000H","deviceSn":"44b9dc1867ef3bea","randomPwd":"","resume":""};
-
-                Map pMap = {
-                  "randomUser": "",
-                  "hostName": "IPC",
-                  "type": 7,
-                  "pid": "",
-                  "deviceSn": "7afe19cceeae6cdc",
-                  "randomPwd": "",
-                  "resume": ""
-                };
-                _startAddDevice(jsonEncode(pMap));
-              },
-              child: const Text('测试')),
-        ],
       ),
       body: Column(
         children: [
