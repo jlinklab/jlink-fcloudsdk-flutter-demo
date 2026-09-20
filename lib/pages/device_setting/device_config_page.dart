@@ -61,7 +61,18 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _removeResetPwdItemIfNeeded();
     _updateDeviceSystemFunction();
+  }
+
+  /// adminToken 不为空时隐藏「重置设备密码」入口
+  void _removeResetPwdItemIfNeeded() {
+    final device = DeviceManager.instance.getDevice(deviceId: widget.deviceId);
+    final tokenEmpty = device?.adminToken.isEmpty ?? true;
+    if (!tokenEmpty) {
+      widget.dataSource
+          .removeWhere((item) => item(context) == TR.current.resetDevPwd);
+    }
   }
 
   _updateDeviceSystemFunction() async {
@@ -177,13 +188,12 @@ class _DeviceConfigPageState extends State<DeviceConfigPage> {
         );
       }));
     } else if (title == TR.current.firmwareManageTitle) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(
-              // 标记路由名，分享文件回调用于判断当前是否已在固件管理页
-              settings: const RouteSettings(name: kFirmwareManageRouteName),
-              builder: (BuildContext context) {
-        return DeviceFirmwareManagePage(deviceId: widget.deviceId);
-      }));
+      Navigator.of(context).push(MaterialPageRoute(
+          // 标记路由名，分享文件回调用于判断当前是否已在固件管理页
+          settings: const RouteSettings(name: kFirmwareManageRouteName),
+          builder: (BuildContext context) {
+            return DeviceFirmwareManagePage(deviceId: widget.deviceId);
+          }));
     } else if (title == TR.current.imageSetting) {
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (BuildContext context) {
