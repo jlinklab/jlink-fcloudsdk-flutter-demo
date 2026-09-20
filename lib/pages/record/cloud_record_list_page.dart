@@ -132,6 +132,21 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
   bool _scrolling = false;
   Timer? _timer;
 
+  ///是否静音
+  bool _isMute = true;
+
+  ///播放/静音
+  _onMute(CloudRecordController controller) {
+    if (_isMute) {
+      controller.mediaController.setVolume(100);
+    } else {
+      controller.mediaController.setVolume(0);
+    }
+    setState(() {
+      _isMute = !_isMute;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -334,6 +349,20 @@ class _CloudRecordListPageState extends State<CloudRecordListPage>
                                                       },
                                                       child: const Icon(
                                                           Icons.photo_camera)),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10.0),
+                                                  child: ElevatedButton(
+                                                      onPressed: () {
+                                                        _onMute(controller);
+                                                      },
+                                                      child: _isMute
+                                                          ? const Icon(
+                                                              Icons.volume_off)
+                                                          : const Icon(
+                                                              Icons.volume_up)),
                                                 ),
                                                 Padding(
                                                   padding:
