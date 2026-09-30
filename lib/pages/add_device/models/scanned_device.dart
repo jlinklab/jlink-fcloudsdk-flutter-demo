@@ -43,8 +43,29 @@ class ScannedDevice {
     return _deviceName;
   }
 
-  ///找到设备页面展示的设备名称
+  ///名称后缀（SN后4位或蓝牙昵称后4位）
+  String get suffix {
+    String suffix = '';
+    if (bleDevice != null) {
+      if (sn.length > 4) {
+        suffix = sn.substring(sn.length - 4);
+      } else if (bleDevice!.nickName.length > 4) {
+        suffix = bleDevice!.nickName.substring(bleDevice!.nickName.length - 4);
+      }
+    }
+    return suffix;
+  }
+
+  ///找到设备页面展示的设备名称（设备类型 + 后缀）
   String displayName = '';
+  String onGetDisplayName() {
+    if (displayName.isEmpty && _deviceName.isNotEmpty && suffix.isNotEmpty) {
+      displayName = '$_deviceName-$suffix';
+      return displayName;
+    }
+    return displayName.isNotEmpty ? displayName : _deviceName;
+  }
+
   updateDeviceShowName(String name) {
     displayName = name;
   }
