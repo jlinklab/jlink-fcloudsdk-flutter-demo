@@ -5,7 +5,7 @@ import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
 
 import '../models/user_instance.dart';
-import '../pages/device_setting/model/model.dart';
+import '../models/device_model.dart';
 import 'device_manager.dart';
 
 class PushManager {

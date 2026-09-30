@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fcloudsdk/utils/sp_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,7 +15,6 @@ import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/models/user_instance.dart';
 import 'package:fcloudsdk_example/utils/app_config.dart';
 import 'package:fcloudsdk_example/utils/push_notification.dart';
-import 'package:fcloudsdk_example/utils/sp_utils.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 
 import 'common/channel_config.dart';

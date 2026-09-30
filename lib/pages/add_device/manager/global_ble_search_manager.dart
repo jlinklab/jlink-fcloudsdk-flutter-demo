@@ -22,7 +22,7 @@ class GlobalBleSearchManager {
   bool manualStop = false;
 
   init() {
-    BleSearch.instance.addSearchStatusListener((isSearching) {
+    BleSearch.instance.addSearchStatusListener((isSearching, errorCode) {
       if (!isSearching && !manualStop) {
         Future.delayed(const Duration(milliseconds: 500), () {
           _retry();

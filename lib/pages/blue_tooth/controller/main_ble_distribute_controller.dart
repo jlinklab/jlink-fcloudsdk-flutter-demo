@@ -1,3 +1,4 @@
+import 'package:fcloudsdk/door_lock/ble_distribute_new.dart';
 import 'package:flutter/material.dart';
 import 'package:fcloudsdk/api/util/util_api.dart';
 import 'package:fcloudsdk/ble_by_sdk/ble_device.dart';
@@ -11,7 +12,7 @@ import 'package:fcloudsdk_example/views/toast/toast.dart';
 class MainBleDistributeController extends ChangeNotifier {
   final BuildContext context;
 
-  late BleDistribute bleDistribute;
+  late BleNewDistribute bleDistribute;
 
   final List<String> logs = [];
 
@@ -24,17 +25,19 @@ class MainBleDistributeController extends ChangeNotifier {
       required this.mac,
       required this.ssid,
       required this.password}) {
-    bleDistribute = BleDistribute(
-      uuid: mac,
-      wifiConfig: WifiConfig(
-        ssid: ssid,
-        wifiPwd: password,
-      ),
-    );
+    bleDistribute = BleNewDistribute(
+        uuid: mac,
+        wifiConfig: WifiConfig(
+          ssid: ssid,
+          wifiPwd: password,
+        ),
+        authKey: '',
+        dns: '',
+        activeSn: '');
 
     addBleListener();
 
-    bleDistribute.start();
+    bleDistribute.startDistribute();
   }
 
   addBleListener() {
@@ -59,7 +62,8 @@ class MainBleDistributeController extends ChangeNotifier {
     });
 
     //配网状态监听
-    bleDistribute.addDistributeResultListener((status, device, errorCode) {
+    bleDistribute
+        .addDistributeResultListener((status, device, errorCode, jsonStr) {
       if (status == BleDistributeStatus.distributeSuccess) {
         logs.add(TR.current.deviceAddConnectBleTip5);
         _success(device);
@@ -120,6 +124,6 @@ class MainBleDistributeController extends ChangeNotifier {
   void dispose() {
     super.dispose();
     bleDistribute.stop();
-    bleDistribute.cleanListeners();
+    bleDistribute.dispose();
   }
 }

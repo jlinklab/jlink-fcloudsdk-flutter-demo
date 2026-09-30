@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:fcloudsdk/manager/device_config_manager.dart';
 import 'package:fcloudsdk/utils/extensions.dart';
+import 'package:fcloudsdk/utils/sp_utils.dart';
 import 'package:fcloudsdk_example/api/add_device_api.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/pages/cloud/device_cloud_service_manager.dart';
 import 'package:fcloudsdk_example/pages/cloud/model/device_cloud.dart';
 import 'package:fcloudsdk_example/pages/device_ability/device_ability_manager.dart';
-import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
-import 'package:fcloudsdk_example/utils/sp_utils.dart';
+import 'package:fcloudsdk_example/models/device_model.dart';
 
 ///多目类别, 根据[streamCount]路码流[lensesCount]个展示窗口判别类别
 enum MultiCategory {

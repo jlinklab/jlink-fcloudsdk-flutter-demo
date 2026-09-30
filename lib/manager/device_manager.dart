@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/utils/extensions.dart';
+import 'package:fcloudsdk_example/api/door_lock_api.dart';
 import 'package:fcloudsdk_example/manager/push_manager.dart';
+import 'package:fcloudsdk_example/manager/user_group_manager.dart';
 
 import '../models/user_instance.dart';
 import '../pages/cloud/device_cloud_service_manager.dart';
-import '../pages/device_setting/model/model.dart';
+import '../models/device_model.dart';
 
 /// 设备数据统一管理单例
 /// 负责设备列表的获取、缓存、状态监听等数据层逻辑
@@ -56,28 +58,46 @@ class DeviceManager {
     mineDeviceList.addAll(deviceList);
   }
 
-  /// 从服务器刷新设备列表
+  /// 从服务器刷新设备列表（JVSS接口）
   Future<void> refreshDeviceList() async {
     if (UserInfo.instance.isLogin == false) return;
 
-    final devicesJson = await JFApi.xcAccount.xcQueryDeviceList();
+    ///同时刷新家庭组（静默获取默认家庭组ID）
+    await UserGroupManager.instance.refreshUserGroups();
+
+    ///JVSS接口获取我的设备列表（过滤掉分享设备）
+    final devicesJson = await doorlockAPI.getUserDeviceListByPage();
     final devices = Devices.fromJson(devicesJson);
     mineDeviceList = devices.mine;
-    // 来自分享的设备，根据 ret 值分流处理
-    final List<Device> rawShareDevices = devices.share;
+
+    ///JVSS接口获取分享设备列表
     shareDeviceList.clear();
     sharedNotAgreeDeviceList.clear();
-    for (var device in rawShareDevices) {
-      if (device is SharedDevice) {
-        final SharedDevice sharedDevice = device;
-        if (sharedDevice.ret == 1) {
-          // 已接受分享的设备，加入分享设备列表
-          shareDeviceList.add(sharedDevice);
-        } else if (sharedDevice.ret != 4) {
-          // ret ！= 4,未接受分享放在sharedNotAgreeDeviceList列表等同意
-          sharedNotAgreeDeviceList.add(sharedDevice);
+    try {
+      final sharedJson = await doorlockAPI.getSharedDeviceList({
+        'page': 0,
+        'limit': 999,
+      });
+      if (sharedJson != null && sharedJson['data'] != null) {
+        final List<Device> rawShareDevices = (sharedJson['data'] as List)
+            .map<SharedDevice>((e) => SharedDevice.fromJson(e))
+            .toList();
+        // 根据 ret 值分流处理
+        for (var device in rawShareDevices) {
+          if (device is SharedDevice) {
+            final SharedDevice sharedDevice = device;
+            if (sharedDevice.ret == 1) {
+              // 已接受分享的设备，加入分享设备列表
+              shareDeviceList.add(sharedDevice);
+            } else if (sharedDevice.ret != 4) {
+              // ret ！= 4,未接受分享放在sharedNotAgreeDeviceList列表等同意
+              sharedNotAgreeDeviceList.add(sharedDevice);
+            }
+          }
         }
       }
+    } catch (e) {
+      debugPrint('获取分享设备列表失败: $e');
     }
 
     // 确保监听已启动

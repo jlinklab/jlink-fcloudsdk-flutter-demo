@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk_example/manager/device_property_manager.dart';
+import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +23,8 @@ import '../cloud/model/device_cloud.dart';
 import '../device_ability/device_ability_page.dart';
 import '../device_pwd_setting/device_pwd_find_back_page.dart';
 import '../share/device_share_page.dart';
-import 'model/model.dart';
-import 'viewmodel/device_list_view_model.dart';
+import '../../models/device_model.dart';
+import '../device_setting/viewmodel/device_list_view_model.dart';
 
 class DeviceListPage extends StatefulWidget {
   const DeviceListPage({Key? key}) : super(key: key);
@@ -346,6 +347,10 @@ class _DeviceCard extends StatelessWidget {
     if (isNVR) {
       // NVR 设备先登录，成功后跳转到通道列表
       _loginAndGoToChannelList(context);
+    } else if (DoorLockHelper.isDoorLock(device.uuid)) {
+      //门锁设备进门锁首页
+      context.pushNamed('doorLockHomePage',
+          queryParameters: {'deviceId': device.uuid});
     } else {
       // 普通设备直接跳转预览
       context.pushNamed('preview', pathParameters: {

@@ -32,6 +32,32 @@ abstract class AddDeviceAPI {
     @Field('page') int page = 1,
     @Field('limit') int limit = 999,
   });
+
+  ///添加设备到用户组，带区域检测
+  ///body 请使用DeviceAddModel().toJsonMapForPair()方法获取
+  @POST('/v3/device/addDeviceWithAreaCheck$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> addDeviceToUserGroup({
+    @Body() required Map<String, dynamic> body,
+  });
+
+  ///查询推荐的设备名称（设置设备昵称用）
+  ///pid：有pid传pid，没有pid传deviceType
+  @POST('/v3/adviceName/getAdviceNameListForApp$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> queryDeviceAdviceName({
+    @Field('pid') required String pid,
+    @Field('language') required String curLanguage,
+  });
+
+  ///判断设备是否可以添加
+  @POST('/v3/device/deviceExistence$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> queryDeviceExistence({
+    @Field('userGroupId') required String userGroupId,
+    @Field('deviceNo') required String deviceNo,
+    @Field('areaCheck') required bool areaCheck,
+  });
 }
 
 AddDeviceAPI addDeviceAPI = AddDeviceAPI(DioConfig.getDio());

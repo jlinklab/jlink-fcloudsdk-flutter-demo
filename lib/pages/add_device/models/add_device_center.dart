@@ -1,9 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
+import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:flutter/foundation.dart';
-import 'package:fcloudsdk/api/api_center.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:fcloudsdk_example/manager/user_group_manager.dart';
+
+import '../../../models/user_instance.dart';
 
 ///添加设备的方式
 //wifi、blueTooth、deviceScanCode这总体上都属于配网的
@@ -13,6 +18,7 @@ enum AddDeviceType {
   deviceScanCode, //二维码配网
   localNet, //局域网 - 无需配网直接添加
   scan, //手机扫码(设备的二维码) - 无需配网直接添加
+  blueToothPair, //门锁蓝牙配对+配网
 }
 
 class DeviceAddModel {
@@ -38,6 +44,15 @@ class DeviceAddModel {
   String devMac = '';
   bool? delOth; //是否删除别人的设备
   bool? ma; //是否设为主账号 是否是主账号添加
+
+  ///蓝牙配对特有：搜索时的sn（激活后新sn可能变化）
+  String oldSearchDeviceId = '';
+
+  ///蓝牙配对特有：蓝牙uuid（iOS外设peripheralIdentifier）
+  String blueUUID = '';
+
+  ///蓝牙配对特有：协议格式类型（激活响应 protocolFormatType，-1未知）
+  int devFormatType = -1;
 
   String toJsonString() {
     Map<String, dynamic> map = {};
@@ -133,6 +148,55 @@ class DeviceAddModel {
       map['delOth'] = delOth!.toString();
     }
     map['extinfo'] = extInfo;
+    return map;
+  }
+
+  ///门锁蓝牙配对-JVSS添加服务器body
+  ///使用静默获取的默认家庭组ID
+  Future<Map<String, dynamic>> toJsonMapForPair() async {
+    Map<String, dynamic> map = {};
+    map['userGroupId'] = UserGroupManager.instance.currentGroupId;
+    map['deviceNo'] = deviceId;
+    map['deviceName'] =
+        deviceName.isNotEmpty ? deviceName : deviceId;
+    map['pid'] = pid;
+    if (adminToken.isNotEmpty) {
+      map['adminToken'] = adminToken;
+    }
+    map['nickName'] = UserInfo.instance.nickname.isNotEmpty
+        ? UserInfo.instance.nickname
+        : UserInfo.instance.userName;
+
+    ///时区
+    map['timeZone'] = await FlutterTimezone.getLocalTimezone();
+    map['devUserName'] = loginName;
+
+    ///配网添加的设备需要增加addType字段 非必须，="net"的话，会把原先的设备删掉
+    map['addType'] = 'net';
+
+    ///设备mac地址
+    if (devMac.isNotEmpty) {
+      var kmac = devMac
+          .replaceAllMapped(
+              RegExp(r'.{2}'), (match) => '${match.group(0)}:')
+          .replaceAll(RegExp(r':$'), '');
+      map['devMac'] = kmac;
+    }
+
+    ///iOS 特有外设对象的uuid
+    if (Platform.isIOS && blueUUID.isNotEmpty) {
+      map['peripheralIdentifier'] = blueUUID;
+    }
+
+    ///协议格式类型
+    if (devFormatType >= 0) {
+      map['devFormatType'] = devFormatType;
+    }
+
+    ///搜索时的sn
+    if (oldSearchDeviceId.isNotEmpty) {
+      map['oldDeviceNo'] = oldSearchDeviceId;
+    }
     return map;
   }
 }

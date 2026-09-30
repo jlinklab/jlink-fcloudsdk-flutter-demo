@@ -1,3 +1,4 @@
+import 'package:fcloudsdk_example/pages/door_lock/home/door_lock_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -66,6 +67,7 @@ final GoRouter goRouter = GoRouter(
         pid: state.pathParameters['pid'] ?? '',
       ),
     ),
+
     /// NVR 通道列表页面
     GoRoute(
       name: 'channel_list',
@@ -105,6 +107,13 @@ final GoRouter goRouter = GoRouter(
       builder: (context, state) => DeviceAlarmLineOrAreaPage(
         deviceId: state.queryParameters['deviceId'] ?? '',
         alarmType: state.queryParameters['alarmType'] ?? '0',
+      ),
+    ),
+    GoRoute(
+      name: 'doorLockHomePage',
+      path: '/doorLockHomePage',
+      builder: (context, state) => DoorLockHomePage(
+        deviceId: state.queryParameters['deviceId'] ?? '',
       ),
     ),
   ],

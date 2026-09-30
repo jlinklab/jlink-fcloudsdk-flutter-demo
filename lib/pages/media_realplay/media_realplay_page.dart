@@ -20,7 +20,7 @@ import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/manager/device_property_manager.dart';
 import 'package:fcloudsdk_example/pages/device_ability/device_ability_manager.dart';
-import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/pages/media_realplay/controller/media_realplay_controller.dart';
 import 'package:fcloudsdk_example/pages/media_realplay/views/4g_widget.dart';
 import 'package:fcloudsdk_example/pages/media_realplay/views/battery_widget.dart';

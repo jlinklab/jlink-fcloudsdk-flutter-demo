@@ -12,7 +12,7 @@ import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/manager/device_property_manager.dart';
 import 'package:fcloudsdk_example/manager/push_manager.dart';
 import 'package:fcloudsdk_example/pages/device_ability/device_ability_manager.dart';
-import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/utils/jpeg_chn_title_helper.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 import 'package:fcloudsdk_example/widgets/sensitivity_slider.dart';

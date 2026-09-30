@@ -33,8 +33,9 @@ dependencies:
     sdk: flutter
 
   fcloudsdk:
-    hosted: https://repo.jftechsoft.com/
-    version: 3.1.2
+    path: ../xcloudsdk_flutter
+    # hosted: https://repo.jftechsoft.com/
+    # version: 3.1.2
 
   flutter_localizations:
     sdk: flutter
@@ -49,10 +50,6 @@ dependencies:
       url: "https://gitee.com/openharmony-sig/flutter_packages.git"
       path: "packages/path_provider/path_provider"
       ref: "path_provider-v2.1.0"
-  shared_preferences:
-    git:
-      url: "https://gitee.com/openharmony-sig/flutter_packages.git"
-      path: "packages/shared_preferences/shared_preferences"
   scrollable_positioned_list: 0.3.8
   permission_handler: #11.0.1
     git:
@@ -82,6 +79,7 @@ dependencies:
       url: "https://gitcode.com/openharmony-sig/fluttertpc_geolocator.git"
       path: "geolocator"
   dio: 5.3.3
+  tuple: 2.0.2
     #网络请求
   retrofit: ^4.4.2
     #网络日志打印

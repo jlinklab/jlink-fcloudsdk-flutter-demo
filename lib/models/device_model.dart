@@ -1,7 +1,7 @@
 import 'package:fcloudsdk/utils/extensions.dart';
 
-import '../../cloud/device_cloud_service_manager.dart';
-import '../../cloud/model/device_cloud.dart';
+import '../pages/cloud/device_cloud_service_manager.dart';
+import '../pages/cloud/model/device_cloud.dart';
 
 ///
 /// {
@@ -63,6 +63,10 @@ class Device {
   ///[DevicePropertyManager.instance.isAOVAsync]
   List<Map<String, dynamic>>? propList;
 
+  String? parentPid;
+
+  String? localUiKey;
+
   ///整个云服务状态
   DeviceCloudService? cloudService({int? channel}) =>
       DeviceCloudServiceManager.instance
@@ -95,11 +99,17 @@ class Device {
     this.adminToken = '',
     this.fromShare = false,
     this.propList,
+    this.parentPid,
+    this.localUiKey,
   });
 
   factory Device.fromJson(Map<String, dynamic> json) {
-    Device device = Device(uuid: json['uuid']);
-    device.nickname = json['nickname'] ?? '';
+    ///JVSS接口返回deviceNo，SDK接口返回uuid
+    String uuid = json['deviceNo'] ?? json['uuid'] ?? '';
+    Device device = Device(uuid: uuid);
+
+    ///JVSS接口返回deviceName，SDK接口返回nickname
+    device.nickname = json['deviceName'] ?? json['nickname'] ?? '';
     device.pid = json['pid'] ?? '';
     int parseDeviceType(dynamic type) {
       if (type is int) {
@@ -110,7 +120,9 @@ class Device {
 
     device.deviceType = parseDeviceType(json['type'] ?? '');
     String parseAdminToken(Map<String, dynamic> json) {
-      dynamic token = json['AdminToken'] ?? json['deviceToken'];
+      ///JVSS接口返回adminToken（小写），SDK接口返回AdminToken
+      dynamic token =
+          json['adminToken'] ?? json['AdminToken'] ?? json['deviceToken'];
       if (token is String) {
         return token;
       }
@@ -135,9 +147,12 @@ class Device {
     device.pwdToken = parsePwdToken(json);
     device.supportToken =
         device.adminToken.isNotEmpty ? true : (json['supportToken'] ?? false);
-    device.userName = json['username'] ?? 'admin';
-    device.password = json['password'] ?? '';
 
+    ///JVSS接口返回devUserName/devPassWord，SDK接口返回username/password
+    device.userName = json['devUserName'] ?? json['username'] ?? 'admin';
+    device.password = json['devPassWord'] ?? json['password'] ?? '';
+    device.parentPid = json['parentPid'];
+    device.localUiKey = json['localUiKey'];
     return device;
   }
 
@@ -153,6 +168,8 @@ class Device {
     data['PWDToken'] = pwdToken;
     data['username'] = userName;
     data['password'] = password;
+    data['parentPid'] = parentPid;
+    data['localUiKey'] = localUiKey;
     return data;
   }
 
@@ -170,13 +187,29 @@ class Devices {
   Devices({this.mine = const <Device>[], this.share = const <SharedDevice>[]});
 
   Devices.fromJson(Map<String, dynamic> json) {
-    if (json['mine'] != null && json['mine'].isNotEmpty) {
-      mine = json['mine'].map<Device>((e) => Device.fromJson(e)).toList();
-    }
-    if (json['share'] != null && json['share'].isNotEmpty) {
-      share = json['share']
-          .map<SharedDevice>((e) => SharedDevice.fromJson(e))
-          .toList();
+    ///JVSS接口返回data数组（所有设备混合），SDK接口返回mine/share两个数组
+    if (json['data'] != null && json['data'].isNotEmpty) {
+      ///JVSS接口：根据sharedVO字段判断是否为分享设备
+      for (var item in json['data']) {
+        var sharedVO = item['sharedVO'];
+        if (sharedVO != null && sharedVO is Map && sharedVO.isNotEmpty) {
+          ///分享设备：有sharedVO字段
+          share.add(SharedDevice.fromJson(item));
+        } else {
+          ///我的设备：没有sharedVO字段
+          mine.add(Device.fromJson(item));
+        }
+      }
+    } else {
+      ///SDK接口格式
+      if (json['mine'] != null && json['mine'].isNotEmpty) {
+        mine = json['mine'].map<Device>((e) => Device.fromJson(e)).toList();
+      }
+      if (json['share'] != null && json['share'].isNotEmpty) {
+        share = json['share']
+            .map<SharedDevice>((e) => SharedDevice.fromJson(e))
+            .toList();
+      }
     }
   }
 }
@@ -240,13 +273,19 @@ class SharedDevice extends Device {
   });
 
   factory SharedDevice.fromJson(Map<String, dynamic> json) {
-    SharedDevice sharedDevice = SharedDevice(uuid: json['uuid']);
-    sharedDevice.nickname = json['nickname'] ?? '';
+    ///JVSS接口返回deviceNo，SDK接口返回uuid
+    String uuid = json['deviceNo'] ?? json['uuid'] ?? '';
+    SharedDevice sharedDevice = SharedDevice(uuid: uuid);
+
+    ///JVSS接口返回deviceName，SDK接口返回nickname
+    sharedDevice.nickname = json['deviceName'] ?? json['nickname'] ?? '';
     sharedDevice.pid = json['pid'] ?? '';
     sharedDevice.deviceType = int.tryParse(json['type'] ?? '') ?? 0;
     sharedDevice.supportToken = json['supportToken'] ?? false;
     String parseAdminToken(Map<String, dynamic> json) {
-      dynamic token = json['AdminToken'] ?? json['deviceToken'];
+      ///JVSS接口返回adminToken（小写），SDK接口返回AdminToken
+      dynamic token =
+          json['adminToken'] ?? json['AdminToken'] ?? json['deviceToken'];
       if (token is String) {
         return token;
       }
@@ -254,14 +293,6 @@ class SharedDevice extends Device {
         return token['AdminToken'] ?? '';
       }
       return '';
-      // dynamic token = json['deviceToken'];
-      // if (token is String) {
-      //   return token;
-      // }
-      // if (token is Map) {
-      //   return token['AdminToken'] ?? '';
-      // }
-      // return '';
     }
 
     String parsePwdToken(Map<String, dynamic> json) {
@@ -277,23 +308,65 @@ class SharedDevice extends Device {
 
     sharedDevice.adminToken = parseAdminToken(json);
     sharedDevice.pwdToken = parsePwdToken(json);
-    sharedDevice.userName = json['username'] ?? 'admin';
-    sharedDevice.password = json['password'] ?? '';
 
-    sharedDevice.shareId = json['id'] ?? '';
-    sharedDevice.ret = json['ret'] ?? 0;
-    sharedDevice.shareNickname = json['account'] ?? '';
-    sharedDevice.shareTime = json['shareTime'] ?? 0;
-    sharedDevice.acceptTime = json['acceptTime'] ?? 0;
-    sharedDevice.expireTime = json['expireTime'] ?? 0;
-    sharedDevice.powers = json['powers'] ?? '';
-    sharedDevice.deviceOwnerId = json['deviceOwnerId'] ?? '';
-    sharedDevice.permissions = json['permissions'] == null
-        ? []
-        : json['permissions']
-            .map<SharedDevicePermission>(
-                (e) => SharedDevicePermission.fromJson(e))
-            .toList();
+    ///JVSS接口返回devUserName/devPassWord，SDK接口返回username/password
+    sharedDevice.userName = json['devUserName'] ?? json['username'] ?? 'admin';
+    sharedDevice.password = json['devPassWord'] ?? json['password'] ?? '';
+
+    ///JVSS接口分享信息在sharedVO对象内，SDK接口在顶层
+    var sharedVO = json['sharedVO'];
+    if (sharedVO != null && sharedVO is Map && sharedVO.isNotEmpty) {
+      ///JVSS接口格式：分享信息在sharedVO内
+      sharedDevice.shareId = sharedVO['id'] ?? '';
+
+      ///activateStatus 分享状态：1=未生效 2=已过期 3=正常
+      ///映射到ret值：1=已接受 4=已过期/已拒绝 0=待接受
+      int activateStatus = sharedVO['activateStatus'] ?? 0;
+      if (activateStatus == 3) {
+        sharedDevice.ret = 1; // 正常=已接受
+      } else if (activateStatus == 2) {
+        sharedDevice.ret = 4; // 已过期
+      } else {
+        sharedDevice.ret = 0; // 未生效=待接受
+      }
+      sharedDevice.shareNickname = sharedVO['nickName'] ?? '';
+      sharedDevice.deviceOwnerId = sharedVO['creatorId'] ?? '';
+
+      ///JVSS的privileges是字符串数组如["all"]，转换为powers字符串
+      var privileges = sharedVO['privileges'];
+      if (privileges != null && privileges is List) {
+        sharedDevice.powers = privileges.join(',');
+      }
+
+      ///JVSS的privileges转换为SharedDevicePermission列表
+      sharedDevice.permissions = [];
+      if (privileges != null && privileges is List) {
+        for (var priv in privileges) {
+          if (priv is String) {
+            sharedDevice.permissions.add(SharedDevicePermission(
+              permission: priv,
+              enable: true,
+            ));
+          }
+        }
+      }
+    } else {
+      ///SDK接口格式：分享信息在顶层
+      sharedDevice.shareId = json['id'] ?? '';
+      sharedDevice.ret = json['ret'] ?? 0;
+      sharedDevice.shareNickname = json['account'] ?? '';
+      sharedDevice.shareTime = json['shareTime'] ?? 0;
+      sharedDevice.acceptTime = json['acceptTime'] ?? 0;
+      sharedDevice.expireTime = json['expireTime'] ?? 0;
+      sharedDevice.powers = json['powers'] ?? '';
+      sharedDevice.deviceOwnerId = json['deviceOwnerId'] ?? '';
+      sharedDevice.permissions = json['permissions'] == null
+          ? []
+          : json['permissions']
+              .map<SharedDevicePermission>(
+                  (e) => SharedDevicePermission.fromJson(e))
+              .toList();
+    }
     return sharedDevice;
   }
 
@@ -312,6 +385,8 @@ class SharedDevice extends Device {
 class SharedDevicePermission {
   String permission = '';
   bool enable = false;
+
+  SharedDevicePermission({this.permission = '', this.enable = false});
 
   SharedDevicePermission.fromJson(Map<String, dynamic> json) {
     permission = json['label'] ?? '';

@@ -14,7 +14,7 @@ import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/manager/push_manager.dart';
 import 'package:fcloudsdk_example/pages/device_setting/device_alarm_custom_voice_page.dart';
-import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/views/x_single_selector.dart';
 
 import '../../../models/user_instance.dart';

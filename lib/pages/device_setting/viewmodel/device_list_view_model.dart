@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk_example/api/share_api.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
-import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/utils/push_notification.dart';
 
 /// 低功耗设备状态类型

@@ -68,7 +68,7 @@ class MainBleScanController extends ChangeNotifier {
 
   _openBleSearch() async {
     ///监听蓝牙是否在扫描
-    BleSearch.instance.addSearchStatusListener((isSearching) {
+    BleSearch.instance.addSearchStatusListener((isSearching, errorCode) {
       _updateView();
     });
 
@@ -82,14 +82,16 @@ class MainBleScanController extends ChangeNotifier {
   }
 
   ///处理搜到的蓝牙设备
-  _handSearchBleDevices(BleSearchDeviceBySDK bleDevice) {
+  _handSearchBleDevices(BleSearchDeviceBySDK bleDevice) async {
     var newDevice = ScannedDevice(bleDevice: bleDevice);
 
-    var index = scannedBleDeviceList.indexWhere((e) => e.id == newDevice.id);
-    if (index != -1) {
-      //已存在，不处理
-    } else {
-      scannedBleDeviceList.add(newDevice); //新增
+    if (await newDevice.needShowBlue()) {
+      var index = scannedBleDeviceList.indexWhere((e) => e.id == newDevice.id);
+      if (index != -1) {
+        //已存在，不处理
+      } else {
+        scannedBleDeviceList.add(newDevice); //新增
+      }
     }
     _updateView();
 

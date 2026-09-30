@@ -10,7 +10,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk_example/generated/l10n.dart';
-import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/pages/share/model/model.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 

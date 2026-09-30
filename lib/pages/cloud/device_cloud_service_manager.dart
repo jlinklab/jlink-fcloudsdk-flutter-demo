@@ -6,7 +6,7 @@ import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/api/cloud_service/cloud_service.dart';
 import 'package:fcloudsdk/utils/extensions.dart';
 import 'package:fcloudsdk_example/pages/cloud/model/device_cloud.dart';
-import 'package:fcloudsdk_example/pages/device_setting/model/model.dart';
+import 'package:fcloudsdk_example/models/device_model.dart';
 
 ///更新了云服务状态事件，上层可监听进行刷新
 ///收到这个事件之后，可以使用缓存获取到最新的值，不需要再次异步获取刷新
