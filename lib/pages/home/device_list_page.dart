@@ -249,13 +249,13 @@ class _DeviceCard extends StatelessWidget {
   const _DeviceCard({Key? key, required this.device, required this.type})
       : super(key: key);
 
-  static const int _stateOffline = 0;
-  static const int _stateOnline = 1;
+  static const int _stateNoPermission = 3; // 没权限
+  static const int _stateUnSupport = -2; // 不支持
+  static const int _stateOffline = -1; // 离线
+  static const int _stateUnknown= 0; // 未知
+  static const int _stateOnline = 1; // 在线，在唤醒状态
   static const int _stateSleep = 2; // 浅度休眠
-  static const int _stateWakingUp = 3; // 唤醒中
-  static const int _stateAwakened = 4; // 已唤醒
-  static const int _stateDeepSleep = 5; // 深度休眠（不可唤醒）
-  static const int _statePrepareSleep = 6; // 准备休眠
+  static const int _stateDeepSleep = 3; // 深度休眠（不可唤醒）
 
   /// 获取低功耗设备的详细状态（从 ViewModel 查询，而非 device.state）
   int _getLowPowerState(BuildContext context) {
@@ -284,16 +284,11 @@ class _DeviceCard extends StatelessWidget {
       case _stateOffline:
         return (color: Colors.grey, text: null);
       case _stateOnline:
-      case _stateAwakened:
         return (color: Colors.green, text: TR.current.deviceAwakened);
       case _stateSleep:
         return (color: Colors.orange, text: TR.current.deviceSleeping);
-      case _stateWakingUp:
-        return (color: Colors.blue, text: TR.current.deviceWakingUp);
       case _stateDeepSleep:
         return (color: Colors.red, text: TR.current.deviceDeepSleep);
-      case _statePrepareSleep:
-        return (color: Colors.orange, text: TR.current.devicePrepareSleep);
       default:
         return (color: Colors.grey, text: null);
     }
@@ -302,7 +297,7 @@ class _DeviceCard extends StatelessWidget {
   /// 判断设备是否处于休眠状态（需要唤醒才能预览）
   bool _isSleeping(int lpState) =>
       device.isLowPowerType &&
-      (lpState == _stateSleep || lpState == _statePrepareSleep);
+      (lpState == _stateSleep);
 
   /// 判断设备是否深度休眠（不可唤醒）
   bool _isDeepSleep(int lpState) =>
@@ -323,7 +318,7 @@ class _DeviceCard extends StatelessWidget {
       final lpState = _getLowPowerState(context);
 
       // 离线状态，无法预览
-      if (lpState == _stateOffline || lpState < 0) {
+      if (lpState <= 0) {
         KToast.show(status: TR.current.deviceOffline);
         return;
       }
@@ -341,7 +336,7 @@ class _DeviceCard extends StatelessWidget {
       }
     } else {
       // 离线状态，无法预览
-      if (device.state <= _stateOffline) {
+      if (device.state <= 0) {
         KToast.show(status: TR.current.deviceOffline);
         return;
       }
