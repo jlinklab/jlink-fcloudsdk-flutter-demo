@@ -53,13 +53,12 @@ class _BlePairConfigPageState extends State<BlePairConfigPage> {
                         const SizedBox(height: 8),
                         const Text(
                           '请在门锁上操作网络重置，等待指示灯变化',
-                          style:
-                              TextStyle(color: Colors.grey, fontSize: 13),
+                          style: TextStyle(color: Colors.grey, fontSize: 13),
                         ),
                         TextButton(
                           onPressed: () {
                             controller.cancelWaitReset();
-                            Navigator.of(context).pop();
+                            Navigator.of(context).popUntil((route) => route.isFirst);
                           },
                           child: const Text('取消等待'),
                         ),
@@ -85,22 +84,14 @@ class _BlePairConfigPageState extends State<BlePairConfigPage> {
                 if (controller.isFail)
                   Padding(
                     padding: const EdgeInsets.all(20),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text('返回'),
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () => controller.retry(),
-                            child: const Text('重试'),
-                          ),
-                        ),
-                      ],
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).popUntil((route) => route.isFirst);
+                        },
+                        child: const Text('返回'),
+                      ),
                     ),
                   ),
                 if (controller.isDone)
@@ -109,7 +100,10 @@ class _BlePairConfigPageState extends State<BlePairConfigPage> {
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () => Navigator.of(context).pop(true),
+                        onPressed: () {
+                          ///配网完成直接回首页
+                          Navigator.of(context).popUntil((route) => route.isFirst);
+                        },
                         child: const Text('完成'),
                       ),
                     ),

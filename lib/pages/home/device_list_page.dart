@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:fcloudsdk/api/api_center.dart';
+import 'package:fcloudsdk/door_lock/door_lock_key_value.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
+import 'package:fcloudsdk_example/api/add_device_api.dart';
 import 'package:fcloudsdk_example/manager/device_property_manager.dart';
+import 'package:fcloudsdk_example/models/device_type.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -256,7 +259,9 @@ class _DeviceCard extends StatelessWidget {
 
   /// 获取低功耗设备的详细状态（从 ViewModel 查询，而非 device.state）
   int _getLowPowerState(BuildContext context) {
-    if (!device.isLowPowerType) return device.state;
+    if (!device.isLowPowerType && !DeviceTypeUtil.isSleepSateDevice(device)) {
+      return device.state;
+    }
     final viewModel = context.read<DevListViewModel>();
     return viewModel.getLowPowerDevState(device.uuid);
   }
@@ -305,7 +310,16 @@ class _DeviceCard extends StatelessWidget {
 
   /// 导航到预览页面（低功耗设备需先唤醒）
   void _navigateToPreview(BuildContext context) async {
-    if (device.isLowPowerType) {
+    if (DoorLockHelper.isDoorLock(device.uuid)) {
+      //门锁是否深度休眠判断
+      final lpState = _getLowPowerState(context);
+
+      // 深度休眠，无法唤醒
+      if (_isDeepSleep(lpState)) {
+        KToast.show(status: TR.current.deviceDeepSleepCannotWake);
+        return;
+      }
+    } else if (device.isLowPowerType) {
       final lpState = _getLowPowerState(context);
 
       // 离线状态，无法预览
@@ -945,10 +959,21 @@ class _DeviceCard extends StatelessWidget {
       if (dev.fromShare) {
         await shareAPI.refuseSharedDevice((dev as SharedDevice).shareId);
       } else {
-        await JFApi.xcAccount.xcRemoveDevice(device.uuid);
+        //走jvss删除接口
+        Map<String, dynamic> map = {'deviceNo': dev.uuid};
+        await addDeviceAPI.deleteDevice(map);
       }
       await PushManager.instance.unsubscribe(device.uuid);
       await viewModel.deleteDev(device.uuid, type);
+
+      // 删除设备时清本地缓存（authKey 等）
+      JFApi.xcDevice.xcLoginOut(deviceId: device.uuid);
+      JFApi.xcDevice.xcSetLocalUserNameAndPwd(
+          deviceId: device.uuid, userName: 'admin', pwd: '');
+      JFApi.xcDevice.xcSetDeviceToken(deviceId: device.uuid, token: '');
+      JFApi.xcDevice.xcDeleteDevsInfo(deviceIds: device.uuid);
+      DoorLockKeyValueLocal.clearCache(deviceId: device.uuid);
+
       KToast.dismiss();
     } catch (error) {
       KToast.show(status: kErrorMsg(error));

@@ -14,12 +14,15 @@ import 'package:fcloudsdk/door_lock/door_lock_parse.dart';
 import 'package:fcloudsdk/door_lock/door_lock_shadow.dart';
 import 'package:fcloudsdk/utils/bit_util.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../../api/add_device_api.dart';
 import '../../../api/door_lock_api.dart';
+import '../../../api/weather_service.dart';
 import '../../../pages/door_lock/usecase/device_sync_time.dart';
 import '../../../pages/door_lock/usecase/door_lock_helper.dart';
 import '../../add_device/models/add_device_center.dart';
+import '../../../utils/permission_utils.dart';
 
 ///门锁蓝牙激活控制器
 ///流程：连接 → 下发激活(0010) → 激活响应(拿 authKey/token/newSn) → 服务器校验
@@ -56,11 +59,17 @@ class MainBleActiveController extends ChangeNotifier {
   ///锁板业务接口（激活后可选步骤使用）
   late DoorLockBleApi doorLockBleApi;
 
+  ///蓝牙激活能力集(0003)（含区域激活能力标识）
+  BleActivePreAbility? blePreActiveAbility;
+
   ///锁板能力集(EB)
   DoorLockBleAbility? doorLockBleAbility;
 
   ///锁板额外的产品信息
   DoorLockExInfo? doorLockExInfo;
+
+  ///第一次保活结果（syncDoorStatus的er）
+  DoorLockNetIpOperaterResult? syncDoorStatus;
 
   ///锁板用户密码长度区间（激活后步骤获取，影子上报用）
   DoorLockPwdLengthRange? pwdLengthRange;
@@ -86,13 +95,14 @@ class MainBleActiveController extends ChangeNotifier {
 
   ///开始激活
   start() async {
-    logs.add('开始蓝牙激活: uuid=${bleDevice.uuid}, sn=${model.deviceId}, pid=${model.pid}');
+    logs.add(
+        '开始蓝牙激活: uuid=${bleDevice.uuid}, sn=${model.deviceId}, pid=${model.pid}');
     _updateView();
 
-    ///获取accessToken
+    ///获取accessToken（未加密）
     String accessToken = '';
     try {
-      accessToken = await JFApi.xcAccount.xcGetAccessToken();
+      accessToken = await JFApi.xcAccount.xcGetRealAccessToken();
     } catch (e) {
       debugPrint('get accessToken fail: $e');
     }
@@ -133,7 +143,9 @@ class MainBleActiveController extends ChangeNotifier {
         logs.add('蓝牙激活响应: newSn=${data.newSn}, mac=${data.mac}');
       }
     } else if (status == BleActiveStatus.getAbilitySuccess) {
-      logs.add('获取锁板能力集(0003)成功');
+      blePreActiveAbility = data is BleActivePreAbility ? data : null;
+      logs.add(
+          '获取锁板能力集(0003)成功, 支持区域激活=${blePreActiveAbility?.supportRegionalActivation}');
     } else if (status == BleActiveStatus.activateWaitOK) {
       logs.add('请在锁端按OK键确认');
     } else if (status == BleActiveStatus.activateWaitCheckUser) {
@@ -200,28 +212,23 @@ class MainBleActiveController extends ChangeNotifier {
         '本地authKey: ${DoorLockKeyValueLocal.authKey(deviceId: model.deviceId)}');
     _updateView();
 
-    ///支持蓝牙netip协议的锁不走后续锁板步骤（无低功耗锁板能力）
+    ///是否支持蓝牙netip协议（国内锁）
     if (DoorLockHelper.isSuppportBleNetip(
         deviceId: model.deviceId, activeResponse: activeResponse)) {
       logs.add('支持蓝牙netip协议，跳过锁板可选步骤');
-      isSuccess = true;
       _updateView();
 
-      ///设置设备昵称
-      await askDeviceNickname();
-      await addDeviceToService();
+      ///国内锁：通知设备激活成功 + 开蓝牙netip + 影子服务链路 + 添加服务器
+      await _doCnLockFinish();
 
-      ///国内锁：通知设备激活成功 + 开蓝牙netip + 影子服务链路
-      if (isAddServiceSuccess) {
-        await _doCnLockFinish();
+      ///整个激活链路走完后才标记成功
+      if (!isFail) {
+        isSuccess = true;
+        _updateView();
       }
       return;
     }
 
-    isSuccess = true;
-    _updateView();
-
-    ///激活后: 锁板能力集(EB) → 产品额外信息 → 强制添加密码管理员 → KV上报 → 同步时区
     await startGetDoorLockAbilityIfNeed();
 
     await startGetManager();
@@ -231,21 +238,33 @@ class MainBleActiveController extends ChangeNotifier {
     if (addManagerDone != false) {
       await startSyncTime();
 
-      ///设置设备昵称
-      await askDeviceNickname();
+      ///海外锁/低功耗锁：QSPID + 经纬度 + 添加服务器
+      await _doOverseasLockFinish();
+    }
 
-      ///添加服务器
-      await addDeviceToService();
-
-      ///海外锁：上传QSPID到Caps
-      if (isAddServiceSuccess) {
-        await _updateQsPID();
-      }
+    ///整个激活链路走完后才标记成功
+    if (!isFail) {
+      isSuccess = true;
+      _updateView();
     }
 
     logs.add('激活后步骤完成');
     _updateView();
+  }
 
+  ///海外锁/低功耗锁完成流程
+  _doOverseasLockFinish() async {
+    ///上传QSPID到Caps
+    await _updateQsPID();
+
+    ///上报经纬度
+    _updateDeviceLatlon();
+
+    ///设置设备昵称
+    await askDeviceNickname();
+
+    ///添加服务器
+    await addDeviceToService();
   }
 
   ///设置设备昵称
@@ -259,7 +278,8 @@ class MainBleActiveController extends ChangeNotifier {
         adviceNames = result.map((e) => e.toString()).toList();
       }
     } catch (_) {}
-    var defaultName = adviceNames.isNotEmpty ? adviceNames.first : model.deviceId;
+    var defaultName =
+        adviceNames.isNotEmpty ? adviceNames.first : model.deviceId;
     logs.add('推荐设备名: $adviceNames');
     _updateView();
 
@@ -345,12 +365,21 @@ class MainBleActiveController extends ChangeNotifier {
     _updateView();
   }
 
+  ///指令02失败：删除服务端设备
+  _deleteDeviceOnActiveFail() async {
+    try {
+      await addDeviceAPI.deleteDevice({'deviceNo': model.deviceId});
+      logs.add('已删除服务端设备: ${model.deviceId}');
+    } catch (e) {
+      logs.add('删除服务端设备失败: $e');
+    }
+  }
+
   ///国内锁（支持蓝牙netip）添加服务器后的影子服务链路
   _doCnLockFinish() async {
-    logs.add('国内锁影子服务链路开始');
     _updateView();
 
-    ///发送激活成功给设备（指令02，重试5次，失败也继续流程）
+    ///发送激活成功给设备（指令02，重试5次，阻塞性，失败终止流程）
     var activeSuccess = false;
     for (var i = 0; i < 5; i++) {
       try {
@@ -363,33 +392,104 @@ class MainBleActiveController extends ChangeNotifier {
       }
     }
     bleActive.clearListen();
-    logs.add(activeSuccess ? '通知设备激活成功(指令02)' : '通知设备激活成功失败，继续流程');
+    if (!activeSuccess) {
+      logs.add('通知设备激活成功(指令02)失败，删除设备并结束添加');
+      await _deleteDeviceOnActiveFail();
+      isFail = true;
+      _updateView();
+      return;
+    }
+    logs.add('通知设备激活成功(指令02)');
     _updateView();
 
-    ///上报经纬度：demo暂不接 WeatherService，跳过
+    ///上报经纬度
+    _updateDeviceLatlon();
 
     ///开启蓝牙netip（获取锁版配置能力集的必要前置）
     await DoorLockHelper.openBlueNetIp(
-        sn: model.deviceId,
-        mac: model.blueUUID,
-        adminToken: model.adminToken);
+        sn: model.deviceId, mac: model.blueUUID, adminToken: model.adminToken);
+
+//区域激活
+    Future areaActivateFuture;
+    if (blePreActiveAbility?.supportRegionalActivation == true) {
+      areaActivateFuture = _doAreaActivate().catchError((e) {
+        logs.add('区域激活异常: $e');
+      });
+    } else {
+      areaActivateFuture = Future.value(null);
+    }
 
     ///获取锁版配置能力集 → 影子上报/保活/在线配置/用户信息上报（并行）
     var doorFunctionFuture = _getDoorFunctionAndReport();
 
     ///同步时间（netip通道）
-    var syncTimeFuture = DeviceSyncTime.syncTimeToDevice(deviceId: model.deviceId);
+    var syncTimeFuture =
+        DeviceSyncTime.syncTimeToDevice(deviceId: model.deviceId);
 
     ///并行等待异步任务组，10秒超时兜底
     try {
       await Future.wait<dynamic>(
-              [doorFunctionFuture, syncTimeFuture])
+              [doorFunctionFuture, syncTimeFuture, areaActivateFuture])
           .timeout(const Duration(seconds: 10));
     } catch (_) {
-      logs.add('国内锁影子链路10s超时兜底，继续流程');
+      logs.add('10s超时兜底，继续流程');
     }
-    logs.add('国内锁影子服务链路完成');
+
+    ///设置设备昵称
+    await askDeviceNickname();
+
+    ///添加服务器
+    await addDeviceToService();
+
     _updateView();
+  }
+
+  ///区域激活：从设备获取区域信息并上报JVSS
+  _doAreaActivate() async {
+    logs.add('区域激活开始');
+
+    ///从设备获取区域激活信息（command 1042）
+    Map<String, dynamic>? activeInfo;
+    try {
+      var response = await JFApi.xcDevice.xcDevGetSysConfig(
+        deviceId: model.deviceId,
+        commandName: 'System.ActivateInfo',
+        command: 1042,
+      );
+      if (response['Ret'] == 100 && response['System.ActivateInfo'] != null) {
+        activeInfo = Map<String, dynamic>.from(response['System.ActivateInfo']);
+      }
+      logs.add('获取设备区域激活信息: ${response['Ret']}');
+    } catch (e) {
+      logs.add('获取设备区域激活信息失败: $e');
+    }
+
+    if (activeInfo == null) {
+      logs.add('区域激活: 设备未返回激活信息，跳过');
+      return;
+    }
+
+    ///解析区域激活能力并上报JVSS
+    ///restrict: null/0=支持激活时间能力(2); 非0=支持区域激活检测(1)
+    var restrict = activeInfo['restrict'];
+    int active;
+    if (restrict == null || restrict == 0) {
+      active = 2; // supportTime
+    } else {
+      active = 1; // areaSupport
+    }
+    try {
+      await doorlockAPI.sysFuncActiveInsertOrUpdate(
+        deviceNo: model.deviceId,
+        active: active,
+      );
+      logs.add('区域激活: 上报JVSS成功, active=$active');
+    } catch (e) {
+      logs.add('区域激活: 上报JVSS失败: $e');
+    }
+
+    ///上报天气服务器并回写设备：demo暂不接 WeatherService，跳过
+    logs.add('区域激活完成');
   }
 
   ///获取锁版配置能力集并执行影子上报等后续（重试3次，失败后也继续流程）
@@ -422,11 +522,9 @@ class MainBleActiveController extends ChangeNotifier {
 
       ///改写广播包状态（本地标记）：
       ///一体化锁=2：已激活；非一体化锁=4：已激活，需假配网并且需要锁板进行网络重置操作
-      var isIntegrated =
-          doorLockBleAbility?.byte1.supportUserManager ?? false;
+      var isIntegrated = doorLockBleAbility?.byte1.supportUserManager ?? false;
       bleDevice = BleSearchDeviceBySDK.fromJson(
           bleDevice.toJson()..['BTDevExtra'] = isIntegrated ? 2 : 4);
-      logs.add('广播包状态改写: extra=${isIntegrated ? 2 : 4}(${isIntegrated ? '一体化锁' : '非一体化锁'})');
 
       ///上报影子服务
       await JFApi.xcDevice.xcDevSetConfigByShadowServer(
@@ -438,15 +536,16 @@ class MainBleActiveController extends ChangeNotifier {
 
       ///保活
       var syncStatusResult = await DoorLockNetIp.syncDoorStatus(model.deviceId);
-      logs.add('保活syncDoorStatus: ${syncStatusResult.item1}');
+      syncDoorStatus = syncStatusResult.item2?.err;
+      logs.add(
+          '保活syncDoorStatus: ${syncStatusResult.item1}, err=$syncDoorStatus');
 
       if (syncStatusResult.item1) {
         ///获取配置并上报在线配置
         var configResult =
             await DoorLockNetIp.getDoorLockConfig(model.deviceId);
         if (configResult.item1 && configResult.item2 != null) {
-          var rawList =
-              parseWifiConfigToRaw(configResult.item2!.data);
+          var rawList = parseWifiConfigToRaw(configResult.item2!.data);
           try {
             var datas =
                 rawList.map((e) => base64Encode(hexToBytes(e))).toList();
@@ -494,7 +593,28 @@ class MainBleActiveController extends ChangeNotifier {
     }
   }
 
-  ///上报设备经纬度：demo暂不接 WeatherService，跳过
+  ///上报设备经纬度
+  _updateDeviceLatlon() async {
+    var isPermissionLocationService = await PermissionUtils.checkPermission(
+        permission: XPermission.locationService, onlyStatus: true);
+    if (!isPermissionLocationService) {
+      logs.add('经纬度上报: 无定位服务权限，跳过');
+      return;
+    }
+    try {
+      var position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      await weatherService.updateDeviceLatlon(
+        sn: model.deviceId,
+        lat: position.latitude.toString(),
+        lon: position.longitude.toString(),
+      );
+      logs.add('经纬度上报成功: lat=${position.latitude}, lon=${position.longitude}');
+    } catch (e) {
+      logs.add('经纬度上报失败: $e');
+    }
+  }
 
   ///上传QSPID到Caps（海外锁）
   _updateQsPID() async {
@@ -503,8 +623,8 @@ class MainBleActiveController extends ChangeNotifier {
       return;
     }
     try {
-      await doorlockAPI.syncCaps(
-          sn: model.deviceId, caps: {'dev.ext.pid2': qsPid});
+      await doorlockAPI
+          .syncCaps(sn: model.deviceId, caps: {'dev.ext.pid2': qsPid});
       logs.add('上传QSPID成功: $qsPid');
     } catch (e) {
       logs.add('上传QSPID失败: $e');
@@ -632,10 +752,6 @@ class MainBleActiveController extends ChangeNotifier {
                 InputDecoration(hintText: '请输入$minLength-$maxLength位数字密码'),
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('取消'),
-            ),
             TextButton(
               onPressed: () {
                 var pwd = controller.text;

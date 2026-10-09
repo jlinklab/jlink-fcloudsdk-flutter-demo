@@ -9,6 +9,7 @@ import 'package:fcloudsdk_example/pages/cloud/device_cloud_service_manager.dart'
 import 'package:fcloudsdk_example/pages/cloud/model/device_cloud.dart';
 import 'package:fcloudsdk_example/pages/device_ability/device_ability_manager.dart';
 import 'package:fcloudsdk_example/models/device_model.dart';
+import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 
 ///多目类别, 根据[streamCount]路码流[lensesCount]个展示窗口判别类别
 enum MultiCategory {
@@ -382,6 +383,10 @@ class DevicePropertyManager {
     if (device == null) {
       return false;
     }
+    if (DoorLockHelper.isDoorLock(device.uuid)) {
+      //门锁设备直接return
+      return false;
+    }
     String key = _spKey(_nvr, deviceId);
     String countKey = _spKey(_nvrChannelCount, deviceId);
     bool nvr = false;
@@ -401,7 +406,8 @@ class DevicePropertyManager {
               device.deviceType == 2 ||
               device.deviceType == 4 ||
               device.deviceType == 8)) {
-        var response = await DeviceConfigManager.getConfigToObject<List<String>>(
+        var response =
+            await DeviceConfigManager.getConfigToObject<List<String>>(
           deviceId: deviceId,
           command: 1048,
           commandName: DeviceJsonName.channelTitle,
@@ -427,7 +433,8 @@ class DevicePropertyManager {
       if (cloudService != null && cloudService.channelCloud.isNotEmpty) {
         nvr = true;
         await SPUtils.preferences.setBool(key, nvr);
-        await SPUtils.preferences.setInt(countKey, cloudService.channelCloud.length);
+        await SPUtils.preferences
+            .setInt(countKey, cloudService.channelCloud.length);
       }
     } catch (e) {
       // ignore
@@ -618,8 +625,8 @@ class DevicePropertyManager {
       return true;
     }
 
-    DeviceCloudService? cloudService = DeviceCloudServiceManager.instance
-        .getCloudService(deviceId: deviceId);
+    DeviceCloudService? cloudService =
+        DeviceCloudServiceManager.instance.getCloudService(deviceId: deviceId);
     if (cloudService != null &&
         cloudService.cloudFlowStatus != CloudFlowStatus.notSupported) {
       return true;

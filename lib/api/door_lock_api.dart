@@ -96,6 +96,40 @@ abstract class DoorLockAPI {
     @Field('data') required Map<String, dynamic> data,
   });
 
+  ///新增或更新门锁固件版本
+  @POST('/v3/device/getOrUpdateFirmwareVersion$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> getOrUpdateFirmwareVersion({
+    @Field('deviceNo') required String deviceNo,
+    @Field('ver') String? ver,
+  });
+
+  ///新增或更新门锁配置
+  @POST('/v3/doorLockInfo/insertOrUpdateDoorLockInfo$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> insertOrUpdateDoorLockInfo({
+    @Field('deviceSn') required String deviceSn,
+    @Field('password') String? password,
+    @Field('ver') String? ver,
+    @Field('volume') String? volume,
+    @Field('openModeTime') String? openModeTime,
+    @Field('batteryPower') String? batteryPower,
+    @Field('autoLock') String? autoLock,
+    @Field('supportDeadbolt') String? supportDeadbolt,
+    @Field('doorOpenDirection') String? doorOpenDirection,
+    @Field('pirDetection') String? pirDetection,
+    @Field('keySyncState') bool? keySyncState,
+    @Field('yearSyncState') bool? yearSyncState,
+    @Field('deviceLanguage') String? deviceLanguage,
+    @Field('devLanList') String? devLanList,
+    @Field('humanSensor') String? humanSensor,
+    @Field('doorUnlockMode') String? doorUnlockMode,
+    @Field('doorFaceAlarmTone') String? doorFaceAlarmTone,
+    @Field('doorLockAntiPryAlarm') String? doorLockAntiPryAlarm,
+    @Field('lockState') bool? lockState,
+    @Field('reverseLockState') bool? reverseLockState,
+  });
+
   ///上传caps（QSPID）
   @POST('/api/syncCaps$uselessSegmentCaps')
   @Headers({'host': caps, 'encryot': false, 'decrypt': false})
@@ -127,6 +161,21 @@ abstract class DoorLockAPI {
   @POST('/v3/deviceShare/getSharedDeviceList/v2$uselessSegmentBase')
   @Headers({'host': jvss})
   Future<dynamic> getSharedDeviceList(@Body() Map<String, dynamic> body);
+
+  ///查询激活信息
+  @POST('/v3/sysFuncActive/select$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> sysFuncActiveSelect({
+    @Field('deviceNo') required String deviceNo,
+  });
+
+  ///插入或更新激活接口
+  @POST('/v3/sysFuncActive/insertOrUpdate$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> sysFuncActiveInsertOrUpdate({
+    @Field('deviceNo') required String deviceNo,
+    @Field('active') required int active,
+  });
 
   ///查询家庭组列表
   @POST('/v3/userGroup/getUserGroupListByPage$uselessSegmentBase')

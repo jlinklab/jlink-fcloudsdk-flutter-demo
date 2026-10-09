@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/ble_by_sdk/ble_device.dart';
 import 'package:fcloudsdk/door_lock/door_lock_key_value.dart';
+import 'package:fcloudsdk/door_lock/door_lock_parse.dart';
 import 'package:fcloudsdk/utils/bit_util.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/models/device_type.dart';
@@ -147,7 +150,6 @@ class DoorLockHelper {
   //设备是否支持蓝牙netip协议（国内锁）
   //激活过程中直接传BleActiveResponse
   ///原逻辑：device?.devFormatType == 1 || activeResponse?.protocolFormatType == 1
-  ///demo 无设备对象，devFormatType 与 DoorLockKeyValueLocal.protocolFormatType 同源（SDK 激活时存储）
   static bool isSuppportBleNetip(
       {required String deviceId, BleActiveResponse? activeResponse}) {
     return DoorLockKeyValueLocal.protocolFormatType(deviceId: deviceId) == 1 ||
@@ -208,6 +210,67 @@ class DoorLockHelper {
   static closeBlueNetIp({required String sn}) async {
     await JFApi.xcDevice.switchBlueNetIp(deviceId: sn, open: 0);
     debugPrint('close BlueNetIp deivceId:$sn');
+  }
+
+  ///上报门锁在线配置
+  ///rawList: 十六进制字符串数组（几维协议格式）
+  saveOnlineConfig(String deviceId, List<String> rawList) async {
+    ///海外锁走JVSS接口（insertOrUpdateDoorLockInfo）
+    if (isOverSeaDoorLock(deviceId)) {
+      return saveOnlineConfigToJvss(deviceId, rawList);
+    }
+    try {
+      var datas = rawList.map((e) => base64Encode(hexToBytes(e))).toList();
+      var cmd = {
+        "OPDoorLockProCmd": {
+          "DoorConfig": {
+            "RawData": datas,
+          }
+        }
+      };
+      await doorlockAPI.saveOnline(sn: deviceId, data: cmd);
+      debugPrint('door lock saveOnlineConfig: $cmd');
+    } catch (e) {
+      debugPrint('door lock saveOnlineConfig error: $e');
+    }
+  }
+
+  ///上报海外锁在线配置（通过insertOrUpdateDoorLockInfo接口）
+  ///rawList: 几维协议格式的十六进制字符串数组
+  saveOnlineConfigToJvss(String deviceId, List<String> rawList) async {
+    try {
+      var fields = rawListToJvssFields(rawList);
+      await uploadJvssConfig(deviceId, fields);
+      debugPrint('saveOnlineConfigToJvss success');
+    } catch (e) {
+      debugPrint('saveOnlineConfigToJvss error: $e');
+    }
+  }
+
+  ///通过字段Map调用insertOrUpdateDoorLockInfo
+  Future<void> uploadJvssConfig(
+    String deviceId,
+    Map<String, String> fields, {
+    bool? yearSyncState,
+    bool? keySyncState,
+  }) async {
+    await doorlockAPI.insertOrUpdateDoorLockInfo(
+      deviceSn: deviceId,
+      pirDetection: fields['pirDetection'],
+      humanSensor: fields['humanSensor'],
+      autoLock: fields['autoLock'],
+      volume: fields['volume'],
+      openModeTime: fields['openModeTime'],
+      supportDeadbolt: fields['supportDeadbolt'],
+      doorOpenDirection: fields['doorOpenDirection'],
+      doorUnlockMode: fields['doorUnlockMode'],
+      doorFaceAlarmTone: fields['doorFaceAlarmTone'],
+      doorLockAntiPryAlarm: fields['doorLockAntiPryAlarm'],
+      devLanList: fields['devLanList'],
+      deviceLanguage: fields['deviceLanguage'],
+      yearSyncState: yearSyncState,
+      keySyncState: keySyncState,
+    );
   }
 
   ///蓝牙锁激活类型

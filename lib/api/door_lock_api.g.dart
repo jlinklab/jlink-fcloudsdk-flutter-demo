@@ -363,6 +363,111 @@ class _DoorLockAPI implements DoorLockAPI {
   }
 
   @override
+  Future<dynamic> getOrUpdateFirmwareVersion({
+    required String deviceNo,
+    String? ver,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {'deviceNo': deviceNo, 'ver': ver};
+    _data.removeWhere((k, v) => v == null);
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/device/getOrUpdateFirmwareVersion/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<dynamic> insertOrUpdateDoorLockInfo({
+    required String deviceSn,
+    String? password,
+    String? ver,
+    String? volume,
+    String? openModeTime,
+    String? batteryPower,
+    String? autoLock,
+    String? supportDeadbolt,
+    String? doorOpenDirection,
+    String? pirDetection,
+    bool? keySyncState,
+    bool? yearSyncState,
+    String? deviceLanguage,
+    String? devLanList,
+    String? humanSensor,
+    String? doorUnlockMode,
+    String? doorFaceAlarmTone,
+    String? doorLockAntiPryAlarm,
+    bool? lockState,
+    bool? reverseLockState,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {
+      'deviceSn': deviceSn,
+      'password': password,
+      'ver': ver,
+      'volume': volume,
+      'openModeTime': openModeTime,
+      'batteryPower': batteryPower,
+      'autoLock': autoLock,
+      'supportDeadbolt': supportDeadbolt,
+      'doorOpenDirection': doorOpenDirection,
+      'pirDetection': pirDetection,
+      'keySyncState': keySyncState,
+      'yearSyncState': yearSyncState,
+      'deviceLanguage': deviceLanguage,
+      'devLanList': devLanList,
+      'humanSensor': humanSensor,
+      'doorUnlockMode': doorUnlockMode,
+      'doorFaceAlarmTone': doorFaceAlarmTone,
+      'doorLockAntiPryAlarm': doorLockAntiPryAlarm,
+      'lockState': lockState,
+      'reverseLockState': reverseLockState,
+    };
+    _data.removeWhere((k, v) => v == null);
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/doorLockInfo/insertOrUpdateDoorLockInfo/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
   Future<dynamic> syncCaps({
     required String sn,
     required Map<String, dynamic> caps,
@@ -509,6 +614,8 @@ class _DoorLockAPI implements DoorLockAPI {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'host': 'jvss'};
     _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
     final _options = _setStreamType<dynamic>(Options(
       method: 'POST',
       headers: _headers,
@@ -518,7 +625,66 @@ class _DoorLockAPI implements DoorLockAPI {
           _dio.options,
           '/v3/userGroup/getUserGroupListByPage/{timeMillis}/{secret}',
           queryParameters: queryParameters,
-          data: body,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<dynamic> sysFuncActiveSelect({required String deviceNo}) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {'deviceNo': deviceNo};
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/sysFuncActive/select/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<dynamic> sysFuncActiveInsertOrUpdate({
+    required String deviceNo,
+    required int active,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {'deviceNo': deviceNo, 'active': active};
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/sysFuncActive/insertOrUpdate/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
         )
         .copyWith(
             baseUrl: _combineBaseUrls(

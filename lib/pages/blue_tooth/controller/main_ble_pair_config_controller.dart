@@ -45,6 +45,9 @@ class BlePairConfigArgs {
   ///锁版配置能力集 navVersion（'v1.2'时配网后需检查密码管理员）
   final String? navVersion;
 
+  ///第一次保活结果（doCnLockFinish中syncDoorStatus的err，可能为anotherOperating）
+  final DoorLockNetIpOperaterResult? syncDoorStatus;
+
   BlePairConfigArgs({
     required this.model,
     required this.bleDevice,
@@ -53,6 +56,7 @@ class BlePairConfigArgs {
     this.exInfo,
     this.pwdLengthRange,
     this.navVersion,
+    this.syncDoorStatus,
   });
 }
 
@@ -91,6 +95,12 @@ class MainBlePairConfigController extends ChangeNotifier {
   Map<int, String>? doorLockAllConfig;
   bool syncKeyPair = true;
   bool syncJvssBaseYear = true;
+
+  ///锁固件版本（getDeviceVersion，上报JVSS用）
+  String? doorLockVersion;
+
+  ///几维协议在线配置rawList（parseBleDeviceInfoToRaw，上报在线配置用）
+  List<String>? deviceInfoRawList;
 
   ///管理员/用户系统能力集（影子上报用）
   DoorManagerAbility? doorManagerAbility;
@@ -187,8 +197,12 @@ class MainBlePairConfigController extends ChangeNotifier {
       } else {
         ///没网络
         if (isIntegrated) {
-          ///一体化锁直接完成（jlink 还有引导添加管理员步骤，demo未同步）
-          _finish();
+          ///一体化锁：navVersion为v1.2需引导添加管理员
+          if (args.navVersion == 'v1.2') {
+            await _checkAdminAfterDisNet();
+          } else {
+            _finish();
+          }
         } else {
           ///非一体化锁：等待锁端重置 → 假配网
           if (await _checkNeedWaitDoorLockOperation()) {
@@ -283,6 +297,9 @@ class MainBlePairConfigController extends ChangeNotifier {
       var bleUpgrade =
           BleUpgrade(uuid: model.blueUUID, activeSn: model.deviceId);
       var result = await bleUpgrade.getDeviceVersion();
+      if (result != null && result.isNotEmpty) {
+        doorLockVersion = result;
+      }
       _log('获取锁版本: $result');
       await bleUpgrade.dispose();
     } catch (e) {
@@ -294,6 +311,9 @@ class MainBlePairConfigController extends ChangeNotifier {
   _getDoorLockAllConfig() async {
     try {
       doorLockAllConfig = await doorLockBleApi.getDoorLockAllConfig();
+
+      ///解析几维协议在线配置（上报在线配置用）
+      deviceInfoRawList = parseBleDeviceInfoToRaw(doorLockAllConfig);
       _log('获取锁全部配置成功');
     } catch (e) {
       _log('获取锁全部配置失败: $e');
@@ -371,23 +391,24 @@ class MainBlePairConfigController extends ChangeNotifier {
       }
     }
 
-    if (!DoorLockKeyValueLocal.supportLowPowerBle(deviceId: model.deviceId)) {
-      _log('非低功耗锁，跳过用户信息上报');
-      return;
-    }
-
-    if (userInfos.isNotEmpty) {
-      try {
-        await doorlockAPI.saveDoorLockUser(
-            sn: model.deviceId,
-            users: userInfos,
-            operationStr: JvssOperationAction.updateAll.value);
-        _log('上报用户信息成功: ${userInfos.length}条');
-      } catch (e) {
-        _log('上报用户信息失败: $e');
+    if (DoorLockKeyValueLocal.supportLowPowerBle(deviceId: model.deviceId)) {
+      ///低功耗锁：上报用户信息
+      if (userInfos.isNotEmpty) {
+        try {
+          await doorlockAPI.saveDoorLockUser(
+              sn: model.deviceId,
+              users: userInfos,
+              operationStr: JvssOperationAction.updateAll.value);
+          _log('上报用户信息成功: ${userInfos.length}条');
+        } catch (e) {
+          _log('上报用户信息失败: $e');
+        }
       }
+    } else {
+      _log('非低功耗锁，跳过用户信息上报');
     }
 
+    ///开锁方式：低功耗/非低功耗锁都上报
     if (doorInfos.isNotEmpty) {
       try {
         await doorlockAPI.syncUnlockInfo(
@@ -400,6 +421,40 @@ class MainBlePairConfigController extends ChangeNotifier {
         _log('上报开锁方式失败: $e');
       }
     }
+
+    ///固件版本上报
+    if (doorLockVersion != null) {
+      try {
+        await doorlockAPI.getOrUpdateFirmwareVersion(
+            deviceNo: model.deviceId, ver: doorLockVersion!);
+        _log('上报固件版本成功: $doorLockVersion');
+      } catch (e) {
+        _log('上报固件版本失败: $e');
+      }
+    }
+
+    ///上报设备配置（insertOrUpdateDoorLockInfo，含基准年/密钥同步状态）
+    try {
+      var fields = doorLockAllConfig != null
+          ? bleConfigToJvssFields(doorLockAllConfig!)
+          : <String, String>{};
+      await DoorLockHelper.instance.uploadJvssConfig(
+        model.deviceId,
+        fields,
+        yearSyncState: syncJvssBaseYear,
+        keySyncState: syncKeyPair,
+      );
+      _log('上报设备配置成功');
+    } catch (e) {
+      _log('上报设备配置失败: $e');
+    }
+
+    ///上报在线配置
+    if (deviceInfoRawList != null) {
+      await DoorLockHelper.instance
+          .saveOnlineConfig(model.deviceId, deviceInfoRawList!);
+      _log('上报在线配置完成');
+    }
   }
 
   //====================等待锁端重置网络====================
@@ -411,7 +466,12 @@ class MainBlePairConfigController extends ChangeNotifier {
       return true;
     }
 
-    ///非一体化锁：激活后需假配网并且需要锁板进行网络重置操作
+    if (args.bleDevice.extra != 4) {
+      ///只有extra=4（已激活，需假配网且需锁板网络重置）才等待，其余直接跳过
+      return true;
+    }
+
+    ///非一体化锁且extra=4：等待锁端网络重置
     return _waitDoorLockResetNet();
   }
 
@@ -507,7 +567,7 @@ class MainBlePairConfigController extends ChangeNotifier {
   ///真配网
   _startTrueDistribute({required String ssid, required String wifiPwd}) async {
     stage = '蓝牙配网中';
-    _log('真配网开始: ssid=$ssid');
+    _log('配网开始: ssid=$ssid');
     _updateView();
 
     _stopDistribute();
@@ -595,7 +655,7 @@ class MainBlePairConfigController extends ChangeNotifier {
     ///防重复回调（管理员检查等后续流程中才置isDone，期间页面不显示完成）
     _distributeDone = true;
     stage = '配网成功';
-    _log('真配网成功');
+    _log('配网成功');
     _updateView();
 
     ///同步adminToken到服务器
@@ -669,13 +729,15 @@ class MainBlePairConfigController extends ChangeNotifier {
     _log('开始检查密码管理员');
     _updateView();
 
-    DoorLockNetIpOperaterResult? syncStatus;
+    ///使用第一次保活结果（doCnLockFinish中存储的）
+    DoorLockNetIpOperaterResult? syncStatus = args.syncDoorStatus;
     try {
       var result = await DoorLockNetIp.syncDoorStatus(model.deviceId);
+      ///遇到anotherOperating不覆盖已有值
       if (result.item2?.err != DoorLockNetIpOperaterResult.anotherOperating) {
         syncStatus = result.item2?.err;
       }
-      _log('保活结果: ${result.item1}, err=$syncStatus');
+      _log('保活结果: ${result.item1}, err=${result.item2?.err}, syncStatus=$syncStatus');
     } catch (e) {
       _log('保活异常: $e');
     }
@@ -707,8 +769,21 @@ class MainBlePairConfigController extends ChangeNotifier {
     }
 
     try {
-      ///先保活
-      await DoorLockNetIp.syncDoorStatus(model.deviceId);
+      ///先保活，校验保活结果再决定是否添加
+      var syncResult = await DoorLockNetIp.syncDoorStatus(model.deviceId);
+      if (!syncResult.item1) {
+        if (syncResult.item2?.err == DoorLockNetIpOperaterResult.needSync) {
+          ///同步状态过期，提示后结束
+          _log('保活失败：同步状态过期(needSync)');
+          await _showSyncStatusExpiredDialog();
+          _finish();
+          return;
+        }
+        _log('保活失败: ${syncResult.item2?.err}, ${syncResult.item3}');
+        _finish();
+        return;
+      }
+
       var result = await DoorLockNetIp.addDoorOpenType(
         deviceId: model.deviceId,
         type: JvssOperateType.password,
@@ -717,12 +792,32 @@ class MainBlePairConfigController extends ChangeNotifier {
         pwd: pwd,
       );
       if (result.item1 && result.item2?.parse is DookLockOpenTypeUser) {
+        ///锁端取消了添加
+        if ((result.item2?.data.containsKey('Action') ?? false) &&
+            result.item2?.data['Action'] == 'CancelAdd') {
+          _log('锁端取消添加管理员(CancelAdd)');
+          _finish();
+          return;
+        }
         var admin = result.item2!.parse as DookLockOpenTypeUser;
         _log('添加密码管理员成功: id=${admin.id}');
         await _saveAdminToService(admin);
         await _editAdminNickName(admin);
       } else {
-        _log('添加密码管理员失败: ${result.item2?.err}');
+        if (result.item2?.err == DoorLockNetIpOperaterResult.unknowError) {
+          ///取消添加会返回个未知错误，忽略
+          _log('添加管理员返回未知错误(unknowError)，忽略');
+          _finish();
+          return;
+        }
+        if (result.item2?.err == DoorLockNetIpOperaterResult.needSync) {
+          ///同步状态过期，提示后结束
+          _log('添加管理员失败：同步状态过期(needSync)');
+          await _showSyncStatusExpiredDialog();
+          _finish();
+          return;
+        }
+        _log('添加密码管理员失败: ${result.item2?.err}, ${result.item3}');
         _finish();
       }
     } catch (e) {
@@ -826,11 +921,14 @@ class MainBlePairConfigController extends ChangeNotifier {
 
     ///假配网就一条指令很快，防止页面一闪而过，给一些延迟
     await Future.delayed(const Duration(seconds: 1));
+
+    ///收尾：所有锁类型统一登出设备，国内锁额外关闭蓝牙netip
+    _logoutDeviceOnFinish();
   }
 
   ///配网失败
   _onDistributeFail(int? errorCode, {required bool isFake}) {
-    if (isDone) {
+    if (isDone || _distributeDone) {
       return;
     }
     isFail = true;
@@ -839,37 +937,27 @@ class MainBlePairConfigController extends ChangeNotifier {
     _updateView();
   }
 
-  ///失败重试（重新走配网，WiFi会重新输入）
-  retry() async {
-    if (isDone) {
-      return;
-    }
-    isFail = false;
-    stage = '';
-    _log('重试配网');
-    _updateView();
-    if (args.isNetip) {
-      if (await _checkNeedWaitDoorLockOperation()) {
-        await _wifiInputAndDistribute();
-      } else {
-        isFail = true;
-        stage = '等待锁端重置超时';
-        _updateView();
-      }
-    } else {
-      if (args.exInfo?.byte2.supportConnectToWiFi ?? false) {
-        await _wifiInputAndDistribute();
-      } else {
-        _finish();
-      }
-    }
-  }
-
   _finish() {
     isDone = true;
+    isFail = false;
     stage = '完成';
     _log('配对流程完成');
     _updateView();
+
+    ///收尾：所有锁类型统一登出设备，国内锁额外关闭蓝牙netip
+    _logoutDeviceOnFinish();
+  }
+
+  ///收尾登出：所有锁类型统一 xcLoginOut；国内锁额外 closeBlueNetIp
+  _logoutDeviceOnFinish() {
+    try {
+      JFApi.xcDevice.xcLoginOut(deviceId: model.deviceId);
+    } catch (_) {}
+    if (args.isNetip) {
+      try {
+        DoorLockHelper.closeBlueNetIp(sn: model.deviceId);
+      } catch (_) {}
+    }
   }
 
   _stopDistribute() {
@@ -879,7 +967,7 @@ class MainBlePairConfigController extends ChangeNotifier {
 
   //====================弹窗====================
 
-  ///密码管理员密码输入弹窗，取消返回 null
+  ///密码管理员密码输入弹窗
   Future<String?> _showAdminPwdDialog(
       {required int minLength, required int maxLength}) {
     var pwdController = TextEditingController();
@@ -904,10 +992,6 @@ class MainBlePairConfigController extends ChangeNotifier {
             ],
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('跳过'),
-            ),
             TextButton(
               onPressed: () {
                 var pwd = pwdController.text.trim();
@@ -947,6 +1031,26 @@ class MainBlePairConfigController extends ChangeNotifier {
     ).then((value) => value ?? false);
   }
 
+  ///同步状态过期提示弹窗
+  Future<void> _showSyncStatusExpiredDialog() {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('同步状态过期'),
+          content: const Text('门锁状态同步已过期，请稍后在门锁详情页重新同步状态。'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('确定'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   ///管理员昵称输入弹窗，取消返回 null
   Future<String?> _showAdminNickNameDialog() {
     var nameController = TextEditingController();
@@ -961,10 +1065,6 @@ class MainBlePairConfigController extends ChangeNotifier {
             decoration: const InputDecoration(hintText: '请输入管理员昵称'),
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('跳过'),
-            ),
             TextButton(
               onPressed: () {
                 var name = nameController.text.trim();

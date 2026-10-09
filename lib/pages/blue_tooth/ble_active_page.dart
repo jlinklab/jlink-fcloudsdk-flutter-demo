@@ -5,10 +5,9 @@ import 'package:provider/provider.dart';
 import '../../../pages/door_lock/usecase/door_lock_helper.dart';
 import 'controller/main_ble_active_controller.dart';
 import 'controller/main_ble_pair_config_controller.dart';
+import 'ble_pair_config_page.dart';
 
 ///门锁蓝牙激活页
-///流程：连接 → 下发激活(0010) → 激活响应(拿 authKey/token/newSn) → 服务器校验
-///→ 获取能力集(0003) → 通知设备校验结果(0011) → 握手协商密钥 → 成功
 class BleActivePage extends StatefulWidget {
   const BleActivePage({Key? key, required this.bleDevice}) : super(key: key);
 
@@ -76,20 +75,24 @@ class _BleActivePageState extends State<BleActivePage> {
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        ///携带配网参数进入配网流程
                         onPressed: () {
-                          Navigator.of(context).pop(BlePairConfigArgs(
-                            model: controller.model,
-                            ///改写广播包状态后的设备（一体化=2/非一体化=4）
-                            bleDevice: controller.bleDevice,
-                            isNetip: DoorLockHelper.isSuppportBleNetip(
-                                deviceId: controller.model.deviceId,
-                                activeResponse: controller.activeResponse),
-                            ability: controller.doorLockBleAbility,
-                            exInfo: controller.doorLockExInfo,
-                            pwdLengthRange: controller.pwdLengthRange,
-                            navVersion: controller.doorFunction?.navVersion,
-                          ));
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) {
+                            return BlePairConfigPage(
+                              args: BlePairConfigArgs(
+                                model: controller.model,
+                                bleDevice: controller.bleDevice,
+                                isNetip: DoorLockHelper.isSuppportBleNetip(
+                                    deviceId: controller.model.deviceId,
+                                    activeResponse: controller.activeResponse),
+                                ability: controller.doorLockBleAbility,
+                                exInfo: controller.doorLockExInfo,
+                                pwdLengthRange: controller.pwdLengthRange,
+                                navVersion: controller.doorFunction?.navVersion,
+                                syncDoorStatus: controller.syncDoorStatus,
+                              ),
+                            );
+                          }));
                         },
                         child: const Text('去配网'),
                       ),
@@ -102,7 +105,7 @@ class _BleActivePageState extends State<BleActivePage> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context).popUntil((route) => route.isFirst);
                         },
                         child: const Text('返回'),
                       ),

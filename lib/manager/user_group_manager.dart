@@ -59,7 +59,7 @@ class UserGroupManager {
             .toList();
 
         // 默认选中第一个
-        if (_groups.isNotEmpty && _currentGroup == null) {
+        if (_groups.isNotEmpty) {
           _currentGroup = _groups.first;
         }
 

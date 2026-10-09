@@ -58,6 +58,12 @@ abstract class AddDeviceAPI {
     @Field('deviceNo') required String deviceNo,
     @Field('areaCheck') required bool areaCheck,
   });
+
+    /// 删除用户组设备
+  /// {'deviceNo': '设备序列号', 'clearNss': 是否重置设备（默认：false）, 'notifyPms': 删除设备时是否通知Pms发送删除推送（默认:true）};
+  @POST('/v3/device/delDevice$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> deleteDevice(@Body() Map<String, dynamic> body);
 }
 
 AddDeviceAPI addDeviceAPI = AddDeviceAPI(DioConfig.getDio());
