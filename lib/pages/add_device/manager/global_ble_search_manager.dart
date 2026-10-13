@@ -83,9 +83,12 @@ class GlobalBleSearchManager {
   }
 
   unInit() {
+    ///清空SDK上注册的搜索状态/结果监听，防止重新登录后重复注册
+    BleSearch.instance.clearListeners();
     displayUpdateListener.clearListeners();
     stopScan();
     _receiverBlueMessageSub.cancel();
+    clearCache();
   }
 
   checkPermission() async {
@@ -139,7 +142,6 @@ class GlobalBleSearchManager {
     }
   }
 
-  // ignore: unused_element
   clearCache() {
     displayDeviceList.clear();
     allDeviceMap.clear();

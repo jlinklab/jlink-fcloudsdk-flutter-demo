@@ -166,7 +166,10 @@ class DeviceManager {
           device.state = event.state;
           _onDeviceStateChanged?.call();
           //查询低功耗状态放到拿到设备状态之后再去查询，不然不准
-          _queryLowPowerDevStates();
+          if (device.isLowPowerType ||
+              DeviceTypeUtil.isSleepSateDevice(device)) {
+            _queryLowPowerDevStates(device);
+          }
         }
       });
     }
@@ -239,20 +242,15 @@ class DeviceManager {
   }
 
   /// 批量查询低功耗设备的详细休眠状态
-  Future<void> _queryLowPowerDevStates() async {
-    final lowPowerDevices = DeviceManager.instance.allDevices
-        .where((d) => (d.isLowPowerType || DeviceTypeUtil.isSleepSateDevice(d)))
-        .toList();
-    for (var device in lowPowerDevices) {
-      try {
-        final state = await JFApi.xcDevice.xcGetDeviceState(
-          deviceId: device.uuid,
-          stateType: 8,
-        );
-        device.sleepState = DeviceSleepState.from(state);
-      } catch (e) {
-        debugPrint('查询低功耗设备状态失败: ${device.uuid}, $e');
-      }
+  Future<void> _queryLowPowerDevStates(Device device) async {
+    try {
+      final state = await JFApi.xcDevice.xcGetDeviceState(
+        deviceId: device.uuid,
+        stateType: 8,
+      );
+      device.sleepState = DeviceSleepState.from(state);
+    } catch (e) {
+      debugPrint('查询低功耗设备状态失败: ${device.uuid}, $e');
     }
   }
 

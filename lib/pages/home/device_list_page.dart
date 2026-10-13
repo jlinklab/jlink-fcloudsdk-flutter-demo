@@ -303,7 +303,7 @@ class _DeviceCard extends StatelessWidget {
   /// 导航到预览页面（低功耗设备需先唤醒）
   void _navigateToPreview(BuildContext context) async {
     if (DoorLockHelper.isDoorLock(device.uuid)) {
-      //
+      // 门锁不走低功耗唤醒/离线判断，直接跳转门锁首页
     } else if (_isLowPower) {
       final sleepState = _getSleepState();
 

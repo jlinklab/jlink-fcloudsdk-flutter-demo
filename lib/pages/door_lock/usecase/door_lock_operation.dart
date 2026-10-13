@@ -6,7 +6,6 @@ import 'package:fcloudsdk/door_lock/door_lock_ble_api.dart';
 import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
 import 'package:fcloudsdk/door_lock/door_lock_key_value.dart';
 import 'package:fcloudsdk/door_lock/door_lock_netip_api.dart';
-import 'package:fcloudsdk/door_lock/door_lock_netip_model.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk_example/common/code_prase.dart';
 import 'package:fcloudsdk_example/common/event.dart';
@@ -16,14 +15,9 @@ import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/manager/low_power_dev_helper.dart';
 import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/pages/add_device/manager/global_ble_search_manager.dart';
-import 'package:fcloudsdk_example/pages/door_lock/model/door_lock_custom_model.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 import 'package:flutter/material.dart';
-import 'package:tuple/tuple.dart';
-
-///本次手动操作的标志
-bool manualTag = false;
 
 ///门锁控制器基类
 abstract class DoorLockPageController extends ChangeNotifier
@@ -254,8 +248,6 @@ mixin DoorLockOperationMixin on ChangeNotifier {
 
   ///关锁
   Future<bool> lock({bool showLoading = true}) async {
-    manualTag = true;
-
     // 重试计数：BLE→WiFi→BLE 或 WiFi→BLE→WiFi，最多重试2次
     int retryCount = 0;
 
@@ -347,8 +339,6 @@ mixin DoorLockOperationMixin on ChangeNotifier {
 
   ///开锁
   Future<bool> unlock({bool showLoading = true}) async {
-    manualTag = true;
-
     // 重试计数：BLE→WiFi→BLE 或 WiFi→BLE→WiFi，最多重试2次
     int retryCount = 0;
 
@@ -448,85 +438,5 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       }
     }
     return false;
-  }
-
-  ///远程开锁结果等待序号，新一轮开锁使旧等待作废
-  int _remoteUnlockWaitSeq = 0;
-
-  ///开锁命令发送成功不代表开锁成功
-  ///门已反锁时设备会拒绝开锁并推送 reverseLockFail
-  ///正常开锁成功推送remoteUnlock，等待mqtt真实结果
-  ///需要先订阅mqtt，有可能推送早于命令结果到达
-  RemoteUnlockWait _subscribeUnlockMqtt() {
-    final seq = ++_remoteUnlockWaitSeq;
-    LogUtils.doorLock.log('unlock wait mqtt result begin, seq: $seq');
-    final completer = Completer<bool>();
-    StreamSubscription<RemoteUnlockResultEvent>? unlockSub;
-    StreamSubscription<ReverseLockFailEvent>? reverseSub;
-    Timer? timer;
-
-    void complete(bool value) {
-      if (completer.isCompleted) return;
-      timer?.cancel();
-      unlockSub?.cancel();
-      reverseSub?.cancel();
-      completer.complete(value);
-    }
-
-    //兜底超时不立即启动，等命令受理后（startFallbackTimer）才起算
-    //避免命令未被受理（如设备睡眠超时）时，兜底定时器先到误报成功
-    void startFallbackTimer() {
-      timer = Timer(const Duration(seconds: 12), () {
-        if (seq != _remoteUnlockWaitSeq) {
-          //已有新一轮开锁，旧等待静默作废
-          LogUtils.doorLock
-              .log('unlock wait mqtt timeout, seq: $seq is stale, discard');
-          complete(false);
-          return;
-        }
-        //超时未收到结果推送，真实结果未知，静默处理不提示
-        LogUtils.doorLock
-            .log('unlock wait mqtt timeout, seq: $seq, as unknown');
-        KToast.dismiss();
-        complete(false);
-      });
-    }
-
-    unlockSub = eventBus.on<RemoteUnlockResultEvent>().listen((event) {
-      if (event.deviceId != deviceId || seq != _remoteUnlockWaitSeq) return;
-      LogUtils.doorLock
-          .log('unlock mqtt remoteUnlock result: ${event.success}, seq: $seq');
-      if (event.success) {
-        KToast.show();
-        complete(true);
-      } else {
-        ///失败不提示
-        KToast.dismiss();
-        complete(false);
-      }
-    });
-
-    reverseSub = eventBus.on<ReverseLockFailEvent>().listen((event) {
-      if (event.deviceId != deviceId || seq != _remoteUnlockWaitSeq) return;
-      LogUtils.doorLock
-          .log('unlock mqtt reverseLockFail, door is deadbolted, seq: $seq');
-      KToast.show(
-        status: TR.current.tr_doorlock_open_failed_with_deadbolt,
-      );
-      complete(false);
-    });
-
-    return RemoteUnlockWait(
-      future: completer.future,
-      startFallbackTimer: startFallbackTimer,
-      cancel: () {
-        LogUtils.doorLock
-            .log('unlock wait mqtt cancel, cmd not accepted, seq: $seq');
-        timer?.cancel();
-        unlockSub?.cancel();
-        reverseSub?.cancel();
-        if (!completer.isCompleted) completer.complete(false);
-      },
-    );
   }
 }

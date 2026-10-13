@@ -541,8 +541,9 @@ enum DevicePermission {
 
 /// 低功耗设备休眠状态
 ///
-/// value 直接对齐 SDK 接口 [JFApi.xcDevice.xcGetDeviceState] (stateType: 8) 返回值：
-///   -3 没权限 / -2 不支持 / -1 离线 / 0 未知 / 1 唤醒 / 2 睡眠(可唤醒) / 3 不能被唤醒的休眠 / 4 正在准备休眠
+/// -3~3 直接对齐 SDK 接口 [JFApi.xcDevice.xcGetDeviceState] (stateType: 8) 返回值：
+///   -3 没权限 / -2 不支持 / -1 离线 / 0 未知 / 1 唤醒 / 2 睡眠(可唤醒) / 3 不能被唤醒的休眠
+/// 10/11/12 为 app 内部逻辑状态
 ///
 enum DeviceSleepState {
   ///没权限
