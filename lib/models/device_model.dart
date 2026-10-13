@@ -1,4 +1,11 @@
+import 'package:fcloudsdk/ble_by_sdk/ble_device.dart';
+import 'package:fcloudsdk/door_lock/door_lock_ble_model.dart';
+import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
+import 'package:fcloudsdk/door_lock/door_lock_key_value.dart';
+import 'package:fcloudsdk/door_lock/door_lock_shadow.dart';
 import 'package:fcloudsdk/utils/extensions.dart';
+import 'package:fcloudsdk_example/pages/door_lock/repository/door_lock_local.dart';
+import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 
 import '../pages/cloud/device_cloud_service_manager.dart';
 import '../pages/cloud/model/device_cloud.dart';
@@ -36,6 +43,9 @@ class Device {
   ///额外添加
   int state = 0;
 
+  /// 休眠状态 0 未知 1 唤醒 2 睡眠 3 不能被唤醒的休眠 4正在准备休眠
+  DeviceSleepState? sleepState;
+
   ///设备密码
   String password = '';
 
@@ -67,6 +77,75 @@ class Device {
 
   String? localUiKey;
 
+  ///门锁指令状态
+  DoolockCmdStatus doolockCmdStatus = DoolockCmdStatus.offline;
+
+  ///锁板能力集集合
+  DoorFunction? doorFunction;
+
+  ///锁板能力集(EB)
+  DoorLockBleAbility? doorLockBleAbility;
+
+  ///锁板额外产品信息
+  DoorLockExInfo? doorLockExInfo;
+
+  ///管理员系统能力集
+  DoorManagerAbility? doorManagerAbility;
+
+  ///用户系统能力
+  DoorManagerAbility? doorUserAbility;
+
+  ///锁板用户密码长度区间
+  DoorLockPwdLengthRange? doorLockPwdLengthRange;
+
+  ///控制门锁透传动作、版本对应关系
+  List<UserManagerActionVersion>? doorLockActionVerList;
+
+  ///蓝牙是否在线
+  bool blueOnline = false;
+
+  ///蓝牙uuid（iOS外设peripheralIdentifier）
+  String? blueUUid;
+
+  ///支持锁板串口升级能力
+  bool? opTrans;
+
+  ///锁板额外pid
+  String? qsPid;
+
+  ///导向版本，无此字段时默认v1.0， v1.2版本需要引导添加管理员 v9999不使用该功能
+  String? navVersion;
+
+  /// 支持远程人脸录入
+  bool? supportRtFace;
+
+  ///旧版锁能力集
+  Dlctrl? dlctrl;
+
+  int? memberId;
+
+  ///锁开合状态 （true 表示锁闭合，false 表示锁打开）
+  bool? lockState;
+
+  ///锁反锁状态 （true 表示反锁，false 表示未反锁）
+  bool? reverseLockState;
+
+  ///密钥同步状态
+  bool keySyncState = false;
+
+  ///基准年同步状态
+  bool yearSyncState = false;
+
+  ///电量
+  int? level;
+
+  ///蓝牙搜索包
+  BleSearchDeviceBySDK? searchResult;
+
+  String? devMac;
+
+  String? peripheralIdentifier;
+
   ///整个云服务状态
   DeviceCloudService? cloudService({int? channel}) =>
       DeviceCloudServiceManager.instance
@@ -78,6 +157,16 @@ class Device {
           .getCloudService(deviceId: uuid, channel: channel)
           ?.cloudServerStatus;
 
+  ///门锁是否配网
+  bool get doorlockIsConfigNet =>
+      DoorLockLocalCache.doorlockIsConfigNet(deviceId: uuid);
+
+  ///是否处于蓝牙netip可用状态
+  bool get isBlueNetIpEnable =>
+      DoorLockHelper.isSuppportBleNetip(deviceId: uuid) &&
+      !doorlockIsConfigNet &&
+      blueOnline;
+
   ///主账号id（分享的设备）
   String? get masterId {
     return null;
@@ -86,12 +175,16 @@ class Device {
   /// 是否为低功耗类型
   bool get isLowPowerType => (deviceType == 21 || deviceType == 285409282);
 
+  ///激活前的sn
+  String get oldDeviceId => DoorLockKeyValueLocal.oldDeviceNo(deviceId: uuid);
+
   Device({
     required this.uuid,
     this.nickname,
     this.userName,
     this.type,
     this.state = 0,
+    this.sleepState,
     this.password = '',
     this.pid = '',
     this.deviceType = 0,
@@ -101,6 +194,9 @@ class Device {
     this.propList,
     this.parentPid,
     this.localUiKey,
+    this.memberId,
+    this.devMac,
+    this.peripheralIdentifier,
   });
 
   factory Device.fromJson(Map<String, dynamic> json) {
@@ -153,6 +249,9 @@ class Device {
     device.password = json['devPassWord'] ?? json['password'] ?? '';
     device.parentPid = json['parentPid'];
     device.localUiKey = json['localUiKey'];
+    device.memberId = json['memberId'];
+    device.devMac = json['devMac'];
+    device.peripheralIdentifier = json['peripheralIdentifier'];
     return device;
   }
 
@@ -170,6 +269,9 @@ class Device {
     data['password'] = password;
     data['parentPid'] = parentPid;
     data['localUiKey'] = localUiKey;
+    data['memberId'] = memberId;
+    data['devMac'] = devMac;
+    data['peripheralIdentifier'] = peripheralIdentifier;
     return data;
   }
 
@@ -255,6 +357,7 @@ class SharedDevice extends Device {
     super.pid = '',
     super.deviceType = 0,
     super.state = -1,
+    super.sleepState,
     super.fromShare = true,
     super.supportToken = false,
     super.adminToken = '',
@@ -434,6 +537,55 @@ enum DevicePermission {
 
   // 修改云服务配置
   DP_CLoudConfig
+}
+
+/// 低功耗设备休眠状态
+///
+/// value 直接对齐 SDK 接口 [JFApi.xcDevice.xcGetDeviceState] (stateType: 8) 返回值：
+///   -3 没权限 / -2 不支持 / -1 离线 / 0 未知 / 1 唤醒 / 2 睡眠(可唤醒) / 3 不能被唤醒的休眠 / 4 正在准备休眠
+///
+enum DeviceSleepState {
+  ///没权限
+  noPermission(-3),
+
+  ///不支持
+  unSupport(-2),
+
+  ///离线
+  offline(-1),
+
+  ///未知
+  unknown(0),
+
+  ///唤醒
+  wakeUp(1),
+
+  ///睡眠（浅休眠，可唤醒）
+  lightSleep(2),
+
+  ///不能被唤醒的休眠（深度休眠）
+  deepSleep(3),
+
+  /// 即将休眠
+  preSleep(10), //【内部逻辑定义的状态】
+
+  /// 即将唤醒
+  waking(11), //【内部逻辑定义的状态】
+
+  /// 休眠中
+  sleeping(12); //【内部逻辑定义的状态】
+
+  final int value;
+
+  const DeviceSleepState(this.value);
+
+  static DeviceSleepState from(int index) {
+    if (index <= -1 || index > 4) {
+      return DeviceSleepState.unknown;
+    }
+    return DeviceSleepState.values
+        .firstWhere((element) => element.value == index);
+  }
 }
 
 /// 前端设备状态（NVR 通道状态）

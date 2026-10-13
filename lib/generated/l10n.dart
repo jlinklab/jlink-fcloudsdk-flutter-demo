@@ -6942,6 +6942,116 @@ class TR {
   String get recordTypeAlarm {
     return Intl.message('报警录像', name: 'recordTypeAlarm', desc: '', args: []);
   }
+
+  /// `关锁失败`
+  String get tr_player_lock_failed {
+    return Intl.message(
+      '关锁失败',
+      name: 'tr_player_lock_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `关锁成功`
+  String get tr_player_lock_succeed {
+    return Intl.message(
+      '关锁成功',
+      name: 'tr_player_lock_succeed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `门已反锁，开锁失败`
+  String get tr_doorlock_open_failed_with_deadbolt {
+    return Intl.message(
+      '门已反锁，开锁失败',
+      name: 'tr_doorlock_open_failed_with_deadbolt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `开锁成功`
+  String get tr_player_unlock_succeed {
+    return Intl.message(
+      '开锁成功',
+      name: 'tr_player_unlock_succeed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `开锁失败`
+  String get tr_player_unlock_failed {
+    return Intl.message(
+      '开锁失败',
+      name: 'tr_player_unlock_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `验证是您本人在操作`
+  String get tr_lib_sdk_check_defend_title {
+    return Intl.message(
+      '验证是您本人在操作',
+      name: 'tr_lib_sdk_check_defend_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `您需输入设备PIN码后才能继续`
+  String get tr_lib_sdk_check_defend_sub_title {
+    return Intl.message(
+      '您需输入设备PIN码后才能继续',
+      name: 'tr_lib_sdk_check_defend_sub_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `安全验证`
+  String get tr_common_security_verification {
+    return Intl.message(
+      '安全验证',
+      name: 'tr_common_security_verification',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请确认蓝牙是否打开`
+  String get doorlock_bluetooth_disconnect_tip {
+    return Intl.message(
+      '请确认蓝牙是否打开',
+      name: 'doorlock_bluetooth_disconnect_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `您没有在门外操作按键完成配网操作，门锁暂时无法正常使用`
+  String get tr_doorlock_uninit_can_not_operation_tips_ios {
+    return Intl.message(
+      '您没有在门外操作按键完成配网操作，门锁暂时无法正常使用',
+      name: 'tr_doorlock_uninit_can_not_operation_tips_ios',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前设备可能不在附近或已休眠，是否继续操作？`
+  String get tr_ble_doorlock_connect_fail_confirm_tips {
+    return Intl.message(
+      '当前设备可能不在附近或已休眠，是否继续操作？',
+      name: 'tr_ble_doorlock_connect_fail_confirm_tips',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

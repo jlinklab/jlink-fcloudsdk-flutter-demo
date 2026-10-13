@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/add_device/manager/global_ble_search_manager.dart';
 import 'package:fcloudsdk_example/pages/home/device_list_page.dart';
 
 import 'pages/account/account_info_page.dart';
@@ -37,6 +38,9 @@ class _HomePageState extends State<HomePage>
     );
     errorCodePage = const ErrorCodePage();
     accountInfoPage = const AccountInfoPage();
+
+    ///蓝牙搜索监听
+    GlobalBleSearchManager.instance.init();
     super.initState();
   }
 

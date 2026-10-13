@@ -372,7 +372,10 @@ class _DoorLockAPI implements DoorLockAPI {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{r'host': 'jvss'};
     _headers.removeWhere((k, v) => v == null);
-    final _data = {'deviceNo': deviceNo, 'ver': ver};
+    final _data = {
+      'deviceNo': deviceNo,
+      'ver': ver,
+    };
     _data.removeWhere((k, v) => v == null);
     final _options = _setStreamType<dynamic>(Options(
       method: 'POST',
@@ -609,35 +612,6 @@ class _DoorLockAPI implements DoorLockAPI {
   }
 
   @override
-  Future<dynamic> getUserGroupListByPage(Map<String, dynamic> body) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'host': 'jvss'};
-    _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
-    _data.addAll(body);
-    final _options = _setStreamType<dynamic>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-    )
-        .compose(
-          _dio.options,
-          '/v3/userGroup/getUserGroupListByPage/{timeMillis}/{secret}',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
-    final _result = await _dio.fetch(_options);
-    final _value = _result.data;
-    return _value;
-  }
-
-  @override
   Future<dynamic> sysFuncActiveSelect({required String deviceNo}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -674,7 +648,10 @@ class _DoorLockAPI implements DoorLockAPI {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'host': 'jvss'};
     _headers.removeWhere((k, v) => v == null);
-    final _data = {'deviceNo': deviceNo, 'active': active};
+    final _data = {
+      'deviceNo': deviceNo,
+      'active': active,
+    };
     final _options = _setStreamType<dynamic>(Options(
       method: 'POST',
       headers: _headers,
@@ -683,6 +660,71 @@ class _DoorLockAPI implements DoorLockAPI {
         .compose(
           _dio.options,
           '/v3/sysFuncActive/insertOrUpdate/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<dynamic> getUserGroupListByPage(Map<String, dynamic> body) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/userGroup/getUserGroupListByPage/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<dynamic> getDoorLockInfo({
+    required String deviceSn,
+    String? parentPid,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {
+      'deviceSn': deviceSn,
+      'parentPid': parentPid,
+    };
+    _data.removeWhere((k, v) => v == null);
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/doorLockInfo/selOne/{timeMillis}/{secret}',
           queryParameters: queryParameters,
           data: _data,
         )

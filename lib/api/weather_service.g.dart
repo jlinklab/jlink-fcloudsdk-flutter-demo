@@ -6,10 +6,14 @@ part of 'weather_service.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter
 
 class _WeatherService implements WeatherService {
-  _WeatherService(this._dio, {this.baseUrl, this.errorLogger}) {
+  _WeatherService(
+    this._dio, {
+    this.baseUrl,
+    this.errorLogger,
+  }) {
     baseUrl ??= 'https://jlink-weather.jftechws.com';
   }
 
@@ -26,16 +30,22 @@ class _WeatherService implements WeatherService {
     queryParameters.addAll(body);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<dynamic>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/jfweather/weather/queryWeather',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/jfweather/weather/queryWeather',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
     final _result = await _dio.fetch(_options);
     final _value = _result.data;
     return _value;
@@ -49,19 +59,32 @@ class _WeatherService implements WeatherService {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'encryot': false, r'decrypt': false};
+    final _headers = <String, dynamic>{
+      r'encryot': false,
+      r'decrypt': false,
+    };
     _headers.removeWhere((k, v) => v == null);
-    final _data = {'sn': sn, 'lat': lat, 'lon': lon};
-    final _options = _setStreamType<dynamic>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/jfweather/device/latlon/save',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
+    final _data = {
+      'sn': sn,
+      'lat': lat,
+      'lon': lon,
+    };
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/jfweather/device/latlon/save',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
     final _result = await _dio.fetch(_options);
     final _value = _result.data;
     return _value;
@@ -74,21 +97,23 @@ class _WeatherService implements WeatherService {
     final _headers = <String, dynamic>{r'Content-Type': 'application/x-plist'};
     _headers.removeWhere((k, v) => v == null);
     final _data = aesBase64Body;
-    final _options = _setStreamType<dynamic>(
-      Options(
-        method: 'POST',
-        headers: _headers,
-        extra: _extra,
-        contentType: 'application/x-plist',
-      )
-          .compose(
-            _dio.options,
-            '/jfweather/device/latlon/report',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'application/x-plist',
+    )
+        .compose(
+          _dio.options,
+          '/jfweather/device/latlon/report',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
     final _result = await _dio.fetch(_options);
     final _value = _result.data;
     return _value;
@@ -101,21 +126,23 @@ class _WeatherService implements WeatherService {
     final _headers = <String, dynamic>{r'Content-Type': 'application/x-plist'};
     _headers.removeWhere((k, v) => v == null);
     final _data = aesBase64Body;
-    final _options = _setStreamType<dynamic>(
-      Options(
-        method: 'POST',
-        headers: _headers,
-        extra: _extra,
-        contentType: 'application/x-plist',
-      )
-          .compose(
-            _dio.options,
-            '/jfweather/device/latlon/detail',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'application/x-plist',
+    )
+        .compose(
+          _dio.options,
+          '/jfweather/device/latlon/detail',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
     final _result = await _dio.fetch(_options);
     final _value = _result.data;
     return _value;
@@ -134,7 +161,10 @@ class _WeatherService implements WeatherService {
     return requestOptions;
   }
 
-  String _combineBaseUrls(String dioBaseUrl, String? baseUrl) {
+  String _combineBaseUrls(
+    String dioBaseUrl,
+    String? baseUrl,
+  ) {
     if (baseUrl == null || baseUrl.trim().isEmpty) {
       return dioBaseUrl;
     }

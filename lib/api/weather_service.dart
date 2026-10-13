@@ -23,15 +23,6 @@ abstract class WeatherService {
     @Field('lon') required String lon,
   });
 
-  ///设备区域信息上报
-  @POST('/jfweather/device/latlon/report')
-  @Headers({'Content-Type': 'application/x-plist'})
-  Future<dynamic> reportDeviceLatlon(@Body() String aesBase64Body);
-
-  ///设备区域信息获取
-  @POST('/jfweather/device/latlon/detail')
-  @Headers({'Content-Type': 'application/x-plist'})
-  Future<dynamic> getDeviceLatlonDetail(@Body() String aesBase64Body);
 }
 
 WeatherService weatherService = WeatherService(DioConfig.getDio());

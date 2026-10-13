@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../../api/door_lock_api.dart';
+import '../../../manager/device_manager.dart';
 import '../../../pages/door_lock/usecase/door_lock_helper.dart';
 import '../../add_device/models/add_device_center.dart';
 
@@ -733,11 +734,13 @@ class MainBlePairConfigController extends ChangeNotifier {
     DoorLockNetIpOperaterResult? syncStatus = args.syncDoorStatus;
     try {
       var result = await DoorLockNetIp.syncDoorStatus(model.deviceId);
+
       ///遇到anotherOperating不覆盖已有值
       if (result.item2?.err != DoorLockNetIpOperaterResult.anotherOperating) {
         syncStatus = result.item2?.err;
       }
-      _log('保活结果: ${result.item1}, err=${result.item2?.err}, syncStatus=$syncStatus');
+      _log(
+          '保活结果: ${result.item1}, err=${result.item2?.err}, syncStatus=$syncStatus');
     } catch (e) {
       _log('保活异常: $e');
     }
@@ -941,14 +944,14 @@ class MainBlePairConfigController extends ChangeNotifier {
     isDone = true;
     isFail = false;
     stage = '完成';
-    _log('配对流程完成');
+    _log('配网流程完成');
     _updateView();
 
     ///收尾：所有锁类型统一登出设备，国内锁额外关闭蓝牙netip
     _logoutDeviceOnFinish();
   }
 
-  ///收尾登出：所有锁类型统一 xcLoginOut；国内锁额外 closeBlueNetIp
+  ///收尾登出：所有锁类型统一 xcLoginOut；国内锁额外 closeBlueNetIp；
   _logoutDeviceOnFinish() {
     try {
       JFApi.xcDevice.xcLoginOut(deviceId: model.deviceId);
@@ -957,6 +960,14 @@ class MainBlePairConfigController extends ChangeNotifier {
       try {
         DoorLockHelper.closeBlueNetIp(sn: model.deviceId);
       } catch (_) {}
+    }
+
+    ///配对完成后，默认认为蓝牙在线
+    if (DoorLockHelper.showBlueOnlineState(deviceId: model.deviceId)) {
+      DeviceManager.instance.markBlueOnline(
+        deviceId: model.deviceId,
+        blueUUid: model.blueUUID.isNotEmpty ? model.blueUUID : null,
+      );
     }
   }
 

@@ -3,21 +3,25 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/ble_by_sdk/ble_device.dart';
+import 'package:fcloudsdk/door_lock/door_lock_ble_model.dart';
+import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
 import 'package:fcloudsdk/door_lock/door_lock_key_value.dart';
 import 'package:fcloudsdk/door_lock/door_lock_parse.dart';
+import 'package:fcloudsdk/door_lock/door_lock_shadow.dart';
 import 'package:fcloudsdk/utils/bit_util.dart';
+import 'package:fcloudsdk/utils/extensions.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
+import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/models/device_type.dart';
+import 'package:fcloudsdk_example/pages/add_device/manager/global_ble_search_manager.dart';
+import 'package:fcloudsdk_example/pages/door_lock/repository/door_lock_local.dart';
+import 'package:fcloudsdk_example/utils/map_utils.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../api/door_lock_api.dart';
 import '../../add_device/models/scanned_device.dart';
 
 ///门锁辅助类
-///差异说明：
-///1. demo 无 DeviceListCenter（设备未入库），涉及设备对象查询的部分改用 DoorLockKeyValueLocal 等价判断；
-///2. demo 无 DoorLockLocalCache，配网状态仅上报服务器；
-///3. Log.d 日志改为 debugPrint。
 class DoorLockHelper {
   static final DoorLockHelper instance = DoorLockHelper._();
 
@@ -72,6 +76,19 @@ class DoorLockHelper {
     return propMatch || isOverSeaMatch || matchAbility;
   }
 
+  ///是否展示蓝牙在线状态
+  ///蓝牙锁或未配网的锁需要展示蓝牙在线状态；设备尚未拉取到列表中时默认 true（如配网刚结束）
+  static bool showBlueOnlineState({required String deviceId}) {
+    var device = DeviceManager.instance.getDevice(deviceId: deviceId);
+    if (device == null) {
+      return true;
+    }
+    if (isBleDoorLock(deviceId)) {
+      return true;
+    }
+    return !device.doorlockIsConfigNet;
+  }
+
   ///是否海外锁
   static isOverSeaDoorLock(String deviceId, {String? parentPid}) {
     var device = DeviceManager.instance.getDevice(deviceId: deviceId);
@@ -85,6 +102,14 @@ class DoorLockHelper {
             device?.localUiKey == DeviceLocalUIKeyType.BK100W_NoVideo.type;
 
     return pidMatch || matchLocalUiKey;
+  }
+
+  ///是否BK海外锁
+  static isBKOverseaDoorLock(String deviceId) {
+    var device = DeviceManager.instance.getDevice(deviceId: deviceId);
+    return device?.parentPid == 'HAVLK001X0001001' ||
+        device?.parentPid == 'HAVLK0020000100V' &&
+            device?.localUiKey == DeviceLocalUIKeyType.BK100W_NoVideo.type;
   }
 
   ///是否低功耗蓝牙锁
@@ -116,6 +141,8 @@ class DoorLockHelper {
           deviceSn: deviceId,
           connectNetType: connectNetType,
           netProvision: netProvision);
+      DoorLockLocalCache.saveDoorlockIsConfigNet(deviceId, isConfig);
+      DoorLockLocalCache.saveDoorlockIsFakeConfigNet(deviceId, isFake);
       debugPrint(
           'setDeviceNetProvision: {deviceId: $deviceId, connect: $isConfig, isFake:$isFake}');
     } catch (e) {
@@ -134,12 +161,19 @@ class DoorLockHelper {
       if (result is List && result.isNotEmpty) {
         var map = result.first;
         if (map is Map) {
-          var netProvision = map['netProvision'];
+          var netProvision = MapParser.readBool(map, 'netProvision');
           if (netProvision != null) {
-            isConfigNet = netProvision == true || netProvision == 1;
+            isConfigNet = netProvision;
+
+            if (isConfigNet == false) {
+              var connectNetType = MapParser.readString(map, 'connectNetType');
+              DoorLockLocalCache.saveDoorlockIsFakeConfigNet(
+                  deviceId, connectNetType == 'FAKE_CONNECT_NET');
+            }
           }
         }
       }
+      DoorLockLocalCache.saveDoorlockIsConfigNet(deviceId, isConfigNet);
       return isConfigNet;
     } catch (e) {
       ///
@@ -288,5 +322,229 @@ class DoorLockHelper {
       return isLastTime ? 02 : 03;
     }
     return 00;
+  }
+
+  ///刷新门锁状态
+  static refreshDoorLockStatus(String deviceId, {bool queryNet = false}) async {
+    var device = DeviceManager.instance.getDevice(deviceId: deviceId);
+    if (device != null) {
+      ///配网状态
+      queryNet ? await getDeviceNetProvision(deviceId) : null;
+
+      ///门锁指令状态
+      device.doolockCmdStatus = getCmdStatus(deviceId);
+    }
+  }
+
+  ///门锁指令状态
+  static DoolockCmdStatus getCmdStatus(String deviceId) {
+    var device = DeviceManager.instance.getDevice(deviceId: deviceId);
+    if (device == null) {
+      return DoolockCmdStatus.offline;
+    }
+
+    var wifiOnline = device.state > 0 && device.doorlockIsConfigNet;
+
+    ///支持蓝牙netip协议的锁
+    if (DoorLockHelper.isSuppportBleNetip(deviceId: deviceId)) {
+      if (device.blueOnline) {
+        return DoolockCmdStatus.onlyWifi;
+      } else {
+        if (wifiOnline) {
+          if (device.sleepState == DeviceSleepState.deepSleep) {
+            return DoolockCmdStatus.offline;
+          }
+          return DoolockCmdStatus.onlyWifi;
+        }
+      }
+      return DoolockCmdStatus.offline;
+    }
+
+    ///其他协议的蓝牙锁
+    if (wifiOnline && device.blueOnline) {
+      if (device.sleepState == DeviceSleepState.deepSleep) {
+        return DoolockCmdStatus.onlyBlue;
+      }
+      return DoolockCmdStatus.wifiAndBlue;
+    }
+    if (wifiOnline && !device.blueOnline) {
+      if (device.sleepState == DeviceSleepState.deepSleep) {
+        return DoolockCmdStatus.offline;
+      }
+      return DoolockCmdStatus.onlyWifi;
+    }
+    if (!wifiOnline && device.blueOnline) {
+      return DoolockCmdStatus.onlyBlue;
+    }
+    return DoolockCmdStatus.offline;
+  }
+
+  //是否显示远程关锁
+  static bool showRemoteLock({required String deviceId}) {
+    var device = DeviceManager.instance.getDevice(deviceId: deviceId);
+    if (device?.doorLockBleAbility == null) {
+      return false;
+    }
+    if (isOverSeaDoorLock(deviceId) == false) {
+      ///国内只判断一个能力
+      return device!.doorLockBleAbility!.byte3.supportRemoteLock;
+    }
+    if (device!.doorlockIsConfigNet) {
+      if (device.doorLockBleAbility!.byte3.supportRemoteLock ||
+          device.doorLockBleAbility!.byte4.supportBlueToothLock) {
+        return true;
+      }
+      return false;
+    } else {
+      if (device.doorLockBleAbility!.byte4.supportBlueToothLock) {
+        return true;
+      }
+      return false;
+    }
+  }
+
+  ///门锁能力集-影子服务
+  static getFuncFromShadowIfNeed(String deviceId,
+      {bool queryNew = false}) async {
+    await DoorLockShadow.getShadowIfNeed(deviceId, queryNew: queryNew);
+    var result = parseDoorFunction(deviceId);
+    if (!result) {
+      parseDlctrl(deviceId);
+      return;
+    }
+    var device = DeviceManager.instance.getDevice(deviceId: deviceId);
+    if (device?.doorLockBleAbility == null) {
+      parseDlctrl(deviceId);
+    }
+  }
+
+  ///解析本地影子服务门锁能力集
+  static bool parseDoorFunction(String deviceId) {
+    var device = DeviceManager.instance.getDevice(deviceId: deviceId) ??
+        Device(uuid: deviceId);
+    var result = DoorLockShadow.parseDoorFunction(deviceId);
+    if (result == null) {
+      return false;
+    }
+    device.doorFunction = result;
+    device.doorLockBleAbility = result.doorLockBleAbility;
+    device.doorLockExInfo = result.doorLockExInfo;
+    device.doorManagerAbility = result.doorManagerAbility;
+    device.doorUserAbility = result.doorUserAbility;
+    device.doorLockPwdLengthRange = result.doorLockPwdLengthRange;
+    device.doorLockActionVerList = result.userManagerActionVersionList;
+    device.opTrans = result.opTrans;
+    device.qsPid = result.qsPid;
+    device.navVersion = result.navVersion;
+    device.supportRtFace = result.supportRtFace;
+    return true;
+  }
+
+  ///解析旧版本地影子服务门锁能力集
+  static bool parseDlctrl(String deviceId) {
+    var device = DeviceManager.instance.getDevice(deviceId: deviceId) ??
+        Device(uuid: deviceId);
+    var dlctrl = DoorLockShadow.parseDlctrl(deviceId);
+    if (dlctrl == null) {
+      return false;
+    }
+    device.dlctrl = dlctrl;
+
+    if (dlctrl.doorFunction != null) {
+      var result = dlctrl.doorFunction!;
+      device.doorFunction = result;
+      device.doorLockBleAbility = result.doorLockBleAbility;
+      device.doorLockExInfo = result.doorLockExInfo;
+      device.doorManagerAbility = result.doorManagerAbility;
+      device.doorUserAbility = result.doorUserAbility;
+      device.doorLockPwdLengthRange = result.doorLockPwdLengthRange;
+      device.doorLockActionVerList = result.userManagerActionVersionList;
+      device.opTrans = result.opTrans;
+      device.qsPid = result.qsPid;
+      device.navVersion = result.navVersion;
+      device.supportRtFace = result.supportRtFace;
+    } else {
+      device.doorUserAbility = dlctrl.doorUserAbility;
+      device.supportRtFace = dlctrl.supportRtFace;
+      device.doorLockPwdLengthRange =
+          DoorLockPwdLengthRange.fromList(dlctrl.pwdLenRangeArray);
+      device.doorLockBleAbility = DoorLockBleAbility(
+          [],
+          DoorLockBleAbilityByte1(
+            supportUserManager: false,
+            supportUpgrade: dlctrl.supportUpgrade ?? false,
+            supportPirConfig: dlctrl.supportPirConfig ?? false,
+            supportUnlockDirection: dlctrl.supportUnlockDirection ?? false,
+            supportAutoLock: dlctrl.supportAutoLock ?? false,
+            supportUnlockMode: dlctrl.supportUnlockMode ?? false,
+            supportVolumeControl: dlctrl.supportVolumeControl ?? false,
+            supportFaceAlarmTone: dlctrl.supportFaceAlarmTone ?? false,
+          ),
+          DoorLockBleAbilityByte2(
+            supportMotorTorque: dlctrl.supportMotorTorque ?? false,
+            supportNormalOpenMode: dlctrl.supportNormalOpenMode ?? false,
+            supportDeployDefense: dlctrl.supportDeployDefense ?? false,
+            supportHumanSensor: dlctrl.supportHumanSensor ?? false,
+            supportLanguage: dlctrl.supportLanguage ?? false,
+            supportOneKeyDeployDefense: false,
+            supportLockBody: false,
+            supportLockBackTime: false,
+          ),
+          DoorLockBleAbilityByte3(
+            supportReverseTime: false,
+            supportDoorlockReset: dlctrl.supportDoorlockReset ?? false,
+            supportWakeupGetInfo: false,
+            supportRemoteLock: dlctrl.supportRemoteLock ?? false,
+            supportTmpPasswd: dlctrl.supportTmpPasswd ?? false,
+            supportOpeningDirectionSelfCheck: false,
+            supportLockInside: false,
+            supportBleNormalOpenMode: false,
+          ),
+          DoorLockBleAbilityByte4.fromByte(0),
+          DoorLockBleAbilityByte5.fromByte(0));
+    }
+    return true;
+  }
+
+  /// 获取蓝牙uuid
+  static String? getBlueUUID(String deviceId) {
+    var oldDeviceNo = DoorLockKeyValueLocal.oldDeviceNo(deviceId: deviceId);
+    if (oldDeviceNo.isNotEmpty) {
+      var searchBle = GlobalBleSearchManager.instance.allDeviceMap.entries
+          .firstWhereOrNull((e) => e.value.sn == oldDeviceNo);
+      if (searchBle != null) {
+        return searchBle.key;
+      }
+      var device = DeviceManager.instance.getDevice(deviceId: deviceId);
+      if (device?.blueUUid != null) {
+        return device?.blueUUid;
+      }
+    }
+    return null;
+  }
+
+  ///是否需要提示设备不在附近
+  static bool checkNeedTipsDeviceIsNotNearby(String deviceId) {
+    var device = DeviceManager.instance.getDevice(deviceId: deviceId);
+    if (device == null) return false;
+    if (device.blueOnline) {
+      return false;
+    }
+    if (!device.doorlockIsConfigNet) {
+      return true;
+    }
+    if (isLowPowerBle(deviceId) || isOverSeaDoorLock(deviceId)) {
+      return device.doolockCmdStatus == DoolockCmdStatus.offline;
+    }
+    return false;
+  }
+
+  /// 是否支持反锁状态显示
+  static bool supportReverseLockState(String deviceId) {
+    var device = DeviceManager.instance.getDevice(deviceId: deviceId);
+    if (device?.doorLockBleAbility == null) {
+      return false;
+    }
+    return device!.doorLockBleAbility!.byte3.supportLockInside;
   }
 }

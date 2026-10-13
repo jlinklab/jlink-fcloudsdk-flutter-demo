@@ -832,5 +832,16 @@
   "tr_ShareTipsImageMaxNum": "Images cannot exceed 5 per share",
   "selectRecordType": "Select Record Type",
   "recordTypeAll": "All Recordings",
-  "recordTypeAlarm": "Alarm Recordings"
+  "recordTypeAlarm": "Alarm Recordings",
+  "tr_player_lock_failed": "Locking failure",
+  "tr_player_lock_succeed": "Locking succeeded",
+  "tr_doorlock_open_failed_with_deadbolt": "The door has been locked, unlocking failed",
+  "tr_player_unlock_succeed": "Unlocking succeeded",
+  "tr_player_unlock_failed": "Unlocking failed",
+  "tr_lib_sdk_check_defend_title": "Verification is that you are the one operating",
+  "tr_lib_sdk_check_defend_sub_title": "You need to enter the device PIN to continue",
+  "tr_common_security_verification": "Security verification",
+  "doorlock_bluetooth_disconnect_tip": "Please check if Bluetooth is turned on",
+  "tr_doorlock_uninit_can_not_operation_tips_ios": "You have not completed network configuration by using the external button. The lock may not function properly",
+  "tr_ble_doorlock_connect_fail_confirm_tips": "The current device may not be nearby or may be in sleep mode. Do you want to continue?"
 }

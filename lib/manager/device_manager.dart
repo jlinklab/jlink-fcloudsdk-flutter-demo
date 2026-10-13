@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fcloudsdk_example/models/device_type.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/utils/extensions.dart';
@@ -28,6 +29,11 @@ class DeviceManager {
   ///分享的待接受的列表
   List<SharedDevice> sharedNotAgreeDeviceList = [];
 
+  ///门锁蓝牙配对完成后待应用的蓝牙在线标记
+  ///key=deviceId，value=blueUUid（可为空）；配网结束时设备可能尚未拉取到列表中，
+  ///先缓存待标记，下次 [refreshDeviceList] 拉到列表后统一回填
+  final Map<String, String?> _pendingBlueOnline = {};
+
   /// 所有设备（我的 + 分享）
   List<Device> get allDevices => [...mineDeviceList, ...shareDeviceList];
 
@@ -45,6 +51,33 @@ class DeviceManager {
   /// 判断是否存在设备
   bool hasDevice({required String deviceId}) {
     return allDevices.firstWhereOrNull((e) => e.uuid == deviceId) != null;
+  }
+
+  ///门锁蓝牙配对完成后，默认认为蓝牙在线
+  ///若设备已在列表中直接写入，否则缓存待 [refreshDeviceList] 拉到后回填
+  void markBlueOnline({required String deviceId, String? blueUUid}) {
+    if (deviceId.isEmpty) return;
+    final device = getDevice(deviceId: deviceId);
+    if (device != null) {
+      device.blueOnline = true;
+      device.blueUUid = blueUUid;
+      _pendingBlueOnline.remove(deviceId);
+    } else {
+      _pendingBlueOnline[deviceId] = blueUUid;
+    }
+  }
+
+  ///将缓存的蓝牙在线标记回填到列表
+  void _applyPendingBlueOnline() {
+    if (_pendingBlueOnline.isEmpty) return;
+    for (final entry in _pendingBlueOnline.entries.toList()) {
+      final device = getDevice(deviceId: entry.key);
+      if (device != null) {
+        device.blueOnline = true;
+        device.blueUUid = entry.value;
+        _pendingBlueOnline.remove(entry.key);
+      }
+    }
   }
 
   ///根据设备序列号获取设备名字
@@ -102,6 +135,8 @@ class DeviceManager {
 
     // 确保监听已启动
     _ensureStateListener();
+    // 应用配网阶段缓存的蓝牙在线标记
+    _applyPendingBlueOnline();
     // 异步更新设备在线状态
     _updateDevState();
     // 刷新云服务状态
@@ -130,6 +165,8 @@ class DeviceManager {
           debugPrint('${device.uuid} 拿到设备状态 ${event.state}');
           device.state = event.state;
           _onDeviceStateChanged?.call();
+          //查询低功耗状态放到拿到设备状态之后再去查询，不然不准
+          _queryLowPowerDevStates();
         }
       });
     }
@@ -201,11 +238,30 @@ class DeviceManager {
     device.propList = propList ?? device.propList;
   }
 
+  /// 批量查询低功耗设备的详细休眠状态
+  Future<void> _queryLowPowerDevStates() async {
+    final lowPowerDevices = DeviceManager.instance.allDevices
+        .where((d) => (d.isLowPowerType || DeviceTypeUtil.isSleepSateDevice(d)))
+        .toList();
+    for (var device in lowPowerDevices) {
+      try {
+        final state = await JFApi.xcDevice.xcGetDeviceState(
+          deviceId: device.uuid,
+          stateType: 8,
+        );
+        device.sleepState = DeviceSleepState.from(state);
+      } catch (e) {
+        debugPrint('查询低功耗设备状态失败: ${device.uuid}, $e');
+      }
+    }
+  }
+
   /// 释放资源
   void dispose() {
     stopDeviceStateListener();
     mineDeviceList.clear();
     shareDeviceList.clear();
     sharedNotAgreeDeviceList.clear();
+    _pendingBlueOnline.clear();
   }
 }

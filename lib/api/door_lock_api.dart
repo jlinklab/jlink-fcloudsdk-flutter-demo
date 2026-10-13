@@ -181,6 +181,13 @@ abstract class DoorLockAPI {
   @POST('/v3/userGroup/getUserGroupListByPage$uselessSegmentBase')
   @Headers({'host': jvss})
   Future<dynamic> getUserGroupListByPage(@Body() Map<String, dynamic> body);
+
+    ///查询门锁配置
+  @POST('/v3/doorLockInfo/selOne$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> getDoorLockInfo(
+      {@Field('deviceSn') required String deviceSn,
+      @Field('parentPid') String? parentPid});
 }
 
 DoorLockAPI doorlockAPI = DoorLockAPI(DioConfig.getDio());

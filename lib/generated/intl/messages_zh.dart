@@ -323,6 +323,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "deviceSleeping": MessageLookupByLibrary.simpleMessage("休眠中"),
     "deviceToken": MessageLookupByLibrary.simpleMessage("设备Token"),
     "deviceWakingUp": MessageLookupByLibrary.simpleMessage("唤醒中..."),
+    "doorlock_bluetooth_disconnect_tip": MessageLookupByLibrary.simpleMessage(
+      "请确认蓝牙是否打开",
+    ),
     "download": MessageLookupByLibrary.simpleMessage("下载管理"),
     "dynamic_alarm": MessageLookupByLibrary.simpleMessage("报警设置"),
     "empty": MessageLookupByLibrary.simpleMessage("(空)"),
@@ -596,9 +599,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "tr_ShareTipsImageMaxNum": MessageLookupByLibrary.simpleMessage(
       "图片分享单次不能超过5张",
     ),
+    "tr_ble_doorlock_connect_fail_confirm_tips":
+        MessageLookupByLibrary.simpleMessage("当前设备可能不在附近或已休眠，是否继续操作？"),
     "tr_common_download_management": MessageLookupByLibrary.simpleMessage(
       "下载管理",
     ),
+    "tr_common_security_verification": MessageLookupByLibrary.simpleMessage(
+      "安全验证",
+    ),
+    "tr_doorlock_open_failed_with_deadbolt":
+        MessageLookupByLibrary.simpleMessage("门已反锁，开锁失败"),
+    "tr_doorlock_uninit_can_not_operation_tips_ios":
+        MessageLookupByLibrary.simpleMessage("您没有在门外操作按键完成配网操作，门锁暂时无法正常使用"),
     "tr_error_code_1000": MessageLookupByLibrary.simpleMessage("网络错误"),
     "tr_error_code_100000": MessageLookupByLibrary.simpleMessage("错误"),
     "tr_error_code_1001": MessageLookupByLibrary.simpleMessage("发送缓冲区已满"),
@@ -1133,6 +1145,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "tr_error_code_99997": MessageLookupByLibrary.simpleMessage("打开文件失败"),
     "tr_error_code_99998": MessageLookupByLibrary.simpleMessage("创建文件失败"),
     "tr_error_code_99999": MessageLookupByLibrary.simpleMessage("参数异常"),
+    "tr_lib_sdk_check_defend_sub_title": MessageLookupByLibrary.simpleMessage(
+      "您需输入设备PIN码后才能继续",
+    ),
+    "tr_lib_sdk_check_defend_title": MessageLookupByLibrary.simpleMessage(
+      "验证是您本人在操作",
+    ),
     "tr_pet_function_record_start": MessageLookupByLibrary.simpleMessage(
       "点击开始录音",
     ),
@@ -1141,6 +1159,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tr_pet_setting_sound_record_function":
         MessageLookupByLibrary.simpleMessage("录制呼唤音"),
+    "tr_player_lock_failed": MessageLookupByLibrary.simpleMessage("关锁失败"),
+    "tr_player_lock_succeed": MessageLookupByLibrary.simpleMessage("关锁成功"),
+    "tr_player_unlock_failed": MessageLookupByLibrary.simpleMessage("开锁失败"),
+    "tr_player_unlock_succeed": MessageLookupByLibrary.simpleMessage("开锁成功"),
     "tr_recording": MessageLookupByLibrary.simpleMessage("录音中..."),
     "tr_settings_alarm_alert_have_intersection":
         MessageLookupByLibrary.simpleMessage("区域边线存在交叉，请重新绘制"),

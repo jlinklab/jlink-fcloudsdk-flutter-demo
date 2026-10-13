@@ -832,5 +832,16 @@
   "tr_ShareTipsImageMaxNum": "图片分享单次不能超过5张",
   "selectRecordType": "选择录像类型",
   "recordTypeAll": "全部录像",
-  "recordTypeAlarm": "报警录像"
+  "recordTypeAlarm": "报警录像",
+  "tr_player_lock_failed": "关锁失败",
+  "tr_player_lock_succeed": "关锁成功",
+  "tr_doorlock_open_failed_with_deadbolt": "门已反锁，开锁失败",
+  "tr_player_unlock_succeed": "开锁成功",
+  "tr_player_unlock_failed": "开锁失败",
+  "tr_lib_sdk_check_defend_title": "验证是您本人在操作",
+  "tr_lib_sdk_check_defend_sub_title": "您需输入设备PIN码后才能继续",
+  "tr_common_security_verification": "安全验证",
+  "doorlock_bluetooth_disconnect_tip": "请确认蓝牙是否打开",
+  "tr_doorlock_uninit_can_not_operation_tips_ios": "您没有在门外操作按键完成配网操作，门锁暂时无法正常使用",
+  "tr_ble_doorlock_connect_fail_confirm_tips": "当前设备可能不在附近或已休眠，是否继续操作？"
 }

@@ -249,28 +249,21 @@ class _DeviceCard extends StatelessWidget {
   const _DeviceCard({Key? key, required this.device, required this.type})
       : super(key: key);
 
-  static const int _stateNoPermission = 3; // 没权限
-  static const int _stateUnSupport = -2; // 不支持
-  static const int _stateOffline = -1; // 离线
-  static const int _stateUnknown= 0; // 未知
-  static const int _stateOnline = 1; // 在线，在唤醒状态
-  static const int _stateSleep = 2; // 浅度休眠
-  static const int _stateDeepSleep = 3; // 深度休眠（不可唤醒）
+  /// 是否按低功耗设备处理
+  bool get _isLowPower =>
+      device.isLowPowerType || DeviceTypeUtil.isSleepSateDevice(device);
 
-  /// 获取低功耗设备的详细状态（从 ViewModel 查询，而非 device.state）
-  int _getLowPowerState(BuildContext context) {
-    if (!device.isLowPowerType && !DeviceTypeUtil.isSleepSateDevice(device)) {
-      return device.state;
-    }
-    final viewModel = context.read<DevListViewModel>();
-    return viewModel.getLowPowerDevState(device.uuid);
+  /// 获取低功耗设备的休眠状态
+  /// 非低功耗设备返回 null，上层可直接基于 [Device.state] 判断在线/离线
+  DeviceSleepState? _getSleepState() {
+    if (!_isLowPower) return null;
+    return device.sleepState;
   }
 
   /// 获取设备状态信息（颜色、文本）
-  ({Color color, String? text}) _getDeviceStateInfo(int lpState) {
-    final isLowPower = device.isLowPowerType;
-
-    if (!isLowPower) {
+  ({Color color, String? text}) _getDeviceStateInfo(
+      DeviceSleepState? sleepState) {
+    if (!_isLowPower) {
       // 非低功耗设备：仅显示在线/离线
       final state = device.state;
       return (
@@ -279,58 +272,55 @@ class _DeviceCard extends StatelessWidget {
       );
     }
 
-    // 低功耗设备：细分休眠状态（使用接口查询的状态）
-    switch (lpState) {
-      case _stateOffline:
-        return (color: Colors.grey, text: null);
-      case _stateOnline:
+    // 低功耗设备：细分休眠状态
+    switch (sleepState) {
+      case DeviceSleepState.wakeUp:
         return (color: Colors.green, text: TR.current.deviceAwakened);
-      case _stateSleep:
+      case DeviceSleepState.lightSleep:
+      case DeviceSleepState.preSleep:
         return (color: Colors.orange, text: TR.current.deviceSleeping);
-      case _stateDeepSleep:
-        return (color: Colors.red, text: TR.current.deviceDeepSleep);
-      default:
+      case DeviceSleepState.deepSleep:
+        return (color: Colors.blueGrey, text: TR.current.deviceDeepSleep);
+      case DeviceSleepState.offline:
+      case DeviceSleepState.unSupport:
+      case DeviceSleepState.noPermission:
+      case DeviceSleepState.unknown:
+      case DeviceSleepState.waking:
+      case DeviceSleepState.sleeping:
+      case null:
         return (color: Colors.grey, text: null);
     }
   }
 
   /// 判断设备是否处于休眠状态（需要唤醒才能预览）
-  bool _isSleeping(int lpState) =>
-      device.isLowPowerType &&
-      (lpState == _stateSleep);
+  bool _isSleeping(DeviceSleepState? sleepState) =>
+      _isLowPower && sleepState == DeviceSleepState.lightSleep;
 
   /// 判断设备是否深度休眠（不可唤醒）
-  bool _isDeepSleep(int lpState) =>
-      device.isLowPowerType && lpState == _stateDeepSleep;
+  bool _isDeepSleep(DeviceSleepState? sleepState) =>
+      _isLowPower && sleepState == DeviceSleepState.deepSleep;
 
   /// 导航到预览页面（低功耗设备需先唤醒）
   void _navigateToPreview(BuildContext context) async {
     if (DoorLockHelper.isDoorLock(device.uuid)) {
-      //门锁是否深度休眠判断
-      final lpState = _getLowPowerState(context);
+      //
+    } else if (_isLowPower) {
+      final sleepState = _getSleepState();
 
-      // 深度休眠，无法唤醒
-      if (_isDeepSleep(lpState)) {
-        KToast.show(status: TR.current.deviceDeepSleepCannotWake);
-        return;
-      }
-    } else if (device.isLowPowerType) {
-      final lpState = _getLowPowerState(context);
-
-      // 离线状态，无法预览
-      if (lpState <= 0) {
+      // 离线/未知/不支持/没权限（value<=0），无法预览
+      if (sleepState == null || sleepState.value <= 0) {
         KToast.show(status: TR.current.deviceOffline);
         return;
       }
 
       // 深度休眠，无法唤醒
-      if (_isDeepSleep(lpState)) {
+      if (_isDeepSleep(sleepState)) {
         KToast.show(status: TR.current.deviceDeepSleepCannotWake);
         return;
       }
 
       // 休眠状态，需要先唤醒
-      if (_isSleeping(lpState)) {
+      if (_isSleeping(sleepState)) {
         _showWakeUpDialog(context);
         return;
       }
@@ -535,8 +525,8 @@ class _DeviceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final cloudService = DeviceCloudServiceManager.instance
         .getCloudService(deviceId: device.uuid);
-    final lpState = _getLowPowerState(context);
-    final stateInfo = _getDeviceStateInfo(lpState);
+    final sleepState = _getSleepState();
+    final stateInfo = _getDeviceStateInfo(sleepState);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -575,8 +565,9 @@ class _DeviceCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  // 低功耗设备状态标签
-                  if (stateInfo.text != null)
+                  // 门锁先不显示休眠状态标签，这里状态可能不准 低功耗设备状态标签
+                  if (!DoorLockHelper.isDoorLock(device.uuid) &&
+                      stateInfo.text != null)
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 6, vertical: 2),

@@ -25,7 +25,14 @@ class _BlePairConfigPageState extends State<BlePairConfigPage> {
       child: Consumer<MainBlePairConfigController>(
         builder: (context, controller, _) {
           return Scaffold(
-            appBar: AppBar(title: const Text('门锁配网')),
+            appBar: AppBar(
+              title: const Text('门锁配网'),
+              leading: BackButton(
+                onPressed: () {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                },
+              ),
+            ),
             body: Column(
               children: [
                 Container(

@@ -436,6 +436,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "deviceSleeping": MessageLookupByLibrary.simpleMessage("Sleeping"),
     "deviceToken": MessageLookupByLibrary.simpleMessage("Device Token"),
     "deviceWakingUp": MessageLookupByLibrary.simpleMessage("Waking up..."),
+    "doorlock_bluetooth_disconnect_tip": MessageLookupByLibrary.simpleMessage(
+      "Please check if Bluetooth is turned on",
+    ),
     "download": MessageLookupByLibrary.simpleMessage("Download Management"),
     "dynamic_alarm": MessageLookupByLibrary.simpleMessage("Alarm Settings"),
     "empty": MessageLookupByLibrary.simpleMessage("(empty)"),
@@ -841,9 +844,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "tr_ShareTipsImageMaxNum": MessageLookupByLibrary.simpleMessage(
       "Images cannot exceed 5 per share",
     ),
+    "tr_ble_doorlock_connect_fail_confirm_tips":
+        MessageLookupByLibrary.simpleMessage(
+          "The current device may not be nearby or may be in sleep mode. Do you want to continue?",
+        ),
     "tr_common_download_management": MessageLookupByLibrary.simpleMessage(
       "Download management",
     ),
+    "tr_common_security_verification": MessageLookupByLibrary.simpleMessage(
+      "Security verification",
+    ),
+    "tr_doorlock_open_failed_with_deadbolt":
+        MessageLookupByLibrary.simpleMessage(
+          "The door has been locked, unlocking failed",
+        ),
+    "tr_doorlock_uninit_can_not_operation_tips_ios":
+        MessageLookupByLibrary.simpleMessage(
+          "You have not completed network configuration by using the external button. The lock may not function properly",
+        ),
     "tr_error_code_1000": MessageLookupByLibrary.simpleMessage("Network error"),
     "tr_error_code_100000": MessageLookupByLibrary.simpleMessage("Error"),
     "tr_error_code_1001": MessageLookupByLibrary.simpleMessage(
@@ -1944,6 +1962,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "tr_error_code_99999": MessageLookupByLibrary.simpleMessage(
       "Parameter error",
     ),
+    "tr_lib_sdk_check_defend_sub_title": MessageLookupByLibrary.simpleMessage(
+      "You need to enter the device PIN to continue",
+    ),
+    "tr_lib_sdk_check_defend_title": MessageLookupByLibrary.simpleMessage(
+      "Verification is that you are the one operating",
+    ),
     "tr_pet_function_record_start": MessageLookupByLibrary.simpleMessage(
       "Click to Start Recording",
     ),
@@ -1952,6 +1976,18 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tr_pet_setting_sound_record_function":
         MessageLookupByLibrary.simpleMessage("Record summoning sound"),
+    "tr_player_lock_failed": MessageLookupByLibrary.simpleMessage(
+      "Locking failure",
+    ),
+    "tr_player_lock_succeed": MessageLookupByLibrary.simpleMessage(
+      "Locking succeeded",
+    ),
+    "tr_player_unlock_failed": MessageLookupByLibrary.simpleMessage(
+      "Unlocking failed",
+    ),
+    "tr_player_unlock_succeed": MessageLookupByLibrary.simpleMessage(
+      "Unlocking succeeded",
+    ),
     "tr_recording": MessageLookupByLibrary.simpleMessage("Recording..."),
     "tr_settings_alarm_alert_have_intersection":
         MessageLookupByLibrary.simpleMessage(
