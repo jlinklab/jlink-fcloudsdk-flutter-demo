@@ -118,10 +118,10 @@ class KToast {
     required Widget w,
     Duration? duration,
   }) {
-    assert(
-    _instance.overlayEntry != null,
-    'You should call KToast.init() in your MaterialApp',
-    );
+    if (_instance.overlayEntry == null) {
+      // Overlay 尚未初始化（如 runApp 之前），静默忽略
+      return;
+    }
 
     _w = w;
     _updateWhenSafe();

@@ -175,6 +175,12 @@ class Device {
   /// 是否为低功耗类型
   bool get isLowPowerType => (deviceType == 21 || deviceType == 285409282);
 
+  ///是否管理员（非分享设备即为管理员）
+  bool get isAdmin => !fromShare;
+
+  ///是否分享设备
+  bool get isSharedDevice => fromShare;
+
   ///激活前的sn
   String get oldDeviceId => DoorLockKeyValueLocal.oldDeviceNo(deviceId: uuid);
 
@@ -475,8 +481,11 @@ class SharedDevice extends Device {
 
   @override
   bool hasPermission({required DevicePermission permission}) {
-    SharedDevicePermission? devicePermission =
-        permissions.firstWhereOrNull((e) => e.permission == permission.name);
+    ///同时按 name 与 value 匹配：
+    ///- name 兼容 demo 早期从枚举名直接写入的权限字符串
+    ///- value 对齐 jlink / 服务端下发的权限 key（如 doorLockPwd）
+    SharedDevicePermission? devicePermission = permissions.firstWhereOrNull(
+        (e) => e.permission == permission.value || e.permission == permission.name);
     if (devicePermission == null) {
       return false;
     }
@@ -503,40 +512,75 @@ class SharedDevicePermission {
 
 enum DevicePermission {
   ///支持报警推送
-  DP_AlarmPush,
+  DP_AlarmPush('DP_AlarmPush'),
 
   ///云服务
-  DP_CloudServer,
+  DP_CloudServer('DP_CloudServer'),
 
   ///删除报警信息
-  DP_DeleteAlarmInfo,
+  DP_DeleteAlarmInfo('DP_DeleteAlarmInfo'),
 
   ///删除云视频
-  DP_DeleteCloudVideo,
+  DP_DeleteCloudVideo('DP_DeleteCloudVideo'),
 
   ///对讲
-  DP_Intercom,
+  DP_Intercom('DP_Intercom'),
 
   ///卡回放
-  DP_LocalStorage,
+  DP_LocalStorage('DP_LocalStorage'),
 
   ///修改设备配置
-  DP_ModifyConfig,
+  DP_ModifyConfig('DP_ModifyConfig'),
 
   ///修改设备密码
-  DP_ModifyPwd,
+  DP_ModifyPwd('DP_ModifyPwd'),
 
   ///云台
-  DP_PTZ,
+  DP_PTZ('DP_PTZ'),
 
   ///视频对讲
-  DP_VideoCall,
+  DP_VideoCall('DP_VideoCall'),
 
   ///查看云视频
-  DP_ViewCloudVideo,
+  DP_ViewCloudVideo('DP_ViewCloudVideo'),
 
-  // 修改云服务配置
-  DP_CLoudConfig
+  ///修改云服务配置
+  DP_CLoudConfig('DP_CLoudConfig'),
+
+  ///门锁密码权限
+  DP_DoorLockPsw('doorLockPwd'),
+
+  ///门锁指纹权限
+  DP_DoorLockFingerprint('doorLockFingerPrint'),
+
+  ///门锁掌纹权限
+  DP_DoorLockPalmprint('userManagerFriction'),
+
+  ///门锁人脸权限
+  DP_DoorLockFace('face'),
+
+  ///门锁电子钥匙权限
+  DP_DoorLockEleKey('electronicKey_doorLock'),
+
+  ///门锁卡权限
+  DP_DoorLockCard('doorLockCard'),
+
+  ///门锁指静脉权限
+  DP_DoorLockFingerVein('userManagerFingerVein'),
+
+  ///门锁掌静脉权限
+  DP_DoorLockPalmVein('userManagerPalmVein'),
+
+  ///门锁操作记录权限
+  DP_DoorLockOperateRecord('operationLog'),
+
+  ///门锁设置权限
+  DP_Settings('settings');
+
+  ///服务端下发的权限 key
+  final String value;
+
+  const DevicePermission(this.value);
 }
 
 /// 低功耗设备休眠状态

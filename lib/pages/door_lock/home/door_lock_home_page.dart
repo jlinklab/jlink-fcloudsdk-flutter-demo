@@ -1,5 +1,4 @@
 import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
-import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/pages/door_lock/controller/door_lock_home_controller.dart';
@@ -76,6 +75,8 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
                     const SizedBox(height: 22),
                     //远程开关锁操作条
                     lockActions(),
+                    //用户管理入口（对齐 jlink userManagerContent）
+                    userManagerContent(),
                     const Spacer(),
                   ],
                 ),
@@ -138,13 +139,7 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
     if (_wifiOffline) {
       return GestureDetector(
         onTap: () {
-          //低功耗蓝牙锁 || 国内锁 → 离线弹窗；否则 → 设备状态提示
-          if (DoorLockHelper.isLowPowerBle(widget.deviceId) ||
-              !DoorLockHelper.isOverSeaDoorLock(widget.deviceId)) {
-            _showOfflineTipsDialog();
-          } else {
-            _showDeviceStateTipDialog();
-          }
+          //
         },
         child: Container(
           decoration: BoxDecoration(
@@ -174,19 +169,7 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
                       ],
                     ),
                   ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.wifi_off, size: 60, color: Colors.white),
-                      Text(
-                        TR.current.deviceOffline,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
+                  const Icon(Icons.wifi_off, size: 60, color: Colors.white),
                 ],
               ),
             ),
@@ -324,40 +307,6 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
   ///远程开锁入口显示条件
   bool _showRemoteUnlock() => true;
 
-  ///点击离线缩略图 → 离线提示弹窗
-  void _showOfflineTipsDialog() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(TR.current.deviceOffline),
-        content: const Text('设备当前离线，请检查网络或稍后重试'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(TR.current.confirmBtn),
-          ),
-        ],
-      ),
-    );
-  }
-
-  ///点击离线缩略图 → 海外锁 IoT 设备状态提示
-  void _showDeviceStateTipDialog() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(TR.current.deviceOffline),
-        content: const Text('设备当前不可用，请稍后重试'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(TR.current.confirmBtn),
-          ),
-        ],
-      ),
-    );
-  }
-
   List<Widget> _join(List<Widget> items, Widget separator) {
     final result = <Widget>[];
     for (var i = 0; i < items.length; i++) {
@@ -378,6 +327,88 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
         width: width,
         height: height,
         color: const Color(0xFFE5E5EA),
+      ),
+    );
+  }
+
+  // ==================== 用户管理入口 ====================
+
+  ///用户管理入口网格（对齐 jlink userManagerContent，按 demo UI 约定重写）
+  ///- 3 列网格，每格 96 高，高度 = 行数 * 96
+  ///- 图标用 Flutter 内置 IconData（demo 无 jlink svg 资源）
+  ///- 名称硬编码中文（demo UI 约定）
+  ///- 点击弹框提示未实现（具体子页面不在本次同步范围）
+  Widget userManagerContent() {
+    final list = controller.userManagerUIList;
+    if (list.isEmpty) return const SizedBox.shrink();
+
+    const double cellHeight = 96;
+    final int rows = (list.length / 3).ceil();
+    final double gridHeight = rows * cellHeight + (rows - 1) * 10;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '用户管理',
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1E1E1E),
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: gridHeight,
+            child: GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 1.0,
+              ),
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                final item = list[index];
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => controller.checkUserManager(item),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(item.icon,
+                            size: 26, color: _primaryColor),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        item.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF333333),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

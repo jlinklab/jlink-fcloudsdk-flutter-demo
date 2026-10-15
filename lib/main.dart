@@ -27,8 +27,6 @@ void main() async {
   UserInfo.instance.init();
   await SPUtils.init();
   await _sdkInit();
-  // 初始化推送通知
-  await initPushNotification();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
@@ -74,6 +72,15 @@ class JFApp extends StatefulWidget {
 }
 
 class _JFAppState extends State<JFApp> {
+  @override
+  void initState() {
+    super.initState();
+    // 延迟到首帧渲染后请求推送权限，此时 KToast overlay 已就绪
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initPushNotification();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
