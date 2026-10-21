@@ -15,6 +15,7 @@ import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart'
 import 'package:fcloudsdk_example/utils/debounce_throttle.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_operation.dart';
 import 'package:fcloudsdk_example/pages/door_lock/user_manager/door_lock_password_list_page.dart';
+import 'package:fcloudsdk_example/pages/door_lock/user_manager/door_lock_skin_list_page.dart';
 import 'package:fcloudsdk_example/utils/permission_utils.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 import 'package:flutter/material.dart';
@@ -223,7 +224,8 @@ class DoorLockHomeController extends DoorLockPageController
   }
 
   ///点击用户管理入口
-  ///- password：跳转密码列表页（本次同步的最小闭环）
+  ///- password：跳转密码列表页
+  ///- skin：跳转指纹管理列表页（列表+锁端补全+录入+删除+详情）
   ///- 其他类型：具体子页面未实现，弹框提示
   void checkUserManager(UserManagerUI item) {
     if (!context.mounted) return;
@@ -232,6 +234,15 @@ class DoorLockHomeController extends DoorLockPageController
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => DoorLockPasswordListPage(deviceId: deviceId),
+        ),
+      );
+      return;
+    }
+
+    if (item.type == JvssOperateType.skin) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => DoorLockSkinListPage(deviceId: deviceId),
         ),
       );
       return;

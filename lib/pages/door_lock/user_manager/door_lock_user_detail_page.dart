@@ -5,9 +5,6 @@ import 'package:fcloudsdk_example/pages/door_lock/model/door_user.dart';
 import 'package:flutter/material.dart';
 
 ///门锁用户详情页
-///
-///- 展示：用户类型 / 用户编号 / 创建人 / 昵称
-///- 编辑：点击昵称弹原生对话框修改并保存（modifyAlarmMessageNickName）
 class DoorLockUserDetailPage extends StatefulWidget {
   final DoorUser user;
   final String deviceId;
@@ -29,6 +26,33 @@ class _DoorLockUserDetailPageState extends State<DoorLockUserDetailPage> {
   ///保存进行中（防重复提交）
   bool _saving = false;
 
+  ///开锁方式类型（由用户数据推导，未知时回退密码）
+  JvssOperateType get _type =>
+      JvssOperateType.from(widget.user.type) == JvssOperateType.unknown
+          ? JvssOperateType.password
+          : JvssOperateType.from(widget.user.type);
+
+  ///用户类型展示文案
+  String get _typeText {
+    switch (_type) {
+      case JvssOperateType.skin:
+        return '指纹';
+      case JvssOperateType.card:
+        return '卡片';
+      case JvssOperateType.face:
+        return '人脸';
+      case JvssOperateType.palmprint:
+        return '掌纹';
+      case JvssOperateType.fingervein:
+        return '指静脉';
+      case JvssOperateType.palmVein:
+        return '掌静脉';
+      case JvssOperateType.password:
+      default:
+        return '密码';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +72,7 @@ class _DoorLockUserDetailPageState extends State<DoorLockUserDetailPage> {
             ]),
             const SizedBox(height: 10),
             _buildCard([
-              _buildInfoItem(title: '用户类型', value: '密码'),
+              _buildInfoItem(title: '用户类型', value: _typeText),
               _buildInfoItem(
                 title: '用户编号',
                 value: widget.user.id.toString().padLeft(4, '0'),
@@ -181,7 +205,7 @@ class _DoorLockUserDetailPageState extends State<DoorLockUserDetailPage> {
     try {
       await doorlockAPI.modifyAlarmMessageNickName(
         deviceSn: widget.deviceId,
-        userType: JvssOperateType.password.toJvssString(),
+        userType: _type.toJvssString(),
         userId: widget.user.id.toString(),
         userNickname: newName,
 

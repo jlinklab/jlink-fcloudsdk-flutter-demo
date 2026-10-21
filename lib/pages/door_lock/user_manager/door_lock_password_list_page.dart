@@ -66,11 +66,15 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
   // ==================== 列表加载 ====================
 
   ///1. 先从服务器 [doorlockAPI.getAllPwd] 拉取并渲染（快速可见）
-  ///2. 设备在线时，静默从锁端拉全量密码用户 updateAll 上报服务器（补全缺失数据）
-  ///3. 上报后再次从服务器刷新列表
+  ///2. 昵称拉取与锁端补全并行（纯服务器接口不等锁端长耗时流程，避免昵称延迟回填）
+  ///3. 设备在线时，静默从锁端拉全量密码用户 updateAll 上报服务器（补全缺失数据）
+  ///4. 上报后再次从服务器刷新列表（列表对象重建，昵称再回填一次）
   Future<void> _loadList() async {
     final ok = await _fetchFromServer();
     if (!ok || !mounted) return;
+
+    ///昵称纯服务器接口，立即并行拉取回填，不等待锁端补全
+    unawaited(_fetchNicknames());
 
     ///仅设备在线时做锁端补全（离线拉不到锁端数据）
     final device = _device;
@@ -78,6 +82,53 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
       await getLockEndUnlocking();
       if (!mounted) return;
       await _fetchFromServer(showLoading: false);
+      if (!mounted) return;
+
+      ///刷新后列表对象为新建（无昵称），需再回填
+      await _fetchNicknames();
+    }
+  }
+
+  ///从昵称服务拉取用户昵称并按 UserId 匹配回填密码用户
+  ///
+  ///昵称不在 getAllPwd（doorLockUserInfoVOS）返回内，写入端为录入上报与
+  ///详情页修改（insertOrUpdate）；返回 Map 以开锁方式类型字符串为 key
+  ///（如 PassWdManger），值为 [{UserId, NickName, HeadPortrait}] 列表。
+  Future<void> _fetchNicknames() async {
+    try {
+      final res = await doorlockAPI.queryAlarmMessageNickName(
+        deviceSn: widget.deviceId,
+      );
+      if (!mounted || res is! Map) return;
+      final list = res[JvssOperateType.password.toJvssString()];
+      if (list is! List) return;
+
+      ///UserId → 昵称记录
+      final nickMap = <int, Map<String, dynamic>>{};
+      for (final e in list) {
+        if (e is Map<String, dynamic>) {
+          final id = int.tryParse('${e['UserId'] ?? ''}');
+          if (id != null) nickMap[id] = e;
+        }
+      }
+
+      var changed = false;
+      for (final user in _userList) {
+        if (user is! DoorUser) continue;
+        final record = nickMap[user.id];
+        if (record == null) continue;
+        final name = record['NickName']?.toString() ?? '';
+        final head = record['HeadPortrait']?.toString() ?? '';
+        if (user.userNickName != name || user.userHeadPortrait != head) {
+          user.userNickName = name;
+          user.userHeadPortrait = head;
+          changed = true;
+        }
+      }
+      if (changed) setState(() {});
+    } catch (e) {
+      ///昵称拉取失败不影响列表展示，仅日志
+      LogUtils.doorLock.log('密码用户昵称拉取异常: $e');
     }
   }
 
@@ -714,10 +765,11 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
           return _buildTempPwdTile(item);
         }
         final user = item as DoorUser;
-        final isAdmin = user.isAdmin;
         return ListTile(
+
+          ///主标题：昵称（管理员时追加后缀）；副标题：有效期具体文案（含循环时段）
           title: Text(user.displayTitle),
-          subtitle: Text('${isAdmin ? '管理员' : '普通用户'} · ${user.validText}'),
+          subtitle: Text(user.displayTimeAndVaidType),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

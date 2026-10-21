@@ -4,6 +4,7 @@ import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/door_lock/ble_upgrade.dart';
 import 'package:fcloudsdk/door_lock/door_lock_ble_api.dart';
 import 'package:fcloudsdk/door_lock/door_lock_ble_model.dart';
+import 'package:fcloudsdk/door_lock/door_lock_date.dart';
 import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
 import 'package:fcloudsdk/door_lock/door_lock_key_value.dart';
 import 'package:fcloudsdk/door_lock/door_lock_netip_api.dart';
@@ -736,6 +737,184 @@ mixin DoorLockOperationMixin on ChangeNotifier {
         }
       }
       return const DoorLockAddResult(false, -1, null, null);
+    }
+  }
+
+  ///添加开锁方式（锁端录入类：指纹/卡片等，无 pwd）
+  ///
+  ///与 [doorLockAddPasswordType] 的差异：BLE 通道流式回调 [listen]
+  ///（指纹需多次按压，start 携带总录入次数，process 携带当前序号）。
+  ///时效为限时/循环时仅支持蓝牙通道（netip 明文 AddUser 不携带时效），
+  ///按 [DoorLockTimelinessType] + 时效字段生成 8 字节 timeliness hex 下发。
+  Future<DoorLockAddResult> doorLockAddOpenType({
+    required JvssOperateType type,
+    required bool isAdmin,
+    DoorLockTimelinessType? timelinessType,
+    DateTime? startTime,
+    DateTime? endTime,
+    List<int>? weeks, //周日为 0
+    int? startMin,
+    int? endMin,
+    Function(DoorLockAddBleOpenTypeResponse)? listen,
+  }) async {
+    ///时效 hex（永久为空，限时/循环 8 字节）
+    var timeliness = timelinessType == null
+        ? null
+        : getTimelinessBleFormat(
+            type: timelinessType,
+            startTime: startTime,
+            endTime: endTime,
+            weeks: weeks,
+            startMin: startMin,
+            endMin: endMin,
+          );
+    var bleTimelinessType = timelinessType ?? DoorLockTimelinessType.permanent;
+
+    ///蓝牙通道：流式监听录入结果，done 时取 hardwareId
+    Future<DoorLockAddResult> sendByBlue() async {
+      if (await beforeBlue() == false) {
+        return const DoorLockAddResult(false, -1, null, null);
+      }
+      final completer = Completer<DoorLockAddResult>();
+      StreamSubscription<DoorLockAddBleOpenTypeResponse>? sub;
+      try {
+        sub = doorLockBleApi
+            ?.addDoorOpenType(DoorLockAddBleOpenTypeRequest(
+          type: BleOperateType.from(type.toBleType()),
+          stage: BleInputStage.start,
+          memberId: isAdmin ? 2 : 1,
+          timelinessType: bleTimelinessType,
+          timeliness: timeliness,
+        ))
+            ?.listen((response) {
+          listen?.call(response);
+          switch (response.stage) {
+            case BleInputStage.start:
+            case BleInputStage.process:
+              break;
+            case BleInputStage.done:
+              sub?.cancel();
+              if (!completer.isCompleted) {
+                completer.complete(
+                    DoorLockAddResult(true, response.hardwareId, null, null));
+              }
+              break;
+            case BleInputStage.fail:
+            case BleInputStage.appCancel:
+            default:
+              sub?.cancel();
+              if (!completer.isCompleted) {
+                completer
+                    .complete(const DoorLockAddResult(false, -1, null, null));
+              }
+              break;
+          }
+        });
+      } catch (e) {
+        LogUtils.doorLock.log('doorLockAddOpenType sendByBlue error: $e');
+        return const DoorLockAddResult(false, -1, null, null);
+      }
+      if (sub == null) {
+        return const DoorLockAddResult(false, -1, null, null);
+      }
+
+      ///兜底超时：指纹录入需多次按压耗时较长，取消/失败回包也会走 fail/appCancel 分支收尾
+      return completer.future.timeout(const Duration(seconds: 120),
+          onTimeout: () {
+        sub?.cancel();
+        return const DoorLockAddResult(false, -1, null, null);
+      });
+    }
+
+    ///netip 通道：先保活（syncDoorStatus）刷新同步状态，再添加，避免 needSync
+    Future<DoorLockAddResult> sendByNetIp() async {
+      var sync = await DoorLockNetIp.syncDoorStatus(deviceId);
+      if (!sync.item1) {
+        return DoorLockAddResult(false, -1, sync.item2?.err, sync.item3);
+      }
+      var result = await DoorLockNetIp.addDoorOpenType(
+        deviceId: deviceId,
+        type: type,
+        isAdmin: isAdmin,
+      );
+      if (result.item1 && result.item2?.parse is DookLockOpenTypeUser) {
+        final id = (result.item2!.parse as DookLockOpenTypeUser).id;
+        return DoorLockAddResult(true, id, null, null);
+      }
+      return DoorLockAddResult(false, -1, result.item2?.err, result.item3);
+    }
+
+    ///限时/循环仅支持蓝牙通道（netip 明文 AddUser 不携带时效）
+    bool onlyBlue = timelinessType == DoorLockTimelinessType.limit ||
+        timelinessType == DoorLockTimelinessType.loop;
+
+    if (onlyBlue) {
+      if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue ||
+          device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
+        return sendByBlue();
+      }
+
+      ///离线：低功耗/海外锁先搜蓝牙，等到在线后走 BLE 添加
+      if (DoorLockHelper.isLowPowerBle(deviceId) ||
+          DoorLockHelper.isOverSeaDoorLock(deviceId)) {
+        bool online = await waitBleOnline();
+        if (online) {
+          return sendByBlue();
+        }
+      }
+      return const DoorLockAddResult(false, -1, null, null);
+    }
+
+    if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
+      return sendByNetIp();
+    } else if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue ||
+        device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
+      return sendByBlue();
+    } else {
+      ///离线：低功耗/海外锁先搜蓝牙，等到在线后走 BLE 添加
+      if (DoorLockHelper.isLowPowerBle(deviceId) ||
+          DoorLockHelper.isOverSeaDoorLock(deviceId)) {
+        bool online = await waitBleOnline();
+        if (online) {
+          return sendByBlue();
+        }
+      }
+      return const DoorLockAddResult(false, -1, null, null);
+    }
+  }
+
+  ///取消添加开锁方式（录入页用户主动退出时调）
+  ///
+  ///BLE 通道发送 stage=appCancel，锁端回包会同时让原 [doorLockAddOpenType]
+  ///的流式监听以 appCancel 收场；netip 通道直接发 CancelAdd 指令。
+  ///取消本身不看重结果，失败仅日志。
+  Future<void> cancelDoorLockAddOpenType({
+    required JvssOperateType type,
+    required bool isAdmin,
+  }) async {
+    try {
+      if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue ||
+          device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
+        if (doorLockBleApi == null) return;
+        await doorLockBleApi
+            ?.addDoorOpenType(DoorLockAddBleOpenTypeRequest(
+              type: BleOperateType.from(type.toBleType()),
+              stage: BleInputStage.appCancel,
+              memberId: isAdmin ? 2 : 1,
+              timelinessType: DoorLockTimelinessType.permanent,
+            ))
+            ?.drain()
+            .timeout(const Duration(seconds: 5));
+      } else if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
+        await DoorLockNetIp.addDoorOpenType(
+                deviceId: deviceId,
+                type: type,
+                isAdmin: isAdmin,
+                isCancel: true)
+            .timeout(const Duration(seconds: 5));
+      }
+    } catch (e) {
+      LogUtils.doorLock.log('cancelDoorLockAddOpenType error: $e');
     }
   }
 

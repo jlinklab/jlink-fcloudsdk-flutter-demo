@@ -149,6 +149,16 @@ abstract class DoorLockAPI {
     @Field('headPortrait') required String headPortrait,
   });
 
+  ///查询云事件（用户）昵称
+  ///
+  ///返回 Map：key 为开锁方式类型字符串（如 FingerManger/PassWdManger），
+  ///值为 [{UserId, NickName, HeadPortrait}] 列表，按 UserId 匹配回填用户昵称。
+  @POST('/v3/doorLockUserNickname/listNicknameForApp$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> queryAlarmMessageNickName({
+    @Field('deviceSn') required String deviceSn,
+  });
+
   ///查询设备列表
   @POST('/v3/device/getUserDeviceListByPage$uselessSegmentBase')
   @Headers({'host': jvss})

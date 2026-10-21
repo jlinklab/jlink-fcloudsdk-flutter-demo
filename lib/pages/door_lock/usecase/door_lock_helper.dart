@@ -563,6 +563,53 @@ class DoorLockHelper {
     return userAbility || offlineAbility;
   }
 
+  ///是否支持添加管理员用户（能力集 doorManagerAbility，影子服务/netip 获取后回填）
+  ///
+  ///能力集优先取内存（影子服务解析时已回填），缺失时回退本地缓存 mask；
+  ///分享设备不支持添加管理员。
+  static bool supportAddAdmin(
+      {required String deviceId, required JvssOperateType type}) {
+    var device = DeviceManager.instance.getDevice(deviceId: deviceId);
+    if (device == null) {
+      return false;
+    }
+    if (device.isSharedDevice) {
+      return false;
+    }
+
+    if (device.doorManagerAbility == null) {
+      var localMask =
+          DoorLockKeyValueLocal.userManagerAdminAbility(deviceId: deviceId);
+      if (localMask.isNotEmpty) {
+        var origin = hexToBytes(localMask).reversed.toList();
+        device.doorManagerAbility = DoorManagerAbility.fromValues(origin);
+      }
+    }
+
+    var byte1 = device.doorManagerAbility?.byte1;
+    if (byte1 == null) {
+      return false;
+    }
+    switch (type) {
+      case JvssOperateType.password:
+        return byte1.supportPassword;
+      case JvssOperateType.skin:
+        return byte1.supportSkin;
+      case JvssOperateType.face:
+        return byte1.supportFace;
+      case JvssOperateType.palmprint:
+        return byte1.supportPalmprint;
+      case JvssOperateType.fingervein:
+        return byte1.supportFingervein;
+      case JvssOperateType.card:
+        return byte1.supportCard;
+      case JvssOperateType.palmVein:
+        return byte1.supportPalmVein;
+      default:
+        return false;
+    }
+  }
+
   ///是否支持临时密码 / 自定义密码
   static bool supportTempPwd({required String deviceId}) {
     var device = DeviceManager.instance.getDevice(deviceId: deviceId);
