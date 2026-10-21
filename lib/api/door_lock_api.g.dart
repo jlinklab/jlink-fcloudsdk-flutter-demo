@@ -738,6 +738,302 @@ class _DoorLockAPI implements DoorLockAPI {
     return _value;
   }
 
+  @override
+  Future<dynamic> getAllPwd({
+    required Map<String, dynamic> sn,
+    required Map<String, dynamic> deviceSn,
+    required Map<String, dynamic> unlockInfo,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {
+      'paramDTO': sn,
+      'deviceSnDTO': deviceSn,
+      'queryUnlockInfoListByPageDTO': unlockInfo,
+    };
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/devicePwd/selAllPwd/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<dynamic> deleteUnlockInfo({required String id}) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {'id': id};
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/unlockInfo/deleteUnlockInfo/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<dynamic> updateUnlockInfo({
+    required String id,
+    required String editName,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {
+      'id': id,
+      'name': editName,
+    };
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/unlockInfo/updateUnlockInfo/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<dynamic> generateOfflineUnlockPwd({
+    required String deviceSn,
+    String? pwdName,
+    required int createTime,
+    required String validType,
+    int? startHour,
+    int? endHour,
+    String? time,
+    String? week,
+    int? year,
+    int? overOneYear,
+    int? startTime,
+    int? endTime,
+    List<int>? pwdLengthRange,
+    String unlockMode = '0x04',
+    int? memberId,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {
+      'deviceSn': deviceSn,
+      'pwdName': pwdName,
+      'createTime': createTime,
+      'validType': validType,
+      'startHour': startHour,
+      'endHour': endHour,
+      'time': time,
+      'week': week,
+      'year': year,
+      'overOneYear': overOneYear,
+      'startTime': startTime,
+      'endTime': endTime,
+      'pwdLengthRange': pwdLengthRange,
+      'unlockMode': unlockMode,
+      'memberId': memberId,
+    };
+    _data.removeWhere((k, v) => v == null);
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/unlockInfo/generateUnlockPwd/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<dynamic> addTempPwd({
+    required String deviceSn,
+    required String password,
+    required String rpt,
+    required String name,
+    required String startTime,
+    required String endTime,
+    required int startTimeStamp,
+    required int endTimeStamp,
+    required int uType,
+    int? memberId,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {
+      'deviceSn': deviceSn,
+      'password': password,
+      'rpt': rpt,
+      'name': name,
+      'startTime': startTime,
+      'endTime': endTime,
+      'startTimeStamp': startTimeStamp,
+      'endTimeStamp': endTimeStamp,
+      'uType': uType,
+      'memberId': memberId,
+    };
+    _data.removeWhere((k, v) => v == null);
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/tempPwd/add/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<dynamic> updateTempPwd({
+    required String deviceSn,
+    required String password,
+    required String rpt,
+    required String name,
+    required String startTime,
+    required String endTime,
+    required int startTimeStamp,
+    required int endTimeStamp,
+    required int uType,
+    required String id,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {
+      'deviceSn': deviceSn,
+      'password': password,
+      'rpt': rpt,
+      'name': name,
+      'startTime': startTime,
+      'endTime': endTime,
+      'startTimeStamp': startTimeStamp,
+      'endTimeStamp': endTimeStamp,
+      'uType': uType,
+      'id': id,
+    };
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/tempPwd/update/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<dynamic> deleteTmpPassword({
+    required String id,
+    required String deviceSn,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {
+      'id': id,
+      'deviceSn': deviceSn,
+    };
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/tempPwd/del/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

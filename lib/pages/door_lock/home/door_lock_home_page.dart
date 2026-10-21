@@ -2,7 +2,6 @@ import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/pages/door_lock/controller/door_lock_home_controller.dart';
-import 'package:fcloudsdk_example/pages/door_lock/repository/door_lock_local.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,20 +24,6 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
   Device? get _device =>
       DeviceManager.instance.getDevice(deviceId: widget.deviceId);
 
-  ///门锁是否已配网
-  bool get _doorlockIsConfigNet =>
-      DoorLockLocalCache.doorlockIsConfigNet(deviceId: _device?.uuid ?? "");
-
-  ///设备是否在线
-  bool get _online => (_device?.state ?? 0) > 0;
-
-  ///休眠状态
-  DeviceSleepState? get _sleepState => _device?.sleepState;
-
-  bool get _wifiOnline => _doorlockIsConfigNet && _online;
-
-  bool get _wifiOffline => _doorlockIsConfigNet && !_online;
-
   ///远程操作是否可用
   bool get _enableOperation =>
       controller.device.doolockCmdStatus != DoolockCmdStatus.offline;
@@ -60,7 +45,7 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
               title: Text(_device?.nickname ?? widget.deviceId),
             ),
             body: SafeArea(
-              child: Padding(
+              child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: Column(
                   children: [
@@ -75,9 +60,8 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
                     const SizedBox(height: 22),
                     //远程开关锁操作条
                     lockActions(),
-                    //用户管理入口（对齐 jlink userManagerContent）
+                    //用户管理入口
                     userManagerContent(),
-                    const Spacer(),
                   ],
                 ),
               ),
@@ -91,110 +75,28 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
     if (width > 150) width = 150;
     var height = (width / (3 / 5)).ceil().toDouble();
 
-    // wifi 在线
-    if (_wifiOnline) {
-      Color borderColors = _primaryColor;
-      if (_sleepState == DeviceSleepState.lightSleep) {
-        borderColors = Colors.orange.shade300;
-      } else if (_sleepState == DeviceSleepState.preSleep) {
-        borderColors = Colors.purple.shade400;
-      } else if (_sleepState == DeviceSleepState.deepSleep) {
-        borderColors = Colors.indigo.shade200;
-      }
-
-      return GestureDetector(
-        onTap: () {},
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(12)),
-            border: Border.all(color: borderColors, width: 5),
-            color: Colors.white,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(1.0),
-            child: Container(
-              width: width,
-              height: height,
-              color: Colors.transparent,
-              child: Stack(
-                alignment: AlignmentDirectional.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: _buildDefaultThumb(width: width, height: height),
-                  ),
-                  _sleepState == DeviceSleepState.deepSleep
-                      ? const Icon(Icons.bedtime,
-                          size: 60, color: Colors.white70)
-                      : const SizedBox(),
-                ],
-              ),
-            ),
-          ),
+    // wifi 在线/离线共用同一缩略图
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+          color: Colors.white,
         ),
-      );
-    }
-
-    // wifi 离线
-    if (_wifiOffline) {
-      return GestureDetector(
-        onTap: () {
-          //
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(12)),
-            border: Border.all(color: Colors.grey, width: 5),
-            color: Colors.white,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(1.0),
-            child: Container(
-              width: width,
-              height: height,
-              color: Colors.transparent,
-              child: Stack(
-                alignment: AlignmentDirectional.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: Stack(
-                      children: [
-                        _buildDefaultThumb(width: width, height: height),
-                        Container(
-                          width: width,
-                          height: height,
-                          color: const Color(0xFF3A4C51).withOpacity(0.8),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Icon(Icons.wifi_off, size: 60, color: Colors.white),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    // 默认
-    return Container(
-        color: Colors.transparent,
-        padding: const EdgeInsets.only(top: 40, bottom: 10),
-        width: width,
-        height: height,
-        child: Image.asset(
-          'images/monitor_bg.png',
-          width: width,
-          height: height,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => Container(
+        child: Padding(
+          padding: const EdgeInsets.all(1.0),
+          child: Container(
             width: width,
             height: height,
-            color: const Color(0xFFE5E5EA),
+            color: Colors.transparent,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: _buildDefaultThumb(width: width, height: height),
+            ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   ///远程关锁 / 远程开锁
@@ -333,11 +235,7 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
 
   // ==================== 用户管理入口 ====================
 
-  ///用户管理入口网格（对齐 jlink userManagerContent，按 demo UI 约定重写）
-  ///- 3 列网格，每格 96 高，高度 = 行数 * 96
-  ///- 图标用 Flutter 内置 IconData（demo 无 jlink svg 资源）
-  ///- 名称硬编码中文（demo UI 约定）
-  ///- 点击弹框提示未实现（具体子页面不在本次同步范围）
+  ///用户管理入口网格
   Widget userManagerContent() {
     final list = controller.userManagerUIList;
     if (list.isEmpty) return const SizedBox.shrink();
@@ -364,8 +262,7 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
             height: gridHeight,
             child: GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
@@ -388,8 +285,7 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Icon(item.icon,
-                            size: 26, color: _primaryColor),
+                        child: Icon(item.icon, size: 26, color: _primaryColor),
                       ),
                       const SizedBox(height: 8),
                       Text(

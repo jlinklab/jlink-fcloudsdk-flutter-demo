@@ -90,64 +90,6 @@ class _WeatherService implements WeatherService {
     return _value;
   }
 
-  @override
-  Future<dynamic> reportDeviceLatlon(String aesBase64Body) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Content-Type': 'application/x-plist'};
-    _headers.removeWhere((k, v) => v == null);
-    final _data = aesBase64Body;
-    final _options = _setStreamType<dynamic>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-      contentType: 'application/x-plist',
-    )
-        .compose(
-          _dio.options,
-          '/jfweather/device/latlon/report',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
-    final _result = await _dio.fetch(_options);
-    final _value = _result.data;
-    return _value;
-  }
-
-  @override
-  Future<dynamic> getDeviceLatlonDetail(String aesBase64Body) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Content-Type': 'application/x-plist'};
-    _headers.removeWhere((k, v) => v == null);
-    final _data = aesBase64Body;
-    final _options = _setStreamType<dynamic>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-      contentType: 'application/x-plist',
-    )
-        .compose(
-          _dio.options,
-          '/jfweather/device/latlon/detail',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
-    final _result = await _dio.fetch(_options);
-    final _value = _result.data;
-    return _value;
-  }
-
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

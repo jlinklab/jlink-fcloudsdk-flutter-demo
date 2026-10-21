@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/door_lock/ble_upgrade.dart';
 import 'package:fcloudsdk/door_lock/door_lock_ble_api.dart';
+import 'package:fcloudsdk/door_lock/door_lock_ble_model.dart';
 import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
 import 'package:fcloudsdk/door_lock/door_lock_key_value.dart';
 import 'package:fcloudsdk/door_lock/door_lock_netip_api.dart';
+import 'package:fcloudsdk/door_lock/door_lock_netip_model.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk_example/common/code_prase.dart';
 import 'package:fcloudsdk_example/common/event.dart';
@@ -15,6 +17,7 @@ import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/manager/low_power_dev_helper.dart';
 import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/pages/add_device/manager/global_ble_search_manager.dart';
+import 'package:fcloudsdk_example/pages/door_lock/model/door_user.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +71,56 @@ class DoorLockModifyOpenTypeResult {
   final String? errorMsg;
 
   const DoorLockModifyOpenTypeResult(this.success, this.errorMsg);
+}
+
+/// 删除开锁方式结果
+class DoorLockDeleteResult {
+  ///锁端删除是否成功
+  final bool success;
+
+  ///netip 通道返回的错误码（BLE 通道为 null），供调用方识别 needSync 等
+  final DoorLockNetIpOperaterResult? err;
+
+  ///netip 通道 catch 到的原始异常（BLE 通道为 null）
+  final dynamic rawError;
+
+  const DoorLockDeleteResult(this.success, this.err, this.rawError);
+}
+
+/// 添加开锁方式结果
+class DoorLockAddResult {
+  ///锁端添加是否成功
+  final bool success;
+
+  ///添加成功后的锁端 hardwareId（失败为 -1）
+  final int hardwareId;
+
+  ///netip 通道返回的错误码（BLE 通道为 null），供调用方识别 needSync 等
+  final DoorLockNetIpOperaterResult? err;
+
+  ///netip 通道 catch 到的原始异常（BLE 通道为 null）
+  final dynamic rawError;
+
+  const DoorLockAddResult(
+      this.success, this.hardwareId, this.err, this.rawError);
+}
+
+///远程开关锁结果推送等待句柄
+class RemoteLockPushWait {
+  ///推送到达时完成并返回 true；超时/作废返回 false
+  final Future<bool> future;
+
+  ///命令受理成功后启动兜底超时（超时未收到推送则按结果未知收场）
+  final void Function() startFallbackTimer;
+
+  ///命令未受理/发送失败时作废等待
+  final void Function() cancel;
+
+  RemoteLockPushWait({
+    required this.future,
+    required this.startFallbackTimer,
+    required this.cancel,
+  });
 }
 
 mixin DoorLockOperationMixin on ChangeNotifier {
@@ -246,6 +299,57 @@ mixin DoorLockOperationMixin on ChangeNotifier {
     }
   }
 
+  // ==================== 远程开关锁结果等待 ====================
+
+  ///远程开关锁结果推送等待序号，新一轮开关锁使旧等待作废
+  int _remoteLockWaitSeq = 0;
+
+  ///订阅远程开关锁结果推送
+  ///
+  ///命令发送成功不代表锁已动作（如门已反锁设备会拒绝执行），
+  ///真实结果由服务器推送 DoorLockOpen/DoorLockClose 下发；
+  ///推送可能先于命令结果到达，须在发送命令前先订阅
+  RemoteLockPushWait _subscribeRemoteLockPush({required bool isUnlock}) {
+    final seq = ++_remoteLockWaitSeq;
+    final completer = Completer<bool>();
+    StreamSubscription<RemoteLockActionResultEvent>? sub;
+    Timer? timer;
+
+    void finish(bool pushed) {
+      if (completer.isCompleted) return;
+      timer?.cancel();
+      sub?.cancel();
+      completer.complete(pushed);
+    }
+
+    sub = eventBus.on<RemoteLockActionResultEvent>().listen((event) {
+      if (event.deviceId != deviceId || event.isUnlock != isUnlock) return;
+      if (seq != _remoteLockWaitSeq) return;
+      LogUtils.doorLock
+          .log('remote lock push result isUnlock=$isUnlock, seq: $seq');
+      finish(true);
+    });
+
+    return RemoteLockPushWait(
+      future: completer.future,
+      //兜底超时不立即启动，等命令受理后才起算，
+      //避免命令未被受理（如设备睡眠超时）时定时器先到误收转圈
+      startFallbackTimer: () {
+        timer = Timer(const Duration(seconds: 12), () {
+          //超时未收到结果推送，真实结果未知，静默收起不提示
+          LogUtils.doorLock
+              .log('remote lock push timeout, seq: $seq, as unknown');
+          finish(false);
+        });
+      },
+      cancel: () {
+        //命令未受理/发送失败，作废本次等待
+        LogUtils.doorLock.log('remote lock push cancel, seq: $seq');
+        finish(false);
+      },
+    );
+  }
+
   ///关锁
   Future<bool> lock({bool showLoading = true}) async {
     // 重试计数：BLE→WiFi→BLE 或 WiFi→BLE→WiFi，最多重试2次
@@ -292,13 +396,35 @@ mixin DoorLockOperationMixin on ChangeNotifier {
 
     sendByNetIp = () async {
       showLoading ? KToast.show() : null;
-      if (await beforeNetIp(needKeepAlive: false) == false) return false;
+      //配对门锁经蓝牙 netip 隧道发送，锁端直接回执，保持原样；
+      //纯远程 wifi 通道（非配对）命令受理≠锁已动作，发送前先订阅结果推送
+      final pushWait = device.isBlueNetIpEnable
+          ? null
+          : _subscribeRemoteLockPush(isUnlock: false);
+      if (await beforeNetIp(needKeepAlive: false) == false) {
+        pushWait?.cancel();
+        return false;
+      }
       var result = await DoorLockNetIp.lockDoor(deviceId, device.memberId ?? 1);
       if (result) {
-        KToast.show(
-          status: TR.current.tr_player_lock_succeed,
-        );
+        if (pushWait != null) {
+          //命令已受理，等推送真实结果期间保持转圈，超时结果未知静默收起
+          pushWait.startFallbackTimer();
+          final pushed = await pushWait.future;
+          if (pushed) {
+            KToast.show(
+              status: TR.current.tr_player_lock_succeed,
+            );
+          } else {
+            KToast.dismiss();
+          }
+        } else {
+          KToast.show(
+            status: TR.current.tr_player_lock_succeed,
+          );
+        }
       } else {
+        pushWait?.cancel();
         // WiFi失败，已达最大重试次数则停止
         if (retryCount >= 2) {
           KToast.show(status: TR.current.tr_player_lock_failed);
@@ -394,14 +520,34 @@ mixin DoorLockOperationMixin on ChangeNotifier {
 
     sendByNetIp = () async {
       showLoading ? KToast.show() : null;
-      if (await beforeNetIp(needKeepAlive: false) == false) return false;
+      //配对门锁经蓝牙 netip 隧道发送，锁端直接回执，保持原样；
+      //纯远程 wifi 通道（非配对）命令受理≠锁已动作，发送前先订阅结果推送
+      final pushWait = device.isBlueNetIpEnable
+          ? null
+          : _subscribeRemoteLockPush(isUnlock: true);
+      if (await beforeNetIp(needKeepAlive: false) == false) {
+        pushWait?.cancel();
+        return false;
+      }
 
       var result =
           await DoorLockNetIp.unlockDoor(deviceId, device.memberId ?? 1);
       if (result) {
-        KToast.dismiss();
+        if (pushWait != null) {
+          //命令已受理，等推送真实结果期间保持转圈，超时结果未知静默收起
+          pushWait.startFallbackTimer();
+          final pushed = await pushWait.future;
+          if (pushed) {
+            KToast.show(status: TR.current.tr_player_unlock_succeed);
+          } else {
+            KToast.dismiss();
+          }
+        } else {
+          KToast.dismiss();
+        }
         return true;
       } else {
+        pushWait?.cancel();
         // WiFi失败，已达最大重试次数则停止
         if (retryCount >= 2) {
           KToast.show(status: TR.current.tr_player_unlock_failed);
@@ -438,5 +584,242 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       }
     }
     return false;
+  }
+
+  ///删除开锁方式
+  Future<DoorLockDeleteResult> doorLockDeleteType(
+    int id,
+    JvssOperateType type,
+    bool isAdmin,
+  ) async {
+    ///蓝牙通道：直连锁端删除
+    Future<DoorLockDeleteResult> sendByBlue() async {
+      if (await beforeBlue() == false) {
+        return const DoorLockDeleteResult(false, null, null);
+      }
+      bool ok = false;
+      try {
+        ok = await doorLockBleApi
+                ?.deleteDoorOpenType(DoorLockDeleteBleOpenTypeRequest(
+              deleteType: 0x01,
+              type: BleOperateType.from(type.toBleType()),
+              hardwareId: id,
+              memberId: isAdmin ? 2 : 1,
+            )) ??
+            false;
+      } catch (e) {
+        LogUtils.doorLock.log('doorLockDeleteType sendByBlue error: $e');
+        ok = false;
+      }
+      return DoorLockDeleteResult(ok, null, null);
+    }
+
+    ///netip 通道
+    Future<DoorLockDeleteResult> sendByNetIp() async {
+      var sync = await DoorLockNetIp.syncDoorStatus(deviceId);
+      if (!sync.item1) {
+        return DoorLockDeleteResult(false, sync.item2?.err, sync.item3);
+      }
+      var result = await DoorLockNetIp.deleteDoorOpenType(
+          deviceId: deviceId, type: type, id: id);
+      return DoorLockDeleteResult(
+          result.item1, result.item2?.err, result.item3);
+    }
+
+    if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
+      return sendByNetIp();
+    } else if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue ||
+        device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
+      return sendByBlue();
+    } else {
+      ///离线：低功耗/海外锁先搜蓝牙，等到在线后走 BLE 删除
+      if (DoorLockHelper.isLowPowerBle(deviceId) ||
+          DoorLockHelper.isOverSeaDoorLock(deviceId)) {
+        bool online = await waitBleOnline();
+        if (online) {
+          return sendByBlue();
+        }
+      }
+      return const DoorLockDeleteResult(false, null, null);
+    }
+  }
+
+  ///添加永久密码
+  Future<DoorLockAddResult> doorLockAddPasswordType({
+    required String pwd,
+    required bool isAdmin,
+  }) async {
+    ///蓝牙通道：pwd 透传，流式监听录入结果，done 时取 hardwareId
+    Future<DoorLockAddResult> sendByBlue() async {
+      if (await beforeBlue() == false) {
+        return const DoorLockAddResult(false, -1, null, null);
+      }
+      final completer = Completer<DoorLockAddResult>();
+      StreamSubscription<DoorLockAddBleOpenTypeResponse>? sub;
+      try {
+        sub = doorLockBleApi
+            ?.addDoorOpenType(DoorLockAddBleOpenTypeRequest(
+          type: BleOperateType.from(JvssOperateType.password.toBleType()),
+          stage: BleInputStage.start,
+          memberId: isAdmin ? 2 : 1,
+          timelinessType: DoorLockTimelinessType.permanent,
+          pwdContent: pwd,
+        ))
+            ?.listen((response) {
+          switch (response.stage) {
+            case BleInputStage.start:
+            case BleInputStage.process:
+              break;
+            case BleInputStage.done:
+              sub?.cancel();
+              if (!completer.isCompleted) {
+                completer.complete(
+                    DoorLockAddResult(true, response.hardwareId, null, null));
+              }
+              break;
+            default:
+              sub?.cancel();
+              if (!completer.isCompleted) {
+                completer
+                    .complete(const DoorLockAddResult(false, -1, null, null));
+              }
+              break;
+          }
+        });
+      } catch (e) {
+        LogUtils.doorLock.log('doorLockAddPasswordType sendByBlue error: $e');
+        return const DoorLockAddResult(false, -1, null, null);
+      }
+      if (sub == null) {
+        return const DoorLockAddResult(false, -1, null, null);
+      }
+
+      ///兜底超时，避免锁端无响应时流式监听长期挂起
+      return completer.future.timeout(const Duration(seconds: 40),
+          onTimeout: () {
+        sub?.cancel();
+        return const DoorLockAddResult(false, -1, null, null);
+      });
+    }
+
+    ///netip 通道：先保活（syncDoorStatus）刷新同步状态，再添加，避免 needSync
+    Future<DoorLockAddResult> sendByNetIp() async {
+      var sync = await DoorLockNetIp.syncDoorStatus(deviceId);
+      if (!sync.item1) {
+        return DoorLockAddResult(false, -1, sync.item2?.err, sync.item3);
+      }
+      var result = await DoorLockNetIp.addDoorOpenType(
+        deviceId: deviceId,
+        type: JvssOperateType.password,
+        isAdmin: isAdmin,
+        pwd: pwd,
+      );
+      if (result.item1 && result.item2?.parse is DookLockOpenTypeUser) {
+        final id = (result.item2!.parse as DookLockOpenTypeUser).id;
+        return DoorLockAddResult(true, id, null, null);
+      }
+      return DoorLockAddResult(false, -1, result.item2?.err, result.item3);
+    }
+
+    if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
+      return sendByNetIp();
+    } else if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue ||
+        device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
+      return sendByBlue();
+    } else {
+      ///离线：低功耗/海外锁先搜蓝牙，等到在线后走 BLE 添加
+      if (DoorLockHelper.isLowPowerBle(deviceId) ||
+          DoorLockHelper.isOverSeaDoorLock(deviceId)) {
+        bool online = await waitBleOnline();
+        if (online) {
+          return sendByBlue();
+        }
+      }
+      return const DoorLockAddResult(false, -1, null, null);
+    }
+  }
+
+  ///获取锁端开锁方式（按设备通道自动路由 BLE / netip）
+  Future<List<DoorUser>> getLockEndUnlockingList(
+      {JvssOperateType? type}) async {
+    ///蓝牙通道：直连锁端读取
+    Future<List<DoorUser>> sendByBlue() async {
+      if (await beforeBlue() == false) return [];
+      var bleType = type != null ? BleOperateType.from(type.toBleType()) : null;
+      try {
+        var result = await doorLockBleApi?.getDoorOpenType(type: bleType) ?? [];
+        return result.map((e) => DoorUser.fromLockModel(e)).toList();
+      } catch (e) {
+        LogUtils.doorLock.log('getLockEndUnlockingList sendByBlue error: $e');
+        return [];
+      }
+    }
+
+    ///netip 通道：先保活（syncDoorStatus）再拉取，返回归一化 DoorUser
+    Future<List<DoorUser>> sendByNetIp() async {
+      var sync = await DoorLockNetIp.syncDoorStatus(deviceId);
+      if (!sync.item1) {
+        LogUtils.doorLock
+            .log('getLockEndUnlockingList 保活失败: ${sync.item2?.err}');
+        return [];
+      }
+
+      ///单类型拉取一次：失败返回 null（区别于“该类型无用户”的空列表）
+      Future<List<DoorUser>?> queryOnce(JvssOperateType queryType) async {
+        var result = await DoorLockNetIp.getDoorOpenType(
+            deviceId: deviceId, type: queryType);
+        if (result.item1 && result.item2?.parse is List) {
+          return (result.item2!.parse as List)
+              .whereType<DookLockOpenTypeUser>()
+              .map((e) => DoorUser.fromOpenTypeUser(e))
+              .toList();
+        }
+        LogUtils.doorLock.log(
+            'getLockEndUnlockingList netip 拉取失败 type=${queryType.value}: ${result.item2?.err}');
+        return null;
+      }
+
+      ///指定单类型：只拉该类型
+      if (type != null) {
+        return await queryOnce(type) ?? [];
+      }
+
+      ///全量：按能力集逐类型串行拉取，某类型失败即中断（避免半量上报）
+      var ability = device.doorUserAbility?.byte1;
+      var types = <JvssOperateType>[
+        if (ability?.supportPassword == true) JvssOperateType.password,
+        if (ability?.supportSkin == true) JvssOperateType.skin,
+        if (ability?.supportFace == true) JvssOperateType.face,
+        if (ability?.supportPalmprint == true) JvssOperateType.palmprint,
+        if (ability?.supportFingervein == true) JvssOperateType.fingervein,
+        if (ability?.supportCard == true) JvssOperateType.card,
+        if (ability?.supportPalmVein == true) JvssOperateType.palmVein,
+      ];
+      if (types.isEmpty) return [];
+      var all = <DoorUser>[];
+      for (var t in types) {
+        var list = await queryOnce(t);
+        if (list == null) break;
+        all.addAll(list);
+      }
+      return all;
+    }
+
+    if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
+      return sendByNetIp();
+    } else if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue ||
+        device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
+      return sendByBlue();
+    } else {
+      ///离线：低功耗/海外锁先搜蓝牙，等到在线后走 BLE 读取
+      if (DoorLockHelper.isLowPowerBle(deviceId) ||
+          DoorLockHelper.isOverSeaDoorLock(deviceId)) {
+        bool online = await waitBleOnline();
+        if (online) {
+          return sendByBlue();
+        }
+      }
+      return [];
+    }
   }
 }

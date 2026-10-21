@@ -188,6 +188,92 @@ abstract class DoorLockAPI {
   Future<dynamic> getDoorLockInfo(
       {@Field('deviceSn') required String deviceSn,
       @Field('parentPid') String? parentPid});
+
+  ///获取所有密码列表（临时、自定义、离线）
+  @POST('/v3/devicePwd/selAllPwd$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> getAllPwd({
+    @Field('paramDTO') required Map<String, dynamic> sn,
+    @Field('deviceSnDTO') required Map<String, dynamic> deviceSn,
+    @Field('queryUnlockInfoListByPageDTO')
+    required Map<String, dynamic> unlockInfo,
+  });
+
+  ///删除离线密码
+  @POST('/v3/unlockInfo/deleteUnlockInfo$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> deleteUnlockInfo({
+    @Field('id') required String id,
+  });
+
+  ///修改离线密码昵称
+  @POST('/v3/unlockInfo/updateUnlockInfo$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> updateUnlockInfo({
+    @Field('id') required String id,
+    @Field('name') required String editName,
+  });
+
+  ///生成离线密码（单次/限时/循环）
+  @POST('/v3/unlockInfo/generateUnlockPwd$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> generateOfflineUnlockPwd({
+    @Field('deviceSn') required String deviceSn,
+    @Field('pwdName') String? pwdName,
+    @Field('createTime') required int createTime,
+    @Field('validType') required String validType,
+    @Field('startHour') int? startHour,
+    @Field('endHour') int? endHour,
+    @Field('time') String? time,
+    @Field('week') String? week,
+    @Field('year') int? year,
+    @Field('overOneYear') int? overOneYear,
+    @Field('startTime') int? startTime,
+    @Field('endTime') int? endTime,
+    @Field('pwdLengthRange') List<int>? pwdLengthRange,
+    @Field('unlockMode') String unlockMode = '0x04',
+    @Field('memberId') int? memberId,
+  });
+
+  ///添加临时密码（自定义）
+  @POST('/v3/tempPwd/add$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> addTempPwd({
+    @Field('deviceSn') required String deviceSn,
+    @Field('password') required String password,
+    @Field('rpt') required String rpt,
+    @Field('name') required String name,
+    @Field('startTime') required String startTime,
+    @Field('endTime') required String endTime,
+    @Field('startTimeStamp') required int startTimeStamp,
+    @Field('endTimeStamp') required int endTimeStamp,
+    @Field('uType') required int uType,
+    @Field('memberId') int? memberId,
+  });
+
+  ///更新临时密码（全量更新：改昵称也需带上整条记录原有字段）
+  @POST('/v3/tempPwd/update$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> updateTempPwd({
+    @Field('deviceSn') required String deviceSn,
+    @Field('password') required String password,
+    @Field('rpt') required String rpt,
+    @Field('name') required String name,
+    @Field('startTime') required String startTime,
+    @Field('endTime') required String endTime,
+    @Field('startTimeStamp') required int startTimeStamp,
+    @Field('endTimeStamp') required int endTimeStamp,
+    @Field('uType') required int uType,
+    @Field('id') required String id,
+  });
+
+  ///删除临时密码（服务器计算密码，仅删服务器记录，无需锁端交互）
+  @POST('/v3/tempPwd/del$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> deleteTmpPassword({
+    @Field('id') required String id,
+    @Field('deviceSn') required String deviceSn,
+  });
 }
 
 DoorLockAPI doorlockAPI = DoorLockAPI(DioConfig.getDio());

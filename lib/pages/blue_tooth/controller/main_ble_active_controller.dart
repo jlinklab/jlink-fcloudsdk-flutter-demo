@@ -488,7 +488,6 @@ class MainBleActiveController extends ChangeNotifier {
       logs.add('区域激活: 上报JVSS失败: $e');
     }
 
-    ///上报天气服务器并回写设备：demo暂不接 WeatherService，跳过
     logs.add('区域激活完成');
   }
 

@@ -12,7 +12,9 @@ import 'package:fcloudsdk_example/pages/add_device/manager/global_ble_search_man
 import 'package:fcloudsdk_example/pages/door_lock/model/user_manager_ui.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_action.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
+import 'package:fcloudsdk_example/utils/debounce_throttle.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_operation.dart';
+import 'package:fcloudsdk_example/pages/door_lock/user_manager/door_lock_password_list_page.dart';
 import 'package:fcloudsdk_example/utils/permission_utils.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +29,13 @@ class DoorLockHomeController extends DoorLockPageController
   ///前置数据请求是否完成
   bool isReady = false;
 
-  ///用户管理入口列表（对齐 jlink userManagerUIList）
+  ///用户管理入口列表
   List<UserManagerUI> userManagerUIList = [];
 
   StreamSubscription<BlueOnlineEvent>? _blueOnlineEvent;
+
+  ///服务器设备状态流（在线/休眠变化）订阅
+  StreamSubscription<DeviceStateUpdateEvent>? _deviceStateEvent;
 
   DoorLockHomeController({required super.context, required this.deviceId}) {
     init();
@@ -41,6 +46,9 @@ class DoorLockHomeController extends DoorLockPageController
 
     ///用户管理，先使用缓存渲染一次
     _getUserManagerList();
+
+    ///获取门锁状态（含密钥/基准年同步状态，供生成密码页判断是否已同步）
+    getDoorLockInfoFromJvss();
 
     ///前置必要数据请求，如果仅做数据获取，可以提前到这些步骤之前做
     await DoorLockKeyValueManager.instance.requestService(deviceId);
@@ -59,6 +67,10 @@ class DoorLockHomeController extends DoorLockPageController
   }
 
   Future<bool> _checkPermission() async {
+    ///先只读一次蓝牙权限状态填充缓存：onlyWifi 会提前返回，
+    ///若此处不读，随后的 startScan 会因缓存标志位未初始化误判“权限未开启”而不扫描
+    await AddDevicePermissionUsecase.instance.checkOnlyBlue(onlyStatus: true);
+
     if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
       return true;
     }
@@ -101,6 +113,18 @@ class DoorLockHomeController extends DoorLockPageController
       }
     });
 
+    ///服务器设备状态流：在线/休眠变化时重算指令通道状态，
+    ///避免蓝牙路径丢失（oldSn 不匹配/throttle 抑制）后按钮迟迟不变色
+    _deviceStateEvent =
+        eventBus.on<DeviceStateUpdateEvent>().listen((event) async {
+      if (event.deviceId != deviceId) return;
+      DebounceThrottle.debounce(() async {
+        await DoorLockHelper.refreshDoorLockStatus(deviceId);
+        notifyListeners();
+      }, const Duration(milliseconds: 500),
+          key: '_deviceStateEvent_$hashCode');
+    });
+
     ///开始低频搜索
     if (DoorLockHelper.showBlueOnlineState(deviceId: deviceId)) {
       await _checkPermission();
@@ -115,6 +139,7 @@ class DoorLockHomeController extends DoorLockPageController
   void dispose() {
     GlobalBleSearchManager.instance.stopScan();
     _blueOnlineEvent?.cancel();
+    _deviceStateEvent?.cancel();
 
     if (device.isBlueNetIpEnable) {
       DoorLockHelper.closeBlueNetIp(sn: deviceId);
@@ -124,33 +149,26 @@ class DoorLockHomeController extends DoorLockPageController
 
   // ==================== 用户管理入口聚合 ====================
 
-  ///聚合首页“用户管理”列表（对齐 jlink _getUserManagerList）
-  ///
-  ///范围精简说明（与 jlink 差异）：
-  ///- 不含电子钥匙：demo Device 无 devExtPidPropList
-  ///- 不含人形侦测：demo Device 无 props 字段（showPirConfigToHumanDetection）
-  ///- 不含配件：demo 无 AppType / CountryProvider（needShowLowPowerTips）
-  ///- “设置”项在 demo 也暂未实现，但作为入口保留（对齐 jlink 总是显示）
   void _getUserManagerList() {
     userManagerUIList.clear();
 
     ///分享权限（非分享设备 hasPermission 默认返回 true）
     bool sharePassword =
         device.hasPermission(permission: DevicePermission.DP_DoorLockPsw);
-    bool shareSkin = device
-        .hasPermission(permission: DevicePermission.DP_DoorLockFingerprint);
+    bool shareSkin = device.hasPermission(
+        permission: DevicePermission.DP_DoorLockFingerprint);
     bool shareFace =
         device.hasPermission(permission: DevicePermission.DP_DoorLockFace);
-    bool sharePalmprint = device
-        .hasPermission(permission: DevicePermission.DP_DoorLockPalmprint);
-    bool shareFingervein = device
-        .hasPermission(permission: DevicePermission.DP_DoorLockFingerVein);
+    bool sharePalmprint =
+        device.hasPermission(permission: DevicePermission.DP_DoorLockPalmprint);
+    bool shareFingervein = device.hasPermission(
+        permission: DevicePermission.DP_DoorLockFingerVein);
     bool shareCard =
         device.hasPermission(permission: DevicePermission.DP_DoorLockCard);
-    bool sharePalmVein = device
-        .hasPermission(permission: DevicePermission.DP_DoorLockPalmVein);
-    bool shareOperateRecord = device
-        .hasPermission(permission: DevicePermission.DP_DoorLockOperateRecord);
+    bool sharePalmVein =
+        device.hasPermission(permission: DevicePermission.DP_DoorLockPalmVein);
+    bool shareOperateRecord = device.hasPermission(
+        permission: DevicePermission.DP_DoorLockOperateRecord);
 
     ///海外锁：写死密码/指纹/卡片/操作记录，只看分享权限
     bool isOversea = DoorLockHelper.isOverSeaDoorLock(deviceId);
@@ -198,19 +216,27 @@ class DoorLockHomeController extends DoorLockPageController
       userManagerUIList.add(UserManagerUI(type: JvssOperateType.tmpPassword));
     }
     if (supportOperateRecord && shareOperateRecord) {
-      userManagerUIList
-          .add(UserManagerUI(type: JvssOperateType.operateRecord));
+      userManagerUIList.add(UserManagerUI(type: JvssOperateType.operateRecord));
     }
-
-    ///设置（总是显示，对齐 jlink）
-    userManagerUIList.add(UserManagerUI(type: JvssOperateType.settings));
 
     notifyListeners();
   }
 
-  ///点击用户管理入口（demo 具体子页面未实现，统一弹框提示）
+  ///点击用户管理入口
+  ///- password：跳转密码列表页（本次同步的最小闭环）
+  ///- 其他类型：具体子页面未实现，弹框提示
   void checkUserManager(UserManagerUI item) {
     if (!context.mounted) return;
+
+    if (item.type == JvssOperateType.password) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => DoorLockPasswordListPage(deviceId: deviceId),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(

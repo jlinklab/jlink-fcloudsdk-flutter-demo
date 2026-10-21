@@ -67,7 +67,7 @@ class DoorLockHelper {
   static isBleDoorLock(String deviceId) {
     var device = DeviceManager.instance.getDevice(deviceId: deviceId);
 
-    bool propMatch = (device?.propList ?? []).contains('bleLockPair');
+    bool propMatch = device?.props?.contains('bleLockPair') ?? false;
 
     bool isOverSeaMatch = isOverSeaDoorLock(deviceId);
 
@@ -114,7 +114,6 @@ class DoorLockHelper {
 
   ///是否低功耗蓝牙锁
   ///原逻辑：device?.doorLockExInfo?.byte1.supportBluetoothOnLockPlate == true || DoorLockKeyValueLocal.supportLowPowerBle
-  ///demo 无设备对象，使用 DoorLockKeyValueLocal（SDK 激活时已 saveAndUpload 存储本地）
   static isLowPowerBle(String deviceId) {
     return DoorLockKeyValueLocal.supportLowPowerBle(deviceId: deviceId);
   }
@@ -548,7 +547,7 @@ class DoorLockHelper {
     return device!.doorLockBleAbility!.byte3.supportLockInside;
   }
 
-  ///是否显示用户管理-密码入口（对齐 jlink showUserManagerPwd）
+  ///是否显示用户管理-密码入口
   static bool showUserManagerPwd({required String deviceId}) {
     var device = DeviceManager.instance.getDevice(deviceId: deviceId);
     if (device == null) return false;
@@ -564,7 +563,7 @@ class DoorLockHelper {
     return userAbility || offlineAbility;
   }
 
-  ///是否支持临时密码 / 自定义密码（对齐 jlink supportTempPwd）
+  ///是否支持临时密码 / 自定义密码
   static bool supportTempPwd({required String deviceId}) {
     var device = DeviceManager.instance.getDevice(deviceId: deviceId);
     if (device == null) return false;
@@ -579,13 +578,13 @@ class DoorLockHelper {
         (tempAbility || tmpProp || tempAbilityOld);
   }
 
-  ///是否显示用户管理-临时密码（对齐 jlink showTempPwd，demo 不含电子钥匙分享判断）
+  ///是否显示用户管理-临时密码（demo 不含电子钥匙分享判断）
   static bool showTempPwd({required String deviceId}) {
     var supportTemp = supportTempPwd(deviceId: deviceId);
     return supportTemp && !isLowPowerBle(deviceId);
   }
 
-  ///用户管理入口是否显示（对齐 jlink checkUserManagerShow）
+  ///用户管理入口是否显示
   ///首页“用户管理”区域是否渲染：任一能力+对应分享权限命中则显示
   static bool checkUserManagerShow({required String deviceId}) {
     var device = DeviceManager.instance.getDevice(deviceId: deviceId);
@@ -593,18 +592,18 @@ class DoorLockHelper {
 
     var sharePassword =
         device.hasPermission(permission: DevicePermission.DP_DoorLockPsw);
-    var shareSkin = device
-        .hasPermission(permission: DevicePermission.DP_DoorLockFingerprint);
+    var shareSkin = device.hasPermission(
+        permission: DevicePermission.DP_DoorLockFingerprint);
     var shareFace =
         device.hasPermission(permission: DevicePermission.DP_DoorLockFace);
-    var sharePalmprint = device
-        .hasPermission(permission: DevicePermission.DP_DoorLockPalmprint);
+    var sharePalmprint =
+        device.hasPermission(permission: DevicePermission.DP_DoorLockPalmprint);
     var shareCard =
         device.hasPermission(permission: DevicePermission.DP_DoorLockCard);
-    var shareFingerVein = device
-        .hasPermission(permission: DevicePermission.DP_DoorLockFingerVein);
-    var sharePalmVein = device
-        .hasPermission(permission: DevicePermission.DP_DoorLockPalmVein);
+    var shareFingerVein = device.hasPermission(
+        permission: DevicePermission.DP_DoorLockFingerVein);
+    var sharePalmVein =
+        device.hasPermission(permission: DevicePermission.DP_DoorLockPalmVein);
 
     return (showUserManagerPwd(deviceId: deviceId) && sharePassword) ||
         (device.doorUserAbility?.byte1.supportSkin == true && shareSkin) ||
@@ -614,6 +613,7 @@ class DoorLockHelper {
         (device.doorUserAbility?.byte1.supportCard == true && shareCard) ||
         (device.doorUserAbility?.byte1.supportFingervein == true &&
             shareFingerVein) ||
-        (device.doorUserAbility?.byte1.supportPalmVein == true && sharePalmVein);
+        (device.doorUserAbility?.byte1.supportPalmVein == true &&
+            sharePalmVein);
   }
 }

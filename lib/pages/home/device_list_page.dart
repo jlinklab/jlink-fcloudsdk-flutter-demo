@@ -253,6 +253,11 @@ class _DeviceCard extends StatelessWidget {
   bool get _isLowPower =>
       device.isLowPowerType || DeviceTypeUtil.isSleepSateDevice(device);
 
+  /// 门锁是否处于蓝牙配对状态（已配对未配网，含假配网）
+  /// 此时服务器在线状态不可信，不展示状态，改展示蓝牙图标
+  bool get _isPairedDoorLock =>
+      DoorLockHelper.isDoorLock(device.uuid) && !device.doorlockIsConfigNet;
+
   /// 获取低功耗设备的休眠状态
   /// 非低功耗设备返回 null，上层可直接基于 [Device.state] 判断在线/离线
   DeviceSleepState? _getSleepState() {
@@ -340,6 +345,9 @@ class _DeviceCard extends StatelessWidget {
   /// 对于 NVR 多通道设备，先登录设备，成功后跳转到通道列表
   /// 对于普通设备，直接跳转到预览
   void _goToPreview(BuildContext context) async {
+    // 登录设备
+    await _loginDevice();
+
     // 检查是否是 NVR 多通道设备
     final bool isNVR = await _checkIsNVR();
 
@@ -357,6 +365,31 @@ class _DeviceCard extends StatelessWidget {
         'type': type.toString(),
         'pid': device.pid.isNotEmpty ? device.pid : '-1'
       });
+    }
+  }
+
+  Future<void> _loginDevice() async {
+    try {
+      final String deviceId = device.uuid;
+      if (deviceId.isEmpty) return;
+      final String token = device.adminToken;
+      if (token.isNotEmpty) {
+        await JFApi.xcDevice.xcSetDeviceToken(deviceId: deviceId, token: token);
+        debugPrint('[DeviceList] xcSetDeviceToken done: $deviceId');
+      } else if (device.password.isNotEmpty) {
+        final String userName =
+            (device.userName ?? '').isNotEmpty ? device.userName! : 'admin';
+        await JFApi.xcDevice.xcSetLocalUserNameAndPwd(
+            deviceId: deviceId,
+            userName: userName,
+            pwd: 'MD5_${device.password}');
+        debugPrint('[DeviceList] xcSetLocalUserNameAndPwd done: $deviceId');
+      } else {
+        debugPrint(
+            '[DeviceList] no adminToken/password, skip credential sync: $deviceId');
+      }
+    } catch (e) {
+      debugPrint('[DeviceList] _syncDeviceCredentialToSdk error: $e');
     }
   }
 
@@ -543,14 +576,18 @@ class _DeviceCard extends StatelessWidget {
               // 第一行：设备名称 + 状态指示
               Row(
                 children: [
-                  Container(
-                    width: 10,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: stateInfo.color,
+                  // 门锁配对状态：不显示在线状态圆点，显示蓝牙图标
+                  if (_isPairedDoorLock)
+                    const Icon(Icons.bluetooth, size: 16, color: Colors.blue)
+                  else
+                    Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: stateInfo.color,
+                      ),
                     ),
-                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -626,7 +663,10 @@ class _DeviceCard extends StatelessWidget {
                               AlarmMessageListPage(deviceId: device.uuid)));
                     },
                   ),
-                  if (!device.fromShare) ...[
+
+                  ///门锁设备不显示分享
+                  if (!device.fromShare &&
+                      !DoorLockHelper.isDoorLock(device.uuid)) ...[
                     const SizedBox(width: 8),
                     _ActionButton(
                       icon: Icons.share_outlined,

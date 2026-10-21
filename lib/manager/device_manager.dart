@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/utils/extensions.dart';
 import 'package:fcloudsdk_example/api/door_lock_api.dart';
+import 'package:fcloudsdk_example/common/event.dart';
+import 'package:fcloudsdk_example/event/event.dart';
 import 'package:fcloudsdk_example/manager/push_manager.dart';
 import 'package:fcloudsdk_example/manager/user_group_manager.dart';
 
@@ -159,7 +161,7 @@ class DeviceManager {
   void _ensureStateListener() {
     if (_deviceStateSubscription == null && _onDeviceStateChanged != null) {
       _deviceStateSubscription =
-          AccountAPI.instance.deviceStateStream.listen((event) {
+          AccountAPI.instance.deviceStateStream.listen((event) async {
         final device = allDevices.firstWhereOrNull((e) => e.uuid == event.uuid);
         if (device != null) {
           debugPrint('${device.uuid} 拿到设备状态 ${event.state}');
@@ -168,8 +170,11 @@ class DeviceManager {
           //查询低功耗状态放到拿到设备状态之后再去查询，不然不准
           if (device.isLowPowerType ||
               DeviceTypeUtil.isSleepSateDevice(device)) {
-            _queryLowPowerDevStates(device);
+            await _queryLowPowerDevStates(device);
           }
+
+          ///在线/休眠状态变化，广播给门锁首页等页面重算指令通道状态
+          eventBus.fire(DeviceStateUpdateEvent(deviceId: device.uuid));
         }
       });
     }

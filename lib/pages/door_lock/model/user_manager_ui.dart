@@ -2,10 +2,6 @@ import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
 import 'package:flutter/material.dart';
 
 ///门锁首页“用户管理”入口 UI 模型
-///
-///对齐 jlink UserManagerUI，但按 demo UI 约定精简：
-///- 图标使用 Flutter 内置 IconData（demo 未内置 jlink 的 svg 资源）
-///- 名称硬编码中文（demo UI 展示与错误提示约定）
 class UserManagerUI {
   final JvssOperateType type;
 
@@ -45,7 +41,7 @@ class UserManagerUI {
     }
   }
 
-  ///入口名称（硬编码中文，符合 demo UI 约定）
+  ///入口名称
   String get name {
     switch (type) {
       case JvssOperateType.password:

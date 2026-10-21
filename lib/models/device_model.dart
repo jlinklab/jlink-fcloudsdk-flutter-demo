@@ -73,6 +73,10 @@ class Device {
   ///[DevicePropertyManager.instance.isAOVAsync]
   List<Map<String, dynamic>>? propList;
 
+  ///设备能力标识列表（如 bleLockPair / wifiFeeder / sleepState），随设备列表 JSON 的 props 字段同步下发
+  ///区别于 [propList]：props 是字符串数组、拉列表即有；propList 是按 pid 异步拉取的属性详情
+  List<String>? props;
+
   String? parentPid;
 
   String? localUiKey;
@@ -258,6 +262,7 @@ class Device {
     device.memberId = json['memberId'];
     device.devMac = json['devMac'];
     device.peripheralIdentifier = json['peripheralIdentifier'];
+    device.props = json['props']?.cast<String>();
     return device;
   }
 
@@ -476,14 +481,12 @@ class SharedDevice extends Device {
                   (e) => SharedDevicePermission.fromJson(e))
               .toList();
     }
+    sharedDevice.props = json['props']?.cast<String>();
     return sharedDevice;
   }
 
   @override
   bool hasPermission({required DevicePermission permission}) {
-    ///同时按 name 与 value 匹配：
-    ///- name 兼容 demo 早期从枚举名直接写入的权限字符串
-    ///- value 对齐 jlink / 服务端下发的权限 key（如 doorLockPwd）
     SharedDevicePermission? devicePermission = permissions.firstWhereOrNull(
         (e) => e.permission == permission.value || e.permission == permission.name);
     if (devicePermission == null) {

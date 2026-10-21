@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
+import 'package:fcloudsdk_example/common/event.dart';
+import 'package:fcloudsdk_example/event/event.dart';
 
 import 'permission_utils.dart';
 
@@ -99,6 +101,7 @@ void showNotificationFromJson(String jsonString) {
         data['AlarmID']?.toString() ??
         DateTime.now().toString();
     LogUtils.push.log('推送 $id-$title-$content-$jsonString');
+    _parseRemoteLockResult(data);
     showPushNotification(
       id: id,
       title: title,
@@ -107,5 +110,43 @@ void showNotificationFromJson(String jsonString) {
     );
   } catch (e) {
     print('解析推送数据失败: $e');
+  }
+}
+
+///解析远程开关锁结果推送并广播事件
+///
+///远程开关锁命令受理成功不代表锁已动作，锁真实执行后
+///服务器会推送 DoorLockOpen/DoorLockClose（ExtInfo.MsgType 为 Remote）
+void _parseRemoteLockResult(Map<String, dynamic> data) {
+  try {
+    final Map<String, dynamic>? alarmInfo =
+        data['AlarmInfo'] is Map<String, dynamic> ? data['AlarmInfo'] : null;
+    if (alarmInfo == null) return;
+
+    //只有远程触发的开关锁才作为命令回执
+    final Map<String, dynamic>? extInfo =
+        alarmInfo['ExtInfo'] is Map<String, dynamic> ? alarmInfo['ExtInfo'] : null;
+    if (extInfo?['MsgType']?.toString() != 'Remote') return;
+
+    final String? event = alarmInfo['Event']?.toString();
+    final bool isUnlock;
+    if (event == 'DoorLockOpen') {
+      isUnlock = true;
+    } else if (event == 'DoorLockClose') {
+      isUnlock = false;
+    } else {
+      return;
+    }
+
+    final Map<String, dynamic>? allPushInfo =
+        data['AllPushInfo'] is Map<String, dynamic> ? data['AllPushInfo'] : null;
+    final String deviceId = allPushInfo?['SerialNumber']?.toString() ?? '';
+    if (deviceId.isEmpty) return;
+
+    LogUtils.push.log('远程开关锁回执 deviceId=$deviceId isUnlock=$isUnlock');
+    eventBus.fire(
+        RemoteLockActionResultEvent(deviceId: deviceId, isUnlock: isUnlock));
+  } catch (e) {
+    LogUtils.push.log('解析远程开关锁推送失败: $e');
   }
 }

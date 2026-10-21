@@ -8,9 +8,6 @@ import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/utils/push_notification.dart';
 
-/// 低功耗设备状态类型
-const int _kLowPowerStateType = 8;
-
 /// 设备列表 UI 状态管理
 /// 仅负责驱动 UI 刷新，实际数据操作委托给 [DeviceManager] 单例
 /// 外部类需要获取设备数据时，请直接使用 [DeviceManager.instance]

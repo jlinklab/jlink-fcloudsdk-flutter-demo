@@ -90,6 +90,9 @@ class MainBlePairConfigController extends ChangeNotifier {
 
   late final DoorLockBleApi doorLockBleApi;
 
+  ///蓝牙版本读取器
+  BleUpgrade? bleUpgrade;
+
   BleNewDistribute? bleDistribute;
 
   ///门锁初始化中间数据
@@ -240,6 +243,13 @@ class MainBlePairConfigController extends ChangeNotifier {
     await _uploadInfoToShadow();
     await _uploadInfoToJvss();
 
+    ///同步结果写回内存 Device（避免生成密码页读到默认 false 而误报未同步）
+    final dev = DeviceManager.instance.getDevice(deviceId: model.deviceId);
+    if (dev != null) {
+      dev.keySyncState = syncKeyPair;
+      dev.yearSyncState = syncJvssBaseYear;
+    }
+
     _log('门锁初始化结束');
     _updateView();
   }
@@ -295,14 +305,12 @@ class MainBlePairConfigController extends ChangeNotifier {
   ///获取锁版本信息
   _getDeviceVersion() async {
     try {
-      var bleUpgrade =
-          BleUpgrade(uuid: model.blueUUID, activeSn: model.deviceId);
-      var result = await bleUpgrade.getDeviceVersion();
+      bleUpgrade ??= BleUpgrade(uuid: model.blueUUID, activeSn: model.deviceId);
+      var result = await bleUpgrade!.getDeviceVersion();
       if (result != null && result.isNotEmpty) {
         doorLockVersion = result;
       }
       _log('获取锁版本: $result');
-      await bleUpgrade.dispose();
     } catch (e) {
       _log('获取锁版本失败: $e');
     }
@@ -1356,6 +1364,7 @@ class MainBlePairConfigController extends ChangeNotifier {
     }
     _stopDistribute();
     doorLockBleApi.dispose();
+    bleUpgrade?.dispose();
     super.dispose();
   }
 }

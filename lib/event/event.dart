@@ -33,3 +33,25 @@ class BlueOnlineEvent {
     required this.isChanged,
   });
 }
+
+/// 设备在线/休眠状态变化（服务器设备状态流下发）
+///
+///门锁首页监听此事件重算指令通道状态（doolockCmdStatus），
+///让开关锁按钮及时随在线/休眠状态变色
+class DeviceStateUpdateEvent {
+  final String deviceId;
+
+  DeviceStateUpdateEvent({required this.deviceId});
+}
+
+/// 远程开关锁结果推送（锁真实执行动作后服务器推送 DoorLockOpen/DoorLockClose）
+///
+///远程命令受理成功不代表锁已动作，开关锁页面等待此事件
+///把转圈替换为成功提示
+///[isUnlock] true 开锁 / false 关锁
+class RemoteLockActionResultEvent {
+  final String deviceId;
+  final bool isUnlock;
+
+  RemoteLockActionResultEvent({required this.deviceId, required this.isUnlock});
+}
