@@ -15,7 +15,7 @@ import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart'
 import 'package:fcloudsdk_example/utils/debounce_throttle.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_operation.dart';
 import 'package:fcloudsdk_example/pages/door_lock/user_manager/door_lock_password_list_page.dart';
-import 'package:fcloudsdk_example/pages/door_lock/user_manager/door_lock_skin_list_page.dart';
+import 'package:fcloudsdk_example/pages/door_lock/user_manager/door_lock_user_list_page.dart';
 import 'package:fcloudsdk_example/utils/permission_utils.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 import 'package:flutter/material.dart';
@@ -158,8 +158,6 @@ class DoorLockHomeController extends DoorLockPageController
         device.hasPermission(permission: DevicePermission.DP_DoorLockPsw);
     bool shareSkin = device.hasPermission(
         permission: DevicePermission.DP_DoorLockFingerprint);
-    bool shareFace =
-        device.hasPermission(permission: DevicePermission.DP_DoorLockFace);
     bool sharePalmprint =
         device.hasPermission(permission: DevicePermission.DP_DoorLockPalmprint);
     bool shareFingervein = device.hasPermission(
@@ -179,7 +177,6 @@ class DoorLockHomeController extends DoorLockPageController
         isOversea || DoorLockHelper.showUserManagerPwd(deviceId: deviceId);
     bool supportSkin =
         isOversea || device.doorUserAbility?.byte1.supportSkin == true;
-    bool supportFace = device.doorUserAbility?.byte1.supportFace == true;
     bool supportPalmprint =
         device.doorUserAbility?.byte1.supportPalmprint == true;
     bool supportFingervein =
@@ -197,9 +194,6 @@ class DoorLockHomeController extends DoorLockPageController
     }
     if (supportSkin && shareSkin) {
       userManagerUIList.add(UserManagerUI(type: JvssOperateType.skin));
-    }
-    if (supportFace && shareFace) {
-      userManagerUIList.add(UserManagerUI(type: JvssOperateType.face));
     }
     if (supportPalmprint && sharePalmprint) {
       userManagerUIList.add(UserManagerUI(type: JvssOperateType.palmprint));
@@ -225,7 +219,8 @@ class DoorLockHomeController extends DoorLockPageController
 
   ///点击用户管理入口
   ///- password：跳转密码列表页
-  ///- skin：跳转指纹管理列表页（列表+锁端补全+录入+删除+详情）
+  ///- tmpPassword：跳转临时密码列表页（复用密码列表页仅临时密码模式）
+  ///- skin/card/palmprint：跳转锁端录入类通用列表页（列表+锁端补全+录入+删除+详情）
   ///- 其他类型：具体子页面未实现，弹框提示
   void checkUserManager(UserManagerUI item) {
     if (!context.mounted) return;
@@ -239,10 +234,27 @@ class DoorLockHomeController extends DoorLockPageController
       return;
     }
 
-    if (item.type == JvssOperateType.skin) {
+    if (item.type == JvssOperateType.tmpPassword) {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (_) => DoorLockSkinListPage(deviceId: deviceId),
+          builder: (_) => DoorLockPasswordListPage(
+            deviceId: deviceId,
+            type: JvssOperateType.tmpPassword,
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (item.type == JvssOperateType.skin ||
+        item.type == JvssOperateType.card ||
+        item.type == JvssOperateType.palmprint) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => DoorLockUserListPage(
+            deviceId: deviceId,
+            type: item.type,
+          ),
         ),
       );
       return;

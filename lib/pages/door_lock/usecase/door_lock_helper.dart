@@ -641,8 +641,6 @@ class DoorLockHelper {
         device.hasPermission(permission: DevicePermission.DP_DoorLockPsw);
     var shareSkin = device.hasPermission(
         permission: DevicePermission.DP_DoorLockFingerprint);
-    var shareFace =
-        device.hasPermission(permission: DevicePermission.DP_DoorLockFace);
     var sharePalmprint =
         device.hasPermission(permission: DevicePermission.DP_DoorLockPalmprint);
     var shareCard =
@@ -654,7 +652,6 @@ class DoorLockHelper {
 
     return (showUserManagerPwd(deviceId: deviceId) && sharePassword) ||
         (device.doorUserAbility?.byte1.supportSkin == true && shareSkin) ||
-        (device.doorUserAbility?.byte1.supportFace == true && shareFace) ||
         (device.doorUserAbility?.byte1.supportPalmprint == true &&
             sharePalmprint) ||
         (device.doorUserAbility?.byte1.supportCard == true && shareCard) ||

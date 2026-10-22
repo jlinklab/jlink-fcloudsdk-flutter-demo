@@ -17,25 +17,67 @@ import 'package:fcloudsdk_example/pages/door_lock/user_manager/add_door_lock_vai
 import 'package:fcloudsdk_example/pages/door_lock/user_manager/door_lock_user_detail_page.dart';
 import 'package:flutter/material.dart';
 
-///门锁指纹管理列表页
-///
-///- 列表：服务器 getAllPwd 过滤指纹用户，在线时静默从锁端拉指纹用户 updateAll 补全
-///- 删除：按通道路由（BLE/netip）删锁端 → 服务器 del 上报
-///- 添加：底部按钮进录入引导页（普通/管理员）
-///- 详情：复用用户详情页（昵称编辑走 FingerManger）
-class DoorLockSkinListPage extends StatefulWidget {
+///门锁锁端录入类开锁方式通用列表页（指纹/卡片等）
+class DoorLockUserListPage extends StatefulWidget {
   final String deviceId;
 
-  const DoorLockSkinListPage({super.key, required this.deviceId});
+  ///开锁方式类型（指纹/卡片等锁端录入类）
+  final JvssOperateType type;
+
+  const DoorLockUserListPage({
+    super.key,
+    required this.deviceId,
+    required this.type,
+  });
 
   @override
-  State<DoorLockSkinListPage> createState() => _DoorLockSkinListPageState();
+  State<DoorLockUserListPage> createState() => _DoorLockUserListPageState();
 }
 
-class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
-  static const JvssOperateType _type = JvssOperateType.skin;
+class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
+  JvssOperateType get _type => widget.type;
 
-  ///指纹用户列表
+  ///类型展示名（删除确认/空态/日志文案派生）
+  String get _typeText {
+    switch (_type) {
+      case JvssOperateType.skin:
+        return '指纹';
+      case JvssOperateType.card:
+        return '卡片';
+      case JvssOperateType.face:
+        return '人脸';
+      case JvssOperateType.palmprint:
+        return '掌纹';
+      case JvssOperateType.fingervein:
+        return '指静脉';
+      case JvssOperateType.palmVein:
+        return '掌静脉';
+      default:
+        return '用户';
+    }
+  }
+
+  ///空态图标
+  IconData get _typeIcon {
+    switch (_type) {
+      case JvssOperateType.skin:
+        return Icons.fingerprint;
+      case JvssOperateType.card:
+        return Icons.credit_card;
+      case JvssOperateType.face:
+        return Icons.face;
+      case JvssOperateType.palmprint:
+        return Icons.pan_tool;
+      case JvssOperateType.fingervein:
+        return Icons.touch_app;
+      case JvssOperateType.palmVein:
+        return Icons.bloodtype;
+      default:
+        return Icons.help_outline;
+    }
+  }
+
+  ///用户列表
   List<DoorUser> _userList = [];
 
   ///加载中
@@ -46,6 +88,11 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
 
   ///loading 弹框是否显示中
   bool _loadingShown = false;
+
+  ///锁端拉取串行锁：BLE 透传回包无法区分是哪个查询的响应，
+  ///两个拉取并发会互相截胡回包导致数据残缺（如全量只拿到后结束那条
+  ///单类型查询的数据），须排队串行执行
+  Future<void>? _lockEndSyncLock;
 
   ///错误信息（拉取失败时展示）
   String? _errorMsg;
@@ -76,9 +123,9 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
 
   // ==================== 列表加载 ====================
 
-  ///1. 先从服务器拉取指纹用户并渲染（快速可见）
+  ///1. 先从服务器拉取该类型用户并渲染（快速可见）
   ///2. 昵称拉取与锁端补全并行（纯服务器接口不等锁端长耗时流程，避免昵称延迟回填）
-  ///3. 设备在线时，静默从锁端拉指纹用户 updateAll 上报服务器（补全缺失数据）
+  ///3. 设备在线时，静默从锁端拉用户 updateAll 上报服务器（补全缺失数据）
   ///4. 上报后再次从服务器刷新列表（列表对象重建，昵称再回填一次）
   Future<void> _loadList() async {
     final ok = await _fetchFromServer();
@@ -101,10 +148,6 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
   }
 
   ///从昵称服务拉取用户昵称并按 UserId 匹配回填列表
-  ///
-  ///昵称不在 getAllPwd（doorLockUserInfoVOS）返回内，写入端为录入上报与
-  ///详情页修改（insertOrUpdate）；返回 Map 以开锁方式类型字符串为 key
-  ///（如 FingerManger），值为 [{UserId, NickName, HeadPortrait}] 列表。
   Future<void> _fetchNicknames() async {
     try {
       final res = await doorlockAPI.queryAlarmMessageNickName(
@@ -129,6 +172,10 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
         if (record == null) continue;
         final name = record['NickName']?.toString() ?? '';
         final head = record['HeadPortrait']?.toString() ?? '';
+
+        ///空记录不覆盖本地已有昵称（昵称无合法清空途径，
+        ///空值视为无记录/写读延迟，避免已显示的昵称被"用户xx"闪断）
+        if (name.isEmpty && (user.userNickName ?? '').isNotEmpty) continue;
         if (user.userNickName != name || user.userHeadPortrait != head) {
           user.userNickName = name;
           user.userHeadPortrait = head;
@@ -138,11 +185,35 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
       if (changed) setState(() {});
     } catch (e) {
       ///昵称拉取失败不影响列表展示，仅日志
-      LogUtils.doorLock.log('指纹用户昵称拉取异常: $e');
+      LogUtils.doorLock.log('$_typeText用户昵称拉取异常: $e');
     }
   }
 
-  ///从服务器拉取指纹用户并渲染，返回是否成功
+  ///把旧列表对象的昵称/头像迁移到新列表对象（按 id 匹配）
+  ///
+  ///getAllPwd 与锁端数据均不含昵称（昵称存于独立昵称服务），任何重建列表的
+  ///流程若不迁移，会把已回填/已修改的昵称冲掉回退"用户xx"
+  void _migrateUserMeta(List<DoorUser> newList) {
+    if (_userList.isEmpty || newList.isEmpty) return;
+    final oldUserMap = <int, DoorUser>{};
+    for (final old in _userList) {
+      oldUserMap[old.id] = old;
+    }
+    for (final user in newList) {
+      final old = oldUserMap[user.id];
+      if (old == null) continue;
+      if ((user.userNickName ?? '').isEmpty &&
+          (old.userNickName ?? '').isNotEmpty) {
+        user.userNickName = old.userNickName;
+      }
+      if ((user.userHeadPortrait ?? '').isEmpty &&
+          (old.userHeadPortrait ?? '').isNotEmpty) {
+        user.userHeadPortrait = old.userHeadPortrait;
+      }
+    }
+  }
+
+  ///从服务器拉取该类型用户并渲染，返回是否成功
   Future<bool> _fetchFromServer({bool showLoading = true}) async {
     if (showLoading) {
       setState(() {
@@ -164,13 +235,16 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
           if (e is Map<String, dynamic>) {
             final user = DoorUser.fromJson(e);
 
-            ///只取指纹类型用户
+            ///只取当前类型用户
             if (user.type == _type.value) {
               list.add(user);
             }
           }
         }
       }
+
+      ///重建前迁移旧昵称/头像，避免异步流程重建列表时冲掉已显示的昵称
+      _migrateUserMeta(list);
       setState(() {
         _userList = list;
         _loading = false;
@@ -178,7 +252,7 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
       });
       return true;
     } catch (e) {
-      LogUtils.doorLock.log('指纹列表拉取异常: $e');
+      LogUtils.doorLock.log('$_typeText列表拉取异常: $e');
       if (!mounted) return false;
       setState(() {
         _errorMsg = '拉取失败: $e';
@@ -190,11 +264,20 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
 
   // ==================== 从锁端拉数据 ====================
 
-  ///从锁端拉取指纹用户并 updateAll 上报服务器
+  ///从锁端拉取用户并 updateAll 上报服务器
   ///
-  ///进页面静默补全与右上角"从锁端拉数据"（全量按能力集拉）共用。
-  ///按设备通道路由（BLE 直连 / netip）读取，60s 超时保护，失败/超时返回空列表不阻塞
-  Future<List<DoorUser>> _syncLockEndToServer({bool isAll = false}) async {
+  ///进页面静默补全（[isAll]=false）与右上角手动全量拉取（[isAll]=true）
+  ///共用此入口：先等上一次拉取结束再发起，避免并发回包串扰
+  Future<List<DoorUser>> _syncLockEndToServer({bool isAll = false}) {
+    final prev = _lockEndSyncLock;
+    final task = prev == null
+        ? _doSyncLockEndToServer(isAll: isAll)
+        : prev.then((_) => _doSyncLockEndToServer(isAll: isAll));
+    _lockEndSyncLock = task.then((_) {}, onError: (_) {});
+    return task;
+  }
+
+  Future<List<DoorUser>> _doSyncLockEndToServer({bool isAll = false}) async {
     try {
       final lockUsers = await _operation
           .getLockEndUnlockingList(type: isAll ? null : _type)
@@ -265,12 +348,15 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
       return;
     }
 
-    ///不回读服务器，直接用锁端结果替换列表的指纹用户部分
-    final skinUsers = list.where((e) => e.type == _type.value).toList();
+    ///不回读服务器，直接用锁端结果替换列表的当前类型用户部分
+    ///（锁端数据不含昵称：先迁移旧昵称避免被"用户xx"覆盖，再异步拉昵称服务兑底）
+    final typeUsers = list.where((e) => e.type == _type.value).toList();
+    _migrateUserMeta(typeUsers);
     setState(() {
       _operating = false;
-      _userList = skinUsers;
+      _userList = typeUsers;
     });
+    unawaited(_fetchNicknames());
   }
 
   // ==================== 管理员能力集 ====================
@@ -284,8 +370,7 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
       return;
     }
     final device = _device;
-    if (device == null ||
-        device.doolockCmdStatus == DoolockCmdStatus.offline) {
+    if (device == null || device.doolockCmdStatus == DoolockCmdStatus.offline) {
       _refreshSupportAddAdmin();
       return;
     }
@@ -295,16 +380,15 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
         _refreshSupportAddAdmin();
         return;
       }
-      var result = await DoorLockNetIp.getAdminAbility(deviceId: widget.deviceId);
+      var result =
+          await DoorLockNetIp.getAdminAbility(deviceId: widget.deviceId);
       if (result.item2 != null) {
         var mask = result.item2!.data['TypeMsk']?.toString() ?? '';
         if (mask.isNotEmpty) {
           DoorLockKeyValueLocal.saveUserManagerAdminAbility(
               widget.deviceId, mask);
           DoorLockKeyValueService.post(
-              sn: widget.deviceId,
-              key: 'userManagerAdminAbility',
-              value: mask);
+              sn: widget.deviceId, key: 'userManagerAdminAbility', value: mask);
           if (device.doorManagerAbility == null) {
             var origin = hexToBytes(mask);
             if (origin.isNotEmpty) {
@@ -329,7 +413,7 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
     });
   }
 
-  // ==================== 添加指纹 ====================
+  // ==================== 添加用户 ====================
 
   ///是否支持普通用户限时/循环/归属（doorLockExInfo.byte2 能力位）
   bool _supportTimeLimitAndBelong() {
@@ -375,7 +459,7 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
     }
   }
 
-  // ==================== 删除指纹 ====================
+  // ==================== 删除 ====================
 
   ///点击删除：先弹确认框
   Future<void> _onDeletePressed(DoorUser user) async {
@@ -392,8 +476,8 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('删除指纹'),
-        content: Text('确定删除"${user.displayTitle}"的指纹吗？'
+        title: Text('删除$_typeText'),
+        content: Text('确定删除"${user.displayTitle}"的$_typeText吗？'
             '${user.isAdmin ? '\n（该用户为管理员）' : ''}'),
         actions: [
           TextButton(
@@ -438,7 +522,7 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
       }
     } catch (e) {
       _hideLoading();
-      LogUtils.doorLock.log('删除指纹异常: $e');
+      LogUtils.doorLock.log('删除$_typeText异常: $e');
       _showSnack('删除异常: $e');
     } finally {
       if (mounted) setState(() => _operating = false);
@@ -447,9 +531,10 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
 
   // ==================== 用户详情跳转 ====================
 
-  ///点击指纹用户项进入详情页
+  ///点击用户项进入详情页
   ///
-  ///详情页保存昵称时会直接修改传入的 DoorUser 对象，返回后 setState 即可刷新
+  ///详情页保存昵称时会直接修改传入的 DoorUser 对象，返回后 setState 即可刷新；
+  ///再从服务器兑底拉取一次昵称，保证与昵称服务最终一致（写读延迟场景）
   Future<void> _onUserTap(DoorUser user) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
@@ -459,7 +544,9 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
         ),
       ),
     );
-    if (mounted) setState(() {});
+    if (!mounted) return;
+    setState(() {});
+    unawaited(_fetchNicknames());
   }
 
   // ==================== 服务器上报 ====================
@@ -478,7 +565,7 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
       );
     } catch (e) {
       ///上报失败不阻塞主流程，仅日志
-      LogUtils.doorLock.log('指纹用户上报服务器失败 action=${action.value}: $e');
+      LogUtils.doorLock.log('$_typeText用户上报服务器失败 action=${action.value}: $e');
     }
   }
 
@@ -528,7 +615,7 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('提示'),
-        content: const Text('同步状态过期，请返回后重新进入指纹管理页。'),
+        content: Text('同步状态过期，请返回后重新进入$_typeText管理页。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
@@ -546,7 +633,7 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F9),
       appBar: AppBar(
-        title: const Text('指纹管理'),
+        title: Text('$_typeText管理'),
         actions: [
           IconButton(
             icon: const Icon(Icons.download),
@@ -623,14 +710,14 @@ class _DoorLockSkinListPageState extends State<DoorLockSkinListPage> {
       );
     }
     if (_userList.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.fingerprint, size: 60, color: Colors.grey),
-            SizedBox(height: 12),
-            Text('暂无指纹，点击下方"添加用户"录入',
-                style: TextStyle(color: Colors.grey)),
+            Icon(_typeIcon, size: 60, color: Colors.grey),
+            const SizedBox(height: 12),
+            Text('暂无$_typeText，点击下方"添加用户"录入',
+                style: const TextStyle(color: Colors.grey)),
           ],
         ),
       );

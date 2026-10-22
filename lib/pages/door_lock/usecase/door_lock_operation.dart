@@ -974,11 +974,18 @@ mixin DoorLockOperationMixin on ChangeNotifier {
         if (ability?.supportCard == true) JvssOperateType.card,
         if (ability?.supportPalmVein == true) JvssOperateType.palmVein,
       ];
+      LogUtils.doorLock.log(
+          'getLockEndUnlockingList 全量拉取类型: $types（能力位 doorUserAbility=${ability != null}）');
       if (types.isEmpty) return [];
       var all = <DoorUser>[];
       for (var t in types) {
         var list = await queryOnce(t);
-        if (list == null) break;
+        if (list == null) {
+          LogUtils.doorLock.log('getLockEndUnlockingList 全量拉取中断: type=$t 拉取失败');
+          break;
+        }
+        LogUtils.doorLock
+            .log('getLockEndUnlockingList 全量拉取 type=$t 拉到 ${list.length} 条');
         all.addAll(list);
       }
       return all;

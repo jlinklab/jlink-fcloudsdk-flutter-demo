@@ -17,10 +17,19 @@ import 'package:fcloudsdk_example/pages/door_lock/user_manager/door_lock_user_de
 import 'package:flutter/material.dart';
 
 ///门锁密码管理列表页
+///
+///[type] 为 [JvssOperateType.tmpPassword] 时为临时密码模式：
+///仅拉取/展示临时密码（服务器数据，无昵称回填/锁端补全/从锁端拉取）。
 class DoorLockPasswordListPage extends StatefulWidget {
   final String deviceId;
 
-  const DoorLockPasswordListPage({super.key, required this.deviceId});
+  ///列表类型：password 密码混合列表 / tmpPassword 仅临时密码
+  final JvssOperateType type;
+
+  const DoorLockPasswordListPage(
+      {super.key,
+      required this.deviceId,
+      this.type = JvssOperateType.password});
 
   @override
   State<DoorLockPasswordListPage> createState() =>
@@ -28,6 +37,9 @@ class DoorLockPasswordListPage extends StatefulWidget {
 }
 
 class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
+  ///是否临时密码模式（仅展示临时密码）
+  bool get _isTmpPwd => widget.type == JvssOperateType.tmpPassword;
+
   ///密码列表（混合：自定义密码 [DoorUser] + 离线密码 [UnlockInfo]
   List<dynamic> _userList = [];
 
@@ -39,6 +51,11 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
 
   ///loading 弹框是否显示中
   bool _loadingShown = false;
+
+  ///锁端拉取串行锁：BLE 透传回包无法区分是哪个查询的响应，
+  ///两个拉取并发会互相截胡回包导致数据残缺（如全量只拿到后结束那条
+  ///单类型查询的数据），须排队串行执行
+  Future<void>? _lockEndSyncLock;
 
   ///错误信息（拉取失败时展示）
   String? _errorMsg;
@@ -72,6 +89,9 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
   Future<void> _loadList() async {
     final ok = await _fetchFromServer();
     if (!ok || !mounted) return;
+
+    ///临时密码为服务器数据，无昵称回填/锁端补全流程
+    if (_isTmpPwd) return;
 
     ///昵称纯服务器接口，立即并行拉取回填，不等待锁端补全
     unawaited(_fetchNicknames());
@@ -149,8 +169,8 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
       if (!mounted) return false;
       final List<dynamic> list = [];
 
-      ///① 自定义密码
-      if (res is Map && res['doorLockUserInfoVOS'] is List) {
+      ///① 自定义密码（临时密码模式下不拉取）
+      if (!_isTmpPwd && res is Map && res['doorLockUserInfoVOS'] is List) {
         for (final e in (res['doorLockUserInfoVOS'] as List)) {
           if (e is Map<String, dynamic>) {
             final user = DoorUser.fromJson(e);
@@ -163,8 +183,9 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
       }
 
       ///② 临时密码
+      ///（临时密码模式下不限定低功耗锁；密码模式下维持原低功耗限定）
       if (res is Map &&
-          DoorLockHelper.isLowPowerBle(widget.deviceId) &&
+          (_isTmpPwd || DoorLockHelper.isLowPowerBle(widget.deviceId)) &&
           res['jsonObject'] is Map &&
           (res['jsonObject'] as Map)['tpswd'] is Map &&
           ((res['jsonObject'] as Map)['tpswd'] as Map)['list'] is List) {
@@ -176,8 +197,9 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
         }
       }
 
-      ///③ 离线密码
-      if (res is Map &&
+      ///③ 离线密码（临时密码模式下不拉取）
+      if (!_isTmpPwd &&
+          res is Map &&
           res['unlockInfoList'] is Map &&
           (res['unlockInfoList'] as Map)['data'] is List) {
         for (final e in ((res['unlockInfoList'] as Map)['data'] as List)) {
@@ -186,6 +208,25 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
           }
         }
       }
+
+      ///按类型 + Id 去重：服务器在 add/updateAll 写入后的读延迟期间，
+      ///同一密码可能返回新旧两条记录，直接渲染会短暂出现重复 item
+      final seenIds = <String>{};
+      list.retainWhere((e) {
+        String key;
+        if (e is DoorUser) {
+          key = 'pwd_${e.id}';
+        } else if (e is TempPassword) {
+          key = 'tmp_${e.id}';
+        } else if (e is UnlockInfo) {
+          key = 'offline_${e.id}';
+        } else {
+          return true;
+        }
+        if (seenIds.contains(key)) return false;
+        seenIds.add(key);
+        return true;
+      });
       setState(() {
         _userList = list;
         _loading = false;
@@ -208,9 +249,19 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
   ///从锁端拉取开锁方式并 updateAll 上报服务器
   ///
   ///进页面静默补全（[isAll]=false，只拉密码）与右上角“从锁端拉数据”
-  ///（[isAll]=true，按能力集全量拉）共用。按设备通道路由（BLE 直连 / netip）
+  ///（[isAll]=true，按能力集全量拉）共用此入口：先等上一次拉取结束
+  ///再发起，避免并发回包串扰。按设备通道路由（BLE 直连 / netip）
   ///读取，60s 超时保护，失败/超时返回空列表不阻塞
-  Future<List<DoorUser>> getLockEndUnlocking({bool isAll = false}) async {
+  Future<List<DoorUser>> getLockEndUnlocking({bool isAll = false}) {
+    final prev = _lockEndSyncLock;
+    final task = prev == null
+        ? _doGetLockEndUnlocking(isAll: isAll)
+        : prev.then((_) => _doGetLockEndUnlocking(isAll: isAll));
+    _lockEndSyncLock = task.then((_) {}, onError: (_) {});
+    return task;
+  }
+
+  Future<List<DoorUser>> _doGetLockEndUnlocking({bool isAll = false}) async {
     try {
       final lockUsers = await _operation
           .getLockEndUnlockingList(
@@ -296,7 +347,8 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
 
   // ==================== 生成密码 ====================
 
-  ///点击“生成密码”：跳转生成密码页（永久/自定义/限时/单次/循环），成功后刷新列表
+  ///点击“生成密码”：跳转生成密码页（永久/自定义/限时/单次/循环；
+  ///临时密码模式仅自定义 Tab），成功后刷新列表
   Future<void> _onCreatePassword() async {
     if (_operating) return;
     if (_device == null) {
@@ -305,7 +357,10 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
     }
     final created = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-        builder: (_) => DoorLockCreatePasswordPage(deviceId: widget.deviceId),
+        builder: (_) => DoorLockCreatePasswordPage(
+          deviceId: widget.deviceId,
+          type: widget.type,
+        ),
       ),
     );
     if (created == true && mounted) {
@@ -689,18 +744,21 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F9),
       appBar: AppBar(
-        title: const Text('密码管理'),
+        title: Text(_isTmpPwd ? '临时密码管理' : '密码管理'),
         actions: [
           IconButton(
             icon: const Icon(Icons.dialpad),
             tooltip: '生成密码',
             onPressed: _operating ? null : _onCreatePassword,
           ),
-          IconButton(
-            icon: const Icon(Icons.download),
-            tooltip: '从锁端拉数据',
-            onPressed: _operating ? null : _onSyncFromLockEnd,
-          ),
+
+          ///临时密码为服务器数据，无锁端拉取入口
+          if (!_isTmpPwd)
+            IconButton(
+              icon: const Icon(Icons.download),
+              tooltip: '从锁端拉数据',
+              onPressed: _operating ? null : _onSyncFromLockEnd,
+            ),
         ],
       ),
       body: _buildBody(),
@@ -737,13 +795,15 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
       );
     }
     if (_userList.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.lock_open, size: 60, color: Colors.grey),
-            SizedBox(height: 12),
-            Text('暂无密码，点击右上角"生成密码"添加', style: TextStyle(color: Colors.grey)),
+            Icon(_isTmpPwd ? Icons.timelapse : Icons.lock_open,
+                size: 60, color: Colors.grey),
+            const SizedBox(height: 12),
+            Text(_isTmpPwd ? '暂无临时密码，点击右上角"生成密码"添加' : '暂无密码，点击右上角"生成密码"添加',
+                style: const TextStyle(color: Colors.grey)),
           ],
         ),
       );
@@ -766,7 +826,6 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
         }
         final user = item as DoorUser;
         return ListTile(
-
           ///主标题：昵称（管理员时追加后缀）；副标题：有效期具体文案（含循环时段）
           title: Text(user.displayTitle),
           subtitle: Text(user.displayTimeAndVaidType),

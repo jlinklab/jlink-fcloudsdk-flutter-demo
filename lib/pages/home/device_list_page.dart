@@ -6,6 +6,7 @@ import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk_example/api/add_device_api.dart';
 import 'package:fcloudsdk_example/manager/device_property_manager.dart';
 import 'package:fcloudsdk_example/models/device_type.dart';
+import 'package:fcloudsdk_example/pages/door_lock/repository/door_lock_local.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -253,10 +254,15 @@ class _DeviceCard extends StatelessWidget {
   bool get _isLowPower =>
       device.isLowPowerType || DeviceTypeUtil.isSleepSateDevice(device);
 
-  /// 门锁是否处于蓝牙配对状态（已配对未配网，含假配网）
-  /// 此时服务器在线状态不可信，不展示状态，改展示蓝牙图标
+  /// 门锁是否处于蓝牙配对状态（已确认未配网，含假配网）
+  ///
+  /// 须 SP 已保存过配网状态且值为未配网：缓存缺失时不能断定未配网，
+  /// 否则换机/重装后已配网门锁被误判，丢失在线状态展示；
+  /// 蓝牙图标仅在扫描到设备（blueOnline）时显示，蓝牙不可达走离线展示
   bool get _isPairedDoorLock =>
-      DoorLockHelper.isDoorLock(device.uuid) && !device.doorlockIsConfigNet;
+      DoorLockHelper.isDoorLock(device.uuid) &&
+      DoorLockLocalCache.hadSaveDoorlockIsConfigNet(deviceId: device.uuid) &&
+      !device.doorlockIsConfigNet;
 
   /// 获取低功耗设备的休眠状态
   /// 非低功耗设备返回 null，上层可直接基于 [Device.state] 判断在线/离线
@@ -576,8 +582,8 @@ class _DeviceCard extends StatelessWidget {
               // 第一行：设备名称 + 状态指示
               Row(
                 children: [
-                  // 门锁配对状态：不显示在线状态圆点，显示蓝牙图标
-                  if (_isPairedDoorLock)
+                  // 门锁配对状态且蓝牙可达：显示蓝牙图标；蓝牙不可达走离线展示
+                  if (_isPairedDoorLock && device.blueOnline)
                     const Icon(Icons.bluetooth, size: 16, color: Colors.blue)
                   else
                     Container(

@@ -231,6 +231,22 @@ class _AddDoorLockUserGuidePageState extends State<AddDoorLockUserGuidePage> {
     );
   }
 
+  ///引导图标（按开锁方式类型）
+  IconData get _guideIcon {
+    switch (widget.type) {
+      case JvssOperateType.skin:
+        return Icons.fingerprint;
+      case JvssOperateType.card:
+        return Icons.credit_card;
+      case JvssOperateType.face:
+        return Icons.face;
+      case JvssOperateType.palmprint:
+        return Icons.pan_tool;
+      default:
+        return Icons.touch_app;
+    }
+  }
+
   ///录入前引导视图
   Widget _guideContent() {
     return Column(
@@ -238,9 +254,7 @@ class _AddDoorLockUserGuidePageState extends State<AddDoorLockUserGuidePage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Icon(
-          widget.type == JvssOperateType.skin
-              ? Icons.fingerprint
-              : Icons.touch_app,
+          _guideIcon,
           size: 96,
           color: const Color(0xFF00B294),
         ),

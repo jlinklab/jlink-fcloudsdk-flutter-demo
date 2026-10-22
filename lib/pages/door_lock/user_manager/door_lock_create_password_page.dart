@@ -20,7 +20,14 @@ import 'package:intl/intl.dart';
 class DoorLockCreatePasswordPage extends StatefulWidget {
   final String deviceId;
 
-  const DoorLockCreatePasswordPage({super.key, required this.deviceId});
+  ///入口类型：password 密码入口（永久/自定义/离线按能力显示）/
+  ///tmpPassword 临时密码入口（仅自定义 Tab）
+  final JvssOperateType type;
+
+  const DoorLockCreatePasswordPage(
+      {super.key,
+      required this.deviceId,
+      this.type = JvssOperateType.password});
 
   @override
   State<DoorLockCreatePasswordPage> createState() =>
@@ -120,18 +127,25 @@ class _DoorLockCreatePasswordPageState extends State<DoorLockCreatePasswordPage>
 
   // ==================== 能力判断 ====================
 
-  ///永久：type=password 时看 supportPassword 能力
+  ///永久：密码入口看 supportPassword 能力；临时密码入口不显示
   bool _showForever() =>
-      _device?.doorUserAbility?.byte1.supportPassword ?? false;
+      widget.type != JvssOperateType.tmpPassword &&
+      (_device?.doorUserAbility?.byte1.supportPassword ?? false);
 
-  ///自定义（临时）：type=password 仅低功耗蓝牙锁 + supportTempPwd 才显示
-  bool _showCustom() =>
-      DoorLockHelper.supportTempPwd(deviceId: widget.deviceId) &&
-      DoorLockHelper.isLowPowerBle(widget.deviceId);
+  ///自定义（临时）：临时密码入口看 supportTempPwd；
+  ///密码入口仅低功耗蓝牙锁 + supportTempPwd 才显示
+  bool _showCustom() {
+    var support = DoorLockHelper.supportTempPwd(deviceId: widget.deviceId);
+    if (widget.type == JvssOperateType.tmpPassword) {
+      return support;
+    }
+    return support && DoorLockHelper.isLowPowerBle(widget.deviceId);
+  }
 
-  ///离线（限时/单次/循环）：看 supportLockEndOffLinePwd 能力
+  ///离线（限时/单次/循环）：看 supportLockEndOffLinePwd 能力；临时密码入口不显示
   bool _showOffline() =>
-      _device?.doorLockExInfo?.byte1.supportLockEndOffLinePwd ?? false;
+      widget.type != JvssOperateType.tmpPassword &&
+      (_device?.doorLockExInfo?.byte1.supportLockEndOffLinePwd ?? false);
 
   List<int> _buildTabs() {
     final tabs = <int>[];
