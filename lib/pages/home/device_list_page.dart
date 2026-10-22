@@ -6,6 +6,8 @@ import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk_example/api/add_device_api.dart';
 import 'package:fcloudsdk_example/manager/device_property_manager.dart';
 import 'package:fcloudsdk_example/models/device_type.dart';
+import 'package:fcloudsdk_example/pages/add_device/manager/add_device_permission_manager.dart';
+import 'package:fcloudsdk_example/pages/add_device/manager/global_ble_search_manager.dart';
 import 'package:fcloudsdk_example/pages/door_lock/repository/door_lock_local.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:flutter/material.dart';
@@ -235,7 +237,19 @@ class _DeviceTabPageState extends State<DeviceTabPage> {
                   },
                   itemCount: devices.length,
                 ),
-          onRefresh: () => context.read<DevListViewModel>().onRefresh(),
+          onRefresh: () async {
+            await context.read<DevListViewModel>().onRefresh();
+
+            ///下拉刷新重扫蓝牙：清空旧扫描缓存后启动高频扫描，
+            ///重新发现门锁等蓝牙设备并刷新蓝牙在线状态
+            if (!mounted ||
+                !AddDevicePermissionUsecase.instance.isCanBleSearch()) {
+              return;
+            }
+            GlobalBleSearchManager.instance.clearCache();
+            GlobalBleSearchManager.instance.startScanByDebounce(
+                pageContext: this.context, retryCountMax: 4);
+          },
         );
       },
     );
@@ -258,7 +272,7 @@ class _DeviceCard extends StatelessWidget {
   ///
   /// 须 SP 已保存过配网状态且值为未配网：缓存缺失时不能断定未配网，
   /// 否则换机/重装后已配网门锁被误判，丢失在线状态展示；
-  /// 蓝牙图标仅在扫描到设备（blueOnline）时显示，蓝牙不可达走离线展示
+  /// 蓝牙图标仅在扫描到设备（blueOnline）时显示，蓝牙不可达不展示
   bool get _isPairedDoorLock =>
       DoorLockHelper.isDoorLock(device.uuid) &&
       DoorLockLocalCache.hadSaveDoorlockIsConfigNet(deviceId: device.uuid) &&
@@ -582,10 +596,12 @@ class _DeviceCard extends StatelessWidget {
               // 第一行：设备名称 + 状态指示
               Row(
                 children: [
-                  // 门锁配对状态且蓝牙可达：显示蓝牙图标；蓝牙不可达走离线展示
-                  if (_isPairedDoorLock && device.blueOnline)
-                    const Icon(Icons.bluetooth, size: 16, color: Colors.blue)
-                  else
+                  // 门锁仅配对状态且蓝牙可达时显示蓝牙图标；
+                  // 已配网门锁不显示在线/休眠圆点（状态滞后易误导），名称与下方序列号对齐
+                  if (_isPairedDoorLock && device.blueOnline) ...[
+                    const Icon(Icons.bluetooth, size: 16, color: Colors.blue),
+                    const SizedBox(width: 8),
+                  ] else if (!DoorLockHelper.isDoorLock(device.uuid)) ...[
                     Container(
                       width: 10,
                       height: 10,
@@ -594,7 +610,8 @@ class _DeviceCard extends StatelessWidget {
                         color: stateInfo.color,
                       ),
                     ),
-                  const SizedBox(width: 8),
+                    const SizedBox(width: 8),
+                  ],
                   Expanded(
                     child: Text(
                       (device.nickname != null && device.nickname!.isNotEmpty)
@@ -608,7 +625,7 @@ class _DeviceCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  // 门锁先不显示休眠状态标签，这里状态可能不准 低功耗设备状态标签
+                  // 低功耗设备状态标签（门锁不展示）
                   if (!DoorLockHelper.isDoorLock(device.uuid) &&
                       stateInfo.text != null)
                     Container(
@@ -626,7 +643,9 @@ class _DeviceCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (stateInfo.text != null) const SizedBox(width: 4),
+                  if (!DoorLockHelper.isDoorLock(device.uuid) &&
+                      stateInfo.text != null)
+                    const SizedBox(width: 4),
                   if (cloudService != null)
                     _buildCloudBadge(cloudService.cloudServerStatus),
                   const SizedBox(width: 4),

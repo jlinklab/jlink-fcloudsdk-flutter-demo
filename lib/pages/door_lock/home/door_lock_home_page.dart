@@ -43,6 +43,13 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
             backgroundColor: const Color(0xFFF7F7F9),
             appBar: AppBar(
               title: Text(_device?.nickname ?? widget.deviceId),
+              actions: [
+                ///手动刷新设备状态（在线/休眠/配网/指令通道）
+                IconButton(
+                  onPressed: () => controller.refreshDeviceState(),
+                  icon: const Icon(Icons.refresh),
+                ),
+              ],
             ),
             body: SafeArea(
               child: SingleChildScrollView(
@@ -75,12 +82,34 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
     if (width > 150) width = 150;
     var height = (width / (3 / 5)).ceil().toDouble();
 
-    // wifi 在线/离线共用同一缩略图
+    // wifi 在线/离线共用同一缩略图，外圈边框按休眠状态染色：
+    // 在线默认主题色，浅睡橙 / 准睡紫 / 深睡蓝灰；离线恒灰
+    final wifiOnline =
+        controller.device.doorlockIsConfigNet && controller.device.state > 0;
+    Color borderColors = Colors.grey;
+    if (wifiOnline) {
+      borderColors = _primaryColor;
+      switch (controller.device.sleepState) {
+        case DeviceSleepState.lightSleep:
+          borderColors = Colors.orange.shade300;
+          break;
+        case DeviceSleepState.preSleep:
+          borderColors = Colors.purple.shade400;
+          break;
+        case DeviceSleepState.deepSleep:
+          borderColors = Colors.indigo.shade200;
+          break;
+        default:
+          break;
+      }
+    }
+
     return GestureDetector(
       onTap: () {},
       child: Container(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(12)),
+          border: Border.all(color: borderColors, width: 5),
           color: Colors.white,
         ),
         child: Padding(

@@ -37,7 +37,7 @@ class DoorLockUserListPage extends StatefulWidget {
 class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
   JvssOperateType get _type => widget.type;
 
-  ///类型展示名（删除确认/空态/日志文案派生）
+  ///类型展示名
   String get _typeText {
     switch (_type) {
       case JvssOperateType.skin:
@@ -243,7 +243,7 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
         }
       }
 
-      ///重建前迁移旧昵称/头像，避免异步流程重建列表时冲掉已显示的昵称
+      ///重建前迁移旧昵称，避免异步流程重建列表时冲掉已显示的昵称
       _migrateUserMeta(list);
       setState(() {
         _userList = list;

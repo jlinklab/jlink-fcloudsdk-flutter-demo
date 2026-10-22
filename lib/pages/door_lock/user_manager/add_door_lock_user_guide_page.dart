@@ -242,6 +242,10 @@ class _AddDoorLockUserGuidePageState extends State<AddDoorLockUserGuidePage> {
         return Icons.face;
       case JvssOperateType.palmprint:
         return Icons.pan_tool;
+      case JvssOperateType.fingervein:
+        return Icons.touch_app;
+      case JvssOperateType.palmVein:
+        return Icons.bloodtype;
       default:
         return Icons.touch_app;
     }

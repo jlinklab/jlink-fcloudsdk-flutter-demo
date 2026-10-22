@@ -139,6 +139,10 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
         if (record == null) continue;
         final name = record['NickName']?.toString() ?? '';
         final head = record['HeadPortrait']?.toString() ?? '';
+
+        ///昵称服务存在写读延迟，空记录不覆盖本地非空昵称
+        if (name.isEmpty && (user.userNickName ?? '').isNotEmpty) continue;
+
         if (user.userNickName != name || user.userHeadPortrait != head) {
           user.userNickName = name;
           user.userHeadPortrait = head;
@@ -227,6 +231,22 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
         seenIds.add(key);
         return true;
       });
+      ///按 id 迁移旧列表的昵称/头像：刷新会重建 DoorUser 对象
+      ///（昵称不在 getAllPwd 返回内），不迁移会闪回"用户xx"占位
+      final oldUsers = <int, DoorUser>{};
+      for (final e in _userList) {
+        if (e is DoorUser) oldUsers[e.id] = e;
+      }
+      for (final e in list) {
+        if (e is! DoorUser) continue;
+        final old = oldUsers[e.id];
+        if (old == null) continue;
+        if ((old.userNickName ?? '').isNotEmpty) {
+          e.userNickName = old.userNickName;
+          e.userHeadPortrait = old.userHeadPortrait;
+        }
+      }
+
       setState(() {
         _userList = list;
         _loading = false;
@@ -338,11 +358,32 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
     ///锁端拉取不涉及，保留不动。
     final pwdUsers =
         list.where((e) => e.type == JvssOperateType.password.value).toList();
+
+    ///锁端对象无昵称（昵称在独立服务器），先把旧列表内已回填的昵称/头像
+    ///按 id 迁移到新对象，避免替换瞬间回退成“用户x”
+    final oldNickMap = <int, DoorUser>{};
+    for (final e in _userList) {
+      if (e is DoorUser) {
+        oldNickMap[e.id] = e;
+      }
+    }
+    for (final user in pwdUsers) {
+      final old = oldNickMap[user.id];
+      if (old == null) continue;
+      if (old.userNickName != null && old.userNickName!.isNotEmpty) {
+        user.userNickName = old.userNickName;
+        user.userHeadPortrait = old.userHeadPortrait;
+      }
+    }
+
     setState(() {
       _operating = false;
       _userList.removeWhere((e) => e is DoorUser);
       _userList.insertAll(0, pwdUsers);
     });
+
+    ///锁端拉取期间用户可能已在详情页改过昵称，再异步拉一次昵称服务兜底
+    unawaited(_fetchNicknames());
   }
 
   // ==================== 生成密码 ====================

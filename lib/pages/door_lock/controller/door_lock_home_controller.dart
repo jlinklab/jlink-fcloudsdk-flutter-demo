@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
 import 'package:fcloudsdk/door_lock/door_lock_key_value.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
@@ -51,6 +52,10 @@ class DoorLockHomeController extends DoorLockPageController
     ///获取门锁状态（含密钥/基准年同步状态，供生成密码页判断是否已同步）
     getDoorLockInfoFromJvss();
 
+    ///进门即查休眠状态
+    ///供缩略图外圈休眠颜色渲染
+    _querySleepState();
+
     ///前置必要数据请求，如果仅做数据获取，可以提前到这些步骤之前做
     await DoorLockKeyValueManager.instance.requestService(deviceId);
     await DoorLockHelper.refreshDoorLockStatus(deviceId, queryNet: true);
@@ -65,6 +70,37 @@ class DoorLockHomeController extends DoorLockPageController
     _getUserManagerList();
 
     notifyListeners();
+  }
+
+  ///查询门锁休眠状态（stateType:8 服务器快照，不唤醒设备）
+  Future<void> _querySleepState() async {
+    try {
+      final state = await JFApi.xcDevice.xcGetDeviceState(
+        deviceId: deviceId,
+        stateType: 8,
+      );
+      device.sleepState = DeviceSleepState.from(state);
+      notifyListeners();
+    } catch (e) {
+      LogUtils.doorLock.log('查询门锁休眠状态失败: $e');
+    }
+  }
+
+  ///手动刷新设备状态（在线/休眠/配网/指令通道）
+  Future<void> refreshDeviceState() async {
+    ///服务器在线状态：批量查询触发 deviceStateStream 回调写 state，
+    ///并 fire DeviceStateUpdateEvent 走已监听的事件链兜底刷新
+    try {
+      await AccountAPI.instance.xcGetDevicesState(uuids: [deviceId]);
+    } catch (e) {
+      LogUtils.doorLock.log('刷新设备在线状态失败: $e');
+    }
+
+    ///休眠状态快照 + 配网状态/指令通道重算
+    await _querySleepState();
+    await DoorLockHelper.refreshDoorLockStatus(deviceId, queryNet: true);
+    notifyListeners();
+    KToast.show(status: '设备状态已刷新');
   }
 
   Future<bool> _checkPermission() async {
@@ -122,8 +158,7 @@ class DoorLockHomeController extends DoorLockPageController
       DebounceThrottle.debounce(() async {
         await DoorLockHelper.refreshDoorLockStatus(deviceId);
         notifyListeners();
-      }, const Duration(milliseconds: 500),
-          key: '_deviceStateEvent_$hashCode');
+      }, const Duration(milliseconds: 500), key: '_deviceStateEvent_$hashCode');
     });
 
     ///开始低频搜索
@@ -220,7 +255,7 @@ class DoorLockHomeController extends DoorLockPageController
   ///点击用户管理入口
   ///- password：跳转密码列表页
   ///- tmpPassword：跳转临时密码列表页（复用密码列表页仅临时密码模式）
-  ///- skin/card/palmprint：跳转锁端录入类通用列表页（列表+锁端补全+录入+删除+详情）
+  ///- skin/card/palmprint/fingervein/palmVein：跳转锁端录入类通用列表页（列表+锁端补全+录入+删除+详情）
   ///- 其他类型：具体子页面未实现，弹框提示
   void checkUserManager(UserManagerUI item) {
     if (!context.mounted) return;
@@ -248,7 +283,9 @@ class DoorLockHomeController extends DoorLockPageController
 
     if (item.type == JvssOperateType.skin ||
         item.type == JvssOperateType.card ||
-        item.type == JvssOperateType.palmprint) {
+        item.type == JvssOperateType.palmprint ||
+        item.type == JvssOperateType.fingervein ||
+        item.type == JvssOperateType.palmVein) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => DoorLockUserListPage(

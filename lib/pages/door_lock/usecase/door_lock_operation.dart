@@ -233,7 +233,8 @@ mixin DoorLockOperationMixin on ChangeNotifier {
           result.item2?.err ==
               DoorLockNetIpOperaterResult.addUserAdminNotskip) {
         if (showErrorTip) {
-          KToast.show(status: result.item2?.err.name);
+          ///锁端要求先添加或修改管理员密码（不可跳过）
+          KToast.show(status: '请先添加管理员密码');
         }
         return false;
       }
@@ -705,9 +706,12 @@ mixin DoorLockOperationMixin on ChangeNotifier {
 
     ///netip 通道：先保活（syncDoorStatus）刷新同步状态，再添加，避免 needSync
     Future<DoorLockAddResult> sendByNetIp() async {
-      var sync = await DoorLockNetIp.syncDoorStatus(deviceId);
-      if (!sync.item1) {
-        return DoorLockAddResult(false, -1, sync.item2?.err, sync.item3);
+      ///添加管理员密码时需忽略'未添加管理员'错误（本次添加正是要设置管理员密码），
+      ///普通用户密码不忽略，锁端未添加管理员时直接提示终止
+      if (await beforeNetIp(
+              showLoading: false, ignoreAddUserAdminNotskip: isAdmin) ==
+          false) {
+        return const DoorLockAddResult(false, -1, null, null);
       }
       var result = await DoorLockNetIp.addDoorOpenType(
         deviceId: deviceId,
@@ -826,11 +830,13 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       });
     }
 
-    ///netip 通道：先保活（syncDoorStatus）刷新同步状态，再添加，避免 needSync
+    ///netip 通道：先保活（syncDoorStatus）刷新同步状态，再添加，避免 needSync；
+    ///锁端未添加管理员密码时（0x10）不忽略，直接提示'请先添加管理员密码'终止
     Future<DoorLockAddResult> sendByNetIp() async {
-      var sync = await DoorLockNetIp.syncDoorStatus(deviceId);
-      if (!sync.item1) {
-        return DoorLockAddResult(false, -1, sync.item2?.err, sync.item3);
+      if (await beforeNetIp(
+              showLoading: false, ignoreAddUserAdminNotskip: false) ==
+          false) {
+        return const DoorLockAddResult(false, -1, null, null);
       }
       var result = await DoorLockNetIp.addDoorOpenType(
         deviceId: deviceId,

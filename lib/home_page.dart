@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/pages/add_device/manager/add_device_permission_manager.dart';
 import 'package:fcloudsdk_example/pages/add_device/manager/global_ble_search_manager.dart';
 import 'package:fcloudsdk_example/pages/home/device_list_page.dart';
 
@@ -41,7 +42,31 @@ class _HomePageState extends State<HomePage>
 
     ///蓝牙搜索监听
     GlobalBleSearchManager.instance.init();
+    _startBleScan();
     super.initState();
+  }
+
+  ///进入首页高频扫描蓝牙设备：设备列表页提前发现门锁等蓝牙设备，
+  ///进入设备详情时蓝牙在线状态已就绪，无需再等待扫描；
+  ///后续扫描由设备列表下拉刷新触发
+  _startBleScan() async {
+    ///仅读取权限状态，不触发系统授权弹窗；未授权则静默跳过
+    await AddDevicePermissionUsecase.instance.checkOnlyBlue(onlyStatus: true);
+    if (!AddDevicePermissionUsecase.instance.isCanBleSearch()) {
+      return;
+    }
+
+    ///不是设备页就不扫描
+    if (_currentIndex != 0) {
+      return;
+    }
+
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (mounted) {
+        GlobalBleSearchManager.instance
+            .startScanByDebounce(pageContext: context, retryCountMax: 4);
+      }
+    });
   }
 
   @override
