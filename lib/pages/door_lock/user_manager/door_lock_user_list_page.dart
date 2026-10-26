@@ -288,7 +288,14 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
       }
       await doorlockAPI.saveDoorLockUser(
         sn: widget.deviceId,
-        users: lockUsers.map((e) => e.toMap()).toList(),
+
+        ///未知类型与临时密码不参与全量上报，服务器会报 userType is invalid
+        users: lockUsers
+            .where((e) =>
+                e.type != JvssOperateType.unknown.value &&
+                e.type != JvssOperateType.tmpPassword.value)
+            .map((e) => e.toMap())
+            .toList(),
         operationStr: JvssOperationAction.updateAll.value,
         userTypes: isAll ? null : [_type.value],
       );
@@ -344,7 +351,6 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
     ///拉取失败/超时（空列表）不动现有列表，避免误清空
     if (list.isEmpty) {
       setState(() => _operating = false);
-      _showSnack('锁端无数据或拉取失败');
       return;
     }
 
