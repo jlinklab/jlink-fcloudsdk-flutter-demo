@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk_example/models/device_type.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fcloudsdk/api/api_center.dart';
@@ -164,7 +165,7 @@ class DeviceManager {
           AccountAPI.instance.deviceStateStream.listen((event) async {
         final device = allDevices.firstWhereOrNull((e) => e.uuid == event.uuid);
         if (device != null) {
-          debugPrint('${device.uuid} 拿到设备状态 ${event.state}');
+          LogUtils.device.log('${device.uuid} 拿到设备状态 ${event.state}');
           device.state = event.state;
           _onDeviceStateChanged?.call();
           //查询低功耗状态放到拿到设备状态之后再去查询，不然不准

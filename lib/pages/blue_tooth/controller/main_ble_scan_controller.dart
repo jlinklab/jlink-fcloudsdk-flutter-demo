@@ -24,7 +24,6 @@ class MainBleScanController extends ChangeNotifier {
   MainBleScanController({
     required this.context,
   }) {
-    checkPermission();
     start();
   }
 

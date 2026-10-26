@@ -274,7 +274,7 @@ class BlueServicePermissionHandler extends PermissionHandler {
         if (isSupportBlueService) {
           return true;
         }
-        requestBlueServicePermission();
+        return await requestBlueServicePermission();
       }
       return false;
     }
