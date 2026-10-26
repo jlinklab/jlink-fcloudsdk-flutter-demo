@@ -383,10 +383,11 @@ packages:
   fcloudsdk:
     dependency: "direct main"
     description:
-      path: "../xcloudsdk_flutter"
-      relative: true
-    source: path
-    version: "3.1.2"
+      name: fcloudsdk
+      sha256: "7fae670513e028453e90fc05a10c1140193016d7f60410b4e6258df149918677"
+      url: "https://repo.jftechsoft.com"
+    source: hosted
+    version: "3.1.3"
   ffi:
     dependency: transitive
     description:

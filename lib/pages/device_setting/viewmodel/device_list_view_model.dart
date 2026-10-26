@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:fcloudsdk_example/models/device_type.dart';
-import 'package:flutter/foundation.dart';
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk_example/api/share_api.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/utils/push_notification.dart';
+import 'package:flutter/foundation.dart';
 
 /// 设备列表 UI 状态管理
 /// 仅负责驱动 UI 刷新，实际数据操作委托给 [DeviceManager] 单例

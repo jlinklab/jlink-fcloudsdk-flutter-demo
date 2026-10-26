@@ -256,7 +256,6 @@ class DoorLockHomeController extends DoorLockPageController
   ///- password：跳转密码列表页
   ///- tmpPassword：跳转临时密码列表页（复用密码列表页仅临时密码模式）
   ///- skin/card/palmprint/fingervein/palmVein：跳转锁端录入类通用列表页（列表+锁端补全+录入+删除+详情）
-  ///- 其他类型：具体子页面未实现，弹框提示
   void checkUserManager(UserManagerUI item) {
     if (!context.mounted) return;
 

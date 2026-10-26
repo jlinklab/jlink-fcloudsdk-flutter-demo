@@ -652,7 +652,6 @@ class MainBleActiveController extends ChangeNotifier {
     ///获取锁板用户的密码长度
     try {
       pwdLengthRange = await doorLockBleApi.requestUserPwdLengthRange();
-      logs.add('获取密码长度范围成功: ${pwdLengthRange?.min}-${pwdLengthRange?.max}');
     } catch (e) {
       logs.add('获取密码长度范围失败: $e');
     }
