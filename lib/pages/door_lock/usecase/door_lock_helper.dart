@@ -113,9 +113,11 @@ class DoorLockHelper {
   }
 
   ///是否低功耗蓝牙锁
-  ///原逻辑：device?.doorLockExInfo?.byte1.supportBluetoothOnLockPlate == true || DoorLockKeyValueLocal.supportLowPowerBle
+  ///锁端直报能力位（影子服务/配网激活时回填）或本地 keyValue 任一命中即可，
   static isLowPowerBle(String deviceId) {
-    return DoorLockKeyValueLocal.supportLowPowerBle(deviceId: deviceId);
+    var device = DeviceManager.instance.getDevice(deviceId: deviceId);
+    return device?.doorLockExInfo?.byte1.supportBluetoothOnLockPlate == true ||
+        DoorLockKeyValueLocal.supportLowPowerBle(deviceId: deviceId);
   }
 
   ///是否海外锁pid

@@ -115,24 +115,26 @@ void showNotificationFromJson(String jsonString) {
 
 ///解析远程开关锁结果推送并广播事件
 ///
-///远程开关锁命令受理成功不代表锁已动作，锁真实执行后
-///服务器会推送 DoorLockOpen/DoorLockClose（ExtInfo.MsgType 为 Remote）
+///远程开关锁命令受理成功不代表锁已动作，锁真实执行后服务器会推送
+/// DoorLockOpen/DoorLockClose：开锁回执 MsgType 为 Remote/ManualUnlock，
+///关锁回执 MsgType 为 HasBeenClose（门已关闭，远程关锁动作的回执载体）
 void _parseRemoteLockResult(Map<String, dynamic> data) {
   try {
     final Map<String, dynamic>? alarmInfo =
         data['AlarmInfo'] is Map<String, dynamic> ? data['AlarmInfo'] : null;
     if (alarmInfo == null) return;
 
-    //只有远程触发的开关锁才作为命令回执
     final Map<String, dynamic>? extInfo =
         alarmInfo['ExtInfo'] is Map<String, dynamic> ? alarmInfo['ExtInfo'] : null;
-    if (extInfo?['MsgType']?.toString() != 'Remote') return;
+    final String msgType = extInfo?['MsgType']?.toString() ?? '';
 
     final String? event = alarmInfo['Event']?.toString();
     final bool isUnlock;
     if (event == 'DoorLockOpen') {
+      if (msgType != 'Remote' && msgType != 'ManualUnlock') return;
       isUnlock = true;
     } else if (event == 'DoorLockClose') {
+      if (msgType != 'Remote' && msgType != 'HasBeenClose') return;
       isUnlock = false;
     } else {
       return;

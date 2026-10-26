@@ -13,6 +13,7 @@ import 'package:fcloudsdk/door_lock/door_lock_netip_model.dart';
 import 'package:fcloudsdk/door_lock/door_lock_parse.dart';
 import 'package:fcloudsdk/door_lock/door_lock_shadow.dart';
 import 'package:fcloudsdk/utils/bit_util.dart';
+import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -205,11 +206,6 @@ class MainBleActiveController extends ChangeNotifier {
     bleActive.removeActiveStatusListener(_onActiveStatus);
 
     logs.add('蓝牙激活成功');
-    logs.add('sn: ${model.deviceId}');
-    logs.add('mac: ${model.devMac}');
-    logs.add('adminToken: ${model.adminToken}');
-    logs.add(
-        '本地authKey: ${DoorLockKeyValueLocal.authKey(deviceId: model.deviceId)}');
     _updateView();
 
     ///是否支持蓝牙netip协议（国内锁）
@@ -247,24 +243,22 @@ class MainBleActiveController extends ChangeNotifier {
       isSuccess = true;
       _updateView();
     }
-
-    logs.add('激活后步骤完成');
     _updateView();
   }
 
   ///海外锁/低功耗锁完成流程
   _doOverseasLockFinish() async {
-    ///上传QSPID到Caps
-    await _updateQsPID();
-
-    ///上报经纬度
-    _updateDeviceLatlon();
-
     ///设置设备昵称
     await askDeviceNickname();
 
     ///添加服务器
     await addDeviceToService();
+
+    ///设备入库后再上报经纬度/QSPID（未入库时服务端按sn查不到设备会报错）
+    if (isAddServiceSuccess) {
+      _updateDeviceLatlon();
+      await _updateQsPID();
+    }
   }
 
   ///设置设备昵称
@@ -280,13 +274,11 @@ class MainBleActiveController extends ChangeNotifier {
     } catch (_) {}
     var defaultName =
         adviceNames.isNotEmpty ? adviceNames.first : model.deviceId;
-    logs.add('推荐设备名: $adviceNames');
     _updateView();
 
     var name = await _showNicknameDialog(
         defaultName: defaultName, adviceNames: adviceNames);
     model.deviceName = name;
-    logs.add('设备昵称: $name');
     _updateView();
   }
 
@@ -346,7 +338,6 @@ class MainBleActiveController extends ChangeNotifier {
   ///添加服务器
   ///使用静默获取的默认家庭组ID（在model.toJsonMapForPair()中处理）
   addDeviceToService() async {
-    logs.add('开始添加服务器(JVSS)');
     _updateView();
     try {
       var body = await model.toJsonMapForPair();
@@ -402,9 +393,6 @@ class MainBleActiveController extends ChangeNotifier {
     logs.add('通知设备激活成功(指令02)');
     _updateView();
 
-    ///上报经纬度
-    _updateDeviceLatlon();
-
     ///开启蓝牙netip（获取锁版配置能力集的必要前置）
     await DoorLockHelper.openBlueNetIp(
         sn: model.deviceId, mac: model.blueUUID, adminToken: model.adminToken);
@@ -440,6 +428,11 @@ class MainBleActiveController extends ChangeNotifier {
 
     ///添加服务器
     await addDeviceToService();
+
+    ///上报经纬度
+    if (isAddServiceSuccess) {
+      _updateDeviceLatlon();
+    }
 
     _updateView();
   }
@@ -609,9 +602,8 @@ class MainBleActiveController extends ChangeNotifier {
         lat: position.latitude.toString(),
         lon: position.longitude.toString(),
       );
-      logs.add('经纬度上报成功: lat=${position.latitude}, lon=${position.longitude}');
     } catch (e) {
-      logs.add('经纬度上报失败: $e');
+      LogUtils.doorLock.log('经纬度上报失败: $e');
     }
   }
 

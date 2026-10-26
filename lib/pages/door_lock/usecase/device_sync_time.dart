@@ -57,7 +57,7 @@ class DeviceSyncTime {
           commandName: '',
           config: jsonEncode(mapTime),
           configLen: 0,
-          command: 1040,
+          command: 1450,
           timeout: 5000);
     } catch (e) {
       debugPrint('syncTimeToDevice error: $e');
@@ -65,7 +65,8 @@ class DeviceSyncTime {
   }
 
   ///同步夏令时规则到设备
-  static Future _syncDST({required String deviceId, required DstInfo dstInfo}) async {
+  static Future _syncDST(
+      {required String deviceId, required DstInfo dstInfo}) async {
     final Map<String, dynamic> map = {};
 
     if (!dstInfo.supportsDst) {
@@ -81,8 +82,7 @@ class DeviceSyncTime {
             'Year': dstInfo.startDate!.year,
             'Month': dstInfo.startDate!.month,
             'Week': dstInfo.startWeekOfMonth, //几月的第几个星期
-            'Day': dstInfo.startDate!.weekday %
-                7, //按周计算时表示星期几，0为星期天
+            'Day': dstInfo.startDate!.weekday % 7, //按周计算时表示星期几，0为星期天
             'Hour': 0,
             'Minute': 0,
           };

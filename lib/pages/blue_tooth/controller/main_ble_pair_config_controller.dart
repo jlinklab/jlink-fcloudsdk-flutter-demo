@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/ble_by_sdk/ble_device.dart';
@@ -235,7 +236,21 @@ class MainBlePairConfigController extends ChangeNotifier {
     }
 
     await _sendKeyPairIfNeed();
+
+    ///密钥组同步失败：中断后续初始化（版本/配置/能力集/上报都不再执行）
+    if (syncKeyPair == false) {
+      _log('密钥组同步失败，中断初始化');
+      return;
+    }
+
     await _syncJvssBaseYearIfNeed();
+
+    ///基准年同步失败：中断后续初始化
+    if (syncJvssBaseYear == false) {
+      _log('基准年同步失败，中断初始化');
+      return;
+    }
+
     await _getDeviceVersion();
     await _getDoorLockAllConfig();
     await _getDoorManagerAbility();
@@ -278,6 +293,10 @@ class MainBlePairConfigController extends ChangeNotifier {
               _log('回退服务器密钥组失败: $e');
             }
           }
+        } else {
+          ///锁端未返回结果，视为同步失败
+          syncKeyPair = false;
+          _log('同步离线密钥组无返回');
         }
       } else {
         _log('获取离线密钥组返回异常: $result');
@@ -521,7 +540,6 @@ class MainBlePairConfigController extends ChangeNotifier {
         }
         _searchListener = (device) {
           if (device.uuid == model.blueUUID) {
-            _log('搜索到设备: sn=${device.sn} extra=${device.extra}');
             if (device.extra == 5 || device.extra == 2) {
               if (!completer.isCompleted) {
                 completer.complete(true);
@@ -583,7 +601,7 @@ class MainBlePairConfigController extends ChangeNotifier {
     bleDistribute = BleNewDistribute(
       uuid: model.blueUUID,
       wifiConfig: WifiConfig(ssid: ssid, wifiPwd: wifiPwd),
-      dns: '',
+      dns: '223.6.6.6',
       authKey: _needAuthKey()
           ? DoorLockKeyValueLocal.authKey(deviceId: model.deviceId)
           : null,
@@ -636,6 +654,16 @@ class MainBlePairConfigController extends ChangeNotifier {
         .addDistributeResultListener((status, device, errorCode, jsonStr) {
       if (status == BleDistributeStatus.distributing) {
         _log('设备已接收配网信息，等待设备连接路由器');
+      } else if (status == BleDistributeStatus.distributeRecv) {
+        ///收到设备配网回包，打印内容用于确认设备是否响应
+        String? hexData;
+        if (jsonStr != null) {
+          try {
+            Map<String, dynamic> jsonData = jsonDecode(jsonStr);
+            hexData = jsonData['HexData'];
+          } catch (e) {}
+        }
+        _log('收到设备配网回包: hexData=${hexData ?? ""}');
       } else if (status == BleDistributeStatus.distributeSuccess) {
         if (isFake) {
           _onFakeDistributeSuccess();
@@ -740,17 +768,35 @@ class MainBlePairConfigController extends ChangeNotifier {
 
     ///使用第一次保活结果（doCnLockFinish中存储的）
     DoorLockNetIpOperaterResult? syncStatus = args.syncDoorStatus;
-    try {
-      var result = await DoorLockNetIp.syncDoorStatus(model.deviceId);
 
-      ///遇到anotherOperating不覆盖已有值
-      if (result.item2?.err != DoorLockNetIpOperaterResult.anotherOperating) {
-        syncStatus = result.item2?.err;
+    ///需要锁端真实的同步状态结果：先清除保活池缓存，强制真实保活
+    ///异常/错误结果时500ms后重试一次，避免单次网络抖动拿到错误结果
+    for (var attempt = 1; attempt <= 2; attempt++) {
+      try {
+        DoorLockNetIp.clearKeepAliveState(model.deviceId);
+        var result = await DoorLockNetIp.syncDoorStatus(model.deviceId,
+            ignoreKeepAlive: true);
+        if (result.item3 != null && attempt < 2) {
+          _log('保活结果异常，500ms后重试($attempt/2): ${result.item3}');
+          await Future.delayed(const Duration(milliseconds: 500));
+          continue;
+        }
+
+        ///遇到anotherOperating不覆盖已有值
+        if (result.item2?.err != DoorLockNetIpOperaterResult.anotherOperating) {
+          syncStatus = result.item2?.err;
+        }
+        _log(
+            '保活结果: ${result.item1}, err=${result.item2?.err}, syncStatus=$syncStatus');
+        break;
+      } catch (e) {
+        if (attempt < 2) {
+          _log('保活异常，500ms后重试($attempt/2): $e');
+          await Future.delayed(const Duration(milliseconds: 500));
+          continue;
+        }
+        _log('保活异常: $e');
       }
-      _log(
-          '保活结果: ${result.item1}, err=${result.item2?.err}, syncStatus=$syncStatus');
-    } catch (e) {
-      _log('保活异常: $e');
     }
 
     if (syncStatus == DoorLockNetIpOperaterResult.addUserAdminNotskip) {
@@ -781,7 +827,10 @@ class MainBlePairConfigController extends ChangeNotifier {
 
     try {
       ///先保活，校验保活结果再决定是否添加
-      var syncResult = await DoorLockNetIp.syncDoorStatus(model.deviceId);
+      ///用户输入密码耗时较长，锁端会话可能已过期：清缓存强制真实保活
+      DoorLockNetIp.clearKeepAliveState(model.deviceId);
+      var syncResult = await DoorLockNetIp.syncDoorStatus(model.deviceId,
+          ignoreKeepAlive: true);
       if (!syncResult.item1) {
         if (syncResult.item2?.err == DoorLockNetIpOperaterResult.needSync) {
           ///同步状态过期，提示后结束

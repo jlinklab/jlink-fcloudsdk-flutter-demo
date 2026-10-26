@@ -107,16 +107,19 @@ class SecurityInterceptor extends Interceptor {
     final String key = map['AesKey'];
     options.extra['aesKey'] = key;
 
-    //加密数据
+    //加密数据（接口声明 encryot:false 时跳过加密，如 caps 服务要求明文）
+    bool needEncryot = options.headers['encryot'] ?? true;
     debugPrint('参数类型 ${options.data.runtimeType}');
     if (options.data != null) {
       String originBody =
           ParamEncoder.encode(options.data, options.contentType);
-      debugPrint('加密前的 body --> $originBody');
-      final encryptData =
-          await UtilAPI.instance.xcAesEncryptToHexString(originBody, key);
-      debugPrint('加密后的 body --> ${encryptData.length}  $encryptData');
-      options.data = encryptData;
+      if (needEncryot) {
+        debugPrint('加密前的 body --> $originBody');
+        final encryptData =
+            await UtilAPI.instance.xcAesEncryptToHexString(originBody, key);
+        debugPrint('加密后的 body --> ${encryptData.length}  $encryptData');
+        options.data = encryptData;
+      }
     }
     super.onRequest(options, handler);
   }
@@ -129,9 +132,13 @@ class SecurityInterceptor extends Interceptor {
     }
 
     bool needDecrypt = response.requestOptions.headers['decrypt'] ?? true;
+
     /// 直接取当前请求加密时使用的 key，避免从 URL 反推带来的偏差
     String? key = response.requestOptions.extra['aesKey'];
-    if (response.data is String && key != null && key.isNotEmpty && needDecrypt) {
+    if (response.data is String &&
+        key != null &&
+        key.isNotEmpty &&
+        needDecrypt) {
       final encryptedData = response.data;
       final decryptedData =
           await UtilAPI.instance.xcAesDecryptToHexString(encryptedData, key);
@@ -166,7 +173,9 @@ class ResponseInterceptor extends Interceptor {
         ? json.decode(response.data)
         : Map.from(response.data);
     int code = responseData['code'] ?? 0;
-    if (code != 2000) {
+    int ret = responseData['ret'] ?? 0;
+    if ((responseData.containsKey('code') && code != 2000) ||
+        (responseData.containsKey('ret') && ret != 200)) {
       String errorMessage = responseData['msg'] ?? '';
       if (errorMessage.isNotEmpty) {
         // showError(errorMessage);

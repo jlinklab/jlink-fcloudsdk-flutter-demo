@@ -84,6 +84,7 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
 
     // wifi 在线/离线共用同一缩略图，外圈边框按休眠状态染色：
     // 在线默认主题色，浅睡橙 / 准睡紫 / 深睡蓝灰；离线恒灰
+    // 蓝牙配对锁（未配网）不展示外圈
     final wifiOnline =
         controller.device.doorlockIsConfigNet && controller.device.state > 0;
     Color borderColors = Colors.grey;
@@ -104,6 +105,21 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
       }
     }
 
+    final thumb = Container(
+      width: width,
+      height: height,
+      color: Colors.transparent,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(6),
+        child: _buildDefaultThumb(width: width, height: height),
+      ),
+    );
+
+    ///蓝牙配对锁（未配网）：无外圈
+    if (!controller.device.doorlockIsConfigNet) {
+      return thumb;
+    }
+
     return GestureDetector(
       onTap: () {},
       child: Container(
@@ -114,15 +130,7 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
         ),
         child: Padding(
           padding: const EdgeInsets.all(1.0),
-          child: Container(
-            width: width,
-            height: height,
-            color: Colors.transparent,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(6),
-              child: _buildDefaultThumb(width: width, height: height),
-            ),
-          ),
+          child: thumb,
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:fcloudsdk/ble_by_sdk/ble_device.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,9 +28,24 @@ class _BleActivePageState extends State<BleActivePage> {
             ..start(),
       builder: (context, child) {
         return Consumer<MainBleActiveController>(builder: (context, controller, child) {
-          return Scaffold(
+          ///配对结束（成功或失败）后才允许退出，退出直接回设备列表页
+          var canExit = controller.isSuccess || controller.isFail;
+          return PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didPop, result) {
+              if (didPop) {
+                return;
+              }
+              if (canExit) {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              } else {
+                KToast.show(status: '配对中，请稍候');
+              }
+            },
+            child: Scaffold(
             appBar: AppBar(
               title: const Text('门锁蓝牙配对'),
+              automaticallyImplyLeading: canExit,
             ),
             body: Column(
               children: [
@@ -112,6 +128,7 @@ class _BleActivePageState extends State<BleActivePage> {
                     ),
                   ),
               ],
+            ),
             ),
           );
         });
