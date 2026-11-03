@@ -78,7 +78,7 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
   }
 
   Widget thumbnail() {
-    var width = (MediaQuery.of(context).size.width * 0.38).ceil().toDouble();
+    var width = (MediaQuery.of(context).size.width * 0.33).ceil().toDouble();
     if (width > 150) width = 150;
     var height = (width / (3 / 5)).ceil().toDouble();
 
@@ -277,10 +277,6 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
     final list = controller.userManagerUIList;
     if (list.isEmpty) return const SizedBox.shrink();
 
-    const double cellHeight = 96;
-    final int rows = (list.length / 3).ceil();
-    final double gridHeight = rows * cellHeight + (rows - 1) * 10;
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
       child: Column(
@@ -295,51 +291,49 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> {
             ),
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            height: gridHeight,
-            child: GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                childAspectRatio: 1.0,
-              ),
-              itemCount: list.length,
-              itemBuilder: (context, index) {
-                final item = list[index];
-                return GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => controller.checkUserManager(item),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(item.icon, size: 26, color: _primaryColor),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        item.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Color(0xFF333333),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              mainAxisSpacing: 0,
+              crossAxisSpacing: 10,
+              childAspectRatio: 1.0,
             ),
+            itemCount: list.length,
+            itemBuilder: (context, index) {
+              final item = list[index];
+              return GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => controller.checkUserManager(item),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(item.icon, size: 26, color: _primaryColor),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      item.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF333333),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ],
       ),
