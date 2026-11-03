@@ -207,11 +207,13 @@ mixin DoorLockOperationMixin on ChangeNotifier {
   }
 
   ///[showErrorTip]为false时失败不弹toast，供页面用重试弹窗兜底的调用方使用
+  ///[showAnotherOperatingTip]为false时Err=10不弹窗，由调用方按兜底数据自行决定提示
   Future<bool> beforeNetIp(
       {bool showLoading = true,
       bool ignoreAddUserAdminNotskip = true,
       bool needKeepAlive = true,
-      bool showErrorTip = true}) async {
+      bool showErrorTip = true,
+      bool showAnotherOperatingTip = true}) async {
     try {
       ///先唤醒, 门锁唤醒由sdk内部处理，这里不调了
       //showLoading ? EasyLoadingUtils.showInContext(pageContext, dismissOnTap: true) : null;
@@ -227,6 +229,15 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       showLoading ? KToast.show() : null;
       var result = await DoorLockNetIp.syncDoorStatus(deviceId);
       showLoading ? KToast.dismiss() : null;
+
+      ///其他用户正在操作(Err=10)
+      if (result.item1 == false &&
+          result.item2?.err == DoorLockNetIpOperaterResult.anotherOperating) {
+        if (showAnotherOperatingTip) {
+          KToast.show(status: '其他用户正在操作，请稍后再试');
+        }
+        return false;
+      }
 
       ///正常情况下addUserAdminNotskip也视为成功，除非特殊场景如验证管理员、用户管理等
       if (!ignoreAddUserAdminNotskip &&
@@ -925,8 +936,9 @@ mixin DoorLockOperationMixin on ChangeNotifier {
   }
 
   ///获取锁端开锁方式（按设备通道自动路由 BLE / netip）
+  ///[showAnotherOperatingTip]为false时Err=10不弹窗，由调用方按兜底数据自行决定提示
   Future<List<DoorUser>> getLockEndUnlockingList(
-      {JvssOperateType? type}) async {
+      {JvssOperateType? type, bool showAnotherOperatingTip = false}) async {
     ///蓝牙通道：直连锁端读取
     Future<List<DoorUser>> sendByBlue() async {
       if (await beforeBlue() == false) return [];
@@ -942,10 +954,13 @@ mixin DoorLockOperationMixin on ChangeNotifier {
 
     ///netip 通道：先保活（syncDoorStatus）再拉取，返回归一化 DoorUser
     Future<List<DoorUser>> sendByNetIp() async {
-      var sync = await DoorLockNetIp.syncDoorStatus(deviceId);
-      if (!sync.item1) {
+      if (await beforeNetIp(
+              showLoading: false,
+              showErrorTip: false,
+              showAnotherOperatingTip: showAnotherOperatingTip) ==
+          false) {
         LogUtils.doorLock
-            .log('getLockEndUnlockingList 保活失败: ${sync.item2?.err}');
+            .log('getLockEndUnlockingList 保活失败: anotherOperating 或其他错误');
         return [];
       }
 

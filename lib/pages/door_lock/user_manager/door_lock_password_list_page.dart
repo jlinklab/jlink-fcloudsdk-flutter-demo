@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
+import 'package:fcloudsdk/door_lock/door_lock_netip_api.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk_example/api/door_lock_api.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
@@ -76,8 +77,20 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
 
   @override
   void dispose() {
+    _endSyncIfNeed();
     _op?.dispose();
     super.dispose();
+  }
+
+  ///密码管理列表页退出时结束保活，但保留蓝牙连接和登录状态
+  void _endSyncIfNeed() {
+    final dev = _device;
+    if (dev == null) return;
+    if (dev.sleepState == DeviceSleepState.wakeUp ||
+        dev.sleepState == DeviceSleepState.unknown) {
+      LogUtils.doorLock.log('密码管理列表页退出，结束保活：${widget.deviceId}');
+      DoorLockNetIp.endSyncDoorStatus(widget.deviceId);
+    }
   }
 
   // ==================== 列表加载 ====================
@@ -286,7 +299,8 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
     try {
       final lockUsers = await _operation
           .getLockEndUnlockingList(
-              type: isAll ? null : JvssOperateType.password)
+              type: isAll ? null : JvssOperateType.password,
+              showAnotherOperatingTip: isAll)
           .timeout(const Duration(seconds: 60));
       if (lockUsers.isEmpty) {
         LogUtils.doorLock.log('从锁端拉数据: 锁端无用户，跳过上报(isAll=$isAll)');

@@ -28,6 +28,16 @@ class DoorLockHomeController extends DoorLockPageController
   @override
   final String deviceId;
 
+  ///门锁首页退出时不保留蓝牙/保活/登录
+  @override
+  bool get keepBleConnectWhenDispose => false;
+
+  @override
+  bool get keepSyncWhenDispose => false;
+
+  @override
+  bool get keepLoginWhenDispose => false;
+
   ///前置数据请求是否完成
   bool isReady = false;
 

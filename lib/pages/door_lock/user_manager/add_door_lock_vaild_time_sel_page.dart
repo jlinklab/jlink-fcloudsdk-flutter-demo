@@ -80,7 +80,7 @@ class _AddDoorLockVaildTimeSelPageState
 
   ///切换 Tab / 初始化时填充默认时效
   ///
-  ///- 限时：now ~ now+1 月（非密码对齐 jlink getVaildStartAndEnd 通用分支）
+  ///- 限时：now ~ now+1 月
   ///- 循环：now ~ now+1 月+1 小时（pswType=4 加一小时），日期归零点到天，
   ///  星星期默认全不选（非密码类型），时段默认当前时刻 ~ +1 小时
   void _resetTimeData() {
