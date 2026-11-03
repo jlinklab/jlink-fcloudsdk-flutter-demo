@@ -20,11 +20,14 @@ import 'package:fcloudsdk/utils/bit_util.dart';
 import 'package:fcloudsdk/wifi/wifi_config.dart';
 import 'package:fcloudsdk/wifi/wifi_platform_interface.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../../api/door_lock_api.dart';
 import '../../../manager/device_manager.dart';
 import '../../../pages/door_lock/usecase/door_lock_helper.dart';
+import '../../../pages/door_lock/user_manager/door_lock_create_password_repository.dart';
+import '../../../views/toast/toast.dart';
 import '../../add_device/models/add_device_center.dart';
 
 ///配网页参数：由激活页携带（激活+昵称+添加服务器完成后）
@@ -1054,6 +1057,7 @@ class MainBlePairConfigController extends ChangeNotifier {
                 controller: pwdController,
                 obscureText: true,
                 keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration:
                     InputDecoration(hintText: '请输入$minLength-$maxLength位数字密码'),
               ),
@@ -1064,6 +1068,11 @@ class MainBlePairConfigController extends ChangeNotifier {
               onPressed: () {
                 var pwd = pwdController.text.trim();
                 if (pwd.length >= minLength && pwd.length <= maxLength) {
+                  if (!complyNationalStandard(pwd)) {
+                    KToast.show(
+                        status: '密码过于简单，不能使用连续或重复数字');
+                    return;
+                  }
                   Navigator.of(dialogContext).pop(pwd);
                 }
               },

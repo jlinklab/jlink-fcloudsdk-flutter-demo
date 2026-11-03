@@ -15,6 +15,7 @@ import 'package:fcloudsdk/door_lock/door_lock_shadow.dart';
 import 'package:fcloudsdk/utils/bit_util.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../../api/add_device_api.dart';
@@ -22,6 +23,8 @@ import '../../../api/door_lock_api.dart';
 import '../../../api/weather_service.dart';
 import '../../../pages/door_lock/usecase/device_sync_time.dart';
 import '../../../pages/door_lock/usecase/door_lock_helper.dart';
+import '../../../pages/door_lock/user_manager/door_lock_create_password_repository.dart';
+import '../../../views/toast/toast.dart';
 import '../../add_device/models/add_device_center.dart';
 import '../../../utils/permission_utils.dart';
 
@@ -323,9 +326,11 @@ class MainBleActiveController extends ChangeNotifier {
             TextButton(
               onPressed: () {
                 var name = textController.text.trim();
-                if (name.isNotEmpty) {
-                  Navigator.of(dialogContext).pop(name);
+                if (name.length < 2 || name.length > 63) {
+                  KToast.show(status: '设备名称长度需为 2-63 位');
+                  return;
                 }
+                Navigator.of(dialogContext).pop(name);
               },
               child: const Text('确定'),
             ),
@@ -738,6 +743,7 @@ class MainBleActiveController extends ChangeNotifier {
             controller: controller,
             obscureText: true,
             keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration:
                 InputDecoration(hintText: '请输入$minLength-$maxLength位数字密码'),
           ),
@@ -746,6 +752,11 @@ class MainBleActiveController extends ChangeNotifier {
               onPressed: () {
                 var pwd = controller.text;
                 if (pwd.length >= minLength && pwd.length <= maxLength) {
+                  if (!complyNationalStandard(pwd)) {
+                    KToast.show(
+                        status: '密码过于简单，不能使用连续或重复数字');
+                    return;
+                  }
                   Navigator.of(dialogContext).pop(pwd);
                 }
               },

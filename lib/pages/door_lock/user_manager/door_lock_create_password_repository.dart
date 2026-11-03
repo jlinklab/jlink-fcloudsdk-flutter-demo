@@ -21,7 +21,7 @@ int _sec(DateTime dt) => dt.millisecondsSinceEpoch ~/ 1000;
 bool _isNumeric(String s) => RegExp(r'^[0-9]*$').hasMatch(s);
 
 ///是否符合新国标：非连续（123456）、非全同（111111）
-bool _complyNationalStandard(String pwd) {
+bool complyNationalStandard(String pwd) {
   if (_simpleContinuous(pwd)) return false;
   if (_sameNumber(pwd)) return false;
   return true;
@@ -78,7 +78,7 @@ void validateForeverPassword({
     throw CreatePwdException('密码长度需为 6-10 位');
   }
   _checkName(pwdName);
-  if (!_complyNationalStandard(pwd)) {
+  if (!complyNationalStandard(pwd)) {
     throw CreatePwdException('密码过于简单，不能使用连续或重复数字');
   }
 }
@@ -132,7 +132,7 @@ Future<String> createCustomPassword({
   if (pwd.length != pwdLength) {
     throw CreatePwdException('密码需为 $pwdLength 位数字');
   }
-  if (!_complyNationalStandard(pwd)) {
+  if (!complyNationalStandard(pwd)) {
     throw CreatePwdException('密码过于简单，不能使用连续或重复数字');
   }
   if (weeks.isEmpty) throw CreatePwdException('请至少选择一天');
