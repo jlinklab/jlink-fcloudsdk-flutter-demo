@@ -19,6 +19,30 @@ class _DoorLockTempPwdDetailPageState extends State<DoorLockTempPwdDetailPage> {
   bool _saving = false;
 
   @override
+  void initState() {
+    super.initState();
+
+    ///已删除未同步的密码不可再操作，进页即提示
+    if (widget.info.isDeleted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            content: const Text('数据已删除，请先唤醒锁进行同步！'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: const Text('确定'),
+              ),
+            ],
+          ),
+        );
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7FB),
@@ -35,8 +59,9 @@ class _DoorLockTempPwdDetailPageState extends State<DoorLockTempPwdDetailPage> {
                 value: widget.info.name.trim().isEmpty
                     ? '未设置'
                     : widget.info.name.trim(),
-                showArrow: true,
-                onTap: _saving ? null : _onEditName,
+                showArrow: !widget.info.isDeleted,
+                onTap:
+                    _saving || widget.info.isDeleted ? null : _onEditName,
               ),
               if (widget.info.uTypeDescription.isNotEmpty)
                 _buildInfoItem(
@@ -184,6 +209,11 @@ class _DoorLockTempPwdDetailPageState extends State<DoorLockTempPwdDetailPage> {
 
   ///点击昵称：弹原生对话框输入，校验长度后保存
   Future<void> _onEditName() async {
+    ///已删除未同步的密码不可再编辑，提示等待锁同步
+    if (widget.info.isDeleted) {
+      _showSnack('数据已删除，请先唤醒锁进行同步！');
+      return;
+    }
     final controller = TextEditingController(text: widget.info.name);
     final newName = await showDialog<String>(
       context: context,

@@ -657,6 +657,23 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
       return;
     }
 
+    ///已删除未同步的密码不可再操作，提示等待锁同步
+    if (tp.isDeleted) {
+      await showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: const Text('数据已删除，请先唤醒锁进行同步！'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('确定'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
