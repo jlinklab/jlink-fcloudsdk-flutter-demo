@@ -314,6 +314,10 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
       );
       LogUtils.doorLock
           .log('从锁端拉数据: 上报 ${lockUsers.length} 条用户到服务器(isAll=$isAll)');
+
+      ///补报锁端离线密码开锁方式（覆盖 unlockInfo 表）+ 密钥组重发，
+      ///使已使用的单次密码随同步从服务器清除
+      await _operation.syncOfflinePwdUnlockInfo();
       return lockUsers;
     } on TimeoutException {
       LogUtils.doorLock.log('从锁端拉数据超时（60s），跳过');

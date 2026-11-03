@@ -9,7 +9,9 @@ import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
 import 'package:fcloudsdk/door_lock/door_lock_key_value.dart';
 import 'package:fcloudsdk/door_lock/door_lock_netip_api.dart';
 import 'package:fcloudsdk/door_lock/door_lock_netip_model.dart';
+import 'package:fcloudsdk/utils/bit_util.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
+import 'package:fcloudsdk_example/api/door_lock_api.dart';
 import 'package:fcloudsdk_example/common/code_prase.dart';
 import 'package:fcloudsdk_example/common/event.dart';
 import 'package:fcloudsdk_example/event/event.dart';
@@ -1027,6 +1029,85 @@ mixin DoorLockOperationMixin on ChangeNotifier {
         }
       }
       return [];
+    }
+  }
+
+  ///锁端同步补报离线密码开锁方式
+  ///
+  ///锁端同步除 doorLockUser 全量上报外，还会把锁端离线密码（含已使用
+  ///后失效的单次密码）全量上报 /unlockInfo/syncUnlockInfo（覆盖式语义），
+  ///成功后重新生成并下发密钥组；
+  Future<void> syncOfflinePwdUnlockInfo() async {
+    if (device.doorLockExInfo?.byte1.supportLockEndOffLinePwd == false) {
+      LogUtils.doorLock.log('syncOfflinePwdUnlockInfo: 锁端不支持离线密码，跳过');
+      return;
+    }
+    if (await beforeBlue() == false || doorLockBleApi == null) {
+      LogUtils.doorLock.log('syncOfflinePwdUnlockInfo: 蓝牙不可达，跳过');
+      return;
+    }
+    try {
+      final models = await doorLockBleApi!
+          .getDoorOpenType(type: BleOperateType.offlinePwd)
+          .timeout(const Duration(seconds: 30));
+      final infos = <Map<String, dynamic>>[
+        for (final m in models)
+          if (m.hardwareType == DoorLockBleHardwareType.offLinePwd)
+            {
+              'name': m.pwd ?? '',
+              'deviceSn': deviceId,
+              'unlockMode': '0x${bytesToHex([m.hardwareTypeOri])}',
+              'validTime': m.timeliness,
+              'validType': bytesToHex([m.timelinessTypeOri]),
+              'hardwareId': m.hardwareId,
+              'memberId': m.memberId,
+              'createTime': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+              'password': m.pwd ?? '',
+            }
+      ];
+      LogUtils.doorLock
+          .log('syncOfflinePwdUnlockInfo: 锁端离线密码 ${infos.length} 条');
+
+      ///锁端无离线密码记录时不上报
+      if (infos.isEmpty) return;
+
+      await doorlockAPI.syncUnlockInfo(
+        deviceSn: deviceId,
+        syncTime: DateTime.now().millisecondsSinceEpoch,
+        infoDTOS: infos,
+      );
+      LogUtils.doorLock.log('syncOfflinePwdUnlockInfo: 覆盖上报成功');
+
+      ///上报成功后重新生成并下发密钥组
+      await _resendOfflineKeyPair();
+    } catch (e) {
+      LogUtils.doorLock.log('syncOfflinePwdUnlockInfo 异常: $e');
+    }
+  }
+
+  ///重新生成并下发离线密钥组（逻辑同生成密码页"去同步"，失败仅日志不回滚流程）
+  Future<void> _resendOfflineKeyPair() async {
+    if (doorLockBleApi == null) return;
+    try {
+      final result = await doorlockAPI.getKeyPair(deviceSn: deviceId);
+      if (result is! List) {
+        LogUtils.doorLock.log('重发密钥组: 获取密钥组返回异常: $result');
+        return;
+      }
+      final keyPair = result.join().replaceAll(':', '');
+      final sendCallBack = await doorLockBleApi!.sendKeyPair(1, keyPair);
+      if (sendCallBack == null) return;
+      if (!sendCallBack.item1 && sendCallBack.item2.first == 2) {
+        ///密钥组回退
+        try {
+          await doorlockAPI.rollBackKeyPair(deviceSn: deviceId);
+        } catch (e) {
+          LogUtils.doorLock.log('重发密钥组: 回退失败: $e');
+        }
+      }
+      LogUtils.doorLock.log('重发密钥组完成: ${sendCallBack.item1}');
+    } catch (e) {
+      LogUtils.doorLock.log('重发密钥组异常: $e');
     }
   }
 }
