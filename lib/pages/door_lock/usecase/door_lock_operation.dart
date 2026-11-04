@@ -22,6 +22,7 @@ import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/pages/add_device/manager/global_ble_search_manager.dart';
 import 'package:fcloudsdk_example/pages/door_lock/model/door_user.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
+import 'package:fcloudsdk_example/utils/permission_utils.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 import 'package:flutter/material.dart';
 
@@ -277,6 +278,21 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       return doorLockBleApi != null;
     } catch (e) {
       return false;
+    }
+  }
+
+  ///系统蓝牙开关是否打开
+  ///
+  ///指令通道状态(doolockCmdStatus)依赖扫描结果刷新，关闭系统蓝牙后
+  ///会存在状态仍为 wifiAndBlue 的窗口，此时走蓝牙会一直等到超时(99991)；
+  ///用系统开关状态前置判断，关闭时直接改走 WiFi。查询异常按打开处理
+  Future<bool> get isBlueSwitchOn async {
+    try {
+      return await PermissionUtils.checkPermission(
+          permission: XPermission.blueSwitch, onlyStatus: true);
+    } catch (e) {
+      LogUtils.doorLock.log('check blue switch error: $e');
+      return true;
     }
   }
 
@@ -641,10 +657,25 @@ mixin DoorLockOperationMixin on ChangeNotifier {
           result.item1, result.item2?.err, result.item3);
     }
 
+    ///蓝牙通道
+    ///增加权限判断 兜底极限情况
+    Future<DoorLockDeleteResult> sendByBlueWithSwitchCheck() async {
+      ///系统蓝牙已关闭但通道状态未重算时，直接走 WiFi
+      if (!await isBlueSwitchOn) {
+        LogUtils.doorLock
+            .log('doorLockDeleteType blue switch off, fallback sendByNetIp');
+        return sendByNetIp();
+      }
+
+      return sendByBlue();
+    }
+
     if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
+      LogUtils.doorLock.log('doorLockDeleteType DoolockCmdStatus.onlyWifi');
       return sendByNetIp();
-    } else if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue ||
-        device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
+    } else if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue) {
+      return sendByBlueWithSwitchCheck();
+    } else if (device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
       return sendByBlue();
     } else {
       ///离线：低功耗/海外锁先搜蓝牙，等到在线后走 BLE 删除
@@ -740,9 +771,18 @@ mixin DoorLockOperationMixin on ChangeNotifier {
     }
 
     if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
+      LogUtils.doorLock
+          .log('doorLockAddPasswordType DoolockCmdStatus.onlyWifi');
       return sendByNetIp();
-    } else if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue ||
-        device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
+    } else if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue) {
+      ///系统蓝牙已关闭但通道状态未重算时，直接走 WiFi
+      if (!await isBlueSwitchOn) {
+        LogUtils.doorLock
+            .log('doorLockAddPasswordType blue switch off, sendByNetIp');
+        return sendByNetIp();
+      }
+      return sendByBlue();
+    } else if (device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
       return sendByBlue();
     } else {
       ///离线：低功耗/海外锁先搜蓝牙，等到在线后走 BLE 添加
@@ -1029,10 +1069,17 @@ mixin DoorLockOperationMixin on ChangeNotifier {
     }
 
     if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
-      LogUtils.doorLock.log('添加开锁方式 DoolockCmdStatus.onlyWifi');
+      LogUtils.doorLock.log('doorLockAddOpenType DoolockCmdStatus.onlyWifi');
       return sendByNetIp();
-    } else if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue ||
-        device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
+    } else if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue) {
+      ///系统蓝牙已关闭但通道状态未重算时，直接走 WiFi
+      if (!await isBlueSwitchOn) {
+        LogUtils.doorLock
+            .log('doorLockAddOpenType blue switch off, sendByNetIp');
+        return sendByNetIp();
+      }
+      return sendByBlue();
+    } else if (device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
       return sendByBlue();
     } else {
       ///离线：低功耗/海外锁先搜蓝牙，等到在线后走 BLE 添加
@@ -1057,8 +1104,15 @@ mixin DoorLockOperationMixin on ChangeNotifier {
     required bool isAdmin,
   }) async {
     try {
-      if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue ||
-          device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
+      ///系统蓝牙已关闭时取消也走 netip，保持与添加实际通道一致
+      bool useBlue = false;
+      if (device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
+        useBlue = true;
+      } else if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue) {
+        useBlue = await isBlueSwitchOn;
+      }
+
+      if (useBlue) {
         if (doorLockBleApi == null) return;
         await doorLockBleApi
             ?.addDoorOpenType(DoorLockAddBleOpenTypeRequest(
@@ -1069,7 +1123,8 @@ mixin DoorLockOperationMixin on ChangeNotifier {
             ))
             ?.drain()
             .timeout(const Duration(seconds: 5));
-      } else if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
+      } else if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi ||
+          device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue) {
         await DoorLockNetIp.addDoorOpenType(
                 deviceId: deviceId,
                 type: type,
@@ -1186,8 +1241,15 @@ mixin DoorLockOperationMixin on ChangeNotifier {
 
     if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
       return sendByNetIp();
-    } else if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue ||
-        device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
+    } else if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue) {
+      ///系统蓝牙已关闭但通道状态未重算时，直接走 WiFi
+      if (!await isBlueSwitchOn) {
+        LogUtils.doorLock
+            .log('getLockEndUnlockingList blue switch off, sendByNetIp');
+        return sendByNetIp();
+      }
+      return sendByBlue();
+    } else if (device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
       return sendByBlue();
     } else {
       ///离线：低功耗/海外锁先搜蓝牙，等到在线后走 BLE 读取

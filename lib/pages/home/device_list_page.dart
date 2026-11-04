@@ -55,10 +55,14 @@ class _DeviceListPageState extends State<DeviceListPage>
       }
     });
 
-    ///蓝牙开关切换（关闭时蓝牙在线态已全部重置）：刷新列表
-    _blueSwitchSubscription = eventBus.on<BlueSwitchEvent>().listen((event) {
-      if (mounted) {
-        context.read<DevListViewModel>().onRefresh();
+    ///蓝牙开关切换：关闭时已重置全部蓝牙在线态，逐个刷新门锁状态纠正展示
+    _blueSwitchSubscription =
+        eventBus.on<BlueSwitchEvent>().listen((event) async {
+      if (!mounted || event.isOn != false) return;
+      for (var device in DeviceManager.instance.allDevices) {
+        if (DoorLockHelper.isDoorLock(device.uuid)) {
+          DoorLockHelper.refreshDoorLockStatus(device.uuid);
+        }
       }
     });
   }

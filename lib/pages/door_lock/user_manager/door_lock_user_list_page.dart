@@ -291,6 +291,12 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
 
   Future<List<DoorUser>> _doSyncLockEndToServer({bool isAll = false}) async {
     try {
+      ///能力集未解析过时，先强制刷新影子服务，保证透传协议版本判断有数据
+      final device = _device;
+      if (device?.doorLockActionVerList == null) {
+        await DoorLockHelper.getFuncFromShadowIfNeed(widget.deviceId,
+            queryNew: true);
+      }
       final lockUsers = await _operation
           .getLockEndUnlockingList(
               type: isAll ? null : _type, showAnotherOperatingTip: isAll)

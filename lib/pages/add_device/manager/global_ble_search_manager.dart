@@ -7,6 +7,7 @@ import 'package:fcloudsdk/door_lock/door_lock_event.dart';
 import 'package:fcloudsdk/utils/event_bus.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk_example/common/event.dart';
+import 'package:fcloudsdk_example/common/named_route.dart';
 import 'package:fcloudsdk_example/event/event.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/models/device_model.dart';
@@ -95,20 +96,7 @@ class GlobalBleSearchManager {
       _resetTimer(uuid: e.uuid, sn: e.activeSn);
     });
 
-    ///监听蓝牙开关状态：鸿蒙上 flutter_blue_plus 首次读取适配器状态
-    ///会隐式触发系统权限弹窗，未授权时先跳过，权限校验通过后再补订阅
-    _listenAdapterStateIfPermitted();
-  }
-
-  ///仅在蓝牙权限已真实授权时才订阅适配器状态流，避免隐式触发系统权限弹窗
-  _listenAdapterStateIfPermitted() {
-    if (_isListeningAdapterState) {
-      return;
-    }
-    if (!AddDevicePermissionUsecase.instance.isCanBleSearch()) {
-      LogUtils.doorLock.log('蓝牙权限未授权，跳过适配器状态订阅');
-      return;
-    }
+    ///监听蓝牙开关状态
     _listenAdapterState();
   }
 
@@ -130,12 +118,24 @@ class GlobalBleSearchManager {
     });
   }
 
-  ///蓝牙打开：防抖后重启扫描，广播开关切换事件
+  ///蓝牙打开：防抖后按栈顶路由重启扫描，广播开关切换事件
+  ///（门锁首页低频扫；设备列表首页高频扫；权限未授权静默跳过，避免误弹权限提示）
   _blueSwitchOn() {
-    DebounceThrottle.debounce(() {
+    DebounceThrottle.debounce(() async {
       LogUtils.doorLock.log('bluetooth switch on, restart scan');
+
+      ///刷新权限标志位（关蓝牙期间可能被置 false，重开后需重新查真实状态）
+      await AddDevicePermissionUsecase.instance.checkOnlyBlue(onlyStatus: true);
       _isBlueOn = true;
-      startScanByDebounce();
+      if (AddDevicePermissionUsecase.instance.isCanBleSearch()) {
+        final top =
+            goRouter.routerDelegate.currentConfiguration.last.matchedLocation;
+        if (top == '/doorLockHomePage') {
+          startScanByDebounce(lowFrequency: true);
+        } else if (top == '/') {
+          startScanByDebounce(retryCountMax: 4);
+        }
+      }
       eventBus.fire(BlueSwitchEvent(isOn: true));
     }, const Duration(seconds: 2), key: 'BlueSwitchChange');
   }
@@ -143,8 +143,11 @@ class GlobalBleSearchManager {
   ///蓝牙关闭：防抖后清空扫描缓存、停止扫描、
   ///重置所有设备蓝牙在线状态，广播开关切换事件
   _blueSwitchClose() {
-    DebounceThrottle.debounce(() {
+    DebounceThrottle.debounce(() async {
       LogUtils.doorLock.log('bluetooth switch close, reset blueOnline');
+
+      ///刷新权限标志位
+      await AddDevicePermissionUsecase.instance.checkOnlyBlue(onlyStatus: true);
       _isBlueOn = false;
       allDeviceMap.clear();
       stopScan();
@@ -169,9 +172,6 @@ class GlobalBleSearchManager {
   checkPermission() async {
     ///新的权限类
     await AddDevicePermissionUsecase.instance.checkOnlyBlue(onlyStatus: false);
-
-    ///权限通过后补订阅蓝牙适配器状态
-    _listenAdapterStateIfPermitted();
   }
 
   startScan({int? retryCountMax, bool lowFrequency = false}) async {
