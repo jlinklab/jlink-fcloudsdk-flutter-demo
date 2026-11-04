@@ -4,6 +4,7 @@ import 'dart:convert';
 // ignore: depend_on_referenced_packages
 import 'package:dio/dio.dart';
 import 'package:fcloudsdk/api/util/util_api.dart';
+import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:fcloudsdk/api/api_center.dart';
@@ -174,6 +175,8 @@ class ResponseInterceptor extends Interceptor {
         : Map.from(response.data);
     int code = responseData['code'] ?? 0;
     int ret = responseData['ret'] ?? 0;
+
+    LogUtils.dio.log('${response.requestOptions.path} body: ${response.data}');
     if ((responseData.containsKey('code') && code != 2000) ||
         (responseData.containsKey('ret') && ret != 200)) {
       String errorMessage = responseData['msg'] ?? '';
