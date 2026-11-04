@@ -215,17 +215,29 @@ class _DeviceTabPageState extends State<DeviceTabPage> {
       builder: (context, devices, _) {
         return RefreshIndicator(
           child: devices.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.devices_other_outlined,
-                          size: 64, color: Colors.grey[400]),
-                      const SizedBox(height: 16),
-                      Text(TR.current.noDevice,
-                          style: TextStyle(color: Colors.grey[600])),
-                    ],
-                  ),
+              ? LayoutBuilder(
+                  builder: (context, constraints) {
+                    return SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: constraints.maxHeight,
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.devices_other_outlined,
+                                  size: 64, color: Colors.grey[400]),
+                              const SizedBox(height: 16),
+                              Text(TR.current.noDevice,
+                                  style: TextStyle(color: Colors.grey[600])),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 )
               : ListView.builder(
                   padding: const EdgeInsets.all(12),
