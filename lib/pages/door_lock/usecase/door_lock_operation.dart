@@ -967,6 +967,8 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       }
 
       ///单类型拉取一次：失败返回 null（区别于“该类型无用户”的空列表）
+      ///拉取报 needSync 时说明 App 侧保活会话与锁端已失联（锁端判定过期），
+      ///清保活缓存强制真实同步后重试一次，仍失败才返回 null
       Future<List<DoorUser>?> queryOnce(JvssOperateType queryType) async {
         var result = await DoorLockNetIp.getDoorOpenType(
             deviceId: deviceId, type: queryType);
@@ -975,6 +977,29 @@ mixin DoorLockOperationMixin on ChangeNotifier {
               .whereType<DookLockOpenTypeUser>()
               .map((e) => DoorUser.fromOpenTypeUser(e))
               .toList();
+        }
+        if (result.item2?.err == DoorLockNetIpOperaterResult.needSync) {
+          LogUtils.doorLock.log(
+              'getLockEndUnlockingList netip 拉取 needSync type=${queryType.value}，清保活缓存后重新同步重试');
+          DoorLockNetIp.clearKeepAliveState(deviceId);
+          var syncResult = await DoorLockNetIp.syncDoorStatus(deviceId,
+              ignoreKeepAlive: true);
+          if (syncResult.item1) {
+            var retry = await DoorLockNetIp.getDoorOpenType(
+                deviceId: deviceId, type: queryType);
+            if (retry.item1 && retry.item2?.parse is List) {
+              return (retry.item2!.parse as List)
+                  .whereType<DookLockOpenTypeUser>()
+                  .map((e) => DoorUser.fromOpenTypeUser(e))
+                  .toList();
+            }
+            LogUtils.doorLock.log(
+                'getLockEndUnlockingList netip 重试仍失败 type=${queryType.value}: ${retry.item2?.err}');
+            return null;
+          }
+          LogUtils.doorLock.log(
+              'getLockEndUnlockingList 重新同步失败 err=${syncResult.item2?.err}，跳过重试');
+          return null;
         }
         LogUtils.doorLock.log(
             'getLockEndUnlockingList netip 拉取失败 type=${queryType.value}: ${result.item2?.err}');
