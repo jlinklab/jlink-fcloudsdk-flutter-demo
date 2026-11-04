@@ -181,6 +181,22 @@ class DoorLockHomeController extends DoorLockPageController
     createDoorLockAPI();
   }
 
+  ///从二级页面返回门锁首页时，重新开始低频搜索以刷新蓝牙在线状态
+  onPopNext() {
+    if (!context.mounted) {
+      return;
+    }
+    if (DoorLockHelper.showBlueOnlineState(deviceId: deviceId)) {
+      _checkPermission().then((_) {
+        if (!context.mounted) {
+          return;
+        }
+        GlobalBleSearchManager.instance
+            .startScanByDebounce(pageContext: context, lowFrequency: true);
+      });
+    }
+  }
+
   @override
   void dispose() {
     GlobalBleSearchManager.instance.stopScan();

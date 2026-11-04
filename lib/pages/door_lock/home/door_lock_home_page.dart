@@ -1,4 +1,5 @@
 import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
+import 'package:fcloudsdk_example/common/named_route.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/pages/door_lock/controller/door_lock_home_controller.dart';
@@ -17,8 +18,27 @@ class DoorLockHomePage extends StatefulWidget {
   State<DoorLockHomePage> createState() => _DoorLockHomePageState();
 }
 
-class _DoorLockHomePageState extends State<DoorLockHomePage> {
+class _DoorLockHomePageState extends State<DoorLockHomePage> with RouteAware {
   late DoorLockHomeController controller;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  ///从二级页面返回门锁首页时，重新开始低频搜索刷新蓝牙在线状态
+  @override
+  void didPopNext() {
+    super.didPopNext();
+    controller.onPopNext();
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
 
   ///设备对象
   Device? get _device =>
