@@ -757,6 +757,71 @@ mixin DoorLockOperationMixin on ChangeNotifier {
     }
   }
 
+  ///支持用户管理Wifi透传v2协议
+  bool supportUserManagerWifiTransV2() {
+    return (device.doorLockActionVerList ?? []).any((e) =>
+        e.action == DoorLockUserManagerAction.addUser.value && e.version == 2);
+  }
+
+  ///支持用户管理Wifi透传v3协议（含限时/循环/归属）
+  bool supportUserManagerWifiTransV3() {
+    return (device.doorLockActionVerList ?? []).any((e) =>
+        e.action == DoorLockUserManagerAction.addUser.value && e.version == 3);
+  }
+
+  ///添加用户是否走Wifi透传流式通道
+  ///
+  ///指纹为多次按压录入类，仅 v2/v3 透传协议或支持指纹录入次数返回的设备可走；
+  ///其他类型仅 v3 协议支持
+  bool canAddUserByWifiTrans(JvssOperateType type) {
+    final v3 = supportUserManagerWifiTransV3();
+    if (type == JvssOperateType.skin) {
+      final v2 = supportUserManagerWifiTransV2();
+      final supportSkinCountReturn =
+          device.doorLockExInfo?.byte2.supportFingerprintCountReturn ?? false;
+      return v3 || v2 || supportSkinCountReturn;
+    }
+    return v3;
+  }
+
+  ///生成添加用户wifi透传请求
+  DoorLockAddWifiTransOpenTypeRequest generateAddUserWifiTransRequest({
+    required JvssOperateType type,
+    required bool isAdmin,
+    DoorLockTimelinessType? timelinessType,
+    DateTime? startTime,
+    DateTime? endTime,
+    List<int>? weeks, //周日为 0
+    int? startMin,
+    int? endMin,
+  }) {
+    int version = 0x02;
+    if (supportUserManagerWifiTransV3()) {
+      version = 0x03;
+    }
+
+    final authority = isAdmin
+        ? DoorLockUserManagerAuthority.admin
+        : DoorLockUserManagerAuthority.fromTimelinessType(
+            timelinessType ?? DoorLockTimelinessType.permanent);
+
+    final limit = creatWifiTransLimit(
+      authority: authority,
+      startTime: startTime,
+      endTime: endTime,
+      weeks: weeks,
+      startMin: startMin,
+      endMin: endMin,
+    );
+
+    return DoorLockAddWifiTransOpenTypeRequest(
+      version: version,
+      type: type,
+      authority: authority,
+      limit: limit,
+    );
+  }
+
   ///添加开锁方式（锁端录入类：指纹/卡片等，无 pwd）
   ///
   ///与 [doorLockAddPasswordType] 的差异：BLE 通道流式回调 [listen]
@@ -772,7 +837,7 @@ mixin DoorLockOperationMixin on ChangeNotifier {
     List<int>? weeks, //周日为 0
     int? startMin,
     int? endMin,
-    Function(DoorLockAddBleOpenTypeResponse)? listen,
+    Function(dynamic)? listen,
   }) async {
     ///时效 hex（永久为空，限时/循环 8 字节）
     var timeliness = timelinessType == null
@@ -851,6 +916,79 @@ mixin DoorLockOperationMixin on ChangeNotifier {
           false) {
         return const DoorLockAddResult(false, -1, null, null);
       }
+      final completer = Completer<DoorLockAddResult>();
+      if (canAddUserByWifiTrans(type)) {
+        ///wifi透传流式添加：指纹多次按压，start 携带总录入次数，
+        ///process 携带当前序号，done 且 success 才完成并取 userId
+        final request = generateAddUserWifiTransRequest(
+          type: type,
+          isAdmin: isAdmin,
+          timelinessType: timelinessType,
+          startTime: startTime,
+          endTime: endTime,
+          weeks: weeks,
+          startMin: startMin,
+          endMin: endMin,
+        );
+        var stream =
+            await DoorLockNetIpWifiTransExtUserManager.addDoorWifiTransOpenType(
+                deviceId: deviceId, request: request);
+        StreamSubscription<DoorLockAddWifiTransOpenTypeResponse>? sub;
+        sub = stream?.listen((DoorLockAddWifiTransOpenTypeResponse response) {
+          listen?.call(response);
+
+          ///异常情况
+          if (response.result != DoorLockUserManagerWifiTransResult.success &&
+              response.result !=
+                  DoorLockUserManagerWifiTransResult.skinIncomplete) {
+            if (response.result ==
+                DoorLockUserManagerWifiTransResult.remoteFaceCat) {
+              ///远程人脸录入结果，给猫眼用的，app忽略
+              return;
+            }
+            sub?.cancel();
+            if (!completer.isCompleted) {
+              completer
+                  .complete(const DoorLockAddResult(false, -1, null, null));
+            }
+            return;
+          }
+          switch (response.stage) {
+            case WifiInputStage.start:
+            case WifiInputStage.process:
+              break;
+            case WifiInputStage.done:
+              if (response.result ==
+                  DoorLockUserManagerWifiTransResult.success) {
+                sub?.cancel();
+                if (!completer.isCompleted) {
+                  completer.complete(
+                      DoorLockAddResult(true, response.userId, null, null));
+                }
+              }
+              break;
+            default:
+              sub?.cancel();
+              if (!completer.isCompleted) {
+                completer
+                    .complete(const DoorLockAddResult(false, -1, null, null));
+              }
+              break;
+          }
+        });
+        if (sub == null) {
+          return const DoorLockAddResult(false, -1, null, null);
+        }
+        final kSub = sub;
+
+        ///兜底超时：指纹录入需多次按压耗时较长
+        return completer.future.timeout(const Duration(seconds: 120),
+            onTimeout: () {
+          kSub.cancel();
+          return const DoorLockAddResult(false, -1, null, null);
+        });
+      }
+
       var result = await DoorLockNetIp.addDoorOpenType(
         deviceId: deviceId,
         type: type,
@@ -863,9 +1001,15 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       return DoorLockAddResult(false, -1, result.item2?.err, result.item3);
     }
 
-    ///限时/循环仅支持蓝牙通道（netip 明文 AddUser 不携带时效）
-    bool onlyBlue = timelinessType == DoorLockTimelinessType.limit ||
-        timelinessType == DoorLockTimelinessType.loop;
+    ///限时/循环优先走 wifi透传 v3（明文 netip AddUser 不携带时效），
+    ///v3 不支持时仅能走蓝牙通道
+    bool onlyBlue = false;
+    if (timelinessType == DoorLockTimelinessType.limit ||
+        timelinessType == DoorLockTimelinessType.loop) {
+      if (!supportUserManagerWifiTransV3()) {
+        onlyBlue = true;
+      }
+    }
 
     if (onlyBlue) {
       if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue ||
@@ -885,6 +1029,7 @@ mixin DoorLockOperationMixin on ChangeNotifier {
     }
 
     if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
+      LogUtils.doorLock.log('添加开锁方式 DoolockCmdStatus.onlyWifi');
       return sendByNetIp();
     } else if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue ||
         device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {

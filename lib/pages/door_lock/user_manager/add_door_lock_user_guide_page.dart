@@ -1,5 +1,6 @@
 import 'package:fcloudsdk/door_lock/door_lock_ble_model.dart';
 import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
+import 'package:fcloudsdk/door_lock/door_lock_netip_model.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk_example/api/door_lock_api.dart';
 import 'package:fcloudsdk_example/pages/door_lock/model/door_user.dart';
@@ -103,30 +104,63 @@ class _AddDoorLockUserGuidePageState extends State<AddDoorLockUserGuidePage> {
 
   ///处理指纹录入进度回包
   ///
+  ///蓝牙通道：
   ///- start：锁端下发总录入次数
   ///- process：error==0x00 表示本次按压成功，inputCount 为当前序号
   ///- done：录入完成，序号补齐到总数
-  void _dealInputNumber(DoorLockAddBleOpenTypeResponse response) {
-    switch (response.stage) {
-      case BleInputStage.start:
-        LogUtils.doorLock.log('收到指纹总录入次数：${response.inputCount}');
-        _inputAll = response.inputCount;
-        break;
-      case BleInputStage.process:
-        if (response.error.value == 0x00) {
-          LogUtils.doorLock.log('本次指纹录入成功，当前序号：${response.inputCount}');
-          _inputCurNo = response.inputCount;
-        } else {
-          LogUtils.doorLock.log(
-              '本次指纹录入失败，当前序号：${response.inputCount}，失败原因：${response.error.value}');
-        }
-        break;
-      case BleInputStage.done:
-        LogUtils.doorLock.log('指纹录入完成');
-        _inputCurNo = _inputAll;
-        break;
-      default:
-        break;
+  ///
+  ///wifi透传通道：
+  ///- start：锁端下发总录入次数（entryNum）
+  ///- process：result==success 表示本次按压成功，entryNum 为当前序号
+  ///- done：录入完成，序号补齐到总数
+  void _dealInputNumber(dynamic response) {
+    if (response is DoorLockAddBleOpenTypeResponse) {
+      switch (response.stage) {
+        case BleInputStage.start:
+          LogUtils.doorLock.log('收到指纹总录入次数：${response.inputCount}');
+          _inputAll = response.inputCount;
+          break;
+        case BleInputStage.process:
+          if (response.error.value == 0x00) {
+            LogUtils.doorLock
+                .log('本次指纹录入成功，当前序号：${response.inputCount}');
+            _inputCurNo = response.inputCount;
+          } else {
+            LogUtils.doorLock.log(
+                '本次指纹录入失败，当前序号：${response.inputCount}，失败原因：${response.error.value}');
+          }
+          break;
+        case BleInputStage.done:
+          LogUtils.doorLock.log('指纹录入完成');
+          _inputCurNo = _inputAll;
+          break;
+        default:
+          break;
+      }
+    } else if (response is DoorLockAddWifiTransOpenTypeResponse) {
+      switch (response.stage) {
+        case WifiInputStage.start:
+          LogUtils.doorLock.log('收到指纹总录入次数：${response.entryNum}');
+          _inputAll = response.entryNum;
+          break;
+        case WifiInputStage.process:
+          if (response.result ==
+              DoorLockUserManagerWifiTransResult.success) {
+            LogUtils.doorLock
+                .log('本次指纹录入成功，当前序号：${response.entryNum}');
+            _inputCurNo = response.entryNum;
+          }
+          break;
+        case WifiInputStage.done:
+          if (response.result ==
+              DoorLockUserManagerWifiTransResult.success) {
+            LogUtils.doorLock.log('指纹录入完成');
+            _inputCurNo = _inputAll;
+          }
+          break;
+        default:
+          break;
+      }
     }
     if (mounted) setState(() {});
   }
