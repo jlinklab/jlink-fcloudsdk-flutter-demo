@@ -83,10 +83,7 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
   ///加载中
   bool _loading = true;
 
-  ///操作进行中（防止重复点击）
-  bool _operating = false;
-
-  ///loading 弹框是否显示中
+  ///loading 弹框是否显示中（弹框不可取消，可拦截重复点击）
   bool _loadingShown = false;
 
   ///锁端拉取串行锁：BLE 透传回包无法区分是哪个查询的响应，
@@ -336,7 +333,6 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
 
   ///右上角"从锁端拉数据"：确认后全量拉锁端开锁方式 + updateAll 上报 + 刷新列表
   Future<void> _onSyncFromLockEnd() async {
-    if (_operating) return;
     if (_device == null) {
       _showSnack('设备不存在');
       return;
@@ -365,7 +361,6 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
     );
     if (confirmed != true || !mounted) return;
 
-    setState(() => _operating = true);
     _showLoading('正在从锁端拉取数据...');
     final list = await _syncLockEndToServer(isAll: true);
     _hideLoading();
@@ -373,7 +368,6 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
 
     ///拉取失败/超时（空列表）不动现有列表，避免误清空
     if (list.isEmpty) {
-      setState(() => _operating = false);
       return;
     }
 
@@ -382,7 +376,6 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
     final typeUsers = list.where((e) => e.type == _type.value).toList();
     _migrateUserMeta(typeUsers);
     setState(() {
-      _operating = false;
       _userList = typeUsers;
     });
     unawaited(_fetchNicknames());
@@ -456,7 +449,6 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
   ///- 其余：直接进录入引导页（永久）
   ///深度休眠的锁无法唤醒录入，直接提示。
   Future<void> _onAddPressed(bool isAdmin) async {
-    if (_operating) return;
     final device = _device;
     if (device == null) {
       _showSnack('设备不存在');
@@ -492,7 +484,6 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
 
   ///点击删除：先弹确认框
   Future<void> _onDeletePressed(DoorUser user) async {
-    if (_operating) return;
     if (_device == null) {
       _showSnack('设备不存在');
       return;
@@ -522,7 +513,6 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
     );
     if (confirmed != true) return;
 
-    setState(() => _operating = true);
     _showLoading('正在删除...');
     try {
       var result = await _operation.doorLockDeleteType(
@@ -553,8 +543,6 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
       _hideLoading();
       LogUtils.doorLock.log('删除$_typeText异常: $e');
       _showSnack('删除异常: $e');
-    } finally {
-      if (mounted) setState(() => _operating = false);
     }
   }
 
@@ -667,7 +655,7 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
           IconButton(
             icon: const Icon(Icons.download),
             tooltip: '从锁端拉数据',
-            onPressed: _operating ? null : _onSyncFromLockEnd,
+            onPressed: _onSyncFromLockEnd,
           ),
         ],
       ),
@@ -688,7 +676,7 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
               width: double.infinity,
               height: 42,
               child: OutlinedButton(
-                onPressed: _operating ? null : () => _onAddPressed(false),
+                onPressed: () => _onAddPressed(false),
                 child: const Text('添加用户'),
               ),
             ),
@@ -698,7 +686,7 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
                 width: double.infinity,
                 height: 42,
                 child: OutlinedButton(
-                  onPressed: _operating ? null : () => _onAddPressed(true),
+                  onPressed: () => _onAddPressed(true),
                   child: const Text('添加管理员用户'),
                 ),
               ),
@@ -769,7 +757,7 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
               IconButton(
                 icon: const Icon(Icons.delete_outline, color: Colors.red),
                 tooltip: '删除',
-                onPressed: _operating ? null : () => _onDeletePressed(user),
+                onPressed: () => _onDeletePressed(user),
               ),
               const Icon(Icons.chevron_right,
                   size: 20, color: Color(0xFFCCCCCC)),
@@ -777,7 +765,7 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
           ),
 
           ///点击进入用户详情页
-          onTap: _operating ? null : () => _onUserTap(user),
+          onTap: () => _onUserTap(user),
         );
       },
     );

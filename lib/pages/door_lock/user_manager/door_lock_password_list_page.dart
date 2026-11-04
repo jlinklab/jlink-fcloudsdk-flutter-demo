@@ -47,10 +47,7 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
   ///加载中
   bool _loading = true;
 
-  ///操作进行中（防止重复点击）
-  bool _operating = false;
-
-  ///loading 弹框是否显示中
+  ///loading 弹框是否显示中（弹框不可取消，可拦截重复点击）
   bool _loadingShown = false;
 
   ///锁端拉取串行锁：BLE 透传回包无法区分是哪个查询的响应，
@@ -297,6 +294,12 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
 
   Future<List<DoorUser>> _doGetLockEndUnlocking({bool isAll = false}) async {
     try {
+      ///能力集未解析过时，先强制刷新影子服务，保证透传协议版本判断有数据
+      final device = _device;
+      if (device?.doorLockActionVerList == null) {
+        await DoorLockHelper.getFuncFromShadowIfNeed(widget.deviceId,
+            queryNew: true);
+      }
       final lockUsers = await _operation
           .getLockEndUnlockingList(
               type: isAll ? null : JvssOperateType.password,
@@ -337,7 +340,6 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
 
   ///右上角“从锁端拉数据”：确认后全量拉锁端开锁方式 + updateAll 上报 + 刷新列表
   Future<void> _onSyncFromLockEnd() async {
-    if (_operating) return;
     if (_device == null) {
       _showSnack('设备不存在');
       return;
@@ -366,7 +368,6 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
     );
     if (confirmed != true || !mounted) return;
 
-    setState(() => _operating = true);
     _showLoading('正在从锁端拉取数据...');
     final list = await getLockEndUnlocking(isAll: true);
     _hideLoading();
@@ -374,7 +375,6 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
 
     ///拉取失败/超时（空列表）不动现有列表，避免误清空
     if (list.isEmpty) {
-      setState(() => _operating = false);
       return;
     }
 
@@ -402,7 +402,6 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
     }
 
     setState(() {
-      _operating = false;
       _userList.removeWhere((e) => e is DoorUser);
       _userList.insertAll(0, pwdUsers);
     });
@@ -416,7 +415,6 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
   ///点击“生成密码”：跳转生成密码页（永久/自定义/限时/单次/循环；
   ///临时密码模式仅自定义 Tab），成功后刷新列表
   Future<void> _onCreatePassword() async {
-    if (_operating) return;
     if (_device == null) {
       _showSnack('设备不存在');
       return;
@@ -438,7 +436,6 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
 
   ///点击删除：先弹确认框
   Future<void> _onDeletePressed(DoorUser user) async {
-    if (_operating) return;
     if (_device == null) {
       _showSnack('设备不存在');
       return;
@@ -468,7 +465,6 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
     );
     if (confirmed != true) return;
 
-    setState(() => _operating = true);
     _showLoading('正在删除...');
     try {
       var result = await _operation.doorLockDeleteType(
@@ -499,8 +495,6 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
       _hideLoading();
       LogUtils.doorLock.log('删除密码异常: $e');
       _showSnack('删除异常: $e');
-    } finally {
-      if (mounted) setState(() => _operating = false);
     }
   }
 
@@ -511,7 +505,6 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
   ///流程：确认框 → doorLockDeleteType(offLinePwd, hardwareId) 按通道删锁端
   ///→ 服务器 deleteUnlockInfo(id) → 刷新。锁端删除用 hardwareId，服务器删除用记录 id。
   Future<void> _onDeleteUnlockInfo(UnlockInfo info) async {
-    if (_operating) return;
     if (_device == null) {
       _showSnack('设备不存在');
       return;
@@ -540,7 +533,6 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
     );
     if (confirmed != true) return;
 
-    setState(() => _operating = true);
     _showLoading('正在删除...');
     try {
       ///锁端删除（按通道路由 BLE/netip；type=offLinePwd，id=hardwareId）
@@ -571,8 +563,6 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
       _hideLoading();
       LogUtils.doorLock.log('删除离线密码异常: $e');
       _showSnack('删除异常: $e');
-    } finally {
-      if (mounted) setState(() => _operating = false);
     }
   }
 
@@ -594,14 +584,14 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
           IconButton(
             icon: const Icon(Icons.delete_outline, color: Colors.red),
             tooltip: '删除',
-            onPressed: _operating ? null : () => _onDeleteUnlockInfo(info),
+            onPressed: () => _onDeleteUnlockInfo(info),
           ),
           const Icon(Icons.chevron_right, size: 20, color: Color(0xFFCCCCCC)),
         ],
       ),
 
       ///点击进入离线密码详情页
-      onTap: _operating ? null : () => _onUnlockInfoTap(info),
+      onTap: () => _onUnlockInfoTap(info),
     );
   }
 
@@ -622,14 +612,14 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
           IconButton(
             icon: const Icon(Icons.delete_outline, color: Colors.red),
             tooltip: '删除',
-            onPressed: _operating ? null : () => _onDeleteTempPwd(tp),
+            onPressed: () => _onDeleteTempPwd(tp),
           ),
           const Icon(Icons.chevron_right, size: 20, color: Color(0xFFCCCCCC)),
         ],
       ),
 
       ///点击查看临时密码详情（密码串 + 有效期 + 重复 + 用户类型）
-      onTap: _operating ? null : () => _onTempPwdTap(tp),
+      onTap: () => _onTempPwdTap(tp),
     );
   }
 
@@ -651,7 +641,6 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
   ///临时密码为服务器计算密码，仅需删服务器记录（deleteTmpPassword），
   ///无需锁端交互/保活（区别于自定义密码 [DoorUser] 和离线密码 [UnlockInfo]）。
   Future<void> _onDeleteTempPwd(TempPassword tp) async {
-    if (_operating) return;
     if (_device == null) {
       _showSnack('设备不存在');
       return;
@@ -693,7 +682,6 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
     );
     if (confirmed != true) return;
 
-    setState(() => _operating = true);
     _showLoading('正在删除...');
     try {
       await doorlockAPI.deleteTmpPassword(
@@ -707,8 +695,6 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
       _hideLoading();
       LogUtils.doorLock.log('删除临时密码异常: $e');
       _showSnack('删除失败: $e');
-    } finally {
-      if (mounted) setState(() => _operating = false);
     }
   }
 
@@ -832,7 +818,7 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
           IconButton(
             icon: const Icon(Icons.dialpad),
             tooltip: '生成密码',
-            onPressed: _operating ? null : _onCreatePassword,
+            onPressed: _onCreatePassword,
           ),
 
           ///临时密码为服务器数据，无锁端拉取入口
@@ -840,7 +826,7 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
             IconButton(
               icon: const Icon(Icons.download),
               tooltip: '从锁端拉数据',
-              onPressed: _operating ? null : _onSyncFromLockEnd,
+              onPressed: _onSyncFromLockEnd,
             ),
         ],
       ),
@@ -918,7 +904,7 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
               IconButton(
                 icon: const Icon(Icons.delete_outline, color: Colors.red),
                 tooltip: '删除',
-                onPressed: _operating ? null : () => _onDeletePressed(user),
+                onPressed: () => _onDeletePressed(user),
               ),
               const Icon(Icons.chevron_right,
                   size: 20, color: Color(0xFFCCCCCC)),
@@ -927,7 +913,7 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
 
           ///点击进入用户详情页
           ///详情页保存昵称时会直接修改传入的 DoorUser 对象，返回后 setState 即可刷新
-          onTap: _operating ? null : () => _onUserTap(user),
+          onTap: () => _onUserTap(user),
         );
       },
     );
