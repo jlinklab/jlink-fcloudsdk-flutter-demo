@@ -17,6 +17,7 @@ import 'package:fcloudsdk_example/utils/debounce_throttle.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class GlobalBleSearchManager {
   static final GlobalBleSearchManager instance = GlobalBleSearchManager();
@@ -43,6 +44,15 @@ class GlobalBleSearchManager {
 
   ///收到蓝牙消息
   late StreamSubscription<ReceiveBlueMessage> _receiverBlueMessageSub;
+
+  ///蓝牙适配器状态订阅（防重复订阅）
+  bool _isListeningAdapterState = false;
+
+  StreamSubscription<BluetoothAdapterState>? _adapterStateSub;
+
+  ///当前蓝牙开关状态：关闭期间忽略已连接对象的在途/残留消息，
+  ///避免断连非瞬时导致 _setBlueOnline 又把状态标回在线
+  bool _isBlueOn = true;
 
   ///蓝牙搜索到后计时45s，45s内一直搜不到则为离线，搜到后立刻取消计时，视为在线
   final Map<String, Timer> _deviceOfflineTimers = {};
@@ -77,9 +87,72 @@ class GlobalBleSearchManager {
     });
 
     _receiverBlueMessageSub = xEventBus.on<ReceiveBlueMessage>().listen((e) {
+      if (!_isBlueOn) {
+        LogUtils.doorLock.log('bluetooth is off, ignore ReceiveBlueMessage');
+        return;
+      }
       _setBlueOnline(uuid: e.uuid, sn: e.activeSn, online: true);
       _resetTimer(uuid: e.uuid, sn: e.activeSn);
     });
+
+    ///监听蓝牙开关状态：鸿蒙上 flutter_blue_plus 首次读取适配器状态
+    ///会隐式触发系统权限弹窗，未授权时先跳过，权限校验通过后再补订阅
+    _listenAdapterStateIfPermitted();
+  }
+
+  ///仅在蓝牙权限已真实授权时才订阅适配器状态流，避免隐式触发系统权限弹窗
+  _listenAdapterStateIfPermitted() {
+    if (_isListeningAdapterState) {
+      return;
+    }
+    if (!AddDevicePermissionUsecase.instance.isCanBleSearch()) {
+      LogUtils.doorLock.log('蓝牙权限未授权，跳过适配器状态订阅');
+      return;
+    }
+    _listenAdapterState();
+  }
+
+  _listenAdapterState() {
+    if (_isListeningAdapterState) {
+      return;
+    }
+    _isListeningAdapterState = true;
+    FlutterBluePlus.setOptions(showPowerAlert: false);
+    _adapterStateSub =
+        FlutterBluePlus.adapterState.listen((BluetoothAdapterState bleStatus) {
+      LogUtils.doorLock.log('adapterState change: $bleStatus');
+      if (bleStatus == BluetoothAdapterState.turningOn ||
+          bleStatus == BluetoothAdapterState.on) {
+        _blueSwitchOn();
+      } else {
+        _blueSwitchClose();
+      }
+    });
+  }
+
+  ///蓝牙打开：防抖后重启扫描，广播开关切换事件
+  _blueSwitchOn() {
+    DebounceThrottle.debounce(() {
+      LogUtils.doorLock.log('bluetooth switch on, restart scan');
+      _isBlueOn = true;
+      startScanByDebounce();
+      eventBus.fire(BlueSwitchEvent(isOn: true));
+    }, const Duration(seconds: 2), key: 'BlueSwitchChange');
+  }
+
+  ///蓝牙关闭：防抖后清空扫描缓存、停止扫描、
+  ///重置所有设备蓝牙在线状态，广播开关切换事件
+  _blueSwitchClose() {
+    DebounceThrottle.debounce(() {
+      LogUtils.doorLock.log('bluetooth switch close, reset blueOnline');
+      _isBlueOn = false;
+      allDeviceMap.clear();
+      stopScan();
+      for (var e in DeviceManager.instance.allDevices) {
+        e.blueOnline = false;
+      }
+      eventBus.fire(BlueSwitchEvent(isOn: false));
+    }, const Duration(seconds: 2), key: 'BlueSwitchChange');
   }
 
   unInit() {
@@ -88,12 +161,17 @@ class GlobalBleSearchManager {
     displayUpdateListener.clearListeners();
     stopScan();
     _receiverBlueMessageSub.cancel();
+    _adapterStateSub?.cancel();
+    _isListeningAdapterState = false;
     clearCache();
   }
 
   checkPermission() async {
     ///新的权限类
     await AddDevicePermissionUsecase.instance.checkOnlyBlue(onlyStatus: false);
+
+    ///权限通过后补订阅蓝牙适配器状态
+    _listenAdapterStateIfPermitted();
   }
 
   startScan({int? retryCountMax, bool lowFrequency = false}) async {

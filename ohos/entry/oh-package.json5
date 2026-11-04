@@ -26,6 +26,7 @@
     "flutter_local_notifications": "file:../har/flutter_local_notifications.har",
     "mobile_scanner": "file:../har/mobile_scanner.har",
     "url_launcher_ohos": "file:../har/url_launcher_ohos.har",
-    "flutter_timezone": "file:../har/flutter_timezone.har"
+    "flutter_timezone": "file:../har/flutter_timezone.har",
+    "flutter_blue_plus_ohos": "file:../har/flutter_blue_plus_ohos.har"
   }
 }

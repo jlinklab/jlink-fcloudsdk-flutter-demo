@@ -34,6 +34,12 @@ class BlueOnlineEvent {
   });
 }
 
+/// 蓝牙开关切换（系统蓝牙打开/关闭）
+class BlueSwitchEvent {
+  final bool isOn;
+  BlueSwitchEvent({required this.isOn});
+}
+
 /// 设备在线/休眠状态变化（服务器设备状态流下发）
 ///
 ///门锁首页监听此事件重算指令通道状态（doolockCmdStatus），

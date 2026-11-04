@@ -45,6 +45,7 @@ class DoorLockHomeController extends DoorLockPageController
   List<UserManagerUI> userManagerUIList = [];
 
   StreamSubscription<BlueOnlineEvent>? _blueOnlineEvent;
+  StreamSubscription<BlueSwitchEvent>? _blueSwitchEvent;
 
   ///服务器设备状态流（在线/休眠变化）订阅
   StreamSubscription<DeviceStateUpdateEvent>? _deviceStateEvent;
@@ -171,6 +172,12 @@ class DoorLockHomeController extends DoorLockPageController
       }, const Duration(milliseconds: 500), key: '_deviceStateEvent_$hashCode');
     });
 
+    ///蓝牙开关切换：重新拉取锁状态并刷新（关闭时蓝牙在线态已全部重置）
+    _blueSwitchEvent = eventBus.on<BlueSwitchEvent>().listen((event) async {
+      await DoorLockHelper.refreshDoorLockStatus(deviceId);
+      notifyListeners();
+    });
+
     ///开始低频搜索
     if (DoorLockHelper.showBlueOnlineState(deviceId: deviceId)) {
       await _checkPermission();
@@ -201,6 +208,7 @@ class DoorLockHomeController extends DoorLockPageController
   void dispose() {
     GlobalBleSearchManager.instance.stopScan();
     _blueOnlineEvent?.cancel();
+    _blueSwitchEvent?.cancel();
     _deviceStateEvent?.cancel();
 
     if (device.isBlueNetIpEnable) {

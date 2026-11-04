@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import '../../api/share_api.dart';
 import '../../common/code_prase.dart';
 import '../../common/event.dart';
+import '../../event/event.dart';
 import '../../generated/l10n.dart';
 import '../../manager/device_manager.dart';
 import '../../manager/push_manager.dart';
@@ -49,6 +50,13 @@ class _DeviceListPageState extends State<DeviceListPage>
     });
     super.initState();
     _subscription = eventBus.on<RemoveDeviceUpdateEvent>().listen((_) {
+      if (mounted) {
+        context.read<DevListViewModel>().onRefresh();
+      }
+    });
+
+    ///蓝牙开关切换（关闭时蓝牙在线态已全部重置）：刷新列表
+    _blueSwitchSubscription = eventBus.on<BlueSwitchEvent>().listen((event) {
       if (mounted) {
         context.read<DevListViewModel>().onRefresh();
       }
@@ -151,6 +159,7 @@ class _DeviceListPageState extends State<DeviceListPage>
 
   late TabController _tabController;
   late StreamSubscription _subscription;
+  late StreamSubscription _blueSwitchSubscription;
 
   @override
   Widget build(BuildContext context) {
@@ -192,6 +201,7 @@ class _DeviceListPageState extends State<DeviceListPage>
   void dispose() {
     _tabController.dispose();
     _subscription.cancel();
+    _blueSwitchSubscription.cancel();
     super.dispose();
   }
 }
