@@ -259,6 +259,15 @@ mixin DoorLockOperationMixin on ChangeNotifier {
           ///版本不支持，则忽略，不提示, 视为成功
           return true;
         }
+
+        ///锁端深度休眠(-99968)：不受 loading 开关影响，避免调用方关掉
+        ///loading 后错误被吞掉，界面只剩“添加失败/未知错误”
+        if (showErrorTip &&
+            result.item3 is XCloudAPIException &&
+            (result.item3 as XCloudAPIException).code == -99968) {
+          KToast.show(status: '设备深度休眠，请稍后重试');
+          return false;
+        }
         if (showLoading && showErrorTip) {
           KToast.show(status: kErrorMsg(result.item3));
         }
@@ -626,7 +635,9 @@ mixin DoorLockOperationMixin on ChangeNotifier {
     ///蓝牙通道：直连锁端删除
     Future<DoorLockDeleteResult> sendByBlue() async {
       if (await beforeBlue() == false) {
-        return const DoorLockDeleteResult(false, null, null);
+        ///蓝牙 API 未创建成功（蓝牙已断开/未在线/uuid 缺失），
+        ///直接带回文案，避免页面只弹“未知错误”
+        return const DoorLockDeleteResult(false, null, '蓝牙连接已断开，请检查蓝牙开关');
       }
       bool ok = false;
       try {
@@ -649,6 +660,11 @@ mixin DoorLockOperationMixin on ChangeNotifier {
     Future<DoorLockDeleteResult> sendByNetIp() async {
       var sync = await DoorLockNetIp.syncDoorStatus(deviceId);
       if (!sync.item1) {
+        ///锁端深度休眠：带回明确文案，避免页面直接展示异常对象
+        if (sync.item3 is XCloudAPIException &&
+            (sync.item3 as XCloudAPIException).code == -99968) {
+          return const DoorLockDeleteResult(false, null, '设备深度休眠，请稍后重试');
+        }
         return DoorLockDeleteResult(false, sync.item2?.err, sync.item3);
       }
       var result = await DoorLockNetIp.deleteDoorOpenType(
