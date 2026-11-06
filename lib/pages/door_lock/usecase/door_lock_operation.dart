@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/door_lock/ble_upgrade.dart';
@@ -25,6 +26,7 @@ import 'package:fcloudsdk_example/pages/door_lock/model/door_user.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:fcloudsdk_example/utils/permission_utils.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
+import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 
 ///门锁控制器基类
@@ -628,11 +630,13 @@ mixin DoorLockOperationMixin on ChangeNotifier {
   }
 
   ///删除开锁方式
+  ///离线密码锁端删除需携带密码内容，用于删除未激活的离线密码
   Future<DoorLockDeleteResult> doorLockDeleteType(
     int id,
     JvssOperateType type,
-    bool isAdmin,
-  ) async {
+    bool isAdmin, {
+    String? pwd,
+  }) async {
     ///蓝牙通道：直连锁端删除
     Future<DoorLockDeleteResult> sendByBlue() async {
       if (await beforeBlue() == false) {
@@ -648,6 +652,7 @@ mixin DoorLockOperationMixin on ChangeNotifier {
               type: BleOperateType.from(type.toBleType()),
               hardwareId: id,
               memberId: isAdmin ? 2 : 1,
+              pwdContent: pwd,
             )) ??
             false;
       } catch (e) {
@@ -668,6 +673,16 @@ mixin DoorLockOperationMixin on ChangeNotifier {
         }
         return DoorLockDeleteResult(false, sync.item2?.err, sync.item3);
       }
+
+      ///离线密码走wifi半透传删除：用户ID固定0xFFFF并携带密码内容，
+      ///可删除未激活/未使用的离线密码
+      if (type == JvssOperateType.offLinePwd) {
+        var trans = await deleteOfflinePwdWifiTrans(pwd: pwd ?? '');
+        LogUtils.doorLock
+            .log('deleteOfflinePwdWifiTrans result=${trans.item2}');
+        return DoorLockDeleteResult(
+            trans.item1, null, trans.item1 ? null : trans.item2);
+      }
       var result = await DoorLockNetIp.deleteDoorOpenType(
           deviceId: deviceId, type: type, id: id);
       return DoorLockDeleteResult(
@@ -685,6 +700,28 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       }
 
       return sendByBlue();
+    }
+
+    ///离线密码删除的wifi半透传从V2开始才支持，能力集不支持时只能用蓝牙
+    bool onlyBlue = type == JvssOperateType.offLinePwd &&
+        !supportUserManagerWifiTransV2(
+            action: DoorLockUserManagerAction.deleteUser);
+
+    if (onlyBlue) {
+      if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue ||
+          device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
+        return sendByBlue();
+      }
+
+      ///离线：低功耗/海外锁先搜蓝牙，等到在线后走 BLE 删除
+      if (DoorLockHelper.isLowPowerBle(deviceId) ||
+          DoorLockHelper.isOverSeaDoorLock(deviceId)) {
+        bool online = await waitBleOnline();
+        if (online) {
+          return sendByBlue();
+        }
+      }
+      return const DoorLockDeleteResult(false, null, null);
     }
 
     if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
@@ -814,10 +851,50 @@ mixin DoorLockOperationMixin on ChangeNotifier {
     }
   }
 
-  ///支持用户管理Wifi透传v2协议
-  bool supportUserManagerWifiTransV2() {
-    return (device.doorLockActionVerList ?? []).any((e) =>
-        e.action == DoorLockUserManagerAction.addUser.value && e.version == 2);
+  ///删除离线密码-wifi透传方式
+  ///用户ID固定传0xFFFF并携带密码内容，可删除未激活/未使用的离线密码
+  ///cmd: [0x03=删除用户, 0x02=V2版本, 用户ID(2字节)=0xFFFF, 0x07, 密码长度, ...密码字节]
+  ///0x07是几维V2用户管理协议的离线密码类型（jwCode表），
+  ///与JvssOperateType.offLinePwd（8）不同表，勿改成0x08
+  Future<Tuple2<bool, DoorLockUserManagerWifiTransResult>>
+      deleteOfflinePwdWifiTrans({
+    required String pwd,
+    int? timeout,
+  }) async {
+    try {
+      var pwdBytes = pwdToByte(pwd);
+      var cmd = [0x03, 0x02, 0xFF, 0xFF, 0x07, pwdBytes.length, ...pwdBytes];
+      final rawData =
+          DoorLockNetIpWifiTransExtUserManager.getUserManagerRawData(cmd);
+      var result =
+          await DoorLockNetIpWifiTransExtUserManager.sendUserManagerWifiCmd(
+              deviceId: deviceId, rawData: rawData, timeout: timeout);
+      if (result.item1 == true) {
+        var rawStr = result.item2?.data['RawData'];
+        if (rawStr != null) {
+          var bytes = base64Decode(rawStr).toList();
+          if (bytes.length > 4) {
+            var actionResult =
+                DoorLockUserManagerWifiTransResult.from(bytes[4]);
+            return Tuple2(
+                actionResult == DoorLockUserManagerWifiTransResult.success,
+                actionResult);
+          }
+        }
+        return const Tuple2(false, DoorLockUserManagerWifiTransResult.unknown);
+      }
+      return const Tuple2(false, DoorLockUserManagerWifiTransResult.unknown);
+    } catch (e) {
+      LogUtils.doorLock.log('deleteOfflinePwdWifiTrans error: $e');
+      return const Tuple2(false, DoorLockUserManagerWifiTransResult.unknown);
+    }
+  }
+
+  ///支持用户管理Wifi透传v2协议，[action]指定查询的动作，默认为添加用户
+  bool supportUserManagerWifiTransV2(
+      {DoorLockUserManagerAction action = DoorLockUserManagerAction.addUser}) {
+    return (device.doorLockActionVerList ?? [])
+        .any((e) => e.action == action.value && e.version == 2);
   }
 
   ///支持用户管理Wifi透传v3协议（含限时/循环/归属）
@@ -1004,6 +1081,15 @@ mixin DoorLockOperationMixin on ChangeNotifier {
               return;
             }
             sub?.cancel();
+
+            ///会话失效（needSync）：透传错误码供页面提示"同步状态过期"
+            if (response.err == DoorLockNetIpOperaterResult.needSync.value) {
+              if (!completer.isCompleted) {
+                completer.complete(const DoorLockAddResult(
+                    false, -1, DoorLockNetIpOperaterResult.needSync, null));
+              }
+              return;
+            }
             if (!completer.isCompleted) {
               completer
                   .complete(const DoorLockAddResult(false, -1, null, null));

@@ -549,11 +549,13 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
 
     _showLoading('正在删除...');
     try {
-      ///锁端删除（按通道路由 BLE/netip；type=offLinePwd，id=hardwareId）
+      ///锁端删除（按通道路由 BLE/netip；type=offLinePwd，id=hardwareId，
+      ///携 password 删除未激活离线密码）
       var result = await _operation.doorLockDeleteType(
         info.hardwareIdInt,
         JvssOperateType.offLinePwd,
         info.isAdmin,
+        pwd: info.password,
       );
       if (result.success) {
         ///服务器删除（失败不阻塞，锁端已删）

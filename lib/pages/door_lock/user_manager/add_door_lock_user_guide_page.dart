@@ -1,5 +1,6 @@
 import 'package:fcloudsdk/door_lock/door_lock_ble_model.dart';
 import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
+import 'package:fcloudsdk/door_lock/door_lock_netip_api.dart';
 import 'package:fcloudsdk/door_lock/door_lock_netip_model.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk_example/api/door_lock_api.dart';
@@ -54,6 +55,9 @@ class _AddDoorLockUserGuidePageState extends State<AddDoorLockUserGuidePage> {
   ///是否展示录入进度（录入中且总次数 >= 2）
   bool get _showInputNo => _isAdding && _inputAll >= 2;
 
+  ///needSync 自愈是否已重试过（限一次，防死循环）
+  bool _needSyncRetried = false;
+
   @override
   void initState() {
     super.initState();
@@ -94,6 +98,20 @@ class _AddDoorLockUserGuidePageState extends State<AddDoorLockUserGuidePage> {
         Navigator.of(context).pop(true);
       }
     } else {
+      ///会话失效自愈：配网后锁端可能保活失效，
+      ///而 App 侧保活池仍命中跳过真实 Start，首次操作会踩 needSync；
+      ///清缓存强制真实同步后重试一次
+      if (result.err == DoorLockNetIpOperaterResult.needSync &&
+          !_needSyncRetried) {
+        _needSyncRetried = true;
+        LogUtils.doorLock.log('录入 needSync，清保活缓存后重新同步重试');
+        DoorLockNetIp.clearKeepAliveState(widget.deviceId);
+        var sync = await DoorLockNetIp.syncDoorStatus(widget.deviceId,
+            ignoreKeepAlive: true);
+        if (sync.item1 && mounted) {
+          return _onAdd();
+        }
+      }
       _showSnack('录入失败${_errSuffix(result.err, result.rawError)}');
       await Future.delayed(const Duration(seconds: 2));
       if (mounted) {
@@ -228,6 +246,9 @@ class _AddDoorLockUserGuidePageState extends State<AddDoorLockUserGuidePage> {
   // ==================== UI ====================
 
   String _errSuffix(DoorLockNetIpOperaterResult? err, dynamic raw) {
+    if (err == DoorLockNetIpOperaterResult.needSync) {
+      return '：同步状态过期，请重试';
+    }
     if (raw != null) return ': $raw';
     if (err != null && err != DoorLockNetIpOperaterResult.unknowError) {
       return ': ${err.name}';
