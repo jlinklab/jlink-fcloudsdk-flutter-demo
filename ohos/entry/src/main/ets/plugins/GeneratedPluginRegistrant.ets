@@ -10,6 +10,7 @@ import ConnectivityPlugin from 'connectivity_plus';
 import SharePlusOhosPlugin from 'share_plus';
 import PackageInfoPlugin from 'package_info_plus';
 import DeviceInfoPlusPlugin from 'device_info_plus';
+import FlutterTimezonePlugin from 'flutter_timezone';
 import FlutterLocalNotificationsPlugin from 'flutter_local_notifications';
 import GeolocatorOhosPlugin from 'flutter_geolocator_ohos';
 import MobileScannerPlugin from 'mobile_scanner';
@@ -41,6 +42,7 @@ export class GeneratedPluginRegistrant {
       flutterEngine.getPlugins()?.add(new SharePlusOhosPlugin());
       flutterEngine.getPlugins()?.add(new PackageInfoPlugin());
       flutterEngine.getPlugins()?.add(new DeviceInfoPlusPlugin());
+      flutterEngine.getPlugins()?.add(new FlutterTimezonePlugin());
       flutterEngine.getPlugins()?.add(new FlutterLocalNotificationsPlugin());
       flutterEngine.getPlugins()?.add(new GeolocatorOhosPlugin());
       flutterEngine.getPlugins()?.add(new MobileScannerPlugin());

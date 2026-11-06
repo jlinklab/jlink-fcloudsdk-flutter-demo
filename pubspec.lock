@@ -384,10 +384,10 @@ packages:
     dependency: "direct main"
     description:
       name: fcloudsdk
-      sha256: baae87d508a27b6915ee7fd3fd74df8717fc102dc2bde78257e0374d17eee4b2
+      sha256: "9468fbe9d17564cbeffafc3f21f6740a1e460a764328fc5f9b10e5622de74c96"
       url: "https://repo.jftechsoft.com"
     source: hosted
-    version: "3.1.2"
+    version: "3.1.3"
   ffi:
     dependency: transitive
     description:
@@ -525,6 +525,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_timezone:
+    dependency: transitive
+    description:
+      path: "."
+      ref: "4010e27af165d19846859ccd88cca8d91cb1b847"
+      resolved-ref: "4010e27af165d19846859ccd88cca8d91cb1b847"
+      url: "https://gitcode.com/nutpi/flutter_timezone.git"
+    source: git
+    version: "4.1.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -1546,10 +1555,10 @@ packages:
     dependency: transitive
     description:
       name: timezone
-      sha256: "2236ec079a174ce07434e89fcd3fcda430025eb7692244139a9cf54fdcf1fc7d"
+      sha256: "2e59efc48e9f684c327c0498ac0b81411aee18b10c82f2db2c08f7f052493569"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.9.4"
+    version: "0.9.0"
   timing:
     dependency: transitive
     description:
@@ -1558,6 +1567,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.2"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
+      sha256: a97ce2013f240b2f3807bcbaf218765b6f301c3eff91092bcfa23a039e7dd151
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.0.2"
   typed_data:
     dependency: transitive
     description:
