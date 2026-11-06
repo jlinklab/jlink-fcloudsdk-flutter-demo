@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fcloudsdk/door_lock/door_lock_ble_model.dart';
+import 'package:fcloudsdk/door_lock/door_lock_business_model.dart';
 import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
 import 'package:fcloudsdk/door_lock/door_lock_key_value.dart';
 import 'package:fcloudsdk/door_lock/door_lock_netip_api.dart';
@@ -143,9 +144,12 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
     ///昵称纯服务器接口，立即并行拉取回填，不等待锁端补全
     unawaited(_fetchNicknames());
 
-    ///仅设备在线时做锁端补全（离线拉不到锁端数据）
+    ///仅设备在线且不支持自主上报时做锁端补全：离线拉不到锁端数据；
+    ///支持自主上报的锁变化会自行上报服务器，无需进页面全量拉取
     final device = _device;
-    if (device != null && device.doolockCmdStatus != DoolockCmdStatus.offline) {
+    if (device != null &&
+        device.doolockCmdStatus != DoolockCmdStatus.offline &&
+        !DoorLockHelper.supportDevAutoUpload(deviceId: widget.deviceId)) {
       await _syncLockEndToServer();
       if (!mounted) return;
       await _fetchFromServer(showLoading: false);
@@ -294,9 +298,13 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
         await DoorLockHelper.getFuncFromShadowIfNeed(widget.deviceId,
             queryNew: true);
       }
+      ///全量拉取时顺带收集锁端离线密码，避免为补报再单独查一次锁端
+      final offlineModels = <DoorLockUnlockModel>[];
       final lockUsers = await _operation
           .getLockEndUnlockingList(
-              type: isAll ? null : _type, showAnotherOperatingTip: isAll)
+              type: isAll ? null : _type,
+              showAnotherOperatingTip: isAll,
+              offlineSink: offlineModels)
           .timeout(const Duration(seconds: 60));
       if (lockUsers.isEmpty) {
         LogUtils.doorLock.log('从锁端拉数据: 锁端无用户，跳过上报(isAll=$isAll)');
@@ -318,9 +326,10 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
       LogUtils.doorLock
           .log('从锁端拉数据: 上报 ${lockUsers.length} 条用户到服务器(isAll=$isAll)');
 
-      ///补报锁端离线密码开锁方式（覆盖 unlockInfo 表）+ 密钥组重发，
-      ///使已使用的单次密码随同步从服务器清除
-      await _operation.syncOfflinePwdUnlockInfo();
+      ///补报锁端离线密码开锁方式（覆盖 unlockInfo 表），
+      ///使已使用的单次密码随同步从服务器清除；离线密码只在全量拉取时
+      ///能拿到，单类型拉取（进页面静默补全）不分流故此处直接跳过
+      await _operation.syncOfflinePwdUnlockInfo(models: offlineModels);
       return lockUsers;
     } on TimeoutException {
       LogUtils.doorLock.log('从锁端拉数据超时（60s），跳过');

@@ -633,6 +633,22 @@ class DoorLockHelper {
     return supportTemp && !isLowPowerBle(deviceId);
   }
 
+  ///设备是否支持用户管理数据自动上报（影子服务 DoorFunction.UserManage.DevAutoUpload）
+  ///不支持时进入用户管理页需从锁端拉取用户列表协助上报服务器
+  static bool supportDevAutoUpload({required String deviceId}) {
+    var map = DoorLockShadow.doorFunction(deviceId: deviceId);
+    if (map.isEmpty) {
+      return false;
+    }
+    var userManage = MapParser.readMap(map, 'UserManage');
+    if (userManage == null) {
+      return false;
+    }
+    return MapParser.readBool(userManage, 'DevAutoUpload') ??
+        MapParser.readBool(userManage, 'devAutoUpload') ??
+        false;
+  }
+
   ///用户管理入口是否显示
   ///首页“用户管理”区域是否渲染：任一能力+对应分享权限命中则显示
   static bool checkUserManagerShow({required String deviceId}) {
