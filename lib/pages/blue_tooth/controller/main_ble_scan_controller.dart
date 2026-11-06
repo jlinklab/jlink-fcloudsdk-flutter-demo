@@ -68,7 +68,7 @@ class MainBleScanController extends ChangeNotifier {
 
   _openBleSearch() async {
     ///监听蓝牙是否在扫描
-    BleSearch.instance.addSearchStatusListener((isSearching) {
+    BleSearch.instance.addSearchStatusListener((isSearching, errorCode) {
       _updateView();
     });
 

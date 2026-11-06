@@ -29,7 +29,7 @@ class MainBleDistributeController extends ChangeNotifier {
       wifiConfig: WifiConfig(
         ssid: ssid,
         wifiPwd: password,
-      ),
+      ), dns: '223.6.6.6',
     );
 
     addBleListener();
@@ -59,7 +59,7 @@ class MainBleDistributeController extends ChangeNotifier {
     });
 
     //配网状态监听
-    bleDistribute.addDistributeResultListener((status, device, errorCode) {
+    bleDistribute.addDistributeResultListener((status, device, errorCode, jsonStr) {
       if (status == BleDistributeStatus.distributeSuccess) {
         logs.add(TR.current.deviceAddConnectBleTip5);
         _success(device);
@@ -120,6 +120,6 @@ class MainBleDistributeController extends ChangeNotifier {
   void dispose() {
     super.dispose();
     bleDistribute.stop();
-    bleDistribute.cleanListeners();
+    bleDistribute.dispose();
   }
 }
