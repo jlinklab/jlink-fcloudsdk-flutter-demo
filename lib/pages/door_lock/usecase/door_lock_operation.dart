@@ -214,6 +214,9 @@ mixin DoorLockOperationMixin on ChangeNotifier {
 
   ///[showErrorTip]为false时失败不弹toast，供页面用重试弹窗兜底的调用方使用
   ///[showAnotherOperatingTip]为false时Err=10不弹窗，由调用方按兜底数据自行决定提示
+  ///最近一次 beforeNetIp 保活失败的原始异常（成功时清空），供录入链路带回页面
+  dynamic lastNetIpSyncError;
+
   Future<bool> beforeNetIp(
       {bool showLoading = true,
       bool ignoreAddUserAdminNotskip = true,
@@ -234,7 +237,20 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       ///再保活
       showLoading ? KToast.show() : null;
       var result = await DoorLockNetIp.syncDoorStatus(deviceId);
+      ///Start 超时(-99991)兜底：锁端可能瞬时不可达（如配网后重启中），
+      ///清缓存后强制真实同步重试一次
+      if (result.item1 == false &&
+          result.item3 is XCloudAPIException &&
+          (result.item3 as XCloudAPIException).code == -99991) {
+        LogUtils.doorLock.log('beforeNetIp sync timeout(-99991)，clear keepAlive then retry once');
+        DoorLockNetIp.clearKeepAliveState(deviceId);
+        result = await DoorLockNetIp.syncDoorStatus(deviceId,
+            ignoreKeepAlive: true);
+      }
       showLoading ? KToast.dismiss() : null;
+
+      ///记录同步失败原因，供调用方带回页面展示（成功时清空）
+      lastNetIpSyncError = result.item1 ? null : result.item3;
 
       ///其他用户正在操作(Err=10)
       if (result.item1 == false &&
@@ -1048,7 +1064,8 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       if (await beforeNetIp(
               showLoading: false, ignoreAddUserAdminNotskip: false) ==
           false) {
-        return const DoorLockAddResult(false, -1, null, null);
+        ///带回保活失败原因（如 -99991 超时），供页面提示而非笼统的“录入失败”
+        return DoorLockAddResult(false, -1, null, lastNetIpSyncError);
       }
       final completer = Completer<DoorLockAddResult>();
       if (canAddUserByWifiTrans(type)) {

@@ -1,3 +1,4 @@
+import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/door_lock/door_lock_ble_model.dart';
 import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
 import 'package:fcloudsdk/door_lock/door_lock_netip_api.dart';
@@ -110,6 +111,15 @@ class _AddDoorLockUserGuidePageState extends State<AddDoorLockUserGuidePage> {
             ignoreKeepAlive: true);
         if (sync.item1 && mounted) {
           return _onAdd();
+        }
+        ///自愈同步也失败：多为设备重启中/暂不可达，与同步过期区分提示
+        if (!sync.item1 && mounted) {
+          _showSnack('设备暂时不可用，请稍后重试');
+          await Future.delayed(const Duration(seconds: 2));
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
+          return;
         }
       }
       _showSnack('录入失败${_errSuffix(result.err, result.rawError)}');
@@ -248,6 +258,10 @@ class _AddDoorLockUserGuidePageState extends State<AddDoorLockUserGuidePage> {
   String _errSuffix(DoorLockNetIpOperaterResult? err, dynamic raw) {
     if (err == DoorLockNetIpOperaterResult.needSync) {
       return '：同步状态过期，请重试';
+    }
+    ///保活同步超时（如锁端重启中/暂不可达）
+    if (raw is XCloudAPIException && raw.code == -99991) {
+      return '：请求超时，设备可能不在线，请稍后重试';
     }
     if (raw != null) return ': $raw';
     if (err != null && err != DoorLockNetIpOperaterResult.unknowError) {

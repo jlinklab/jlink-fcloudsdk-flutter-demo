@@ -122,6 +122,14 @@ packages:
       url: "https://gitcode.com/openharmony-sig/flutter_audioplayers.git"
     source: git
     version: "2.0.2"
+  bluez:
+    dependency: transitive
+    description:
+      name: bluez
+      sha256: "61a7204381925896a374301498f2f5399e59827c6498ae1e924aaa598751b545"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.8.3"
   boolean_selector:
     dependency: transitive
     description:
@@ -457,6 +465,77 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_blue_plus:
+    dependency: "direct main"
+    description:
+      path: "packages/flutter_blue_plus"
+      ref: "2.1.0-ohos-1.0.0"
+      resolved-ref: "83185cfaa2f0920ebf4955633e2c2c7ebb9b4feb"
+      url: "https://gitcode.com/CPF-Flutter/fluttertpc_flutter_blue_plus.git"
+    source: git
+    version: "2.1.0"
+  flutter_blue_plus_android:
+    dependency: "direct overridden"
+    description:
+      path: "packages/flutter_blue_plus_android"
+      ref: "2.1.0-ohos-1.0.0"
+      resolved-ref: "83185cfaa2f0920ebf4955633e2c2c7ebb9b4feb"
+      url: "https://gitcode.com/CPF-Flutter/fluttertpc_flutter_blue_plus.git"
+    source: git
+    version: "8.1.0"
+  flutter_blue_plus_darwin:
+    dependency: "direct overridden"
+    description:
+      path: "packages/flutter_blue_plus_darwin"
+      ref: "2.1.0-ohos-1.0.0"
+      resolved-ref: "83185cfaa2f0920ebf4955633e2c2c7ebb9b4feb"
+      url: "https://gitcode.com/CPF-Flutter/fluttertpc_flutter_blue_plus.git"
+    source: git
+    version: "8.1.0"
+  flutter_blue_plus_linux:
+    dependency: "direct overridden"
+    description:
+      path: "packages/flutter_blue_plus_linux"
+      ref: "2.1.0-ohos-1.0.0"
+      resolved-ref: "83185cfaa2f0920ebf4955633e2c2c7ebb9b4feb"
+      url: "https://gitcode.com/CPF-Flutter/fluttertpc_flutter_blue_plus.git"
+    source: git
+    version: "8.1.0"
+  flutter_blue_plus_ohos:
+    dependency: "direct overridden"
+    description:
+      path: "packages/flutter_blue_plus_ohos"
+      ref: "2.1.0-ohos-1.0.0"
+      resolved-ref: "83185cfaa2f0920ebf4955633e2c2c7ebb9b4feb"
+      url: "https://gitcode.com/CPF-Flutter/fluttertpc_flutter_blue_plus.git"
+    source: git
+    version: "8.1.0"
+  flutter_blue_plus_platform_interface:
+    dependency: "direct overridden"
+    description:
+      path: "packages/flutter_blue_plus_platform_interface"
+      ref: "2.1.0-ohos-1.0.0"
+      resolved-ref: "83185cfaa2f0920ebf4955633e2c2c7ebb9b4feb"
+      url: "https://gitcode.com/CPF-Flutter/fluttertpc_flutter_blue_plus.git"
+    source: git
+    version: "8.1.0"
+  flutter_blue_plus_web:
+    dependency: "direct overridden"
+    description:
+      path: "packages/flutter_blue_plus_web"
+      ref: "2.1.0-ohos-1.0.0"
+      resolved-ref: "83185cfaa2f0920ebf4955633e2c2c7ebb9b4feb"
+      url: "https://gitcode.com/CPF-Flutter/fluttertpc_flutter_blue_plus.git"
+    source: git
+    version: "8.1.0"
+  flutter_blue_plus_winrt:
+    dependency: transitive
+    description:
+      name: flutter_blue_plus_winrt
+      sha256: "3c1b790ba95808b5e2b1f756367e1e8078266488635032976e187823e3b3d8cb"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.0.23"
   flutter_cache_manager:
     dependency: transitive
     description:
