@@ -392,7 +392,7 @@ packages:
     dependency: "direct main"
     description:
       name: fcloudsdk
-      sha256: "7fae670513e028453e90fc05a10c1140193016d7f60410b4e6258df149918677"
+      sha256: "9468fbe9d17564cbeffafc3f21f6740a1e460a764328fc5f9b10e5622de74c96"
       url: "https://repo.jftechsoft.com"
     source: hosted
     version: "3.1.3"
