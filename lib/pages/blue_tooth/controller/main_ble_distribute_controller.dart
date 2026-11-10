@@ -57,6 +57,12 @@ class MainBleDistributeController extends ChangeNotifier {
         logs.add(TR.current.deviceBluetoothCantConnect);
       } else if (status == BleDistributeStatus.breaked) {
         logs.add(TR.current.deviceAddConnectBledDisconnected);
+      } else if (status == BleDistributeStatus.reconnect) {
+        logs.add('蓝牙连接断开，正在重连');
+      } else if (status == BleDistributeStatus.reconnectSuccess) {
+        logs.add('蓝牙重连成功，继续配网');
+      } else if (status == BleDistributeStatus.reconnectFail) {
+        logs.add('蓝牙重连失败:$errorCode');
       }
       _updateView();
     });
@@ -71,6 +77,11 @@ class MainBleDistributeController extends ChangeNotifier {
         stop();
         logs.add("${TR.current.addConnectDevFailed}:$errorCode");
       }
+      _updateView();
+    });
+
+    bleDistribute.addDistributeIgnoreErrorListener((errorCode) {
+      logs.add('收到可忽略的配网错误:$errorCode，继续配网');
       _updateView();
     });
   }

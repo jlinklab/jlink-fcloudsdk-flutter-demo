@@ -17,6 +17,7 @@ import 'package:fcloudsdk/door_lock/door_lock_netip_model.dart';
 import 'package:fcloudsdk/door_lock/door_lock_parse.dart';
 import 'package:fcloudsdk/door_lock/door_lock_shadow.dart';
 import 'package:fcloudsdk/utils/bit_util.dart';
+import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk/wifi/wifi_config.dart';
 import 'package:fcloudsdk/wifi/wifi_platform_interface.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +118,18 @@ class MainBlePairConfigController extends ChangeNotifier {
   ///配网防重入标志（isDone在流程真正结束时由_finish设置）
   bool _distributeDone = false;
 
+  ///是否已收到设备配网应答
+  bool _isDistributing = false;
+
+  ///真配网自动重试次数及延迟任务
+  static const int _maxDistributeRetryCount = 1;
+  int _distributeRetryCount = 0;
+  Timer? _distributeRetryTimer;
+
   Timer? _waitResetTimer;
+  Completer<bool>? _waitResetCompleter;
+  bool _waitResetCancelled = false;
+  bool _isDisposed = false;
 
   ///蓝牙搜索结果监听（等待锁端重置时使用）
   void Function(BleSearchDeviceBySDK device)? _searchListener;
@@ -131,11 +143,16 @@ class MainBlePairConfigController extends ChangeNotifier {
   }
 
   _updateView() {
-    notifyListeners();
+    if (!_isDisposed) {
+      notifyListeners();
+    }
   }
 
-  _log(String msg) {
-    logs.add(msg);
+  _log(String msg, {bool showInPage = true}) {
+    if (showInPage) {
+      logs.add(msg);
+    }
+    LogUtils.blePair.log(msg);
     _updateView();
   }
 
@@ -148,6 +165,12 @@ class MainBlePairConfigController extends ChangeNotifier {
   }
 
   start() async {
+    _log(
+        '配网开始参数: deviceId=${model.deviceId}, '
+        'oldSearchDeviceId=${model.oldSearchDeviceId}, '
+        'oldDeviceNo=${DoorLockKeyValueLocal.oldDeviceNo(deviceId: model.deviceId)}, '
+        'blueUUID=${model.blueUUID}, isNetip=${args.isNetip}',
+        showInPage: false);
     if (!args.isNetip) {
       ///海外/低功耗锁：门锁初始化 → 自检 → 真配网/完成
       await _doorLockInit();
@@ -509,6 +532,7 @@ class MainBlePairConfigController extends ChangeNotifier {
   ///断开蓝牙连接，持续蓝牙搜索，等待设备操作让广播包04变05/02
   Future<bool> _waitDoorLockResetNet() async {
     stage = '等待锁端重置网络';
+    _waitResetCancelled = false;
     _log('等待锁端手动操作进入配网状态(广播包04→05)，最长180秒');
     _updateView();
 
@@ -518,11 +542,19 @@ class MainBlePairConfigController extends ChangeNotifier {
     try {
       await JFApi.xcDevice.xcLoginOut(deviceId: model.deviceId);
     } catch (_) {}
+    if (_waitResetCancelled || _isDisposed) {
+      return false;
+    }
 
-    Completer<bool> completer = Completer();
+    final completer = Completer<bool>();
+    _waitResetCompleter = completer;
 
     waitResetCount = 180;
     _waitResetTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_waitResetCancelled || _isDisposed) {
+        timer.cancel();
+        return;
+      }
       waitResetCount--;
       if (waitResetCount <= 0) {
         timer.cancel();
@@ -534,49 +566,89 @@ class MainBlePairConfigController extends ChangeNotifier {
     });
 
     Future.delayed(const Duration(seconds: 3), () async {
-      if (completer.isCompleted) {
+      if (_isWaitResetInactive(completer)) {
         return;
       }
       try {
         if (!BleSearch.instance.isSearching) {
           await BleSearch.instance.start(timeout: 180);
         }
+        if (_isWaitResetInactive(completer)) {
+          try {
+            await BleSearch.instance.stop();
+          } catch (_) {}
+          return;
+        }
         _searchListener = (device) {
-          if (device.uuid == model.blueUUID) {
+          if (_isWaitResetInactive(completer)) {
+            return;
+          }
+          if (device.sn == model.deviceId || device.uuid == model.blueUUID) {
+            _log('搜索到目标设备: sn=${device.sn} '
+                'uuid=${device.uuid} extra=${device.extra}');
             if (device.extra == 5 || device.extra == 2) {
-              if (!completer.isCompleted) {
-                completer.complete(true);
-              }
+              completer.complete(true);
             }
           }
         };
         BleSearch.instance.addSearchResultListener(_searchListener!);
       } catch (e) {
-        _log('蓝牙搜索异常: $e');
-        if (!completer.isCompleted) {
-          completer.complete(false);
+        if (_isWaitResetInactive(completer)) {
+          return;
         }
+        _log('蓝牙搜索异常: $e');
+        completer.complete(false);
       }
     });
 
-    var result = await completer.future;
+    final result = await completer.future;
     _waitResetTimer?.cancel();
+    _waitResetTimer = null;
+    _removeWaitResetListener();
+    if (identical(_waitResetCompleter, completer)) {
+      _waitResetCompleter = null;
+    }
     try {
       await BleSearch.instance.stop();
     } catch (_) {}
-    _log(result ? '锁端已进入配网状态' : '等待锁端重置网络超时/失败');
-    _updateView();
+    if (!_isDisposed) {
+      _log(result ? '锁端已进入配网状态' : '等待锁端重置网络超时/失败');
+    }
     return result;
+  }
+
+  bool _isWaitResetInactive(Completer<bool> completer) {
+    return _waitResetCancelled ||
+        _isDisposed ||
+        completer.isCompleted ||
+        !identical(_waitResetCompleter, completer);
+  }
+
+  void _removeWaitResetListener() {
+    final listener = _searchListener;
+    if (listener != null) {
+      BleSearch.instance.removeSearchResultListener(listener);
+      _searchListener = null;
+    }
+  }
+
+  void _cancelWaitReset() {
+    _waitResetCancelled = true;
+    _waitResetTimer?.cancel();
+    _waitResetTimer = null;
+    final completer = _waitResetCompleter;
+    if (completer != null && !completer.isCompleted) {
+      completer.complete(false);
+    }
+    _removeWaitResetListener();
   }
 
   ///用户取消等待
   cancelWaitReset() {
-    _waitResetTimer?.cancel();
-    try {
-      BleSearch.instance.stop();
-    } catch (_) {}
-    _log('用户取消等待锁端重置');
-    _updateView();
+    _cancelWaitReset();
+    if (!_isDisposed) {
+      _log('用户取消等待锁端重置');
+    }
   }
 
   //====================真/假配网====================
@@ -601,6 +673,8 @@ class MainBlePairConfigController extends ChangeNotifier {
     _updateView();
 
     _stopDistribute();
+    _isDistributing = false;
+    _distributeRetryCount = 0;
     bleDistribute = BleNewDistribute(
       uuid: model.blueUUID,
       wifiConfig: WifiConfig(ssid: ssid, wifiPwd: wifiPwd),
@@ -640,15 +714,26 @@ class MainBlePairConfigController extends ChangeNotifier {
     ///连接状态监听
     distribute.addConnectStatusListener((status, errorCode) {
       if (status == BleDistributeStatus.connected) {
+        _cancelDistributeRetry();
         _log('蓝牙连接成功，开始发送配网信息');
       } else if (status == BleDistributeStatus.connectFail) {
         _log('蓝牙连接失败: $errorCode');
-        _onDistributeFail(errorCode, isFake: isFake);
+        _onDistributeConnectError(errorCode, isFake: isFake);
       } else if (status == BleDistributeStatus.breaked) {
         if (!isDone) {
           _log('蓝牙连接断开: $errorCode');
-          _onDistributeFail(errorCode, isFake: isFake);
+          _onDistributeConnectError(errorCode, isFake: isFake);
         }
+      } else if (status == BleDistributeStatus.reconnect) {
+        _cancelDistributeRetry();
+        stage = isFake ? '假配网中' : '蓝牙配网中';
+        _log('蓝牙连接断开，正在重连');
+      } else if (status == BleDistributeStatus.reconnectSuccess) {
+        _cancelDistributeRetry();
+        _log('蓝牙重连成功，继续配网');
+      } else if (status == BleDistributeStatus.reconnectFail) {
+        _log('蓝牙重连失败: $errorCode');
+        _onDistributeConnectError(errorCode, isFake: isFake);
       }
     });
 
@@ -656,6 +741,8 @@ class MainBlePairConfigController extends ChangeNotifier {
     distribute
         .addDistributeResultListener((status, device, errorCode, jsonStr) {
       if (status == BleDistributeStatus.distributing) {
+        _isDistributing = true;
+        _cancelDistributeRetry();
         _log('设备已接收配网信息，等待设备连接路由器');
       } else if (status == BleDistributeStatus.distributeRecv) {
         ///收到设备配网回包，打印内容用于确认设备是否响应
@@ -668,6 +755,7 @@ class MainBlePairConfigController extends ChangeNotifier {
         }
         _log('收到设备配网回包: hexData=${hexData ?? ""}');
       } else if (status == BleDistributeStatus.distributeSuccess) {
+        _cancelDistributeRetry();
         if (isFake) {
           _onFakeDistributeSuccess();
         } else {
@@ -679,11 +767,70 @@ class MainBlePairConfigController extends ChangeNotifier {
           }
         }
       } else if (status == BleDistributeStatus.error) {
+        _cancelDistributeRetry();
         distribute.stop();
         _log('配网出错: $errorCode');
         _onDistributeFail(errorCode, isFake: isFake);
       }
     });
+
+    ///可忽略错误只记录，不中断当前配网流程
+    distribute.addDistributeIgnoreErrorListener((errorCode) {
+      _log('收到可忽略的配网错误: $errorCode，继续配网');
+    });
+  }
+
+  ///真配网在收到设备应答前，连接失败自动重试一次
+  _onDistributeConnectError(int? errorCode, {required bool isFake}) {
+    if (isDone || _distributeDone || isFail) {
+      return;
+    }
+    if (isFake ||
+        _isDistributing ||
+        _distributeRetryCount >= _maxDistributeRetryCount) {
+      _onDistributeFail(errorCode, isFake: isFake);
+      return;
+    }
+    if (_distributeRetryTimer != null) {
+      return;
+    }
+
+    final distribute = bleDistribute;
+    if (distribute == null) {
+      _onDistributeFail(errorCode, isFake: isFake);
+      return;
+    }
+
+    _log('蓝牙连接异常，2秒后自动重试配网');
+    _distributeRetryTimer = Timer(const Duration(seconds: 2), () async {
+      _distributeRetryTimer = null;
+      if (isDone ||
+          _distributeDone ||
+          isFail ||
+          _isDistributing ||
+          !identical(distribute, bleDistribute)) {
+        return;
+      }
+
+      _distributeRetryCount++;
+      _log('开始自动重试配网($_distributeRetryCount/$_maxDistributeRetryCount)');
+      try {
+        await distribute.startDistribute();
+      } catch (e) {
+        if (!isDone &&
+            !_distributeDone &&
+            !isFail &&
+            identical(distribute, bleDistribute)) {
+          _log('自动重试配网异常: $e');
+          _onDistributeFail(errorCode, isFake: false);
+        }
+      }
+    });
+  }
+
+  _cancelDistributeRetry() {
+    _distributeRetryTimer?.cancel();
+    _distributeRetryTimer = null;
   }
 
   ///真配网成功
@@ -920,6 +1067,11 @@ class MainBlePairConfigController extends ChangeNotifier {
       return Tuple3(false, null, e);
     });
     if (result.item1 && result.item2?.parse is DookLockOpenTypeUser) {
+      if (result.item2?.data['Action'] == 'CancelAdd') {
+        _log('用户取消锁端录入管理员');
+        _finish();
+        return;
+      }
       var admin = result.item2!.parse as DookLockOpenTypeUser;
       _log('锁端录入管理员成功: id=${admin.id}');
       await _saveAdminToService(admin);
@@ -991,7 +1143,8 @@ class MainBlePairConfigController extends ChangeNotifier {
 
   ///配网失败
   _onDistributeFail(int? errorCode, {required bool isFake}) {
-    if (isDone || _distributeDone) {
+    _cancelDistributeRetry();
+    if (isDone || _distributeDone || isFail) {
       return;
     }
     isFail = true;
@@ -1023,15 +1176,28 @@ class MainBlePairConfigController extends ChangeNotifier {
     }
 
     ///配对完成后，默认认为蓝牙在线
-    if (DoorLockHelper.showBlueOnlineState(deviceId: model.deviceId)) {
+    final showBlueOnline =
+        DoorLockHelper.showBlueOnlineState(deviceId: model.deviceId);
+    _log(
+        '配网收尾: deviceId=${model.deviceId}, '
+        'oldDeviceNo=${DoorLockKeyValueLocal.oldDeviceNo(deviceId: model.deviceId)}, '
+        'blueUUID=${model.blueUUID}, showBlueOnline=$showBlueOnline',
+        showInPage: false);
+    if (showBlueOnline) {
+      final blueUUid = model.blueUUID.isNotEmpty ? model.blueUUID : null;
       DeviceManager.instance.markBlueOnline(
         deviceId: model.deviceId,
-        blueUUid: model.blueUUID.isNotEmpty ? model.blueUUID : null,
+        blueUUid: blueUUid,
       );
+      _log('配网收尾蓝牙标记: markBlueOnline=true, blueUUid=$blueUUid',
+          showInPage: false);
+    } else {
+      _log('配网收尾蓝牙标记: markBlueOnline=false', showInPage: false);
     }
   }
 
   _stopDistribute() {
+    _cancelDistributeRetry();
     bleDistribute?.dispose();
     bleDistribute = null;
   }
@@ -1416,10 +1582,8 @@ class MainBlePairConfigController extends ChangeNotifier {
 
   @override
   void dispose() {
-    _waitResetTimer?.cancel();
-    if (_searchListener != null) {
-      BleSearch.instance.removeSearchResultListener(_searchListener!);
-    }
+    _isDisposed = true;
+    _cancelWaitReset();
     _stopDistribute();
     doorLockBleApi.dispose();
     bleUpgrade?.dispose();

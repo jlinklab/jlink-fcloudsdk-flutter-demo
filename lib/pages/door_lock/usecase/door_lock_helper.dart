@@ -10,6 +10,7 @@ import 'package:fcloudsdk/door_lock/door_lock_parse.dart';
 import 'package:fcloudsdk/door_lock/door_lock_shadow.dart';
 import 'package:fcloudsdk/utils/bit_util.dart';
 import 'package:fcloudsdk/utils/extensions.dart';
+import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/models/device_type.dart';
@@ -510,18 +511,20 @@ class DoorLockHelper {
   /// 获取蓝牙uuid
   static String? getBlueUUID(String deviceId) {
     var oldDeviceNo = DoorLockKeyValueLocal.oldDeviceNo(deviceId: deviceId);
-    if (oldDeviceNo.isNotEmpty) {
-      var searchBle = GlobalBleSearchManager.instance.allDeviceMap.entries
-          .firstWhereOrNull((e) => e.value.sn == oldDeviceNo);
-      if (searchBle != null) {
-        return searchBle.key;
-      }
-      var device = DeviceManager.instance.getDevice(deviceId: deviceId);
-      if (device?.blueUUid != null) {
-        return device?.blueUUid;
-      }
-    }
-    return null;
+    var matchSn = oldDeviceNo.isNotEmpty ? oldDeviceNo : deviceId;
+    var searchBle = GlobalBleSearchManager.instance.allDeviceMap.entries
+        .firstWhereOrNull((e) => e.value.sn == matchSn);
+    var device = DeviceManager.instance.getDevice(deviceId: deviceId);
+    final scanDevices = GlobalBleSearchManager.instance.allDeviceMap.values
+        .map((e) => '${e.sn}:${e.uuid}')
+        .join(',');
+    final result = searchBle?.key ?? device?.blueUUid;
+    LogUtils.doorLock.log(
+        'getBlueUUID deviceId=$deviceId oldDeviceNo=$oldDeviceNo matchSn=$matchSn '
+        'scanDevices=[$scanDevices] searchHit=${searchBle != null} '
+        'searchUuid=${searchBle?.key} blueOnline=${device?.blueOnline} '
+        'blueUUid=${device?.blueUUid} result=$result');
+    return result;
   }
 
   ///是否需要提示设备不在附近

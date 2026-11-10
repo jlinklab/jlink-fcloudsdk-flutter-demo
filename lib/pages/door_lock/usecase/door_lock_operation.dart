@@ -237,15 +237,17 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       ///再保活
       showLoading ? KToast.show() : null;
       var result = await DoorLockNetIp.syncDoorStatus(deviceId);
+
       ///Start 超时(-99991)兜底：锁端可能瞬时不可达（如配网后重启中），
       ///清缓存后强制真实同步重试一次
       if (result.item1 == false &&
           result.item3 is XCloudAPIException &&
           (result.item3 as XCloudAPIException).code == -99991) {
-        LogUtils.doorLock.log('beforeNetIp sync timeout(-99991)，clear keepAlive then retry once');
+        LogUtils.doorLock.log(
+            'beforeNetIp sync timeout(-99991)，clear keepAlive then retry once');
         DoorLockNetIp.clearKeepAliveState(deviceId);
-        result = await DoorLockNetIp.syncDoorStatus(deviceId,
-            ignoreKeepAlive: true);
+        result =
+            await DoorLockNetIp.syncDoorStatus(deviceId, ignoreKeepAlive: true);
       }
       showLoading ? KToast.dismiss() : null;
 
@@ -307,6 +309,45 @@ mixin DoorLockOperationMixin on ChangeNotifier {
     } catch (e) {
       return false;
     }
+  }
+
+  ///开关锁命令下发前确保蓝牙已连接并完成握手
+  ///建连和握手耗时不能计入指令的响应超时，避免冷启动首次操作被误判为失败
+  Future<bool> ensureBleReadyForCommand() async {
+    if (device.blueOnline == false) {
+      if (await waitBleOnline() == false) {
+        LogUtils.doorLock
+            .log('ensureBleReadyForCommand wait device online timeout');
+        return false;
+      }
+    }
+    if (await beforeBlue() == false) {
+      LogUtils.doorLock.log('ensureBleReadyForCommand 握手失败');
+      return false;
+    }
+    final bleObject = doorLockBleApi?.bleObject;
+    if (bleObject == null) {
+      return false;
+    }
+    if (bleObject.isReady) {
+      return true;
+    }
+    LogUtils.doorLock.log('ensureBleReadyForCommand begin wait ready');
+    final readyResult = await bleObject.waitReadyIfNeed().timeout(
+          const Duration(seconds: 20),
+          onTimeout: () => const Tuple2<bool, int?>(false, -99991),
+        );
+    LogUtils.doorLock.log(
+        'ensureBleReadyForCommand result:${readyResult.item1} error:${readyResult.item2}');
+    return readyResult.item1;
+  }
+
+  ///蓝牙就绪失败后重建一次透传对象，清理上一次中断可能残留的连接句柄
+  Future<bool> resetBleAndReadyForCommand() async {
+    LogUtils.doorLock.log('resetBleAndReadyForCommand rebuild ble object');
+    await doorLockBleApi?.dispose();
+    doorLockBleApi = null;
+    return ensureBleReadyForCommand();
   }
 
   ///系统蓝牙开关是否打开
@@ -418,8 +459,15 @@ mixin DoorLockOperationMixin on ChangeNotifier {
     late Future<bool> Function() sendByNetIp;
 
     sendByBlue = () async {
-      if (await beforeBlue() == false) return false;
       showLoading ? KToast.show() : null;
+      var ready = await ensureBleReadyForCommand();
+      if (!ready) {
+        ready = await resetBleAndReadyForCommand();
+      }
+      if (!ready) {
+        KToast.show(status: TR.current.tr_player_lock_failed);
+        return false;
+      }
       bool result = false;
       try {
         result = await doorLockBleApi?.lockDoor(
@@ -505,6 +553,7 @@ mixin DoorLockOperationMixin on ChangeNotifier {
         device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
       return sendByBlue();
     } else if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
+      LogUtils.doorLock.log('lock DoolockCmdStatus.onlyWifi');
       return sendByNetIp();
     } else {
       if (DoorLockHelper.isLowPowerBle(deviceId) ||
@@ -531,8 +580,15 @@ mixin DoorLockOperationMixin on ChangeNotifier {
     late Future<bool> Function() sendByNetIp;
 
     sendByBlue = () async {
-      if (await beforeBlue() == false) return false;
       showLoading ? KToast.show() : null;
+      var ready = await ensureBleReadyForCommand();
+      if (!ready) {
+        ready = await resetBleAndReadyForCommand();
+      }
+      if (!ready) {
+        KToast.show(status: TR.current.tr_player_unlock_failed);
+        return false;
+      }
       //0x00成功 0x01失败 0x02门已反锁 -1蓝牙发送失败
       int status = -1;
       try {
@@ -592,18 +648,19 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       var result =
           await DoorLockNetIp.unlockDoor(deviceId, device.memberId ?? 1);
       if (result) {
-        if (pushWait != null) {
-          //命令已受理，等推送真实结果期间保持转圈，超时结果未知静默收起
-          pushWait.startFallbackTimer();
-          final pushed = await pushWait.future;
-          if (pushed) {
-            KToast.show(status: TR.current.tr_player_unlock_succeed);
-          } else {
-            KToast.dismiss();
-          }
-        } else {
-          KToast.dismiss();
+        if (pushWait == null) {
+          KToast.show(status: TR.current.tr_player_unlock_succeed);
+          return true;
         }
+
+        //命令已受理，等推送真实结果期间保持转圈，超时结果未知静默收起
+        pushWait.startFallbackTimer();
+        final pushed = await pushWait.future;
+        if (!pushed) {
+          KToast.dismiss();
+          return false;
+        }
+        KToast.show(status: TR.current.tr_player_unlock_succeed);
         return true;
       } else {
         pushWait?.cancel();
@@ -628,6 +685,7 @@ mixin DoorLockOperationMixin on ChangeNotifier {
         device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
       return sendByBlue();
     } else if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
+      LogUtils.doorLock.log('unlock DoolockCmdStatus.onlyWifi');
       return sendByNetIp();
     } else {
       if (DoorLockHelper.isLowPowerBle(deviceId) ||

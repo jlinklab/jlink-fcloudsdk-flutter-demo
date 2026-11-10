@@ -16,6 +16,7 @@ import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_operation.da
 import 'package:fcloudsdk_example/pages/door_lock/user_manager/add_door_lock_user_guide_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/user_manager/add_door_lock_vaild_time_sel_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/user_manager/door_lock_user_detail_page.dart';
+import 'package:fcloudsdk_example/utils/permission_utils.dart';
 import 'package:flutter/material.dart';
 
 ///门锁锁端录入类开锁方式通用列表页（指纹/卡片等）
@@ -145,11 +146,14 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
     unawaited(_fetchNicknames());
 
     ///仅设备在线且不支持自主上报时做锁端补全：离线拉不到锁端数据；
-    ///支持自主上报的锁变化会自行上报服务器，无需进页面全量拉取
+    ///已配网且支持自主上报的锁变化会自行上报服务器，无需进页面全量拉取
     final device = _device;
+    final canAutoUpload = device != null &&
+        device.doorlockIsConfigNet &&
+        DoorLockHelper.supportDevAutoUpload(deviceId: widget.deviceId);
     if (device != null &&
         device.doolockCmdStatus != DoolockCmdStatus.offline &&
-        !DoorLockHelper.supportDevAutoUpload(deviceId: widget.deviceId)) {
+        !canAutoUpload) {
       await _syncLockEndToServer();
       if (!mounted) return;
       await _fetchFromServer(showLoading: false);
@@ -298,6 +302,7 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
         await DoorLockHelper.getFuncFromShadowIfNeed(widget.deviceId,
             queryNew: true);
       }
+
       ///全量拉取时顺带收集锁端离线密码，避免为补报再单独查一次锁端
       final offlineModels = <DoorLockUnlockModel>[];
       final lockUsers = await _operation
@@ -452,6 +457,30 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
         true;
   }
 
+  ///离线时检查蓝牙开关与权限，蓝牙不可用导致离线的设备直接给出操作引导
+  Future<bool> _checkBlePermissionGuideIfNeed() async {
+    final supportBlue = DoorLockHelper.isLowPowerBle(widget.deviceId) ||
+        DoorLockHelper.isOverSeaDoorLock(widget.deviceId) ||
+        DoorLockHelper.isSuppportBleNetip(deviceId: widget.deviceId);
+    if (!supportBlue) return false;
+
+    try {
+      if (!await _operation.isBlueSwitchOn) {
+        _showSnack('请打开系统蓝牙后重试');
+        return true;
+      }
+      final isBleService = await PermissionUtils.checkPermission(
+          permission: XPermission.blueService, onlyStatus: false);
+      if (!isBleService) {
+        _showSnack('请允许蓝牙权限后重试');
+        return true;
+      }
+    } catch (e) {
+      LogUtils.doorLock.log('添加用户蓝牙权限检查异常: $e');
+    }
+    return false;
+  }
+
   ///点击"添加用户/添加管理员"：跳转录入引导页，成功后刷新列表
   ///
   ///- 普通用户且设备支持限时/循环：先进时效选择页（昵称+永久/限时/循环）
@@ -463,6 +492,18 @@ class _DoorLockUserListPageState extends State<DoorLockUserListPage> {
       _showSnack('设备不存在');
       return;
     }
+    if (device.doolockCmdStatus == DoolockCmdStatus.offline &&
+        await _checkBlePermissionGuideIfNeed()) {
+      return;
+    }
+    if (!mounted) return;
+
+    ///进入添加流程前先确认可独占设备，被占用时在列表页阻断
+    if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
+      if (await _operation.beforeNetIp() == false) return;
+      if (!mounted) return;
+    }
+
     if (device.doolockCmdStatus == DoolockCmdStatus.offline &&
         device.sleepState == DeviceSleepState.deepSleep) {
       _showSnack('设备深度休眠，无法唤醒录入');

@@ -108,11 +108,14 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
     unawaited(_fetchNicknames());
 
     ///仅设备在线且不支持自主上报时做锁端补全：离线拉不到锁端数据；
-    ///支持自主上报的锁变化会自行上报服务器，无需进页面全量拉取
+    ///已配网且支持自主上报的锁变化会自行上报服务器，无需进页面全量拉取
     final device = _device;
+    final canAutoUpload = device != null &&
+        device.doorlockIsConfigNet &&
+        DoorLockHelper.supportDevAutoUpload(deviceId: widget.deviceId);
     if (device != null &&
         device.doolockCmdStatus != DoolockCmdStatus.offline &&
-        !DoorLockHelper.supportDevAutoUpload(deviceId: widget.deviceId)) {
+        !canAutoUpload) {
       await getLockEndUnlocking();
       if (!mounted) return;
       await _fetchFromServer(showLoading: false);
@@ -429,10 +432,18 @@ class _DoorLockPasswordListPageState extends State<DoorLockPasswordListPage> {
   ///点击“生成密码”：跳转生成密码页（永久/自定义/限时/单次/循环；
   ///临时密码模式仅自定义 Tab），成功后刷新列表
   Future<void> _onCreatePassword() async {
-    if (_device == null) {
+    final device = _device;
+    if (device == null) {
       _showSnack('设备不存在');
       return;
     }
+
+    ///临时密码不需要保活；其余类型先确认可独占设备，被占用时直接阻断
+    if (!_isTmpPwd && device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
+      if (await _operation.beforeNetIp() == false) return;
+      if (!mounted) return;
+    }
+
     final created = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
         builder: (_) => DoorLockCreatePasswordPage(
