@@ -155,6 +155,10 @@ mixin DoorLockOperationMixin on ChangeNotifier {
 
   @override
   dispose() {
+    ///控制器销毁后不再接收共享连接的升级状态
+    bleUpgrade?.clearListen();
+    bleUpgrade = null;
+
     if (!keepBleConnectWhenDispose) {
       LogUtils.doorLock.log('stopBleConnect when dispose：$deviceId');
       doorLockBleApi?.bleObject.stopConnect();

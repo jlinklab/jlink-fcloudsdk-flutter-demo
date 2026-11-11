@@ -5,6 +5,7 @@ import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/ble_by_sdk/ble_device.dart';
 import 'package:fcloudsdk/door_lock/ble_active.dart';
 import 'package:fcloudsdk/door_lock/door_lock_ble_api.dart';
+import 'package:fcloudsdk/door_lock/door_lock_ble_manager.dart';
 import 'package:fcloudsdk/door_lock/door_lock_ble_model.dart';
 import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
 import 'package:fcloudsdk/door_lock/door_lock_key_value.dart';
@@ -94,7 +95,6 @@ class MainBleActiveController extends ChangeNotifier {
     model.addDeviceType = AddDeviceType.blueToothPair;
     model.deviceId = bleDevice.sn;
     model.pid = bleDevice.pid;
-    doorLockBleApi = DoorLockBleApi(uuid: bleDevice.uuid, activeSn: '');
   }
 
   void _log(String msg, {bool showInPage = true}) {
@@ -113,6 +113,23 @@ class MainBleActiveController extends ChangeNotifier {
         'blueUUID=${bleDevice.uuid}, pid=${model.pid}',
         showInPage: false);
     _updateView();
+
+    ///避免复用其他页面残留的原生句柄
+    final previousBleObject =
+        DoorLockBleManager.instance.hadOrNull(bleDevice.uuid);
+    if (previousBleObject != null) {
+      _log(
+          '配对前发现旧蓝牙对象: handle=${previousBleObject.handle}, '
+          'isConnecting=${previousBleObject.isConnecting}, '
+          'isConnected=${previousBleObject.isConnected}',
+          showInPage: false);
+      await previousBleObject.dispose();
+      DoorLockBleManager.instance.remove(bleDevice.uuid);
+      _log('配对前旧蓝牙对象已释放', showInPage: false);
+    } else {
+      _log('配对前无旧蓝牙对象', showInPage: false);
+    }
+    doorLockBleApi = DoorLockBleApi(uuid: bleDevice.uuid, activeSn: '');
 
     ///获取accessToken（未加密）
     String accessToken = '';
@@ -651,7 +668,7 @@ class MainBleActiveController extends ChangeNotifier {
       doorLockBleAbility = await doorLockBleApi.requestAbility();
       _log('获取锁板能力集(EB)成功');
     } catch (e) {
-      _log('获取锁板能力集(EB)失败: $e');
+      _log('获取锁板能力集(EB)失败: $e', showInPage: false);
     }
 
     ///获取锁板额外的产品信息

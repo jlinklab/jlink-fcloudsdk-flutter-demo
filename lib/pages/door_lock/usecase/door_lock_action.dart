@@ -289,7 +289,9 @@ mixin DoorLockActionMixin on ChangeNotifier, DoorLockOperationMixin {
           device.yearSyncState =
               MapParser.queryBool(map, 'yearSyncState', false);
         }
-        notifyListeners();
+        if (hasListeners) {
+          notifyListeners();
+        }
       }
     });
   }

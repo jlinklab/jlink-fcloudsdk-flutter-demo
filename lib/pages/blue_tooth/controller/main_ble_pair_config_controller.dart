@@ -187,11 +187,17 @@ class MainBlePairConfigController extends ChangeNotifier {
         await _showSelfCheckDialog();
       }
 
-      if (args.exInfo?.byte2.supportConnectToWiFi ?? false) {
+      var supportLowPowerBle = args.exInfo?.byte1.supportBluetoothOnLockPlate ??
+          DoorLockKeyValueLocal.supportLowPowerBle(deviceId: model.deviceId);
+      var supportConnectToWifi = args.exInfo?.byte2.supportConnectToWiFi ??
+          DoorLockKeyValueLocal.supportConnectToWifi(deviceId: model.deviceId);
+
+      ///仅纯蓝牙锁（不支持WiFi连接且支持低功耗蓝牙）跳过WiFi配网
+      if (!(supportConnectToWifi == false && supportLowPowerBle)) {
         ///支持配网，WiFi输入后真配网
         await _wifiInputAndDistribute();
       } else {
-        ///不支持配网，直接完成
+        ///纯蓝牙锁不支持配网，直接完成
         _finish();
       }
       return;
@@ -381,7 +387,7 @@ class MainBlePairConfigController extends ChangeNotifier {
       _log(
           '获取管理员能力集成功: ${doorManagerAbility != null ? bytesToBin(doorManagerAbility!.values) : null}');
     } catch (e) {
-      _log('获取管理员能力集失败: $e');
+      _log('获取管理员能力集失败: $e', showInPage: false);
     }
   }
 
@@ -392,7 +398,7 @@ class MainBlePairConfigController extends ChangeNotifier {
       _log(
           '获取用户能力集成功: ${doorUserAbility != null ? bytesToBin(doorUserAbility!.values) : null}');
     } catch (e) {
-      _log('获取用户能力集失败: $e');
+      _log('获取用户能力集失败: $e', showInPage: false);
     }
   }
 
@@ -409,7 +415,7 @@ class MainBlePairConfigController extends ChangeNotifier {
       );
       _log('能力集影子上报成功');
     } catch (e) {
-      _log('能力集影子上报失败: $e');
+      _log('能力集影子上报失败: $e', showInPage: false);
     }
   }
 
@@ -1235,8 +1241,7 @@ class MainBlePairConfigController extends ChangeNotifier {
                 var pwd = pwdController.text.trim();
                 if (pwd.length >= minLength && pwd.length <= maxLength) {
                   if (!complyNationalStandard(pwd)) {
-                    KToast.show(
-                        status: '密码过于简单，不能使用连续或重复数字');
+                    KToast.show(status: '密码过于简单，不能使用连续或重复数字');
                     return;
                   }
                   Navigator.of(dialogContext).pop(pwd);
