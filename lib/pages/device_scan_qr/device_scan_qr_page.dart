@@ -101,7 +101,7 @@ class _DeviceScanQrPageState extends State<DeviceScanQrPage>
     }
     int timeSeconds = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     String url =
-        'https://pairing.xmcsrv.net/api/query?B=$_bRandomCodeStr&T=$timeSeconds';
+        'https://pairing.jftechws.com/api/query?B=$_bRandomCodeStr&T=$timeSeconds';
     if (Platform.isIOS) {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       String appVersion = packageInfo.version;

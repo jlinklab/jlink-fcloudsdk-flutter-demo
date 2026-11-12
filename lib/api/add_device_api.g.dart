@@ -14,7 +14,7 @@ class _AddDeviceAPI implements AddDeviceAPI {
     this.baseUrl,
     this.errorLogger,
   }) {
-    baseUrl ??= 'https://jvss.xmcsrv.net';
+    baseUrl ??= 'https://jvss.jftechws.com';
   }
 
   final Dio _dio;
