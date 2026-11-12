@@ -2,9 +2,9 @@
 ///在设置国家之后,进行对应的修改.
 class ApiUrl {
   static String capsUrl = 'https://caps.jftechws.com';
-  static String amsUrl = 'https://rs.xmeye.net'; //rs
+  static String amsUrl = 'https://ams.jftechws.com';
   static String bossUrl = 'https://boss-api.jftechsoft.com';
-  static String jvssUrl = 'https://jvss.xmcsrv.net';
+  static String jvssUrl = 'https://jvss.jftechws.com';
   static String openApiUrl = 'https://api.jftechws.com';
 
   /// googleHome

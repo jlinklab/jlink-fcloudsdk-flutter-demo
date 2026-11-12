@@ -8,7 +8,7 @@ part 'add_device_api.g.dart';
 
 ///脚本  flutter packages pub run build_runner build
 
-@RestApi(baseUrl: "https://jvss.xmcsrv.net", parser: Parser.JsonSerializable)
+@RestApi(baseUrl: "https://jvss.jftechws.com", parser: Parser.JsonSerializable)
 abstract class AddDeviceAPI {
   factory AddDeviceAPI(Dio dio, {String baseUrl}) = _AddDeviceAPI;
 

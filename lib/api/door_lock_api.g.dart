@@ -14,7 +14,7 @@ class _DoorLockAPI implements DoorLockAPI {
     this.baseUrl,
     this.errorLogger,
   }) {
-    baseUrl ??= 'https://jvss.xmcsrv.net';
+    baseUrl ??= 'https://jvss.jftechws.com';
   }
 
   final Dio _dio;

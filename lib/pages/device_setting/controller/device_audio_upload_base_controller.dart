@@ -473,7 +473,7 @@ abstract class DeviceAudioUploadBaseController with ChangeNotifier {
     }
     KToast.show();
     String voice = sexType == 1 ? 'female' : 'male';
-    String urlString = 'https://tts.xmcsrv.net/tts';
+    String urlString = 'https://tts.jftechws.com/tts';
     var request = http.Request('POST', Uri.parse(urlString));
     request.body = '{"text":"${ttsVoiceText.value}","voice":"$voice"}';
     request.headers['Content-Type'] = 'application/json';

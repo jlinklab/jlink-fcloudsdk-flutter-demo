@@ -79,7 +79,7 @@ class _ShareQRPageState extends State<ShareQRPage> {
       info = await AccountAPI.instance.xcEncodeInfo(encodeStr: encodeInfo);
       if (mounted) {
         setState(() {
-          _qrData = 'https://d.xmeye.net/fcloudsdkdemo?shareKey=${info['key']}';
+          _qrData = 'https://d.jfapp.net/fcloudsdkdemo?shareKey=${info['key']}';
           _isLoading = false;
         });
       }

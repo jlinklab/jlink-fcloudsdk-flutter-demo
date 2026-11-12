@@ -8,7 +8,7 @@ part 'door_lock_api.g.dart';
 
 ///脚本  flutter packages pub run build_runner build
 
-@RestApi(baseUrl: "https://jvss.xmcsrv.net", parser: Parser.JsonSerializable)
+@RestApi(baseUrl: "https://jvss.jftechws.com", parser: Parser.JsonSerializable)
 abstract class DoorLockAPI {
   factory DoorLockAPI(Dio dio, {String baseUrl}) = _DoorLockAPI;
 
