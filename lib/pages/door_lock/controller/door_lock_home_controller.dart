@@ -11,6 +11,7 @@ import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/pages/add_device/manager/add_device_permission_manager.dart';
 import 'package:fcloudsdk_example/pages/add_device/manager/global_ble_search_manager.dart';
 import 'package:fcloudsdk_example/pages/door_lock/model/user_manager_ui.dart';
+import 'package:fcloudsdk_example/pages/door_lock/setting/door_lock_setting_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_action.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:fcloudsdk_example/utils/debounce_throttle.dart';
@@ -283,6 +284,9 @@ class DoorLockHomeController extends DoorLockPageController
       userManagerUIList.add(UserManagerUI(type: JvssOperateType.operateRecord));
     }
 
+    ///设置（始终显示）
+    userManagerUIList.add(UserManagerUI(type: JvssOperateType.settings));
+
     notifyListeners();
   }
 
@@ -292,6 +296,15 @@ class DoorLockHomeController extends DoorLockPageController
   ///- skin/card/palmprint/fingervein/palmVein：跳转锁端录入类通用列表页（列表+锁端补全+录入+删除+详情）
   void checkUserManager(UserManagerUI item) {
     if (!context.mounted) return;
+
+    if (item.type == JvssOperateType.settings) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => DoorLockSettingPage(deviceId: deviceId),
+        ),
+      );
+      return;
+    }
 
     if (item.type == JvssOperateType.password) {
       Navigator.of(context).push(

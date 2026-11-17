@@ -363,6 +363,44 @@ class _DoorLockAPI implements DoorLockAPI {
   }
 
   @override
+  Future<dynamic> queryOnline({
+    required String sn,
+    List<String>? confs,
+    required Map<String, dynamic> data,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {
+      'sn': sn,
+      'confs': confs,
+      'data': data,
+    };
+    _data.removeWhere((k, v) => v == null);
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/device_cfg/config/app/queryOnline/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
   Future<dynamic> getOrUpdateFirmwareVersion({
     required String deviceNo,
     String? ver,

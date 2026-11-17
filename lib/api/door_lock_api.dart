@@ -96,6 +96,15 @@ abstract class DoorLockAPI {
     @Field('data') required Map<String, dynamic> data,
   });
 
+  ///获取门锁在线配置（国内锁）
+  @POST('/v3/device_cfg/config/app/queryOnline$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> queryOnline({
+    @Field('sn') required String sn,
+    @Field('confs') List<String>? confs,
+    @Field('data') required Map<String, dynamic> data,
+  });
+
   ///新增或更新门锁固件版本
   @POST('/v3/device/getOrUpdateFirmwareVersion$uselessSegmentBase')
   @Headers({'host': jvss})
@@ -189,7 +198,7 @@ abstract class DoorLockAPI {
   @Headers({'host': jvss})
   Future<dynamic> getUserGroupListByPage(@Body() Map<String, dynamic> body);
 
-    ///查询门锁配置
+  ///查询门锁配置
   @POST('/v3/doorLockInfo/selOne$uselessSegmentBase')
   @Headers({'host': jvss})
   Future<dynamic> getDoorLockInfo(

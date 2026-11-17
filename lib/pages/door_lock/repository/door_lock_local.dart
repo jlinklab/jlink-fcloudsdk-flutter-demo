@@ -1,5 +1,3 @@
-
-
 import 'package:fcloudsdk/utils/sp_utils.dart';
 
 class DoorLockLocalCache {

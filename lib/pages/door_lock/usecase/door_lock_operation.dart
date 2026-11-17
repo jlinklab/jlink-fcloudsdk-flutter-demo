@@ -58,7 +58,7 @@ class DoorLockOperationObject extends ChangeNotifier
   @override
   bool get keepLoginWhenDispose => keepAlive ?? false;
 
-  DoorLockOperationObject({required this.deviceId, bool keepAlive = false}) {
+  DoorLockOperationObject({required this.deviceId, this.keepAlive = false}) {
     createDoorLockAPI();
     LogUtils.doorLock.log('DoorLockOperationObject create: $deviceId');
   }
@@ -395,6 +395,12 @@ mixin DoorLockOperationMixin on ChangeNotifier {
 
       doorLockBleApi = DoorLockBleApi(
           uuid: DoorLockHelper.getBlueUUID(deviceId)!, activeSn: device.uuid);
+      doorLockBleApi!.bleObject.onIdleDisconnectWarning = () {
+        LogUtils.doorLock
+            .log('show ble idle disconnect toast, deviceId=$deviceId');
+        KToast.show(status: '蓝牙长时间未操作，即将断开');
+      };
+      doorLockBleApi!.startDisConnectCount();
 
       bleUpgrade = BleUpgrade(
           uuid: DoorLockHelper.getBlueUUID(deviceId)!, activeSn: device.uuid);
@@ -1461,6 +1467,163 @@ mixin DoorLockOperationMixin on ChangeNotifier {
   ///锁端同步除 doorLockUser 全量上报外，还会把锁端离线密码（含已使用
   ///后失效的单次密码）全量上报 /unlockInfo/syncUnlockInfo（覆盖式语义）
   ///
+  ///验证管理员密码
+  Future<bool> verifyPwd(String password) async {
+    Future<bool> sendByBlue() async {
+      if (!await ensureBleReadyForCommand()) {
+        KToast.show(status: '蓝牙连接失败，请稍后重试');
+        return false;
+      }
+      Tuple2<bool, int>? result;
+      try {
+        result = await doorLockBleApi?.veriftPwd(pwd: password);
+      } catch (e) {
+        LogUtils.doorLock.log('verifyPwd sendByBlue error: $e');
+        result = null;
+      }
+      if (result == null) {
+        KToast.show(status: '管理员验证失败，请稍后重试');
+        return false;
+      }
+      if (!result.item1) {
+        final message = switch (result.item2) {
+          1 => '等待操作超时',
+          2 => '管理员密码验证失败',
+          3 => '操作已取消',
+          4 => '密码长度错误',
+          5 => '门锁正在开锁或关锁，请稍后重试',
+          _ => '管理员验证失败',
+        };
+        KToast.show(status: message);
+        return false;
+      }
+      return true;
+    }
+
+    Future<bool> sendByNetIp() async {
+      if (!await beforeNetIp(ignoreAddUserAdminNotskip: false)) {
+        return false;
+      }
+      final result =
+          await DoorLockNetIp.verifyPwd(deviceId: deviceId, pwd: password);
+      if (result.item1) return true;
+      if (result.item2?.err == DoorLockNetIpOperaterResult.needSync) {
+        return sendByBlue();
+      }
+      KToast.show(
+        status: result.item3 != null
+            ? kErrorMsg(result.item3)
+            : '管理员密码验证失败：${result.item2?.err ?? '未知错误'}',
+      );
+      return false;
+    }
+
+    if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
+      return sendByNetIp();
+    }
+    if (device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
+      return sendByBlue();
+    }
+    if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue) {
+      return await isBlueSwitchOn ? sendByBlue() : sendByNetIp();
+    }
+    if (DoorLockHelper.isLowPowerBle(deviceId) ||
+        DoorLockHelper.isOverSeaDoorLock(deviceId)) {
+      if (await waitBleOnline()) return sendByBlue();
+    }
+    KToast.show(status: '设备离线，无法验证管理员密码');
+    return false;
+  }
+
+  ///恢复锁具出厂设置
+  Future<bool> reset() async {
+    Future<bool> sendByBlue() async {
+      if (!await ensureBleReadyForCommand()) {
+        KToast.show(status: '蓝牙连接失败，请稍后重试');
+        return false;
+      }
+      Tuple2<bool, int>? result;
+      try {
+        result = await doorLockBleApi?.reset();
+      } catch (e) {
+        LogUtils.doorLock.log('reset sendByBlue error: $e');
+        result = null;
+      }
+      if (result == null) {
+        KToast.show(status: '恢复出厂设置失败，请稍后重试');
+        return false;
+      }
+      if (!result.item1) {
+        final message = switch (result.item2) {
+          1 => '操作已取消',
+          2 => '操作超时',
+          3 => '恢复出厂设置失败：未知错误',
+          _ => '恢复出厂设置失败',
+        };
+        KToast.show(status: message);
+        return false;
+      }
+      return true;
+    }
+
+    Future<bool> sendByNetIp() async {
+      if (!await beforeNetIp(
+        showLoading: false,
+        ignoreAddUserAdminNotskip: false,
+        needKeepAlive: false,
+      )) {
+        return false;
+      }
+
+      Future<Tuple3<bool, DoorLockNetIpResponse?, dynamic>> sendReset(
+          {required int retryCount}) async {
+        final result = await DoorLockNetIp.reset(deviceId: deviceId);
+        final error = result.item3;
+        if (!result.item1 &&
+            error is XCloudAPIException &&
+            error.code == -70527 &&
+            retryCount > 0) {
+          final wakeResult = await LPDHelper.me.wakeupDeviceIfNeed(
+            deviceId,
+            retryCount: 1,
+            showLoading: true,
+          );
+          if (wakeResult) {
+            await Future.delayed(const Duration(seconds: 3));
+            return sendReset(retryCount: retryCount - 1);
+          }
+        }
+        return result;
+      }
+
+      try {
+        final result = await sendReset(retryCount: 2);
+        if (result.item1) return true;
+        KToast.show(
+          status: result.item3 != null
+              ? kErrorMsg(result.item3)
+              : '恢复出厂设置失败：${result.item2?.err ?? '未知错误'}',
+        );
+      } catch (e) {
+        LogUtils.doorLock.log('reset sendByNetIp error: $e');
+        KToast.show(status: kErrorMsg(e));
+      }
+      return false;
+    }
+
+    if (device.doolockCmdStatus == DoolockCmdStatus.onlyWifi) {
+      return sendByNetIp();
+    }
+    if (device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
+      return sendByBlue();
+    }
+    if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue) {
+      return await isBlueSwitchOn ? sendByBlue() : sendByNetIp();
+    }
+    KToast.show(status: '当前设备离线，无法恢复出厂设置');
+    return false;
+  }
+
   ///[models] 为全量查询里已分出的离线密码条目：传入后不再重复查锁端；
   ///传空列表表示锁端无离线密码记录，直接跳过
   Future<void> syncOfflinePwdUnlockInfo(

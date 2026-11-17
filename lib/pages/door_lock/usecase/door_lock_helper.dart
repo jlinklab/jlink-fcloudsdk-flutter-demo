@@ -248,6 +248,74 @@ class DoorLockHelper {
     debugPrint('close BlueNetIp deivceId:$sn');
   }
 
+  ///查询海外锁在线配置
+  Future<List<String>?> queryOnlineConfigFromJvss(String deviceId) async {
+    try {
+      var result = await doorlockAPI.getDoorLockInfo(deviceSn: deviceId);
+      if (result is! Map) return null;
+
+      var bleConfig = <int, String>{};
+      for (var mapping in DoorLockConfigMapping.mappings) {
+        final value = result[mapping.jvssApiKey];
+        if (value != null) {
+          bleConfig[mapping.bleDpId.value] = value.toString();
+        }
+      }
+      if (bleConfig.isEmpty) return null;
+
+      var hexList = parseBleDeviceInfoToRaw(bleConfig);
+      LogUtils.doorLock.log('queryOnlineConfigFromJvss: $hexList');
+      if (hexList.isNotEmpty) {
+        await DoorLockLocalCache.saveDoorlockOnlineConfig(deviceId, hexList);
+        return hexList;
+      }
+    } catch (e) {
+      LogUtils.doorLock.log('queryOnlineConfigFromJvss error: $e');
+    }
+    return null;
+  }
+
+  ///查询门锁在线配置并缓存
+  Future<List<String>?> queryOnlineCongfig(
+    String deviceId, {
+    List<String>? confs,
+  }) async {
+    if (isOverSeaDoorLock(deviceId)) {
+      return queryOnlineConfigFromJvss(deviceId);
+    }
+    try {
+      var cmd = {
+        'OPDoorLockProCmd': {
+          'DoorConfig': {'RawData': <String>[]},
+        }
+      };
+      var result = await doorlockAPI.queryOnline(
+        sn: deviceId,
+        confs: confs,
+        data: cmd,
+      );
+      if (result is Map) {
+        final command = result['OPDoorLockProCmd'];
+        final config = command is Map ? command['DoorConfig'] : null;
+        final rawData = config is Map ? config['RawData'] : null;
+        if (rawData is List) {
+          var hexList = rawData
+              .map((e) => bytesToHex(base64Decode(e.toString())))
+              .toList();
+          LogUtils.doorLock.log('queryOnlineCongfig: $hexList');
+          if (hexList.isNotEmpty) {
+            await DoorLockLocalCache.saveDoorlockOnlineConfig(
+                deviceId, hexList);
+            return hexList;
+          }
+        }
+      }
+    } catch (e) {
+      LogUtils.doorLock.log('queryOnlineCongfig error: $e');
+    }
+    return null;
+  }
+
   ///上报门锁在线配置
   ///rawList: 十六进制字符串数组（几维协议格式）
   saveOnlineConfig(String deviceId, List<String> rawList) async {
@@ -543,6 +611,17 @@ class DoorLockHelper {
     return false;
   }
 
+  ///海外视频锁使用人形侦测合并页面
+  static bool showPirConfigToHumanDetection(String deviceId) {
+    final device = DeviceManager.instance.getDevice(deviceId: deviceId);
+    if (device == null || device.props == null || device.props!.isEmpty) {
+      return true;
+    }
+    return device.props!.any(
+      (prop) => prop.toLowerCase() == 'lockhum-dectfunction',
+    );
+  }
+
   /// 是否支持反锁状态显示
   static bool supportReverseLockState(String deviceId) {
     var device = DeviceManager.instance.getDevice(deviceId: deviceId);
@@ -628,6 +707,14 @@ class DoorLockHelper {
 
     return device.doorlockIsConfigNet &&
         (tempAbility || tmpProp || tempAbilityOld);
+  }
+
+  ///电机堵转时间候选档位，空列表表示不支持
+  static List<int> getLockedRotorTimes({required String deviceId}) {
+    final map = DoorLockShadow.doorFunction(deviceId: deviceId);
+    final list = map['LockedRotorTime'];
+    if (list is! List) return const [];
+    return list.whereType<num>().map((value) => value.toInt()).toList();
   }
 
   ///是否显示用户管理-临时密码（demo 不含电子钥匙分享判断）
