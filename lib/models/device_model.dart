@@ -494,11 +494,25 @@ class SharedDevice extends Device {
               .toList();
     }
     sharedDevice.props = json['props']?.cast<String>();
+
+    ///设备公共字段，与自有设备保持同一解析口径
+    sharedDevice.parentPid = json['parentPid'];
+    sharedDevice.localUiKey = json['localUiKey'];
+    sharedDevice.memberId = json['memberId'];
+    sharedDevice.devMac = json['devMac'];
+    sharedDevice.peripheralIdentifier = json['peripheralIdentifier'];
+    sharedDevice.userGroupId = json['userGroupId'];
+    sharedDevice.roomId = json['roomId'];
+    sharedDevice.roomName = json['roomName'];
     return sharedDevice;
   }
 
   @override
   bool hasPermission({required DevicePermission permission}) {
+    ///分享权限包含全部权限时，任何权限项都视为拥有
+    if (permissions.any((e) => e.enable && e.permission == 'all')) {
+      return true;
+    }
     SharedDevicePermission? devicePermission = permissions.firstWhereOrNull(
         (e) => e.permission == permission.value || e.permission == permission.name);
     if (devicePermission == null) {
