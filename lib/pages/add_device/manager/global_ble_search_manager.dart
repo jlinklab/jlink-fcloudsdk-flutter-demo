@@ -15,7 +15,6 @@ import 'package:fcloudsdk_example/pages/add_device/manager/add_device_permission
 import 'package:fcloudsdk_example/pages/add_device/models/scanned_device.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:fcloudsdk_example/utils/debounce_throttle.dart';
-import 'package:fcloudsdk_example/views/toast/toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -175,9 +174,9 @@ class GlobalBleSearchManager {
   }
 
   startScan({int? retryCountMax, bool lowFrequency = false}) async {
-    ///仅检查权限
+    ///仅检查权限：权限不足静默不扫描，提示由需要权限的页面自行负责
     if (!AddDevicePermissionUsecase.instance.isCanBleSearch()) {
-      KToast.show(status: '权限未开启');
+      LogUtils.doorLock.log('startScan skipped by permission');
       return;
     }
 

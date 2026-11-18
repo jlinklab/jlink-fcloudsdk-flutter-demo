@@ -111,4 +111,11 @@ class JFMatch {
     final RegExp regex = RegExp(r"^[\u4e00-\u9fa5a-zA-Z0-9]{4,16}$");
     return regex.hasMatch(str);
   }
+
+  ///是否包含中文，含中文和中文标点
+  static bool containsChinese(String text) {
+    return RegExp(
+            r'[\u4e00-\u9fa5\u3000-\u303F\uFF00-\uFFEF\u2018-\u201F\uFE10-\uFE1F\uFE30-\uFE4F]')
+        .hasMatch(text);
+  }
 }

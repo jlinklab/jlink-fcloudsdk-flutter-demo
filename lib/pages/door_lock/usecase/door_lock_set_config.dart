@@ -110,6 +110,8 @@ mixin DoorLockSetConfigMixin on DoorLockOperationMixin {
     var deviceConfig = keepAliveOk
         ? await getDoorLockConfig()
         : const Tuple2<List<String>, dynamic>(<String>[], null);
+
+    ///并发同步时BLE读取偶发静默失败（返回空），重试一次仍为空才回退服务器配置
     if (keepAliveOk && deviceConfig.item1.isEmpty) {
       deviceConfig = await getDoorLockConfig();
     }

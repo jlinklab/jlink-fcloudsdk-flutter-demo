@@ -1,8 +1,13 @@
 import 'package:fcloudsdk/door_lock/door_lock_business_model.dart';
 import 'package:fcloudsdk/door_lock/door_lock_parse.dart';
+import 'package:fcloudsdk_example/api/device_api.dart';
+import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/common/device_name.dart';
+import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/pages/door_lock/repository/door_lock_local.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/lock_config/door_lock_config_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
+import 'package:fcloudsdk_example/views/toast/toast.dart';
 import 'package:flutter/material.dart';
 
 ///门锁设置首页
@@ -17,6 +22,17 @@ class DoorLockSettingPage extends StatefulWidget {
 
 class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
   DoorLockSetConfig? _setConfig;
+  final TextEditingController _textController = TextEditingController();
+
+  ///当前设备名称，取设备列表中的昵称，取不到时兜底显示序列号
+  String get _deviceName =>
+      DeviceManager.instance.getDeviceName(deviceId: widget.deviceId) ??
+      widget.deviceId;
+
+  ///被分享的设备不允许修改名称
+  bool get _isSharedDevice =>
+      DeviceManager.instance.getDevice(deviceId: widget.deviceId)?.fromShare ??
+      false;
 
   @override
   void initState() {
@@ -27,6 +43,12 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
       _setConfig = parseRawToSetConfig(cachedRaw);
     }
     _queryConfig();
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
   }
 
   Future<void> _queryConfig() async {
@@ -52,6 +74,13 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
+                leading: const Icon(Icons.edit_outlined),
+                title: const Text('设备名称'),
+                subtitle: Text(_deviceName),
+                trailing: _isSharedDevice ? null : const Icon(Icons.edit),
+                onTap: _isSharedDevice ? null : _showChangeNameDialog,
+              ),
+              ListTile(
                 leading: const Icon(Icons.tune),
                 title: const Text('锁具配置'),
                 trailing: const Icon(Icons.chevron_right),
@@ -71,5 +100,67 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
         ),
       ),
     );
+  }
+
+  ///弹出输入框修改设备名称
+  void _showChangeNameDialog() {
+    _textController.text = _deviceName;
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('修改设备名称'),
+          content: TextField(
+            controller: _textController,
+            autofocus: true,
+            decoration: InputDecoration(
+              hintText: deviceNameHintText(),
+              border: const OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                _textController.text = _deviceName;
+                Navigator.of(dialogContext).pop();
+              },
+              child: const Text('取消'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                _changeDeviceName(_textController);
+              },
+              child: const Text('确定'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  ///校验并提交设备名称到服务器，成功后回写设备列表中的昵称
+  Future<void> _changeDeviceName(TextEditingController textController) async {
+    var vaild = await checkDeviceNameVaild(textController.text, context);
+    if (!vaild) {
+      textController.text = _deviceName;
+      return;
+    }
+    KToast.show();
+    await deviceAPI.updateDevice({
+      'deviceNo': widget.deviceId,
+      'deviceName': textController.text
+    }).then((value) {
+      DeviceManager.instance.getDevice(deviceId: widget.deviceId)?.nickname =
+          textController.text;
+      KToast.show(status: '保存成功');
+      if (mounted) {
+        setState(() {});
+      }
+    }).catchError((error) {
+      textController.text = _deviceName;
+      KToast.show(status: kErrorMsg(error));
+    });
   }
 }
