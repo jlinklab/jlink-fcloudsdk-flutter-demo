@@ -4,9 +4,11 @@ import 'package:fcloudsdk_example/api/device_api.dart';
 import 'package:fcloudsdk_example/common/code_prase.dart';
 import 'package:fcloudsdk_example/common/device_name.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
+import 'package:fcloudsdk_example/models/device_type.dart';
 import 'package:fcloudsdk_example/pages/door_lock/repository/door_lock_local.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/lock_config/door_lock_config_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
+import 'package:fcloudsdk_example/pages/home/move_device_page.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +35,20 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
   bool get _isSharedDevice =>
       DeviceManager.instance.getDevice(deviceId: widget.deviceId)?.fromShare ??
       false;
+
+  ///设备当前所在房间名，未设置时为空
+  String get _roomName =>
+      DeviceManager.instance.getDevice(deviceId: widget.deviceId)?.roomName ??
+      '';
+
+  ///分享的设备无权限设置位置，AHD 猫眼锁设置页无设备位置条目
+  bool get _showLocationEntry {
+    final device = DeviceManager.instance.getDevice(deviceId: widget.deviceId);
+    if (device == null || !device.isAdmin) {
+      return false;
+    }
+    return device.parentPid != DeviceType.PID_SMART_DOOR_LOCK_AHD.pid;
+  }
 
   @override
   void initState() {
@@ -80,6 +96,24 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
                 trailing: _isSharedDevice ? null : const Icon(Icons.edit),
                 onTap: _isSharedDevice ? null : _showChangeNameDialog,
               ),
+              if (_showLocationEntry)
+                ListTile(
+                  leading: const Icon(Icons.location_on_outlined),
+                  title: const Text('设备位置'),
+                  subtitle: Text(_roomName.isEmpty ? '未设置' : _roomName),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            MoveDevicePage(deviceNo: widget.deviceId),
+                      ),
+                    );
+                    if (mounted) {
+                      setState(() {});
+                    }
+                  },
+                ),
               ListTile(
                 leading: const Icon(Icons.tune),
                 title: const Text('锁具配置'),

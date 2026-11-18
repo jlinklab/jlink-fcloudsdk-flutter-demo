@@ -150,6 +150,15 @@ class Device {
 
   String? peripheralIdentifier;
 
+  ///设备所属家庭组id，设备列表数据字段
+  String? userGroupId;
+
+  ///设备所在房间id，设备列表数据字段
+  String? roomId;
+
+  ///设备所在房间名称，设备列表数据字段
+  String? roomName;
+
   ///整个云服务状态
   DeviceCloudService? cloudService({int? channel}) =>
       DeviceCloudServiceManager.instance
@@ -262,6 +271,9 @@ class Device {
     device.memberId = json['memberId'];
     device.devMac = json['devMac'];
     device.peripheralIdentifier = json['peripheralIdentifier'];
+    device.userGroupId = json['userGroupId'];
+    device.roomId = json['roomId'];
+    device.roomName = json['roomName'];
     device.props = json['props']?.cast<String>();
     return device;
   }
