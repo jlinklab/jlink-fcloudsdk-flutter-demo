@@ -170,15 +170,6 @@ class _AddDoorLockVaildTimeSelPageState
       return;
     }
 
-    ///时效循环/限时需蓝牙通道，提前提示不在附近
-    if (_timelinessType != DoorLockTimelinessType.permanent &&
-        device != null &&
-        device.doolockCmdStatus != DoolockCmdStatus.wifiAndBlue &&
-        device.doolockCmdStatus != DoolockCmdStatus.onlyBlue) {
-      _showSnack('限时/循环用户需在蓝牙可达范围内添加');
-      return;
-    }
-
     ///时效下发锁端/上报服务器前的准备（反算 validType/validTime）
     _vaildTimeData.getVaildTypeAndTime();
 
