@@ -101,6 +101,13 @@ class DeviceManager {
     ///同时刷新家庭组（静默获取默认家庭组ID）
     await UserGroupManager.instance.refreshUserGroups();
 
+    ///顺带刷新当前家庭组下的房间，供设备位置页直接取用
+    ///不等待结果，避免拖慢设备列表刷新；登录/切换账号后走到这里会自动覆盖上一次的房间数据
+    final String currentRoomGroupId = UserGroupManager.instance.currentGroupId;
+    if (currentRoomGroupId.isNotEmpty) {
+      UserGroupManager.instance.requestRoom(currentRoomGroupId);
+    }
+
     ///JVSS接口获取我的设备列表（过滤掉分享设备）
     final devicesJson = await doorlockAPI.getUserDeviceListByPage();
     final devices = Devices.fromJson(devicesJson);

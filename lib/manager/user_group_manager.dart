@@ -92,27 +92,36 @@ class UserGroupManager {
   /// 请求指定家庭组下的房间列表（默认房间 + 用户创建的房间）
   /// 返回是否成功获取到房间数据，供调用方决定是否重试
   Future<bool> requestRoom(String groupId) async {
+    //家庭组ID为空时请求不到有效房间，直接返回，避免发无效请求
+    if (groupId.isEmpty) {
+      debugPrint('获取到全部房间 家庭组ID为空，跳过');
+      return false;
+    }
     try {
-      //默认的房间
-      UserRoomResponse response = await homeAPI.getRoomByGrop({
-        'userGroupId': groupId,
-        'page': 1,
-        'limit': 999,
-        'pid': null,
-        'isDefault': true,
-      });
-      //创建的房间
-      UserRoomResponse createResponse = await homeAPI.getRoomByGrop({
-        'userGroupId': groupId,
-        'page': 1,
-        'limit': 999,
-        'pid': null,
-        'isDefault': false,
-      });
+      //默认的房间与用户创建的房间互不依赖，并行请求，减少一次往返
+      final List<UserRoomResponse> responses =
+          await Future.wait<UserRoomResponse>([
+        //默认的房间
+        homeAPI.getRoomByGrop({
+          'userGroupId': groupId,
+          'page': 1,
+          'limit': 999,
+          'pid': null,
+          'isDefault': true,
+        }),
+        //创建的房间
+        homeAPI.getRoomByGrop({
+          'userGroupId': groupId,
+          'page': 1,
+          'limit': 999,
+          'pid': null,
+          'isDefault': false,
+        }),
+      ]);
       _rooms.clear();
       _rooms.add(UserRoom(userGroupId: groupId, id: ''));
-      _rooms.addAll(response.rooms);
-      _rooms.addAll(createResponse.rooms);
+      _rooms.addAll(responses.first.rooms);
+      _rooms.addAll(responses.last.rooms);
       debugPrint('获取到全部房间-- ${_rooms.length}');
       return true;
     } catch (e) {

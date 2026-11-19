@@ -22,6 +22,9 @@ class _MoveDevicePageState extends State<MoveDevicePage> {
   UserRoom? checkedRoom;
   List<UserRoom> rooms = [];
 
+  ///用户是否已手动选过房间，选中后后台刷新不再覆写勾选态
+  bool _userPicked = false;
+
   Device? get _device =>
       DeviceManager.instance.getDevice(deviceId: widget.deviceNo);
 
@@ -39,21 +42,37 @@ class _MoveDevicePageState extends State<MoveDevicePage> {
     _loadRooms();
   }
 
-  ///进页拉取设备所属家庭组下的房间，拉完后按设备当前房间定位勾选项
+  ///进页先用已有的房间数据即时渲染，同时后台拉取最新房间后再刷新，
+  ///保证房间数据与当前账号一致，不会展示上一账号的脏数据
   Future<void> _loadRooms() async {
     final device = _device;
     if (device == null) {
       KToast.show(status: '获取设备信息失败');
       return;
     }
-    await UserGroupManager.instance.requestRoom(_userGroupId);
-    final List<UserRoom> list = UserGroupManager.instance.getUserRooms();
+    final String groupId = _userGroupId;
+
+    ///已有数据先上屏，避免整页空白等请求
+    final List<UserRoom> cachedRooms = UserGroupManager.instance.getUserRooms();
+    if (cachedRooms.isNotEmpty) {
+      rooms = cachedRooms;
+      checkedRoom = cachedRooms.firstWhereOrNull((e) => e.id == device.roomId);
+    }
+
+    if (groupId.isEmpty || !mounted) {
+      return;
+    }
+    await UserGroupManager.instance.requestRoom(groupId);
     if (!mounted) {
       return;
     }
+    final List<UserRoom> latestRooms = UserGroupManager.instance.getUserRooms();
     setState(() {
-      rooms = list;
-      checkedRoom = list.firstWhereOrNull((e) => e.id == device.roomId);
+      rooms = latestRooms;
+      if (!_userPicked) {
+        checkedRoom =
+            latestRooms.firstWhereOrNull((e) => e.id == device.roomId);
+      }
     });
   }
 
@@ -83,6 +102,7 @@ class _MoveDevicePageState extends State<MoveDevicePage> {
                 : null,
             onTap: () {
               setState(() {
+                _userPicked = true;
                 checkedRoom = room;
               });
             },
