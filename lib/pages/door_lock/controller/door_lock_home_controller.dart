@@ -7,6 +7,7 @@ import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk_example/common/event.dart';
 import 'package:fcloudsdk_example/event/event.dart';
 import 'package:fcloudsdk_example/generated/l10n.dart';
+import 'package:fcloudsdk_example/manager/user_group_manager.dart';
 import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/pages/add_device/manager/add_device_permission_manager.dart';
 import 'package:fcloudsdk_example/pages/add_device/manager/global_ble_search_manager.dart';
@@ -68,6 +69,9 @@ class DoorLockHomeController extends DoorLockPageController
     ///供缩略图外圈休眠颜色渲染
     _querySleepState();
 
+    ///预热房间列表，供设置页-设备位置进页直接取用
+    _warmUpRoomList();
+
     ///前置必要数据请求，如果仅做数据获取，可以提前到这些步骤之前做
     await DoorLockKeyValueManager.instance.requestService(deviceId);
     await DoorLockHelper.refreshDoorLockStatus(deviceId, queryNet: true);
@@ -82,6 +86,19 @@ class DoorLockHomeController extends DoorLockPageController
     _getUserManagerList();
 
     notifyListeners();
+  }
+
+  ///预热设备所属家庭组下的房间列表，不等待结果，避免拖慢首页渲染
+  ///家庭组取值口径与设备位置页一致：优先取设备上的，取不到兜底当前家庭组，
+  ///保证进设备位置页时缓存就属于该设备的家庭组，不会渲染出其他家庭组的房间名
+  void _warmUpRoomList() {
+    final String groupId = (device.userGroupId ?? '').isNotEmpty
+        ? device.userGroupId!
+        : UserGroupManager.instance.currentGroupId;
+    if (groupId.isEmpty) {
+      return;
+    }
+    UserGroupManager.instance.requestRoom(groupId);
   }
 
   ///查询门锁休眠状态（stateType:8 服务器快照，不唤醒设备）

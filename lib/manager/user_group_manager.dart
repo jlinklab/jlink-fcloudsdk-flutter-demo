@@ -39,6 +39,11 @@ class UserGroupManager {
   /// 当前家庭组下的房间列表，首位为 id 为空的「全部」占位
   final List<UserRoom> _rooms = [];
 
+  /// [_rooms] 所属的家庭组ID，用于校验缓存是否属于目标家庭组
+  /// 房间数据只在这一项与目标家庭组一致时才可复用，
+  /// 否则会把其他家庭组（或切换账号前的上一个家庭组）的房间名渲染出来
+  String _roomsGroupId = '';
+
   /// 当前选中的家庭组（默认第一个）
   UserGroup? _currentGroup;
 
@@ -122,6 +127,7 @@ class UserGroupManager {
       _rooms.add(UserRoom(userGroupId: groupId, id: ''));
       _rooms.addAll(responses.first.rooms);
       _rooms.addAll(responses.last.rooms);
+      _roomsGroupId = groupId;
       debugPrint('获取到全部房间-- ${_rooms.length}');
       return true;
     } catch (e) {
@@ -131,7 +137,20 @@ class UserGroupManager {
   }
 
   /// 获取有效房间列表，剔除 id 为空的「全部」占位
-  List<UserRoom> getUserRooms() {
+  /// [groupId] 传入时校验缓存归属：缓存不属于该家庭组则按「无缓存」处理返回空列表，
+  /// 调用方此时应等待 [requestRoom] 拉取到该家庭组的房间后再渲染
+  List<UserRoom> getUserRooms({String? groupId}) {
+    if (groupId != null && groupId.isNotEmpty && groupId != _roomsGroupId) {
+      return [];
+    }
     return List.from(_rooms)..removeWhere((e) => e.id?.isEmpty ?? false);
+  }
+
+  /// 清空家庭组与房间缓存（登出时调用，避免下一个账号读到上一个账号的数据）
+  void clear() {
+    _groups = [];
+    _currentGroup = null;
+    _rooms.clear();
+    _roomsGroupId = '';
   }
 }

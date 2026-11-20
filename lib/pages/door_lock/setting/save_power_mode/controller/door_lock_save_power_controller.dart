@@ -45,7 +45,9 @@ class DoorLockSavePowerController extends DoorLockPageController {
   bool get keepSyncWhenDispose => !fromHomePage;
 
   DoorLockSavePowerController(
-      {required super.context, required this.deviceId, this.fromHomePage = false}) {
+      {required super.context,
+      required this.deviceId,
+      this.fromHomePage = false}) {
     monitorModeStart = DateTime(DateTime.now().year);
     monitorModeEnd = DateTime(DateTime.now().year);
 

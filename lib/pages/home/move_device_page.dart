@@ -53,7 +53,10 @@ class _MoveDevicePageState extends State<MoveDevicePage> {
     final String groupId = _userGroupId;
 
     ///已有数据先上屏，避免整页空白等请求
-    final List<UserRoom> cachedRooms = UserGroupManager.instance.getUserRooms();
+    ///仅在缓存就属于该设备的家庭组时才复用，否则宁可空着等拉取结果，
+    ///不渲染其他家庭组/上一个账号的房间名
+    final List<UserRoom> cachedRooms =
+        UserGroupManager.instance.getUserRooms(groupId: groupId);
     if (cachedRooms.isNotEmpty) {
       rooms = cachedRooms;
       checkedRoom = cachedRooms.firstWhereOrNull((e) => e.id == device.roomId);
@@ -66,7 +69,8 @@ class _MoveDevicePageState extends State<MoveDevicePage> {
     if (!mounted) {
       return;
     }
-    final List<UserRoom> latestRooms = UserGroupManager.instance.getUserRooms();
+    final List<UserRoom> latestRooms =
+        UserGroupManager.instance.getUserRooms(groupId: groupId);
     setState(() {
       rooms = latestRooms;
       if (!_userPicked) {

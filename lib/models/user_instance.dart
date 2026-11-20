@@ -7,6 +7,7 @@ import 'package:fcloudsdk_example/common/code_prase.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/manager/idr_property_manager.dart';
 import 'package:fcloudsdk_example/manager/push_manager.dart';
+import 'package:fcloudsdk_example/manager/user_group_manager.dart';
 import 'package:fcloudsdk_example/pages/add_device/manager/global_ble_search_manager.dart';
 import 'package:fcloudsdk_example/pages/account/model/model.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
@@ -219,6 +220,8 @@ class UserInfo extends ChangeNotifier {
     await IDRPropertyManager.instance.dispose();
     // 清空设备管理器中的设备数据
     DeviceManager.instance.dispose();
+    // 清空家庭组与房间缓存，避免下一个账号读到上一个账号的房间数据
+    UserGroupManager.instance.clear();
     // 反初始化全局蓝牙搜索监听
     GlobalBleSearchManager.instance.unInit();
     notifyListeners();
