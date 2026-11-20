@@ -7052,6 +7052,146 @@ class TR {
       args: [],
     );
   }
+
+  /// `触发模式`
+  String get TR_Setting_Trigger_Mode {
+    return Intl.message(
+      '触发模式',
+      name: 'TR_Setting_Trigger_Mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `监控模式`
+  String get TR_Setting_Monitor_Mode {
+    return Intl.message(
+      '监控模式',
+      name: 'TR_Setting_Monitor_Mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `图传模式`
+  String get TR_Setting_Image_Transmission_Mode {
+    return Intl.message(
+      '图传模式',
+      name: 'TR_Setting_Image_Transmission_Mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `门锁在进入休眠状态后，在设定时间内不会断开WiFi，可进入预览查看视频，在到达设定时间后进入深度休眠，电量消耗较少`
+  String get TR_PowerSave_Trigger_Tip {
+    return Intl.message(
+      '门锁在进入休眠状态后，在设定时间内不会断开WiFi，可进入预览查看视频，在到达设定时间后进入深度休眠，电量消耗较少',
+      name: 'TR_PowerSave_Trigger_Tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `门锁在进入休眠状态后，不会主动断开WiFi，\n 可随时进入远程预览查看视频，电量消耗会增加`
+  String get TR_PowerSave_Monitor_Tip {
+    return Intl.message(
+      '门锁在进入休眠状态后，不会主动断开WiFi，\n 可随时进入远程预览查看视频，电量消耗会增加',
+      name: 'TR_PowerSave_Monitor_Tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `门锁在进入休眠状态后，会立刻断开WiFi，\n进入 单向唤醒模式，无法远程操作，电量消耗低`
+  String get TR_PowerSave_Photo_Tip {
+    return Intl.message(
+      '门锁在进入休眠状态后，会立刻断开WiFi，\n进入 单向唤醒模式，无法远程操作，电量消耗低',
+      name: 'TR_PowerSave_Photo_Tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `WiFi网络异常时，门锁为避免频繁连 接，会进入深度休眠或离线`
+  String get TR_PowerSave_Monitor_Important_Tip {
+    return Intl.message(
+      'WiFi网络异常时，门锁为避免频繁连 接，会进入深度休眠或离线',
+      name: 'TR_PowerSave_Monitor_Important_Tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `时间段`
+  String get TR_PowerSave_Period {
+    return Intl.message('时间段', name: 'TR_PowerSave_Period', desc: '', args: []);
+  }
+
+  /// `{param0}分{param1}秒`
+  String TR_PowerSave_ShowTimeUnit(Object param0, Object param1) {
+    return Intl.message(
+      '$param0分$param1秒',
+      name: 'TR_PowerSave_ShowTimeUnit',
+      desc: '',
+      args: [param0, param1],
+    );
+  }
+
+  /// `全天`
+  String get TR_Common_AllDay {
+    return Intl.message('全天', name: 'TR_Common_AllDay', desc: '', args: []);
+  }
+
+  /// `次日`
+  String get TR_Common_NextDay {
+    return Intl.message('次日', name: 'TR_Common_NextDay', desc: '', args: []);
+  }
+
+  /// `设备已进入深度休眠状态，请手动唤醒后 继续访问设备`
+  String get TR_PowerSave_DeepSleepTip {
+    return Intl.message(
+      '设备已进入深度休眠状态，请手动唤醒后 继续访问设备',
+      name: 'TR_PowerSave_DeepSleepTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `获取数据失败`
+  String get TR_Common_DataGetFailed {
+    return Intl.message(
+      '获取数据失败',
+      name: 'TR_Common_DataGetFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `保存成功，设备将在下一次 唤醒联网后同步生效`
+  String get TR_PowerSave_SuccessToShadow {
+    return Intl.message(
+      '保存成功，设备将在下一次 唤醒联网后同步生效',
+      name: 'TR_PowerSave_SuccessToShadow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `时间`
+  String get TR_Common_Time {
+    return Intl.message('时间', name: 'TR_Common_Time', desc: '', args: []);
+  }
+
+  /// `分钟`
+  String get TR_Common_Minute {
+    return Intl.message('分钟', name: 'TR_Common_Minute', desc: '', args: []);
+  }
+
+  /// `自定义`
+  String get TR_Common_Customize {
+    return Intl.message('自定义', name: 'TR_Common_Customize', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

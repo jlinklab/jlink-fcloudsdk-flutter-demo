@@ -843,5 +843,22 @@
   "tr_common_security_verification": "安全验证",
   "doorlock_bluetooth_disconnect_tip": "请确认蓝牙是否打开",
   "tr_doorlock_uninit_can_not_operation_tips_ios": "您没有在门外操作按键完成配网操作，门锁暂时无法正常使用",
-  "tr_ble_doorlock_connect_fail_confirm_tips": "当前设备可能不在附近或已休眠，是否继续操作？"
+  "tr_ble_doorlock_connect_fail_confirm_tips": "当前设备可能不在附近或已休眠，是否继续操作？",
+  "TR_Setting_Trigger_Mode": "触发模式",
+  "TR_Setting_Monitor_Mode": "监控模式",
+  "TR_Setting_Image_Transmission_Mode": "图传模式",
+  "TR_PowerSave_Trigger_Tip": "门锁在进入休眠状态后，在设定时间内不会断开WiFi，可进入预览查看视频，在到达设定时间后进入深度休眠，电量消耗较少",
+  "TR_PowerSave_Monitor_Tip": "门锁在进入休眠状态后，不会主动断开WiFi，\n 可随时进入远程预览查看视频，电量消耗会增加",
+  "TR_PowerSave_Photo_Tip": "门锁在进入休眠状态后，会立刻断开WiFi，\n进入 单向唤醒模式，无法远程操作，电量消耗低",
+  "TR_PowerSave_Monitor_Important_Tip": "WiFi网络异常时，门锁为避免频繁连 接，会进入深度休眠或离线",
+  "TR_PowerSave_Period": "时间段",
+  "TR_PowerSave_ShowTimeUnit": "{param0}分{param1}秒",
+  "TR_Common_AllDay": "全天",
+  "TR_Common_NextDay": "次日",
+  "TR_PowerSave_DeepSleepTip": "设备已进入深度休眠状态，请手动唤醒后 继续访问设备",
+  "TR_Common_DataGetFailed": "获取数据失败",
+  "TR_PowerSave_SuccessToShadow": "保存成功，设备将在下一次 唤醒联网后同步生效",
+  "TR_Common_Time": "时间",
+  "TR_Common_Minute": "分钟",
+  "TR_Common_Customize": "自定义"
 }

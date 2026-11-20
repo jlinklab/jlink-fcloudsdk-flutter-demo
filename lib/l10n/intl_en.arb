@@ -843,5 +843,22 @@
   "tr_common_security_verification": "Security verification",
   "doorlock_bluetooth_disconnect_tip": "Please check if Bluetooth is turned on",
   "tr_doorlock_uninit_can_not_operation_tips_ios": "You have not completed network configuration by using the external button. The lock may not function properly",
-  "tr_ble_doorlock_connect_fail_confirm_tips": "The current device may not be nearby or may be in sleep mode. Do you want to continue?"
+  "tr_ble_doorlock_connect_fail_confirm_tips": "The current device may not be nearby or may be in sleep mode. Do you want to continue?",
+  "TR_Setting_Trigger_Mode": "Trigger Mode",
+  "TR_Setting_Monitor_Mode": "Monitor Mode",
+  "TR_Setting_Image_Transmission_Mode": "Image Transmission Mode",
+  "TR_PowerSave_Trigger_Tip": "After the door lock enters sleep mode, it will not disconnect from WiFi within the set time, allowing preview of videos. After the set time, it enters deep sleep with less power consumption.",
+  "TR_PowerSave_Monitor_Tip": "After entering sleep mode, the door lock will not actively disconnect from WiFi,\nallowing remote preview of videos at any time, with increased power consumption.",
+  "TR_PowerSave_Photo_Tip": "After entering sleep mode, the door lock will immediately disconnect from WiFi,\nentering a one-way wake-up mode, preventing remote operations with low power consumption.",
+  "TR_PowerSave_Monitor_Important_Tip": "In case of WiFi network issues, the door lock will enter deep sleep or go offline to avoid frequent connections.",
+  "TR_PowerSave_Period": "Period",
+  "TR_PowerSave_ShowTimeUnit": "{param0}'{param1}''",
+  "TR_Common_AllDay": "All Day",
+  "TR_Common_NextDay": "Next Day",
+  "TR_PowerSave_DeepSleepTip": "The device is deep Sleep. Please wake up manually to continue accessing the device",
+  "TR_Common_DataGetFailed": "Failed to get data",
+  "TR_PowerSave_SuccessToShadow": "Saved successfully. The changes will take effect after the device wakes up and connects to the network next time.",
+  "TR_Common_Time": "Time",
+  "TR_Common_Minute": "Minute",
+  "TR_Common_Customize": "Customize"
 }

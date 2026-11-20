@@ -20,51 +20,53 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(param0, param1) =>
+  static String m0(param0, param1) => "${param0}\'${param1}\'\'";
+
+  static String m1(param0, param1) =>
       "Show ${param0} frames in ${param1} seconds.";
 
-  static String m1(param0, param1, param2) =>
+  static String m2(param0, param1, param2) =>
       "AOV Frame Rate ${param0}, AOV Alarm Interval ${param1}, Maximum Event Recording Duration ${param2}";
 
-  static String m2(param0) =>
+  static String m3(param0) =>
       "AOV frame rate is ${param0}fps, with card recording";
 
-  static String m3(param0) =>
+  static String m4(param0) =>
       "AOV frame rate ${param0}fps, with infrared illumination and card recording";
 
-  static String m4(param0) =>
+  static String m5(param0) =>
       "Current battery level is below ${param0}. In a low battery mode, recording and alarm notifications will stop, and preview is only available through remote wake-up via app.";
 
-  static String m5(param0, param1, param2) =>
+  static String m6(param0, param1, param2) =>
       "AOV Frame Rate ${param0}, AOV Alarm Interval ${param1}, Maximum Event Recording Duration ${param2}, Infrared Fill Light";
 
-  static String m6(param0) =>
+  static String m7(param0) =>
       "Auto-switches to AOV mode when battery below ${param0}";
 
-  static String m7(level, isCharging) =>
+  static String m8(level, isCharging) =>
       "Battery level [${level}], charging [${isCharging}]";
 
-  static String m8(account) => "Are you sure to cancel share to ${account}?";
+  static String m9(account) => "Are you sure to cancel share to ${account}?";
 
-  static String m9(account) => "Are you sure to share device to ${account}?";
+  static String m10(account) => "Are you sure to share device to ${account}?";
 
-  static String m10(count) => "resend after ${count} seconds";
+  static String m11(count) => "resend after ${count} seconds";
 
-  static String m11(path) =>
+  static String m12(path) =>
       "No local firmware found, please put the .bin/.img firmware file into: ${path}";
 
-  static String m12(mail) => "will send verification code to ${mail}";
+  static String m13(mail) => "will send verification code to ${mail}";
 
-  static String m13(mail, phone) =>
+  static String m14(mail, phone) =>
       "you can choose either ${phone} or ${mail}, verification code will be sent to";
 
-  static String m14(phone) => "will send verification code to ${phone}";
+  static String m15(phone) => "will send verification code to ${phone}";
 
-  static String m15(deviceId) => "${deviceId} Record List";
+  static String m16(deviceId) => "${deviceId} Record List";
 
-  static String m16(level) => "4G signal level [${level}]";
+  static String m17(level) => "4G signal level [${level}]";
 
-  static String m17(level) => "WiFi signal level [${level}]";
+  static String m18(level) => "WiFi signal level [${level}]";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -106,6 +108,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "TR_Capture_Success": MessageLookupByLibrary.simpleMessage(
       "Capture successful",
     ),
+    "TR_Common_AllDay": MessageLookupByLibrary.simpleMessage("All Day"),
+    "TR_Common_Customize": MessageLookupByLibrary.simpleMessage("Customize"),
+    "TR_Common_DataGetFailed": MessageLookupByLibrary.simpleMessage(
+      "Failed to get data",
+    ),
+    "TR_Common_Minute": MessageLookupByLibrary.simpleMessage("Minute"),
+    "TR_Common_NextDay": MessageLookupByLibrary.simpleMessage("Next Day"),
+    "TR_Common_Time": MessageLookupByLibrary.simpleMessage("Time"),
     "TR_File_Size_Exceed_Max_Size": MessageLookupByLibrary.simpleMessage(
       "The File size exceeds the maximum limit",
     ),
@@ -134,6 +144,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "TR_Please_Enter_Alarm_Tips": MessageLookupByLibrary.simpleMessage(
       "Please fill the warning message",
     ),
+    "TR_PowerSave_DeepSleepTip": MessageLookupByLibrary.simpleMessage(
+      "The device is deep Sleep. Please wake up manually to continue accessing the device",
+    ),
+    "TR_PowerSave_Monitor_Important_Tip": MessageLookupByLibrary.simpleMessage(
+      "In case of WiFi network issues, the door lock will enter deep sleep or go offline to avoid frequent connections.",
+    ),
+    "TR_PowerSave_Monitor_Tip": MessageLookupByLibrary.simpleMessage(
+      "After entering sleep mode, the door lock will not actively disconnect from WiFi,\nallowing remote preview of videos at any time, with increased power consumption.",
+    ),
+    "TR_PowerSave_Period": MessageLookupByLibrary.simpleMessage("Period"),
+    "TR_PowerSave_Photo_Tip": MessageLookupByLibrary.simpleMessage(
+      "After entering sleep mode, the door lock will immediately disconnect from WiFi,\nentering a one-way wake-up mode, preventing remote operations with low power consumption.",
+    ),
+    "TR_PowerSave_ShowTimeUnit": m0,
+    "TR_PowerSave_SuccessToShadow": MessageLookupByLibrary.simpleMessage(
+      "Saved successfully. The changes will take effect after the device wakes up and connects to the network next time.",
+    ),
+    "TR_PowerSave_Trigger_Tip": MessageLookupByLibrary.simpleMessage(
+      "After the door lock enters sleep mode, it will not disconnect from WiFi within the set time, allowing preview of videos. After the set time, it enters deep sleep with less power consumption.",
+    ),
     "TR_Press_To_End_Record": MessageLookupByLibrary.simpleMessage(
       "Press to end recording",
     ),
@@ -146,17 +176,17 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "TR_Record_Prompt": MessageLookupByLibrary.simpleMessage("Record a beep"),
     "TR_Rule_Setting": MessageLookupByLibrary.simpleMessage("Smart Alert Rule"),
-    "TR_Set_Aov_Fps_Tips": m0,
+    "TR_Set_Aov_Fps_Tips": m1,
     "TR_Setting_4G_Network_Switching": MessageLookupByLibrary.simpleMessage(
       "4G Network Switching",
     ),
-    "TR_Setting_AOV_BlackLight_Blance_Tips": m1,
-    "TR_Setting_AOV_BlackLight_FPS_Description": m2,
+    "TR_Setting_AOV_BlackLight_Blance_Tips": m2,
+    "TR_Setting_AOV_BlackLight_FPS_Description": m3,
     "TR_Setting_AOV_Device_Config": MessageLookupByLibrary.simpleMessage(
       "AOV Device Settings",
     ),
-    "TR_Setting_AOV_FPS_Description": m3,
-    "TR_Setting_AOV_Low_Battery_Mode_Description": m4,
+    "TR_Setting_AOV_FPS_Description": m4,
+    "TR_Setting_AOV_Low_Battery_Mode_Description": m5,
     "TR_Setting_AOV_Low_Light_Human_Detected_White_Light_Color":
         MessageLookupByLibrary.simpleMessage(
           "In low light, AOV mode records in black and white, real-time view is black and white with infrared light on, and switches to color with white light when human is detected",
@@ -171,7 +201,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "TR_Setting_AOV_Work_Mode": MessageLookupByLibrary.simpleMessage(
       "AOV Mode",
     ),
-    "TR_Setting_Aov_Blance_tips": m5,
+    "TR_Setting_Aov_Blance_tips": m6,
     "TR_Setting_Aov_RecordLength": MessageLookupByLibrary.simpleMessage(
       "Maximum Event Recording Duration",
     ),
@@ -179,7 +209,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "TR_Setting_BatteryThreshold": MessageLookupByLibrary.simpleMessage(
       "Battery Threshold",
     ),
-    "TR_Setting_BatteryThreshold_Desc": m6,
+    "TR_Setting_BatteryThreshold_Desc": m7,
     "TR_Setting_Battery_Management": MessageLookupByLibrary.simpleMessage(
       "Battery management",
     ),
@@ -192,6 +222,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "TR_Setting_Device_Indicator_Light": MessageLookupByLibrary.simpleMessage(
       "Device Indicator Light",
     ),
+    "TR_Setting_Image_Transmission_Mode": MessageLookupByLibrary.simpleMessage(
+      "Image Transmission Mode",
+    ),
     "TR_Setting_Last_Week": MessageLookupByLibrary.simpleMessage("Last week"),
     "TR_Setting_Low_Power_Mode": MessageLookupByLibrary.simpleMessage(
       "Low battery mode",
@@ -201,6 +234,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "TR_Setting_Mode_Of_Work": MessageLookupByLibrary.simpleMessage(
       "Working mode",
+    ),
+    "TR_Setting_Monitor_Mode": MessageLookupByLibrary.simpleMessage(
+      "Monitor Mode",
     ),
     "TR_Setting_Number_Of_Alarms": MessageLookupByLibrary.simpleMessage(
       "Number of alarms",
@@ -221,6 +257,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Preview time",
     ),
     "TR_Setting_Signal": MessageLookupByLibrary.simpleMessage("Signal"),
+    "TR_Setting_Trigger_Mode": MessageLookupByLibrary.simpleMessage(
+      "Trigger Mode",
+    ),
     "TR_Setting_Wake_Up_Time": MessageLookupByLibrary.simpleMessage(
       "Wake-up time",
     ),
@@ -297,7 +336,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Humanoid detection switch",
     ),
     "basicSetting": MessageLookupByLibrary.simpleMessage("Basic Settings"),
-    "batteryInfo": m7,
+    "batteryInfo": m8,
     "blackWhiteMode": MessageLookupByLibrary.simpleMessage("Black & White"),
     "blueToothPermissionCancelTips": MessageLookupByLibrary.simpleMessage(
       "Without the permission to scan nearby Bluetooth devices, you cannot perform network configuration, search, or other operations using Bluetooth.",
@@ -306,7 +345,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "cancelBtn": MessageLookupByLibrary.simpleMessage("Cancel"),
     "cancelShare": MessageLookupByLibrary.simpleMessage("Cancel Share"),
-    "cancelShareContent": m8,
+    "cancelShareContent": m9,
     "cancelShareFailed": MessageLookupByLibrary.simpleMessage(
       "Cancel share failed",
     ),
@@ -338,8 +377,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "commonConfig": MessageLookupByLibrary.simpleMessage("Common Settings"),
     "confirmBtn": MessageLookupByLibrary.simpleMessage("Confirm"),
     "confirmShare": MessageLookupByLibrary.simpleMessage("Confirm Share"),
-    "confirmShareContent": m9,
-    "countDown": m10,
+    "confirmShareContent": m10,
+    "countDown": m11,
     "customerServiceCenter": MessageLookupByLibrary.simpleMessage(
       "Customer Service Center",
     ),
@@ -470,7 +509,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "firmwareEmptyTip": MessageLookupByLibrary.simpleMessage(
       "No firmware file",
     ),
-    "firmwareFirmwareDirTip": m11,
+    "firmwareFirmwareDirTip": m12,
     "firmwareLatest": MessageLookupByLibrary.simpleMessage(
       "Already up to date",
     ),
@@ -600,7 +639,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mailHint": MessageLookupByLibrary.simpleMessage("mail"),
     "mailPhone": MessageLookupByLibrary.simpleMessage("mail/phone"),
     "mailRegister": MessageLookupByLibrary.simpleMessage("Mail Register"),
-    "mailTip": m12,
+    "mailTip": m13,
     "mediaType": MessageLookupByLibrary.simpleMessage("media type"),
     "memoryCardError": MessageLookupByLibrary.simpleMessage(
       "Abnormal storage card",
@@ -668,12 +707,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "permIntercom": MessageLookupByLibrary.simpleMessage("Intercom"),
     "permSdRecord": MessageLookupByLibrary.simpleMessage("SD Card Record"),
     "phone": MessageLookupByLibrary.simpleMessage("phone no"),
-    "phoneMailTip": m13,
+    "phoneMailTip": m14,
     "phoneRegister": MessageLookupByLibrary.simpleMessage("Phone Register"),
     "phoneRule": MessageLookupByLibrary.simpleMessage(
       "Overseas mobile phone numbers need to add area code. eg:+1:80998098979",
     ),
-    "phoneTip": m14,
+    "phoneTip": m15,
     "pleaseCheckErrorCode": MessageLookupByLibrary.simpleMessage(
       "Please check the error code below or visit the Open Platform Documentation Center",
     ),
@@ -713,7 +752,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "recordAudio": MessageLookupByLibrary.simpleMessage("Audio Recording"),
     "recordClip": MessageLookupByLibrary.simpleMessage("Video Segment"),
-    "recordList": m15,
+    "recordList": m16,
     "recordMode": MessageLookupByLibrary.simpleMessage("REC Button"),
     "recordQuality": MessageLookupByLibrary.simpleMessage("Recording Quality"),
     "recordQualityBad": MessageLookupByLibrary.simpleMessage("Relatively Poor"),
@@ -787,7 +826,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "shareTo": MessageLookupByLibrary.simpleMessage("Share to"),
     "sharedAccounts": MessageLookupByLibrary.simpleMessage("Shared Accounts"),
     "sharpness": MessageLookupByLibrary.simpleMessage("Sharpness"),
-    "signal4GLevel": m16,
+    "signal4GLevel": m17,
     "smartInfrared": MessageLookupByLibrary.simpleMessage("Smart Infrared"),
     "smartWarmLight": MessageLookupByLibrary.simpleMessage("Smart Warm Light"),
     "smart_analyze_line_left": MessageLookupByLibrary.simpleMessage(
@@ -2042,6 +2081,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "wifi": MessageLookupByLibrary.simpleMessage("add via wifi"),
     "wifiPwdHint": MessageLookupByLibrary.simpleMessage("Wifi Password"),
-    "wifiSignalLevel": m17,
+    "wifiSignalLevel": m18,
   };
 }

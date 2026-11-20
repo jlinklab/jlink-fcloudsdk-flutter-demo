@@ -20,44 +20,46 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh';
 
-  static String m0(param0, param1) => "表示${param0}秒展示${param1}个画面";
+  static String m0(param0, param1) => "${param0}分${param1}秒";
 
-  static String m1(param0, param1, param2) =>
+  static String m1(param0, param1) => "表示${param0}秒展示${param1}个画面";
+
+  static String m2(param0, param1, param2) =>
       "AOV帧率${param0}，AOV报警间隔${param1}，事件录像最大时长${param2}";
 
-  static String m2(param0) => "AOV帧率${param0}fps，带卡录像";
+  static String m3(param0) => "AOV帧率${param0}fps，带卡录像";
 
-  static String m3(param0) => "AOV帧率${param0}fps,红外补光，带卡录像";
+  static String m4(param0) => "AOV帧率${param0}fps,红外补光，带卡录像";
 
-  static String m4(param0) =>
+  static String m5(param0) =>
       "目前电量低于${param0}，处于低电量模式 会停止录像和报警推送，只能通过APP远程唤醒进行预览";
 
-  static String m5(param0, param1, param2) =>
+  static String m6(param0, param1, param2) =>
       "AOV帧率${param0}，AOV报警间隔${param1}，事件录像最大时长${param2}，红外补光";
 
-  static String m6(param0) => "电量低于 ${param0} 自动进入AOV工作模式";
+  static String m7(param0) => "电量低于 ${param0} 自动进入AOV工作模式";
 
-  static String m7(level, isCharging) => "电量等级【${level}】,是否充电中【${isCharging}】";
+  static String m8(level, isCharging) => "电量等级【${level}】,是否充电中【${isCharging}】";
 
-  static String m8(account) => "确定取消分享给 ${account}？";
+  static String m9(account) => "确定取消分享给 ${account}？";
 
-  static String m9(account) => "确定将设备分享给 ${account}？";
+  static String m10(account) => "确定将设备分享给 ${account}？";
 
-  static String m10(count) => "${count}秒后重新发送";
+  static String m11(count) => "${count}秒后重新发送";
 
-  static String m11(path) => "未找到本地固件，请将 .bin/.img 固件文件放入目录：${path}";
+  static String m12(path) => "未找到本地固件，请将 .bin/.img 固件文件放入目录：${path}";
 
-  static String m12(mail) => "将发送验证码到邮箱:${mail}中";
+  static String m13(mail) => "将发送验证码到邮箱:${mail}中";
 
-  static String m13(mail, phone) => "将发送验证码到邮箱:${mail}中和手机:${phone}上,填入其中一个即可";
+  static String m14(mail, phone) => "将发送验证码到邮箱:${mail}中和手机:${phone}上,填入其中一个即可";
 
-  static String m14(phone) => "将发送验证码到${phone}上";
+  static String m15(phone) => "将发送验证码到${phone}上";
 
-  static String m15(deviceId) => "${deviceId} 回放列表";
+  static String m16(deviceId) => "${deviceId} 回放列表";
 
-  static String m16(level) => "4G信号等级【${level}】";
+  static String m17(level) => "4G信号等级【${level}】";
 
-  static String m17(level) => "WiFi信号等级【${level}】";
+  static String m18(level) => "WiFi信号等级【${level}】";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -85,6 +87,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "TR_AutoLightDetail": MessageLookupByLibrary.simpleMessage("通过环境自动开启和关闭灯光"),
     "TR_Capture_Failed": MessageLookupByLibrary.simpleMessage("抓图失败"),
     "TR_Capture_Success": MessageLookupByLibrary.simpleMessage("抓图成功"),
+    "TR_Common_AllDay": MessageLookupByLibrary.simpleMessage("全天"),
+    "TR_Common_Customize": MessageLookupByLibrary.simpleMessage("自定义"),
+    "TR_Common_DataGetFailed": MessageLookupByLibrary.simpleMessage("获取数据失败"),
+    "TR_Common_Minute": MessageLookupByLibrary.simpleMessage("分钟"),
+    "TR_Common_NextDay": MessageLookupByLibrary.simpleMessage("次日"),
+    "TR_Common_Time": MessageLookupByLibrary.simpleMessage("时间"),
     "TR_File_Size_Exceed_Max_Size": MessageLookupByLibrary.simpleMessage(
       "文件大小超过最大限制",
     ),
@@ -107,23 +115,43 @@ class MessageLookup extends MessageLookupByLibrary {
     "TR_Please_Enter_Alarm_Tips": MessageLookupByLibrary.simpleMessage(
       "请输入报警提示语",
     ),
+    "TR_PowerSave_DeepSleepTip": MessageLookupByLibrary.simpleMessage(
+      "设备已进入深度休眠状态，请手动唤醒后 继续访问设备",
+    ),
+    "TR_PowerSave_Monitor_Important_Tip": MessageLookupByLibrary.simpleMessage(
+      "WiFi网络异常时，门锁为避免频繁连 接，会进入深度休眠或离线",
+    ),
+    "TR_PowerSave_Monitor_Tip": MessageLookupByLibrary.simpleMessage(
+      "门锁在进入休眠状态后，不会主动断开WiFi，\n 可随时进入远程预览查看视频，电量消耗会增加",
+    ),
+    "TR_PowerSave_Period": MessageLookupByLibrary.simpleMessage("时间段"),
+    "TR_PowerSave_Photo_Tip": MessageLookupByLibrary.simpleMessage(
+      "门锁在进入休眠状态后，会立刻断开WiFi，\n进入 单向唤醒模式，无法远程操作，电量消耗低",
+    ),
+    "TR_PowerSave_ShowTimeUnit": m0,
+    "TR_PowerSave_SuccessToShadow": MessageLookupByLibrary.simpleMessage(
+      "保存成功，设备将在下一次 唤醒联网后同步生效",
+    ),
+    "TR_PowerSave_Trigger_Tip": MessageLookupByLibrary.simpleMessage(
+      "门锁在进入休眠状态后，在设定时间内不会断开WiFi，可进入预览查看视频，在到达设定时间后进入深度休眠，电量消耗较少",
+    ),
     "TR_Press_To_End_Record": MessageLookupByLibrary.simpleMessage("按下结束录音"),
     "TR_Press_To_Record": MessageLookupByLibrary.simpleMessage("按下后开始录音"),
     "TR_QR_Code_Has_Been_Used_Generate_Again":
         MessageLookupByLibrary.simpleMessage("二维码已被使用，请联系设备主账号再次生成"),
     "TR_Record_Prompt": MessageLookupByLibrary.simpleMessage("录制提示音"),
     "TR_Rule_Setting": MessageLookupByLibrary.simpleMessage("智能规则设置"),
-    "TR_Set_Aov_Fps_Tips": m0,
+    "TR_Set_Aov_Fps_Tips": m1,
     "TR_Setting_4G_Network_Switching": MessageLookupByLibrary.simpleMessage(
       "4G网络切换",
     ),
-    "TR_Setting_AOV_BlackLight_Blance_Tips": m1,
-    "TR_Setting_AOV_BlackLight_FPS_Description": m2,
+    "TR_Setting_AOV_BlackLight_Blance_Tips": m2,
+    "TR_Setting_AOV_BlackLight_FPS_Description": m3,
     "TR_Setting_AOV_Device_Config": MessageLookupByLibrary.simpleMessage(
       "AOV设备配置",
     ),
-    "TR_Setting_AOV_FPS_Description": m3,
-    "TR_Setting_AOV_Low_Battery_Mode_Description": m4,
+    "TR_Setting_AOV_FPS_Description": m4,
+    "TR_Setting_AOV_Low_Battery_Mode_Description": m5,
     "TR_Setting_AOV_Low_Light_Human_Detected_White_Light_Color":
         MessageLookupByLibrary.simpleMessage(
           "光线不足时，AOV模式下录像画面黑白，实时画面红外灯亮起画面黑白，检测到人形白光灯亮起画面彩色",
@@ -137,13 +165,13 @@ class MessageLookup extends MessageLookupByLibrary {
           "光线不足时，AOV模式下录像画面黑白，实时画面白光灯亮起画面彩色",
         ),
     "TR_Setting_AOV_Work_Mode": MessageLookupByLibrary.simpleMessage("AOV工作模式"),
-    "TR_Setting_Aov_Blance_tips": m5,
+    "TR_Setting_Aov_Blance_tips": m6,
     "TR_Setting_Aov_RecordLength": MessageLookupByLibrary.simpleMessage(
       "事件录像最大时长",
     ),
     "TR_Setting_Battery": MessageLookupByLibrary.simpleMessage("电池"),
     "TR_Setting_BatteryThreshold": MessageLookupByLibrary.simpleMessage("电量阈值"),
-    "TR_Setting_BatteryThreshold_Desc": m6,
+    "TR_Setting_BatteryThreshold_Desc": m7,
     "TR_Setting_Battery_Management": MessageLookupByLibrary.simpleMessage(
       "电池管理",
     ),
@@ -156,6 +184,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "TR_Setting_Device_Indicator_Light": MessageLookupByLibrary.simpleMessage(
       "设备指示灯",
     ),
+    "TR_Setting_Image_Transmission_Mode": MessageLookupByLibrary.simpleMessage(
+      "图传模式",
+    ),
     "TR_Setting_Last_Week": MessageLookupByLibrary.simpleMessage("最近一周"),
     "TR_Setting_Low_Power_Mode": MessageLookupByLibrary.simpleMessage("低电量模式"),
     "TR_Setting_Low_Power_Mode_Description":
@@ -163,6 +194,7 @@ class MessageLookup extends MessageLookupByLibrary {
           "当电量小于所设阈值时， 设备工作模式 会自动切换为低电量状态下工作模式",
         ),
     "TR_Setting_Mode_Of_Work": MessageLookupByLibrary.simpleMessage("工作模式"),
+    "TR_Setting_Monitor_Mode": MessageLookupByLibrary.simpleMessage("监控模式"),
     "TR_Setting_Number_Of_Alarms": MessageLookupByLibrary.simpleMessage("报警次数"),
     "TR_Setting_Performance": MessageLookupByLibrary.simpleMessage("性能模式"),
     "TR_Setting_Power_Level": MessageLookupByLibrary.simpleMessage("电量"),
@@ -174,6 +206,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "TR_Setting_Preview_Time": MessageLookupByLibrary.simpleMessage("预览时间"),
     "TR_Setting_Signal": MessageLookupByLibrary.simpleMessage("信号"),
+    "TR_Setting_Trigger_Mode": MessageLookupByLibrary.simpleMessage("触发模式"),
     "TR_Setting_Wake_Up_Time": MessageLookupByLibrary.simpleMessage("唤醒时间"),
     "TR_Sex_Female": MessageLookupByLibrary.simpleMessage("女"),
     "TR_Sex_Male": MessageLookupByLibrary.simpleMessage("男"),
@@ -220,7 +253,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "人形检测开关",
     ),
     "basicSetting": MessageLookupByLibrary.simpleMessage("基本设置"),
-    "batteryInfo": m7,
+    "batteryInfo": m8,
     "blackWhiteMode": MessageLookupByLibrary.simpleMessage("黑白模式"),
     "blueToothPermissionCancelTips": MessageLookupByLibrary.simpleMessage(
       "未获取到附近蓝牙设备扫描权限，将无法进行蓝牙配网、搜索等操作",
@@ -229,7 +262,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel": MessageLookupByLibrary.simpleMessage("取消"),
     "cancelBtn": MessageLookupByLibrary.simpleMessage("取消"),
     "cancelShare": MessageLookupByLibrary.simpleMessage("取消分享"),
-    "cancelShareContent": m8,
+    "cancelShareContent": m9,
     "cancelShareFailed": MessageLookupByLibrary.simpleMessage("取消分享失败"),
     "cancelShareSuccess": MessageLookupByLibrary.simpleMessage("取消分享成功"),
     "channel": MessageLookupByLibrary.simpleMessage("通道"),
@@ -255,8 +288,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "commonConfig": MessageLookupByLibrary.simpleMessage("通用配置"),
     "confirmBtn": MessageLookupByLibrary.simpleMessage("确定"),
     "confirmShare": MessageLookupByLibrary.simpleMessage("确认分享"),
-    "confirmShareContent": m9,
-    "countDown": m10,
+    "confirmShareContent": m10,
+    "countDown": m11,
     "customerServiceCenter": MessageLookupByLibrary.simpleMessage("客服中心"),
     "dayNightAuto": MessageLookupByLibrary.simpleMessage("自动切换"),
     "dayNightAutoTip": MessageLookupByLibrary.simpleMessage("根据环境光线自动切换日夜模式"),
@@ -345,7 +378,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "正在下载固件文件到本地",
     ),
     "firmwareEmptyTip": MessageLookupByLibrary.simpleMessage("暂无固件文件"),
-    "firmwareFirmwareDirTip": m11,
+    "firmwareFirmwareDirTip": m12,
     "firmwareLatest": MessageLookupByLibrary.simpleMessage("已是最新版本"),
     "firmwareLocalUpgrade": MessageLookupByLibrary.simpleMessage("本地升级"),
     "firmwareMainModule": MessageLookupByLibrary.simpleMessage("主模块"),
@@ -423,7 +456,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mailHint": MessageLookupByLibrary.simpleMessage("邮箱"),
     "mailPhone": MessageLookupByLibrary.simpleMessage("邮箱/手机号"),
     "mailRegister": MessageLookupByLibrary.simpleMessage("邮箱注册"),
-    "mailTip": m12,
+    "mailTip": m13,
     "mediaType": MessageLookupByLibrary.simpleMessage("媒体类型"),
     "memoryCardError": MessageLookupByLibrary.simpleMessage("存储卡异常"),
     "message": MessageLookupByLibrary.simpleMessage("消息"),
@@ -467,12 +500,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "permIntercom": MessageLookupByLibrary.simpleMessage("对讲"),
     "permSdRecord": MessageLookupByLibrary.simpleMessage("SD卡录像"),
     "phone": MessageLookupByLibrary.simpleMessage("手机号"),
-    "phoneMailTip": m13,
+    "phoneMailTip": m14,
     "phoneRegister": MessageLookupByLibrary.simpleMessage("手机号注册"),
     "phoneRule": MessageLookupByLibrary.simpleMessage(
       "国外手机号要加区号，如：+1:80998098979",
     ),
-    "phoneTip": m14,
+    "phoneTip": m15,
     "pleaseCheckErrorCode": MessageLookupByLibrary.simpleMessage(
       "请在下方查询错误码或前往开放平台文档中心",
     ),
@@ -506,7 +539,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "receiveFileSuccessTip": MessageLookupByLibrary.simpleMessage("固件文件接收成功"),
     "recordAudio": MessageLookupByLibrary.simpleMessage("录像音频"),
     "recordClip": MessageLookupByLibrary.simpleMessage("录像段"),
-    "recordList": m15,
+    "recordList": m16,
     "recordMode": MessageLookupByLibrary.simpleMessage("录像开关"),
     "recordQuality": MessageLookupByLibrary.simpleMessage("录像画质"),
     "recordQualityBad": MessageLookupByLibrary.simpleMessage("较差"),
@@ -564,7 +597,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "shareTo": MessageLookupByLibrary.simpleMessage("分享给"),
     "sharedAccounts": MessageLookupByLibrary.simpleMessage("已分享账号"),
     "sharpness": MessageLookupByLibrary.simpleMessage("清晰度"),
-    "signal4GLevel": m16,
+    "signal4GLevel": m17,
     "smartInfrared": MessageLookupByLibrary.simpleMessage("智能红外"),
     "smartWarmLight": MessageLookupByLibrary.simpleMessage("智能暖光"),
     "smart_analyze_line_left": MessageLookupByLibrary.simpleMessage("从左到右"),
@@ -1203,6 +1236,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "whiteLightColor": MessageLookupByLibrary.simpleMessage("白光全彩"),
     "wifi": MessageLookupByLibrary.simpleMessage("快速wifi配网"),
     "wifiPwdHint": MessageLookupByLibrary.simpleMessage("输入WIFI密码"),
-    "wifiSignalLevel": m17,
+    "wifiSignalLevel": m18,
   };
 }

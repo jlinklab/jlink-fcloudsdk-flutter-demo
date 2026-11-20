@@ -1,14 +1,19 @@
+import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/door_lock/door_lock_business_model.dart';
+import 'package:fcloudsdk/door_lock/door_lock_netip_model.dart';
 import 'package:fcloudsdk/door_lock/door_lock_parse.dart';
 import 'package:fcloudsdk_example/api/device_api.dart';
 import 'package:fcloudsdk_example/common/code_prase.dart';
 import 'package:fcloudsdk_example/common/device_name.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
+import 'package:fcloudsdk_example/manager/push_manager.dart';
 import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/models/device_type.dart';
+import 'package:fcloudsdk_example/pages/door_lock/model/door_lock_custom_enum.dart';
 import 'package:fcloudsdk_example/pages/door_lock/repository/door_lock_local.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/lock_config/door_lock_config_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/quick/door_lock_quick_fun_page.dart';
+import 'package:fcloudsdk_example/pages/door_lock/setting/save_power_mode/door_lock_save_power_home_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:fcloudsdk_example/pages/home/move_device_page.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
@@ -27,6 +32,12 @@ class DoorLockSettingPage extends StatefulWidget {
 class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
   DoorLockSetConfig? _setConfig;
   final TextEditingController _textController = TextEditingController();
+
+  ///是否支持省电模式
+  bool _supportPowerSavingMode = false;
+
+  ///当前省电模式显示文案
+  String _powerSaveModeText = '';
 
   ///当前设备名称，取设备列表中的昵称，取不到时兜底显示序列号
   String get _deviceName =>
@@ -62,6 +73,18 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
         device.hasPermission(permission: DevicePermission.DP_DoorLockEleKey);
   }
 
+  ///支持省电模式、已配网且有设置/电子钥匙权限的设备才显示省电模式入口
+  bool get _showPowerSaveEntry {
+    final device = DeviceManager.instance.getDevice(deviceId: widget.deviceId);
+    if (device == null || !_supportPowerSavingMode) {
+      return false;
+    }
+    return device.doorlockIsConfigNet &&
+        (device.hasPermission(permission: DevicePermission.DP_Settings) ||
+            device.hasPermission(
+                permission: DevicePermission.DP_DoorLockEleKey));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -71,6 +94,7 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
       _setConfig = parseRawToSetConfig(cachedRaw);
     }
     _queryConfig();
+    _queryPowerSaving();
   }
 
   @override
@@ -84,6 +108,34 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
         await DoorLockHelper.instance.queryOnlineCongfig(widget.deviceId);
     if (!mounted || rawList == null || rawList.isEmpty) return;
     _setConfig = parseRawToSetConfig(rawList);
+  }
+
+  ///查询是否支持省电模式，并从影子服务读取当前模式用于入口展示
+  Future<void> _queryPowerSaving() async {
+    final device = DeviceManager.instance.getDevice(deviceId: widget.deviceId);
+    _supportPowerSavingMode = (device?.props ?? []).contains('powerSavingMode');
+    if (!_supportPowerSavingMode) {
+      if (mounted) setState(() {});
+      return;
+    }
+    try {
+      final map = await JFApi.xcDevice.xcDevGetConfigFromShadowServer(
+          deviceId: widget.deviceId, configs: ['System.Sleep']);
+      final sleep = map['System.Sleep'];
+      if (sleep is Map) {
+        final model = DookLockSystemLightSleep.from(
+            Map<String, dynamic>.from(sleep['LightSleep'] as Map));
+        var currentMode = DoorLockSavePowerModeType.from(model.mode);
+        if (currentMode == DoorLockSavePowerModeType.monitorMode &&
+            model.supportMods.contains(4)) {
+          currentMode = DoorLockSavePowerModeType.monitorCustomMode;
+        }
+        _powerSaveModeText = currentMode.toStr();
+      }
+    } catch (e) {
+      //
+    }
+    if (mounted) setState(() {});
   }
 
   @override
@@ -155,6 +207,25 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
                   );
                 },
               ),
+              if (_showPowerSaveEntry)
+                ListTile(
+                  leading: const Icon(Icons.battery_saver_outlined),
+                  title: const Text('省电模式'),
+                  subtitle: _powerSaveModeText.isEmpty
+                      ? null
+                      : Text(_powerSaveModeText),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => DoorLockSavePowerModeHomePage(
+                          deviceId: widget.deviceId,
+                        ),
+                      ),
+                    );
+                    _queryPowerSaving();
+                  },
+                ),
             ],
           ),
         ),
@@ -214,6 +285,9 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
     }).then((value) {
       DeviceManager.instance.getDevice(deviceId: widget.deviceId)?.nickname =
           textController.text;
+
+      ///异步同步报警订阅中的设备名称，不阻塞保存提示
+      _syncSubscribeDeviceName(textController.text);
       KToast.show(status: '保存成功');
       if (mounted) {
         setState(() {});
@@ -222,5 +296,19 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
       textController.text = _deviceName;
       KToast.show(status: kErrorMsg(error));
     });
+  }
+
+  ///仅在服务端已订阅时重新订阅以更新推送中的设备名称，
+  ///避免把用户主动关闭的推送重新打开
+  Future<void> _syncSubscribeDeviceName(String deviceName) async {
+    if (_isSharedDevice) return;
+    if (await PushManager.instance.isSubscribed(widget.deviceId)) {
+      try {
+        await PushManager.instance
+            .subscribe(widget.deviceId, deviceName: deviceName);
+      } catch (e) {
+        debugPrint('更新订阅名称失败: $e');
+      }
+    }
   }
 }

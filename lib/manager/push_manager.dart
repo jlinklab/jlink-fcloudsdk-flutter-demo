@@ -70,6 +70,26 @@ class PushManager {
     await JFApi.xcAlarmMessage.xcUnsubscribeDevicesAlarmMessages(model);
   }
 
+  ///实时查询单个设备在服务端的报警订阅状态
+  ///token 为空或查询失败时返回 false，避免调用方误发起订阅
+  Future<bool> isSubscribed(String deviceId) async {
+    try {
+      String jfPushToken = await getJfPushToken();
+      if (jfPushToken.isEmpty) return false;
+
+      AlarmSubscribebaseBody sn = AlarmSubscribebaseBody(sn: deviceId);
+      Querysubscribe messageBody = Querysubscribe(
+        tks: [jfPushToken],
+        snlist: [sn],
+      );
+      return await JFApi.xcAlarmMessage
+          .xcAlarmQuerySubscribeStatus(messageBody);
+    } catch (e) {
+      debugPrint('查询订阅状态失败: $e');
+      return false;
+    }
+  }
+
   ///批量订阅
   Future subscribeBatch({required List<String> deviceIdList}) async {
     if (deviceIdList.isEmpty) {
