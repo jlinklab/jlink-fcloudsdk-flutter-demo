@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 
 import com.lib.xcloud_flutter.XCloudFlutterSDK;
 
-import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.embedding.android.FlutterFragmentActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 
 /**
@@ -24,7 +24,7 @@ import io.flutter.embedding.engine.FlutterEngine;
  * - ACTION_SEND + EXTRA_STREAM：微信/QQ 等分享面板
  * 文件复制到 App 内固件接收目录后通过 EventChannel 通知 Flutter 层。
  */
-public class MainActivity extends FlutterActivity {
+public class MainActivity extends FlutterFragmentActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int PERMISSION_REQUEST_CODE = 10000;

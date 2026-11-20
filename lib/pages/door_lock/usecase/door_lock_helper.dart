@@ -15,9 +15,14 @@ import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/models/device_type.dart';
 import 'package:fcloudsdk_example/pages/add_device/manager/global_ble_search_manager.dart';
+import 'package:fcloudsdk_example/pages/door_lock/model/door_lock_custom_enum.dart';
 import 'package:fcloudsdk_example/pages/door_lock/repository/door_lock_local.dart';
+import 'package:fcloudsdk_example/utils/app_config.dart';
 import 'package:fcloudsdk_example/utils/map_utils.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:local_auth_android/local_auth_android.dart';
 
 import '../../../api/door_lock_api.dart';
 import '../../add_device/models/scanned_device.dart';
@@ -767,5 +772,63 @@ class DoorLockHelper {
             shareFingerVein) ||
         (device.doorUserAbility?.byte1.supportPalmVein == true &&
             sharePalmVein);
+  }
+
+  //是否显示远程开锁按钮（设置-快捷功能-远程开锁按钮显示，默认显示）
+  static bool showRemoteUnlock({required String deviceId}) {
+    return DoorLockLocalCache.isRemoteUnlockShowOpen(deviceId: deviceId);
+  }
+
+  ///进入用户管理前的本机安全验证
+  static Future<bool> checkUserManagerPrivacy(
+      {required String deviceId}) async {
+    if (!DoorLockLocalCache.isUserManagerPrivacyOpen(deviceId: deviceId)) {
+      return true;
+    }
+    final result = await localAuthVerify();
+    return result != LocalAuthResult.failed;
+  }
+
+  ///本机安全验证
+  static Future<LocalAuthResult> localAuthVerify() async {
+    try {
+      final localAuth = LocalAuthentication();
+      final canCheckBiometrics = await localAuth.canCheckBiometrics;
+      final isDeviceSupported = await localAuth.isDeviceSupported();
+
+      if (!(canCheckBiometrics || isDeviceSupported)) {
+        //未设置锁屏密码/指纹/人脸
+        return LocalAuthResult.noCredential;
+      }
+
+      final didAuthenticate = await localAuth.authenticate(
+        localizedReason: '安全验证',
+        //鸿蒙插件 biometricOnly:false 时认证方式无人脸，故鸿蒙单独传 true；
+        //其他端传 false 表示生物识别优先、失败回退锁屏密码
+        options: AuthenticationOptions(biometricOnly: isOhos),
+        //插件默认文案仅英文，需显式传入本地化文案
+        authMessages: [
+          const AndroidAuthMessages(
+            signInTitle: '验证是您本人在操作',
+            biometricHint: '您需输入设备PIN码后才能继续',
+          ),
+        ],
+      );
+      return didAuthenticate ? LocalAuthResult.passed : LocalAuthResult.failed;
+    } on PlatformException catch (e) {
+      //鸿蒙端表示未录入
+      if (e.code.replaceAll(RegExp(r'\D'), '') == '12500010') {
+        return LocalAuthResult.noCredential;
+      }
+      //未录入生物特征
+      if (e.code == 'NotAvailable' || e.code == 'NotEnrolled') {
+        return LocalAuthResult.noCredential;
+      }
+      debugPrint('本机安全验证异常---$e');
+      return LocalAuthResult.failed;
+    } catch (e) {
+      debugPrint('本机安全验证异常---$e');
+      return LocalAuthResult.failed;
+    }
   }
 }

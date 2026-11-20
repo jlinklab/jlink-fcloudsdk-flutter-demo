@@ -109,6 +109,14 @@ dependencies:
     git:
       url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
       path: "packages/url_launcher/url_launcher"
+
+  #生物识别（指纹/面容验证）
+  local_auth:
+    git:
+      url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+      ref: "br_local_auth-v2.3.0_ohos"
+      path: packages/local_auth/local_auth
+  local_auth_android: 1.0.51
     #设备信息
   device_info_plus:
     git:
@@ -239,6 +247,12 @@ dependency_overrides:
       url: "https://gitcode.com/CPF-Flutter/fluttertpc_flutter_blue_plus.git"
       ref: "2.1.0-ohos-1.0.0"
       path: "packages/flutter_blue_plus_web"
+
+  local_auth_ohos:
+    git:
+      url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+      ref: "br_local_auth-v2.3.0_ohos"
+      path: packages/local_auth/local_auth_ohos
 
 dev_dependencies:
   flutter_test:

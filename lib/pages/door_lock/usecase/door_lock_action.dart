@@ -6,6 +6,8 @@ import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/pages/add_device/manager/global_ble_search_manager.dart';
+import 'package:fcloudsdk_example/pages/door_lock/model/door_lock_custom_enum.dart';
+import 'package:fcloudsdk_example/pages/door_lock/repository/door_lock_local.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_operation.dart';
 import 'package:fcloudsdk_example/utils/map_utils.dart';
@@ -27,6 +29,10 @@ mixin DoorLockActionMixin on ChangeNotifier, DoorLockOperationMixin {
     bool showLoading = true,
     bool needSleep = true,
   }) async {
+    if (DoorLockLocalCache.isManualUnlockPrivacyOpen(deviceId: deviceId)) {
+      if (!await _doLocalAuth()) return;
+    }
+
     if (await _checkNeedTipOpenOrCloseLock(isUnlock: true)) return;
 
     _executeAction(true, showLoading: showLoading, needSleep: needSleep);
@@ -192,6 +198,17 @@ mixin DoorLockActionMixin on ChangeNotifier, DoorLockOperationMixin {
       return false;
     }
     return false;
+  }
+
+  /// 生物识别验证，返回 false，表示中断
+  Future<bool> _doLocalAuth() async {
+    final result = await DoorLockHelper.localAuthVerify();
+    if (result == LocalAuthResult.passed) {
+      needTipOpenOrCloseLock = false;
+    }
+
+    ///认证通过 或者 未设置 放过去
+    return result != LocalAuthResult.failed;
   }
 
   // ==================== 执行 ====================

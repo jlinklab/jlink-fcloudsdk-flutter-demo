@@ -264,7 +264,8 @@ class _DoorLockHomePageState extends State<DoorLockHomePage> with RouteAware {
       DoorLockHelper.showRemoteLock(deviceId: widget.deviceId);
 
   ///远程开锁入口显示条件
-  bool _showRemoteUnlock() => true;
+  bool _showRemoteUnlock() =>
+      DoorLockHelper.showRemoteUnlock(deviceId: widget.deviceId);
 
   List<Widget> _join(List<Widget> items, Widget separator) {
     final result = <Widget>[];

@@ -294,7 +294,7 @@ class DoorLockHomeController extends DoorLockPageController
   ///- password：跳转密码列表页
   ///- tmpPassword：跳转临时密码列表页（复用密码列表页仅临时密码模式）
   ///- skin/card/palmprint/fingervein/palmVein：跳转锁端录入类通用列表页（列表+锁端补全+录入+删除+详情）
-  void checkUserManager(UserManagerUI item) {
+  Future<void> checkUserManager(UserManagerUI item) async {
     if (!context.mounted) return;
 
     if (item.type == JvssOperateType.settings) {
@@ -307,6 +307,11 @@ class DoorLockHomeController extends DoorLockPageController
     }
 
     if (item.type == JvssOperateType.password) {
+      //设置-快捷功能-用户管理密码验证
+      if (!await DoorLockHelper.checkUserManagerPrivacy(deviceId: deviceId)) {
+        return;
+      }
+      if (!context.mounted) return;
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => DoorLockPasswordListPage(deviceId: deviceId),
@@ -332,6 +337,11 @@ class DoorLockHomeController extends DoorLockPageController
         item.type == JvssOperateType.palmprint ||
         item.type == JvssOperateType.fingervein ||
         item.type == JvssOperateType.palmVein) {
+      //设置-快捷功能-用户管理密码验证
+      if (!await DoorLockHelper.checkUserManagerPrivacy(deviceId: deviceId)) {
+        return;
+      }
+      if (!context.mounted) return;
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => DoorLockUserListPage(

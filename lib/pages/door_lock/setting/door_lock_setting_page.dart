@@ -4,9 +4,11 @@ import 'package:fcloudsdk_example/api/device_api.dart';
 import 'package:fcloudsdk_example/common/code_prase.dart';
 import 'package:fcloudsdk_example/common/device_name.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
+import 'package:fcloudsdk_example/models/device_model.dart';
 import 'package:fcloudsdk_example/models/device_type.dart';
 import 'package:fcloudsdk_example/pages/door_lock/repository/door_lock_local.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/lock_config/door_lock_config_page.dart';
+import 'package:fcloudsdk_example/pages/door_lock/setting/quick/door_lock_quick_fun_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:fcloudsdk_example/pages/home/move_device_page.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
@@ -48,6 +50,16 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
       return false;
     }
     return device.parentPid != DeviceType.PID_SMART_DOOR_LOCK_AHD.pid;
+  }
+
+  ///有设置权限或电子钥匙分享的设备才显示快捷功能
+  bool get _showQuickFunEntry {
+    final device = DeviceManager.instance.getDevice(deviceId: widget.deviceId);
+    if (device == null) {
+      return false;
+    }
+    return device.hasPermission(permission: DevicePermission.DP_Settings) ||
+        device.hasPermission(permission: DevicePermission.DP_DoorLockEleKey);
   }
 
   @override
@@ -112,6 +124,20 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
                     if (mounted) {
                       setState(() {});
                     }
+                  },
+                ),
+              if (_showQuickFunEntry)
+                ListTile(
+                  leading: const Icon(Icons.bolt_outlined),
+                  title: const Text('快捷功能'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            DoorLockQuickFunPage(deviceId: widget.deviceId),
+                      ),
+                    );
                   },
                 ),
               ListTile(
