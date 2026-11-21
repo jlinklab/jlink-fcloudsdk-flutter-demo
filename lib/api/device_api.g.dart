@@ -24,42 +24,6 @@ class _DeviceAPI implements DeviceAPI {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<dynamic> moveDeviceToRoom({
-    required String roomId,
-    required String userGroupId,
-    required List<String> deviceNos,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'host': 'jvss'};
-    _headers.removeWhere((k, v) => v == null);
-    final _data = {
-      'roomId': roomId,
-      'userGroupId': userGroupId,
-      'deviceNo': deviceNos,
-    };
-    final _options = _setStreamType<dynamic>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-    )
-        .compose(
-          _dio.options,
-          '/v3/device/moveDeviceToRoom/{timeMillis}/{secret}',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
-    final _result = await _dio.fetch(_options);
-    final _value = _result.data;
-    return _value;
-  }
-
-  @override
   Future<dynamic> updateDevice(Map<String, dynamic> body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -75,6 +39,40 @@ class _DeviceAPI implements DeviceAPI {
         .compose(
           _dio.options,
           '/v3/device/updateDevice/{timeMillis}/{secret}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
+  Future<dynamic> getDevicePropStatus({
+    required String deviceId,
+    required List<String> props,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'host': 'jvss'};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {
+      'sn': deviceId,
+      'props': props,
+    };
+    final _options = _setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v3/status/getDevicePropStatus/{timeMillis}/{secret}',
           queryParameters: queryParameters,
           data: _data,
         )

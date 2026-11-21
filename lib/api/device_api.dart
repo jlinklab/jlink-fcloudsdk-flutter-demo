@@ -13,18 +13,17 @@ part 'device_api.g.dart';
 abstract class DeviceAPI {
   factory DeviceAPI(Dio dio, {String baseUrl}) = _DeviceAPI;
 
-  ///编辑房间
-  @POST('/v3/device/moveDeviceToRoom$uselessSegmentBase')
-  @Headers({'host': jvss})
-  Future<dynamic> moveDeviceToRoom({
-    @Field('roomId') required String roomId,
-    @Field('userGroupId') required String userGroupId,
-    @Field('deviceNo') required List<String> deviceNos,
-  });
-
   @POST('/v3/device/updateDevice$uselessSegmentBase')
   @Headers({'host': jvss})
   Future<dynamic> updateDevice(@Body() Map<String, dynamic> body);
+
+  ///获取设备属性状态
+  @POST('/v3/status/getDevicePropStatus$uselessSegmentBase')
+  @Headers({'host': jvss})
+  Future<dynamic> getDevicePropStatus({
+    @Field('sn') required String deviceId,
+    @Field('props') required List<String> props,
+  });
 }
 
 DeviceAPI deviceAPI = DeviceAPI(DioConfig.getDio());

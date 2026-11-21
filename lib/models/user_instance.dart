@@ -220,7 +220,7 @@ class UserInfo extends ChangeNotifier {
     await IDRPropertyManager.instance.dispose();
     // 清空设备管理器中的设备数据
     DeviceManager.instance.dispose();
-    // 清空家庭组与房间缓存，避免下一个账号读到上一个账号的房间数据
+    // 清空家庭组缓存，避免下一个账号读到上一个账号的家庭组数据
     UserGroupManager.instance.clear();
     // 反初始化全局蓝牙搜索监听
     GlobalBleSearchManager.instance.unInit();
