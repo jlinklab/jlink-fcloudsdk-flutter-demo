@@ -38,9 +38,10 @@ class DoorLockLanguageController extends DoorLockPageController
     supportedLanguages = parseDoorLockLanguages(initSetConfig.supportLans);
   }
 
-  Future<void> _syncLatest() async {
+  ///同步锁端配置刷新页面；force 为 true 时忽略写入中状态（保存完成后需要回读锁端实际生效值）
+  Future<void> _syncLatest({bool force = false}) async {
     final latest = await syncLatestSetConfig();
-    if (_disposed || writing || latest == null) return;
+    if (_disposed || (!force && writing) || latest == null) return;
     if (latest.lan != null) initSetConfig.lan = latest.lan;
     if (latest.supportLans != null) {
       initSetConfig.supportLans = latest.supportLans;
@@ -64,6 +65,7 @@ class DoorLockLanguageController extends DoorLockPageController
       initSetConfig.lan = target;
       await _saveLanguageConfig();
       KToast.show(status: '保存成功');
+      await _syncLatest(force: true);
       return true;
     } catch (e) {
       KToast.show(status: kErrorMsg(e));

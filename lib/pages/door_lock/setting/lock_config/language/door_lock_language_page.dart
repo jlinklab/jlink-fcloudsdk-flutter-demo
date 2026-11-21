@@ -72,12 +72,31 @@ class DoorLockLanguagePage extends StatelessWidget {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  _warnTips(),
                 ],
               ),
             ),
           );
         },
       ),
+    );
+  }
+
+  ///页面底部说明：仅切换锁端显示语言，不影响App界面
+  Widget _warnTips() {
+    return const Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(Icons.error_outline, size: 14, color: Colors.orange),
+        SizedBox(width: 4),
+        Expanded(
+          child: Text(
+            '此设置仅修改门锁端显示语言，不影响APP界面',
+            style: TextStyle(color: Colors.orange, fontSize: 12),
+          ),
+        ),
+      ],
     );
   }
 
@@ -105,7 +124,7 @@ class DoorLockLanguagePage extends StatelessWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('提示'),
-        content: Text('确定要将门锁语言切换为“${doorLockLanguageName(language)}”吗？'),
+        content: const Text('确定修改门锁的语言吗?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),

@@ -27,8 +27,8 @@ class DoorLockTipVolumeSetController extends DoorLockPageController
   ///室内门铃音量 0-3
   int? bellVolume;
 
-  ///门锁音量 0-3
-  int lockVolume = 0;
+  ///门锁音量 0-3；null 表示还没读到真实档位，此时不选中任何选项
+  int? lockVolume;
 
   bool _lockSaving = false;
   bool _writing = false;
@@ -80,8 +80,14 @@ class DoorLockTipVolumeSetController extends DoorLockPageController
   ///室内门铃音量选项是否选中
   bool bellSelected(int position) => bellVolume == position;
 
-  ///门锁音量选项是否选中
-  bool lockSelected(int position) => _volumeToDisplay(lockVolume) == position;
+  ///门锁音量选项是否选中：还没读到真实档位时不选中任何选项
+  bool lockSelected(int position) {
+    var volume = lockVolume;
+    if (volume == null) {
+      return false;
+    }
+    return _volumeToDisplay(volume) == position;
+  }
 
   ///显示位转设备档位：两级锁板的“高”占位2，设备档位为3
   int _displayToVolume(int position) =>

@@ -14,6 +14,8 @@ import 'package:fcloudsdk_example/pages/door_lock/model/door_lock_custom_enum.da
 import 'package:fcloudsdk_example/pages/door_lock/repository/door_lock_local.dart';
 import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/lock_config/door_lock_config_page.dart';
+import 'package:fcloudsdk_example/pages/door_lock/setting/lock_config/language/door_lock_language_page.dart';
+import 'package:fcloudsdk_example/pages/door_lock/setting/lock_config/language/door_lock_language_util.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/network/door_lock_net_manage_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/network/usecase/door_lock_wifi_config_jumper.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/quick/door_lock_quick_fun_page.dart';
@@ -138,6 +140,23 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
           ?.doorlockIsConfigNet ??
       false;
 
+  ///联网锁且锁板能力支持语言设置、具备设置/电子钥匙权限的设备才显示语言设置入口
+  bool get _showLanguageEntry {
+    final device = DeviceManager.instance.getDevice(deviceId: widget.deviceId);
+    if (device == null || !DoorLockHelper.isIotDoorLock(widget.deviceId)) {
+      return false;
+    }
+    if (device.doorLockBleAbility?.byte2.supportLanguage != true) {
+      return false;
+    }
+    return device.hasPermission(permission: DevicePermission.DP_Settings) ||
+        device.hasPermission(permission: DevicePermission.DP_DoorLockEleKey);
+  }
+
+  ///入口副标题显示当前门锁语言，未取到锁具配置时为空
+  String get _languageText =>
+      _setConfig?.lan == null ? '' : doorLockLanguageName(_setConfig!.lan);
+
   @override
   void initState() {
     super.initState();
@@ -166,6 +185,7 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
         await DoorLockHelper.instance.queryOnlineCongfig(widget.deviceId);
     if (!mounted || rawList == null || rawList.isEmpty) return;
     _setConfig = parseRawToSetConfig(rawList);
+    setState(() {});
   }
 
   ///查询是否支持省电模式，并从影子服务读取当前模式用于入口展示
@@ -264,6 +284,34 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
     );
   }
 
+  ///语言设置：无锁具配置时先拉一次在线配置，仍取不到则提示后不进入
+  Future<void> _jumpLanguageSet() async {
+    var setConfig = _setConfig;
+    if (setConfig == null) {
+      final rawList =
+          await DoorLockHelper.instance.queryOnlineCongfig(widget.deviceId);
+      if (rawList != null && rawList.isNotEmpty) {
+        setConfig = parseRawToSetConfig(rawList);
+        _setConfig = setConfig;
+      }
+    }
+    if (!mounted) return;
+    if (setConfig == null) {
+      KToast.show(status: '数据获取失败，请稍后重试');
+      return;
+    }
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => DoorLockLanguagePage(
+          deviceId: widget.deviceId,
+          initSetConfig: setConfig!,
+        ),
+      ),
+    );
+    if (!mounted) return;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -315,6 +363,14 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
                   );
                 },
               ),
+              if (_showLanguageEntry)
+                ListTile(
+                  leading: const Icon(Icons.translate),
+                  title: const Text('语言设置'),
+                  subtitle: _languageText.isEmpty ? null : Text(_languageText),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: _jumpLanguageSet,
+                ),
               if (_showNetManageEntry)
                 ListTile(
                   leading: const Icon(Icons.wifi),
