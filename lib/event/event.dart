@@ -1,7 +1,6 @@
 ///设备出图成功事件，更新设备的配置信息缓存等
 class PreviewRenderedEvent {}
 
-
 /// 远程开锁结果
 class RemoteUnlockResultEvent {
   final String deviceId;
@@ -60,4 +59,13 @@ class RemoteLockActionResultEvent {
   final bool isUnlock;
 
   RemoteLockActionResultEvent({required this.deviceId, required this.isUnlock});
+}
+
+/// 重新配网成功
+///
+///网络设置首页监听此事件刷新wifi信息
+class DoorLockResetNetSuccessEvent {
+  final String deviceId;
+
+  DoorLockResetNetSuccessEvent({required this.deviceId});
 }

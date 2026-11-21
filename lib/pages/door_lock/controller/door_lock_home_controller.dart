@@ -150,7 +150,6 @@ class DoorLockHomeController extends DoorLockPageController
     if (!context.mounted) {
       return;
     }
-
     var oldSn = DoorLockKeyValueLocal.oldDeviceNo(deviceId: deviceId);
     _blueOnlineEvent = eventBus.on<BlueOnlineEvent>().listen((event) async {
       if (oldSn == event.deviceId && event.isChanged) {

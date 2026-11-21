@@ -943,7 +943,8 @@ class MainBlePairConfigController extends ChangeNotifier {
           syncStatus = result.item2?.err;
         }
         _log(
-            '保活结果: ${result.item1}, err=${result.item2?.err}, syncStatus=$syncStatus');
+            '保活结果: ${result.item1}, err=${result.item2?.err}, syncStatus=$syncStatus',
+            showInPage: false);
         break;
       } catch (e) {
         if (attempt < 2) {

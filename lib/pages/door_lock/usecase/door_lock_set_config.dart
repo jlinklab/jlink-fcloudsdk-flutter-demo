@@ -8,6 +8,7 @@ import 'package:fcloudsdk/door_lock/door_lock_parse.dart';
 import 'package:fcloudsdk/utils/bit_util.dart';
 import 'package:fcloudsdk/utils/log_util.dart';
 import 'package:fcloudsdk_example/common/code_prase.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_operation.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
@@ -179,6 +180,59 @@ mixin DoorLockSetConfigMixin on DoorLockOperationMixin {
     }
   }
 
+  ///离线且设备可能不在附近时，由用户确认后等待蓝牙上线并重试
+  Future<_ConfigWriteResult> _dealOfflineWrite({
+    required Future<bool> Function() ble,
+    required Future<Tuple3<bool, DoorLockNetIpResponse?, dynamic>> Function()
+        netIp,
+  }) async {
+    if (!DoorLockHelper.checkNeedTipsDeviceIsNotNearby(deviceId)) {
+      return const _ConfigWriteResult(false, error: '设备离线，请稍后重试');
+    }
+
+    final currentContext = pageContext;
+    if (currentContext == null || !currentContext.mounted) {
+      return const _ConfigWriteResult(false, cancelled: true);
+    }
+
+    KToast.dismiss();
+    final confirmed = await showDialog<bool>(
+      context: currentContext,
+      barrierDismissible: false,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('提示'),
+        content: Text(TR.current.tr_ble_doorlock_connect_fail_confirm_tips),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('取消'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('确认'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) {
+      return const _ConfigWriteResult(false, cancelled: true);
+    }
+
+    KToast.show();
+    if (!device.doorlockIsConfigNet &&
+        !device.blueOnline &&
+        !await waitBleOnline()) {
+      return _ConfigWriteResult(
+        false,
+        error: TR.current.TR_Ble_DoorLock_Connect_Failed,
+      );
+    }
+
+    return device.doorlockIsConfigNet
+        ? _sendByNetIp(netIp)
+        : _sendByBlue(ble);
+  }
+
   Future<bool> _writeConfig({
     required Future<bool> Function() ble,
     required Future<Tuple3<bool, DoorLockNetIpResponse?, dynamic>> Function()
@@ -201,7 +255,7 @@ mixin DoorLockSetConfigMixin on DoorLockOperationMixin {
             ? await _sendByBlue(ble)
             : const _ConfigWriteResult(false, error: '设备不在附近，请靠近后重试');
       } else {
-        result = const _ConfigWriteResult(false, error: '设备离线，请稍后重试');
+        result = await _dealOfflineWrite(ble: ble, netIp: netIp);
       }
     } catch (e) {
       LogUtils.doorLock.log('set config error: $e');
@@ -213,7 +267,7 @@ mixin DoorLockSetConfigMixin on DoorLockOperationMixin {
       dealNeedSyncError();
       return false;
     }
-    if (!result.success) {
+    if (!result.success && !result.cancelled) {
       KToast.show(status: result.error ?? '设置失败');
     }
     return result.success;
@@ -468,11 +522,13 @@ mixin DoorLockSetConfigMixin on DoorLockOperationMixin {
 class _ConfigWriteResult {
   final bool success;
   final bool needSync;
+  final bool cancelled;
   final String? error;
 
   const _ConfigWriteResult(
     this.success, {
     this.needSync = false,
+    this.cancelled = false,
     this.error,
   });
 }

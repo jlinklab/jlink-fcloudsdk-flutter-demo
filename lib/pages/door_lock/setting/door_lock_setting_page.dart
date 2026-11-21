@@ -8,16 +8,27 @@ import 'package:fcloudsdk_example/common/device_name.dart';
 import 'package:fcloudsdk_example/manager/device_manager.dart';
 import 'package:fcloudsdk_example/manager/push_manager.dart';
 import 'package:fcloudsdk_example/models/device_model.dart';
-import 'package:fcloudsdk_example/models/device_type.dart';
 import 'package:fcloudsdk_example/pages/door_lock/model/door_lock_custom_enum.dart';
 import 'package:fcloudsdk_example/pages/door_lock/repository/door_lock_local.dart';
+import 'package:fcloudsdk_example/generated/l10n.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/lock_config/door_lock_config_page.dart';
+import 'package:fcloudsdk_example/pages/door_lock/setting/network/door_lock_net_manage_page.dart';
+import 'package:fcloudsdk_example/pages/door_lock/setting/network/usecase/door_lock_wifi_config_jumper.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/quick/door_lock_quick_fun_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/save_power_mode/door_lock_save_power_home_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
-import 'package:fcloudsdk_example/pages/home/move_device_page.dart';
+import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_operation.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
 import 'package:flutter/material.dart';
+
+///设置页门锁控制器：未配网时跳转配网需要门锁控制器上下文
+class DoorLockSettingPageController extends DoorLockPageController {
+  @override
+  final String deviceId;
+
+  DoorLockSettingPageController(
+      {required super.context, required this.deviceId});
+}
 
 ///门锁设置首页
 class DoorLockSettingPage extends StatefulWidget {
@@ -39,6 +50,11 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
   ///当前省电模式显示文案
   String _powerSaveModeText = '';
 
+  ///是否支持网络管理
+  bool _supportNetManager = false;
+
+  late final DoorLockSettingPageController _pageController;
+
   ///当前设备名称，取设备列表中的昵称，取不到时兜底显示序列号
   String get _deviceName =>
       DeviceManager.instance.getDeviceName(deviceId: widget.deviceId) ??
@@ -48,20 +64,6 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
   bool get _isSharedDevice =>
       DeviceManager.instance.getDevice(deviceId: widget.deviceId)?.fromShare ??
       false;
-
-  ///设备当前所在房间名，未设置时为空
-  String get _roomName =>
-      DeviceManager.instance.getDevice(deviceId: widget.deviceId)?.roomName ??
-      '';
-
-  ///分享的设备无权限设置位置，AHD 猫眼锁设置页无设备位置条目
-  bool get _showLocationEntry {
-    final device = DeviceManager.instance.getDevice(deviceId: widget.deviceId);
-    if (device == null || !device.isAdmin) {
-      return false;
-    }
-    return device.parentPid != DeviceType.PID_SMART_DOOR_LOCK_AHD.pid;
-  }
 
   ///有设置权限或电子钥匙分享的设备才显示快捷功能
   bool get _showQuickFunEntry {
@@ -85,9 +87,21 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
                 permission: DevicePermission.DP_DoorLockEleKey));
   }
 
+  ///支持网络管理的设备才显示网络设置入口
+  bool get _showNetManageEntry => _supportNetManager;
+
+  ///设备是否已配网
+  bool get _isConfigNet =>
+      DeviceManager.instance
+          .getDevice(deviceId: widget.deviceId)
+          ?.doorlockIsConfigNet ??
+      false;
+
   @override
   void initState() {
     super.initState();
+    _pageController = DoorLockSettingPageController(
+        context: context, deviceId: widget.deviceId);
     final cachedRaw =
         DoorLockLocalCache.doorlockOnlineConfig(deviceId: widget.deviceId);
     if (cachedRaw.isNotEmpty) {
@@ -95,10 +109,12 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
     }
     _queryConfig();
     _queryPowerSaving();
+    _queryNetManager();
   }
 
   @override
   void dispose() {
+    _pageController.dispose();
     _textController.dispose();
     super.dispose();
   }
@@ -138,6 +154,27 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
     if (mounted) setState(() {});
   }
 
+  ///查询是否支持网络管理
+  void _queryNetManager() {
+    _supportNetManager =
+        DoorLockHelper.instance.supportNetManager(widget.deviceId);
+    if (mounted) setState(() {});
+  }
+
+  ///网络设置：未配网直接进配网，已配网进网络设置首页
+  void _jumpNetSetting() {
+    final device = DeviceManager.instance.getDevice(deviceId: widget.deviceId);
+    if (device != null && device.doorlockIsConfigNet) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => DoorLockNetManagePage(deviceId: widget.deviceId),
+        ),
+      );
+    } else {
+      DoorLockWifiConfigJumper.jumpBlueConfig(_pageController);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,24 +197,6 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
                 trailing: _isSharedDevice ? null : const Icon(Icons.edit),
                 onTap: _isSharedDevice ? null : _showChangeNameDialog,
               ),
-              if (_showLocationEntry)
-                ListTile(
-                  leading: const Icon(Icons.location_on_outlined),
-                  title: const Text('设备位置'),
-                  subtitle: Text(_roomName.isEmpty ? '未设置' : _roomName),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () async {
-                    await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            MoveDevicePage(deviceNo: widget.deviceId),
-                      ),
-                    );
-                    if (mounted) {
-                      setState(() {});
-                    }
-                  },
-                ),
               if (_showQuickFunEntry)
                 ListTile(
                   leading: const Icon(Icons.bolt_outlined),
@@ -207,6 +226,21 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
                   );
                 },
               ),
+              if (_showNetManageEntry)
+                ListTile(
+                  leading: const Icon(Icons.wifi),
+                  title: Text(TR.current.TR_Setting_Network_Set),
+                  subtitle: Text(
+                    _isConfigNet
+                        ? TR.current.TR_DoorLock_Net_Manage_Connected_Wifi
+                        : TR.current.TR_DoorLock_Net_Manage_Not_Connect_Wifi,
+                    style: _isConfigNet
+                        ? null
+                        : const TextStyle(fontSize: 13, color: Colors.red),
+                  ),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: _jumpNetSetting,
+                ),
               if (_showPowerSaveEntry)
                 ListTile(
                   leading: const Icon(Icons.battery_saver_outlined),

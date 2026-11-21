@@ -126,6 +126,21 @@ class DoorLockHelper {
         DoorLockKeyValueLocal.supportLowPowerBle(deviceId: deviceId);
   }
 
+  ///是否涂鸦蓝牙配网设备
+  static bool isTuYaBluetoothDevice(String? parentPid) {
+    return parentPid == 'HABLK001S000100F' || parentPid == 'HABLK001W000100I';
+  }
+
+  ///是否BK海外视频锁
+  static bool isTuyaBKOverseasVideoDevice(String? parentPid) {
+    return parentPid == 'HAVLK001X0001001';
+  }
+
+  ///是否BK海外无视频锁
+  static bool isTuyaBKOverseasNoneVideoDevice(String? parentPid) {
+    return parentPid == 'HAVLK0020000100V';
+  }
+
   ///是否海外锁pid
   static isOverSeaDoorLockByParentPid(String? parentPid) {
     return parentPid == 'HABLK0012000100H' ||
@@ -134,6 +149,45 @@ class DoorLockHelper {
         parentPid == 'HAVLK0002000100V' ||
         parentPid == 'HAVLK001X0001001' ||
         parentPid == 'HAVLK0020000100V';
+  }
+
+  ///是否支持网络管理
+  bool supportNetManager(String deviceId) {
+    if (isOverSeaDoorLock(deviceId)) {
+      return true;
+    }
+
+    var device = DeviceManager.instance.getDevice(deviceId: deviceId);
+
+    var supportLowPowerBle =
+        DoorLockKeyValueLocal.supportLowPowerBle(deviceId: deviceId);
+    var supportConnectToWifi =
+        DoorLockKeyValueLocal.supportConnectToWifi(deviceId: deviceId);
+    var containManageProp =
+        (device?.props ?? []).contains('NetworkManagement') ||
+            (device?.propList ?? []).firstWhereOrNull(
+                    (e) => e['propCode'] == 'NetworkManagement') !=
+                null;
+
+    if (supportLowPowerBle && (supportConnectToWifi || containManageProp)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  ///蓝牙与WiFi是否不共存
+  static bool isBleAndWifiIncompatible(String deviceId) {
+    var device = DeviceManager.instance.getDevice(deviceId: deviceId);
+    if (device == null) {
+      return false;
+    }
+    if ((device.props ?? []).contains('BLEAndWiFiIncompatible')) {
+      return true;
+    }
+    return (device.propList ?? []).firstWhereOrNull(
+            (e) => e['propCode'] == 'BLEAndWiFiIncompatible') !=
+        null;
   }
 
   ///设置服务器门锁配网状态

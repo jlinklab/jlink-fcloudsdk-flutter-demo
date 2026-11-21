@@ -218,6 +218,7 @@ mixin DoorLockOperationMixin on ChangeNotifier {
 
   ///[showErrorTip]为false时失败不弹toast，供页面用重试弹窗兜底的调用方使用
   ///[showAnotherOperatingTip]为false时Err=10不弹窗，由调用方按兜底数据自行决定提示
+  ///[retryOnTimeout]为true时，Start超时后清缓存并重试一次，供录入链路自愈
   ///最近一次 beforeNetIp 保活失败的原始异常（成功时清空），供录入链路带回页面
   dynamic lastNetIpSyncError;
 
@@ -225,6 +226,7 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       {bool showLoading = true,
       bool ignoreAddUserAdminNotskip = true,
       bool needKeepAlive = true,
+      bool retryOnTimeout = false,
       bool showErrorTip = true,
       bool showAnotherOperatingTip = true}) async {
     try {
@@ -244,7 +246,8 @@ mixin DoorLockOperationMixin on ChangeNotifier {
 
       ///Start 超时(-99991)兜底：锁端可能瞬时不可达（如配网后重启中），
       ///清缓存后强制真实同步重试一次
-      if (result.item1 == false &&
+      if (retryOnTimeout &&
+          result.item1 == false &&
           result.item3 is XCloudAPIException &&
           (result.item3 as XCloudAPIException).code == -99991) {
         LogUtils.doorLock.log(
@@ -891,7 +894,9 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       ///添加管理员密码时需忽略'未添加管理员'错误（本次添加正是要设置管理员密码），
       ///普通用户密码不忽略，锁端未添加管理员时直接提示终止
       if (await beforeNetIp(
-              showLoading: false, ignoreAddUserAdminNotskip: isAdmin) ==
+              showLoading: false,
+              ignoreAddUserAdminNotskip: isAdmin,
+              retryOnTimeout: true) ==
           false) {
         return const DoorLockAddResult(false, -1, null, null);
       }
@@ -1130,7 +1135,9 @@ mixin DoorLockOperationMixin on ChangeNotifier {
     ///锁端未添加管理员密码时（0x10）不忽略，直接提示'请先添加管理员密码'终止
     Future<DoorLockAddResult> sendByNetIp() async {
       if (await beforeNetIp(
-              showLoading: false, ignoreAddUserAdminNotskip: false) ==
+              showLoading: false,
+              ignoreAddUserAdminNotskip: false,
+              retryOnTimeout: true) ==
           false) {
         ///带回保活失败原因（如 -99991 超时），供页面提示而非笼统的“录入失败”
         return DoorLockAddResult(false, -1, null, lastNetIpSyncError);
