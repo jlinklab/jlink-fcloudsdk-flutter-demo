@@ -9001,6 +9001,196 @@ class TR {
       args: [],
     );
   }
+
+  /// `门锁屏幕设置`
+  String get TR_Device_Lock_Screen_Setting_Title {
+    return Intl.message(
+      '门锁屏幕设置',
+      name: 'TR_Device_Lock_Screen_Setting_Title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `息屏设置`
+  String get TR_DoorLock_Screen_Shutdown_Setting {
+    return Intl.message(
+      '息屏设置',
+      name: 'TR_DoorLock_Screen_Shutdown_Setting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `息屏时间`
+  String get TR_DoorLock_Screen_Shutdown_Time {
+    return Intl.message(
+      '息屏时间',
+      name: 'TR_DoorLock_Screen_Shutdown_Time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `门锁将在设定的时间内关闭屏幕`
+  String get TR_DoorLock_Screen_Shutdown_Time_Introduce {
+    return Intl.message(
+      '门锁将在设定的时间内关闭屏幕',
+      name: 'TR_DoorLock_Screen_Shutdown_Time_Introduce',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `秒`
+  String get TR_Common_Second {
+    return Intl.message(
+      '秒',
+      name: 'TR_Common_Second',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `高级设置`
+  String get TR_Settings_Advanced_Set {
+    return Intl.message(
+      '高级设置',
+      name: 'TR_Settings_Advanced_Set',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `屏幕显示时间`
+  String get TR_DoorLock_Screen_Show_Time_Title {
+    return Intl.message(
+      '屏幕显示时间',
+      name: 'TR_DoorLock_Screen_Show_Time_Title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `屏幕显示更多（Wifi，天气）`
+  String get TR_DoorLock_Screen_Show_Extra_Info {
+    return Intl.message(
+      '屏幕显示更多（Wifi，天气）',
+      name: 'TR_DoorLock_Screen_Show_Extra_Info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `门铃亮屏`
+  String get TR_DoorLock_Screen_Wake_Up_By_Doorbell {
+    return Intl.message(
+      '门铃亮屏',
+      name: 'TR_DoorLock_Screen_Wake_Up_By_Doorbell',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `出厂设置`
+  String get TR_DoorLock_Factory_Setting_Title {
+    return Intl.message(
+      '出厂设置',
+      name: 'TR_DoorLock_Factory_Setting_Title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `屏幕反转`
+  String get TR_DoorLock_Screen_Invert {
+    return Intl.message(
+      '屏幕反转',
+      name: 'TR_DoorLock_Screen_Invert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `门内锁屏幕会上下反转180°，请勿随意修改`
+  String get TR_DoorLock_Screen_Invert_Introduce {
+    return Intl.message(
+      '门内锁屏幕会上下反转180°，请勿随意修改',
+      name: 'TR_DoorLock_Screen_Invert_Introduce',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `镜头反转`
+  String get TR_DoorLock_Single_Camera_Invert {
+    return Intl.message(
+      '镜头反转',
+      name: 'TR_DoorLock_Single_Camera_Invert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `上摄镜头反转`
+  String get TR_DoorLock_Up_Camera_Invert {
+    return Intl.message(
+      '上摄镜头反转',
+      name: 'TR_DoorLock_Up_Camera_Invert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `下摄镜头反转`
+  String get TR_DoorLock_Down_Camera_Invert {
+    return Intl.message(
+      '下摄镜头反转',
+      name: 'TR_DoorLock_Down_Camera_Invert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `室外镜头反转`
+  String get TR_DoorLock_Outside_Camera_Invert {
+    return Intl.message(
+      '室外镜头反转',
+      name: 'TR_DoorLock_Outside_Camera_Invert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `室内镜头反转`
+  String get TR_DoorLock_Inside_Camera_Invert {
+    return Intl.message(
+      '室内镜头反转',
+      name: 'TR_DoorLock_Inside_Camera_Invert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `无视频信号时可尝试打开`
+  String get TR_DoorLock_Screen_Usb_Introduce {
+    return Intl.message(
+      '无视频信号时可尝试打开',
+      name: 'TR_DoorLock_Screen_Usb_Introduce',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `保存成功`
+  String get TR_Common_Save_Success {
+    return Intl.message(
+      '保存成功',
+      name: 'TR_Common_Save_Success',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

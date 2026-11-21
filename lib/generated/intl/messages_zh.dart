@@ -105,8 +105,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("获取数据失败"),
         "TR_Common_Minute": MessageLookupByLibrary.simpleMessage("分钟"),
         "TR_Common_NextDay": MessageLookupByLibrary.simpleMessage("次日"),
+        "TR_Common_Save_Success": MessageLookupByLibrary.simpleMessage("保存成功"),
+        "TR_Common_Second": MessageLookupByLibrary.simpleMessage("秒"),
         "TR_Common_Time": MessageLookupByLibrary.simpleMessage("时间"),
         "TR_Common_Try_Again": MessageLookupByLibrary.simpleMessage("重试"),
+        "TR_Device_Lock_Screen_Setting_Title":
+            MessageLookupByLibrary.simpleMessage("门锁屏幕设置"),
         "TR_Device_Wifi_Signal_Level":
             MessageLookupByLibrary.simpleMessage("WiFi信号强度"),
         "TR_DoorLock_Clear_Net_Ble_Connect_Success":
@@ -131,12 +135,38 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("3.等待设备重启成功！"),
         "TR_DoorLock_Clear_Net_Wait_Restart_Tip":
             MessageLookupByLibrary.simpleMessage("3.等待设备重启中..."),
+        "TR_DoorLock_Down_Camera_Invert":
+            MessageLookupByLibrary.simpleMessage("下摄镜头反转"),
+        "TR_DoorLock_Factory_Setting_Title":
+            MessageLookupByLibrary.simpleMessage("出厂设置"),
+        "TR_DoorLock_Inside_Camera_Invert":
+            MessageLookupByLibrary.simpleMessage("室内镜头反转"),
         "TR_DoorLock_Net_Checking":
             MessageLookupByLibrary.simpleMessage("正在进行网络检测..."),
         "TR_DoorLock_Net_Manage_Connected_Wifi":
             MessageLookupByLibrary.simpleMessage("已配网"),
         "TR_DoorLock_Net_Manage_Not_Connect_Wifi":
             MessageLookupByLibrary.simpleMessage("未配网"),
+        "TR_DoorLock_Outside_Camera_Invert":
+            MessageLookupByLibrary.simpleMessage("室外镜头反转"),
+        "TR_DoorLock_Screen_Invert":
+            MessageLookupByLibrary.simpleMessage("屏幕反转"),
+        "TR_DoorLock_Screen_Invert_Introduce":
+            MessageLookupByLibrary.simpleMessage("门内锁屏幕会上下反转180°，请勿随意修改"),
+        "TR_DoorLock_Screen_Show_Extra_Info":
+            MessageLookupByLibrary.simpleMessage("屏幕显示更多（Wifi，天气）"),
+        "TR_DoorLock_Screen_Show_Time_Title":
+            MessageLookupByLibrary.simpleMessage("屏幕显示时间"),
+        "TR_DoorLock_Screen_Shutdown_Setting":
+            MessageLookupByLibrary.simpleMessage("息屏设置"),
+        "TR_DoorLock_Screen_Shutdown_Time":
+            MessageLookupByLibrary.simpleMessage("息屏时间"),
+        "TR_DoorLock_Screen_Shutdown_Time_Introduce":
+            MessageLookupByLibrary.simpleMessage("门锁将在设定的时间内关闭屏幕"),
+        "TR_DoorLock_Screen_Usb_Introduce":
+            MessageLookupByLibrary.simpleMessage("无视频信号时可尝试打开"),
+        "TR_DoorLock_Screen_Wake_Up_By_Doorbell":
+            MessageLookupByLibrary.simpleMessage("门铃亮屏"),
         "TR_DoorLock_Settings_Net_Already_Connect_Server":
             MessageLookupByLibrary.simpleMessage("当前设备已连接云服务器"),
         "TR_DoorLock_Settings_Net_Already_Connect_Station":
@@ -159,6 +189,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("重新检测"),
         "TR_DoorLock_Settings_Reset_Net":
             MessageLookupByLibrary.simpleMessage("重置网络"),
+        "TR_DoorLock_Single_Camera_Invert":
+            MessageLookupByLibrary.simpleMessage("镜头反转"),
+        "TR_DoorLock_Up_Camera_Invert":
+            MessageLookupByLibrary.simpleMessage("上摄镜头反转"),
         "TR_DoorLock_Wifi_Name": MessageLookupByLibrary.simpleMessage("网络名称"),
         "TR_File_Size_Exceed_Max_Size":
             MessageLookupByLibrary.simpleMessage("文件大小超过最大限制"),
@@ -258,6 +292,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "TR_Setting_Signal": MessageLookupByLibrary.simpleMessage("信号"),
         "TR_Setting_Trigger_Mode": MessageLookupByLibrary.simpleMessage("触发模式"),
         "TR_Setting_Wake_Up_Time": MessageLookupByLibrary.simpleMessage("唤醒时间"),
+        "TR_Settings_Advanced_Set":
+            MessageLookupByLibrary.simpleMessage("高级设置"),
         "TR_Sex_Female": MessageLookupByLibrary.simpleMessage("女"),
         "TR_Sex_Male": MessageLookupByLibrary.simpleMessage("男"),
         "TR_Show_Traces_Tip":

@@ -1,5 +1,7 @@
 import 'package:fcloudsdk/api/api_center.dart';
 import 'package:fcloudsdk/door_lock/door_lock_business_model.dart';
+import 'package:fcloudsdk/door_lock/door_lock_enum.dart';
+import 'package:fcloudsdk/door_lock/door_lock_netip_api.dart';
 import 'package:fcloudsdk/door_lock/door_lock_netip_model.dart';
 import 'package:fcloudsdk/door_lock/door_lock_parse.dart';
 import 'package:fcloudsdk_example/api/device_api.dart';
@@ -16,6 +18,7 @@ import 'package:fcloudsdk_example/pages/door_lock/setting/network/door_lock_net_
 import 'package:fcloudsdk_example/pages/door_lock/setting/network/usecase/door_lock_wifi_config_jumper.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/quick/door_lock_quick_fun_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/save_power_mode/door_lock_save_power_home_page.dart';
+import 'package:fcloudsdk_example/pages/door_lock/setting/screen_set/door_lock_screen_set_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_operation.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
@@ -52,6 +55,9 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
 
   ///是否支持网络管理
   bool _supportNetManager = false;
+
+  ///猫眼能力集
+  DoorLockCatEyeFunction? _catEyeFunction;
 
   late final DoorLockSettingPageController _pageController;
 
@@ -90,6 +96,27 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
   ///支持网络管理的设备才显示网络设置入口
   bool get _showNetManageEntry => _supportNetManager;
 
+  ///能力集内任一项支持且具备设置/电子钥匙权限的设备才显示屏幕设置入口
+  bool get _showScreenSetEntry {
+    final device = DeviceManager.instance.getDevice(deviceId: widget.deviceId);
+    if (device == null || _catEyeFunction == null) {
+      return false;
+    }
+    var function = _catEyeFunction!;
+    var supportItem = function.camsRotate.isNotEmpty ||
+        function.screenShutDown ||
+        function.screenInvert ||
+        function.showTimeTitle ||
+        function.showExWidgets ||
+        function.videoUsbSpeedMode ||
+        function.doorbellScreenWakeon;
+    if (!supportItem) {
+      return false;
+    }
+    return device.hasPermission(permission: DevicePermission.DP_Settings) ||
+        device.hasPermission(permission: DevicePermission.DP_DoorLockEleKey);
+  }
+
   ///设备是否已配网
   bool get _isConfigNet =>
       DeviceManager.instance
@@ -110,6 +137,7 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
     _queryConfig();
     _queryPowerSaving();
     _queryNetManager();
+    _queryCatEyeFunction();
   }
 
   @override
@@ -159,6 +187,27 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
     _supportNetManager =
         DoorLockHelper.instance.supportNetManager(widget.deviceId);
     if (mounted) setState(() {});
+  }
+
+  ///查询猫眼能力集：仅设备指令可走wifi时才需要拉取
+  Future<void> _queryCatEyeFunction() async {
+    final device = DeviceManager.instance.getDevice(deviceId: widget.deviceId);
+    if (device == null ||
+        (device.doolockCmdStatus != DoolockCmdStatus.onlyWifi &&
+            device.doolockCmdStatus != DoolockCmdStatus.wifiAndBlue)) {
+      return;
+    }
+    try {
+      final result = await DoorLockNetIp.getDoorLockCatEyeFunction(
+          deviceId: widget.deviceId);
+      if (!mounted || result.item1 == null) {
+        return;
+      }
+      _catEyeFunction = result.item1;
+      setState(() {});
+    } catch (e) {
+      debugPrint('queryCatEyeFunction error: ${kErrorMsg(e)}');
+    }
   }
 
   ///网络设置：未配网直接进配网，已配网进网络设置首页
@@ -258,6 +307,22 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
                       ),
                     );
                     _queryPowerSaving();
+                  },
+                ),
+              if (_showScreenSetEntry)
+                ListTile(
+                  leading: const Icon(Icons.monitor_outlined),
+                  title: Text(TR.current.TR_Device_Lock_Screen_Setting_Title),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => DoorLockScreenSetPage(
+                          deviceId: widget.deviceId,
+                          catEyeFunction: _catEyeFunction,
+                        ),
+                      ),
+                    );
                   },
                 ),
             ],

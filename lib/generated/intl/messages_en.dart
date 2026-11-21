@@ -120,8 +120,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Failed to get data"),
         "TR_Common_Minute": MessageLookupByLibrary.simpleMessage("Minute"),
         "TR_Common_NextDay": MessageLookupByLibrary.simpleMessage("Next Day"),
+        "TR_Common_Save_Success":
+            MessageLookupByLibrary.simpleMessage("Saved successfully"),
+        "TR_Common_Second": MessageLookupByLibrary.simpleMessage("Second"),
         "TR_Common_Time": MessageLookupByLibrary.simpleMessage("Time"),
         "TR_Common_Try_Again": MessageLookupByLibrary.simpleMessage("Retry"),
+        "TR_Device_Lock_Screen_Setting_Title":
+            MessageLookupByLibrary.simpleMessage("Door Lock Screen Settings"),
         "TR_Device_Wifi_Signal_Level":
             MessageLookupByLibrary.simpleMessage("Signal Strength"),
         "TR_DoorLock_Clear_Net_Ble_Connect_Success":
@@ -153,12 +158,42 @@ class MessageLookup extends MessageLookupByLibrary {
         "TR_DoorLock_Clear_Net_Wait_Restart_Tip":
             MessageLookupByLibrary.simpleMessage(
                 "3. Waiting for device restart..."),
+        "TR_DoorLock_Down_Camera_Invert":
+            MessageLookupByLibrary.simpleMessage("Invert Down Camera"),
+        "TR_DoorLock_Factory_Setting_Title":
+            MessageLookupByLibrary.simpleMessage("Factory Settings"),
+        "TR_DoorLock_Inside_Camera_Invert":
+            MessageLookupByLibrary.simpleMessage("Invert Inside Camera"),
         "TR_DoorLock_Net_Checking":
             MessageLookupByLibrary.simpleMessage("Checking network..."),
         "TR_DoorLock_Net_Manage_Connected_Wifi":
             MessageLookupByLibrary.simpleMessage("Connected to Wi-Fi"),
         "TR_DoorLock_Net_Manage_Not_Connect_Wifi":
             MessageLookupByLibrary.simpleMessage("Not Connected to Wi-Fi"),
+        "TR_DoorLock_Outside_Camera_Invert":
+            MessageLookupByLibrary.simpleMessage("Invert Outside Camera"),
+        "TR_DoorLock_Screen_Invert":
+            MessageLookupByLibrary.simpleMessage("Invert Screen"),
+        "TR_DoorLock_Screen_Invert_Introduce":
+            MessageLookupByLibrary.simpleMessage(
+                "Door Screen will invert 180°; do not modify casually"),
+        "TR_DoorLock_Screen_Show_Extra_Info":
+            MessageLookupByLibrary.simpleMessage(
+                "Show More on Screen (Wifi, Weather)"),
+        "TR_DoorLock_Screen_Show_Time_Title":
+            MessageLookupByLibrary.simpleMessage("Screen Display Time"),
+        "TR_DoorLock_Screen_Shutdown_Setting":
+            MessageLookupByLibrary.simpleMessage("Screen Shutdown Settings"),
+        "TR_DoorLock_Screen_Shutdown_Time":
+            MessageLookupByLibrary.simpleMessage("Screen Shutdown Time"),
+        "TR_DoorLock_Screen_Shutdown_Time_Introduce":
+            MessageLookupByLibrary.simpleMessage(
+                "The door lock will turn off the screen after the set time"),
+        "TR_DoorLock_Screen_Usb_Introduce":
+            MessageLookupByLibrary.simpleMessage(
+                "Can try to enable when no video signal"),
+        "TR_DoorLock_Screen_Wake_Up_By_Doorbell":
+            MessageLookupByLibrary.simpleMessage("Wake up screen by doorbell"),
         "TR_DoorLock_Settings_Net_Already_Connect_Server":
             MessageLookupByLibrary.simpleMessage(
                 "The current device is already connected to the cloud server"),
@@ -184,6 +219,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Recheck"),
         "TR_DoorLock_Settings_Reset_Net":
             MessageLookupByLibrary.simpleMessage("Reset Network"),
+        "TR_DoorLock_Single_Camera_Invert":
+            MessageLookupByLibrary.simpleMessage("Invert Single Camera"),
+        "TR_DoorLock_Up_Camera_Invert":
+            MessageLookupByLibrary.simpleMessage("Invert Up Camera"),
         "TR_DoorLock_Wifi_Name":
             MessageLookupByLibrary.simpleMessage("Wi-Fi Name"),
         "TR_File_Size_Exceed_Max_Size": MessageLookupByLibrary.simpleMessage(
@@ -300,6 +339,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Trigger Mode"),
         "TR_Setting_Wake_Up_Time":
             MessageLookupByLibrary.simpleMessage("Wake-up time"),
+        "TR_Settings_Advanced_Set":
+            MessageLookupByLibrary.simpleMessage("Advanced Settings"),
         "TR_Sex_Female": MessageLookupByLibrary.simpleMessage("female"),
         "TR_Sex_Male": MessageLookupByLibrary.simpleMessage("male"),
         "TR_Show_Traces_Tip": MessageLookupByLibrary.simpleMessage(
