@@ -988,7 +988,11 @@ class MainBlePairConfigController extends ChangeNotifier {
       DoorLockNetIp.clearKeepAliveState(model.deviceId);
       var syncResult = await DoorLockNetIp.syncDoorStatus(model.deviceId,
           ignoreKeepAlive: true);
-      if (!syncResult.item1) {
+
+      ///保活回 anotherOperating（其他用户正在操作）时直接放过去，继续添加管理员
+      if (!syncResult.item1 &&
+          syncResult.item2?.err !=
+              DoorLockNetIpOperaterResult.anotherOperating) {
         if (syncResult.item2?.err == DoorLockNetIpOperaterResult.needSync) {
           ///同步状态过期，提示后结束
           _log('保活失败：同步状态过期(needSync)');
