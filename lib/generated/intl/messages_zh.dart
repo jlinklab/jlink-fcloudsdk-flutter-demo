@@ -97,11 +97,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("操作失败，请确认设备是否在附近"),
         "TR_Ble_DoorLock_Reconnect_Tips":
             MessageLookupByLibrary.simpleMessage("当前设备未连接，\n是否尝试重新连接？"),
+        "TR_Ble_Doorlock_Voice_Update_Failed":
+            MessageLookupByLibrary.simpleMessage("锁声音信息同步服务器失败，请尝试手动数据同步！"),
         "TR_Capture_Failed": MessageLookupByLibrary.simpleMessage("抓图失败"),
         "TR_Capture_Success": MessageLookupByLibrary.simpleMessage("抓图成功"),
         "TR_Common_AllDay": MessageLookupByLibrary.simpleMessage("全天"),
         "TR_Common_Customize": MessageLookupByLibrary.simpleMessage("自定义"),
         "TR_Common_DataGetFailed":
+            MessageLookupByLibrary.simpleMessage("获取数据失败"),
+        "TR_Common_Data_Get_Failed":
             MessageLookupByLibrary.simpleMessage("获取数据失败"),
         "TR_Common_Minute": MessageLookupByLibrary.simpleMessage("分钟"),
         "TR_Common_NextDay": MessageLookupByLibrary.simpleMessage("次日"),
@@ -111,6 +115,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "TR_Common_Try_Again": MessageLookupByLibrary.simpleMessage("重试"),
         "TR_Device_Lock_Screen_Setting_Title":
             MessageLookupByLibrary.simpleMessage("门锁屏幕设置"),
+        "TR_Device_Volume_Doorlock":
+            MessageLookupByLibrary.simpleMessage("门锁音量"),
+        "TR_Device_Volume_Doorlock_Tip":
+            MessageLookupByLibrary.simpleMessage("调节门锁音量大小，包括按键、密码错误等提示音"),
+        "TR_Device_Volume_In_Room":
+            MessageLookupByLibrary.simpleMessage("室内门铃音量"),
+        "TR_Device_Volume_Mute": MessageLookupByLibrary.simpleMessage("静音"),
         "TR_Device_Wifi_Signal_Level":
             MessageLookupByLibrary.simpleMessage("WiFi信号强度"),
         "TR_DoorLock_Clear_Net_Ble_Connect_Success":
@@ -294,6 +305,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "TR_Setting_Wake_Up_Time": MessageLookupByLibrary.simpleMessage("唤醒时间"),
         "TR_Settings_Advanced_Set":
             MessageLookupByLibrary.simpleMessage("高级设置"),
+        "TR_Settings_Level_High": MessageLookupByLibrary.simpleMessage("高"),
+        "TR_Settings_Level_Low": MessageLookupByLibrary.simpleMessage("低"),
+        "TR_Settings_Level_Middle": MessageLookupByLibrary.simpleMessage("中"),
+        "TR_Settings_Open_Voice": MessageLookupByLibrary.simpleMessage("提示音"),
         "TR_Sex_Female": MessageLookupByLibrary.simpleMessage("女"),
         "TR_Sex_Male": MessageLookupByLibrary.simpleMessage("男"),
         "TR_Show_Traces_Tip":

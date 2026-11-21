@@ -913,5 +913,15 @@
   "TR_DoorLock_Outside_Camera_Invert": "室外镜头反转",
   "TR_DoorLock_Inside_Camera_Invert": "室内镜头反转",
   "TR_DoorLock_Screen_Usb_Introduce": "无视频信号时可尝试打开",
-  "TR_Common_Save_Success": "保存成功"
+  "TR_Common_Save_Success": "保存成功",
+  "TR_Settings_Open_Voice": "提示音",
+  "TR_Device_Volume_In_Room": "室内门铃音量",
+  "TR_Device_Volume_Doorlock": "门锁音量",
+  "TR_Device_Volume_Doorlock_Tip": "调节门锁音量大小，包括按键、密码错误等提示音",
+  "TR_Device_Volume_Mute": "静音",
+  "TR_Settings_Level_Low": "低",
+  "TR_Settings_Level_Middle": "中",
+  "TR_Settings_Level_High": "高",
+  "TR_Common_Data_Get_Failed": "获取数据失败",
+  "TR_Ble_Doorlock_Voice_Update_Failed": "锁声音信息同步服务器失败，请尝试手动数据同步！"
 }

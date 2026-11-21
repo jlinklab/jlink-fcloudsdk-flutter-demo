@@ -913,5 +913,15 @@
   "TR_DoorLock_Outside_Camera_Invert": "Invert Outside Camera",
   "TR_DoorLock_Inside_Camera_Invert": "Invert Inside Camera",
   "TR_DoorLock_Screen_Usb_Introduce": "Can try to enable when no video signal",
-  "TR_Common_Save_Success": "Saved successfully"
+  "TR_Common_Save_Success": "Saved successfully",
+  "TR_Settings_Open_Voice": "Prompt Voice",
+  "TR_Device_Volume_In_Room": "Indoor doorbell volume",
+  "TR_Device_Volume_Doorlock": "Door lock volume",
+  "TR_Device_Volume_Doorlock_Tip": "Adjust the door lock's volume, including keypress, password error, and other notification sounds.",
+  "TR_Device_Volume_Mute": "Mute",
+  "TR_Settings_Level_Low": "Low",
+  "TR_Settings_Level_Middle": "Middle",
+  "TR_Settings_Level_High": "High",
+  "TR_Common_Data_Get_Failed": "Failed to get data",
+  "TR_Ble_Doorlock_Voice_Update_Failed": "DoorLock voice information synchronization server failed, please try manual data synchronization!"
 }

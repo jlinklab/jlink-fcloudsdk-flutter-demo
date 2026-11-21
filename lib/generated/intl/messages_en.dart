@@ -109,6 +109,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Operation failed. Please confirm whether the device is nearby"),
         "TR_Ble_DoorLock_Reconnect_Tips": MessageLookupByLibrary.simpleMessage(
             "The device is not connected. \nDo you want to try reconnect?"),
+        "TR_Ble_Doorlock_Voice_Update_Failed": MessageLookupByLibrary.simpleMessage(
+            "DoorLock voice information synchronization server failed, please try manual data synchronization!"),
         "TR_Capture_Failed":
             MessageLookupByLibrary.simpleMessage("Capture failed"),
         "TR_Capture_Success":
@@ -117,6 +119,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "TR_Common_Customize":
             MessageLookupByLibrary.simpleMessage("Customize"),
         "TR_Common_DataGetFailed":
+            MessageLookupByLibrary.simpleMessage("Failed to get data"),
+        "TR_Common_Data_Get_Failed":
             MessageLookupByLibrary.simpleMessage("Failed to get data"),
         "TR_Common_Minute": MessageLookupByLibrary.simpleMessage("Minute"),
         "TR_Common_NextDay": MessageLookupByLibrary.simpleMessage("Next Day"),
@@ -127,6 +131,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "TR_Common_Try_Again": MessageLookupByLibrary.simpleMessage("Retry"),
         "TR_Device_Lock_Screen_Setting_Title":
             MessageLookupByLibrary.simpleMessage("Door Lock Screen Settings"),
+        "TR_Device_Volume_Doorlock":
+            MessageLookupByLibrary.simpleMessage("Door lock volume"),
+        "TR_Device_Volume_Doorlock_Tip": MessageLookupByLibrary.simpleMessage(
+            "Adjust the door lock\'s volume, including keypress, password error, and other notification sounds."),
+        "TR_Device_Volume_In_Room":
+            MessageLookupByLibrary.simpleMessage("Indoor doorbell volume"),
+        "TR_Device_Volume_Mute": MessageLookupByLibrary.simpleMessage("Mute"),
         "TR_Device_Wifi_Signal_Level":
             MessageLookupByLibrary.simpleMessage("Signal Strength"),
         "TR_DoorLock_Clear_Net_Ble_Connect_Success":
@@ -341,6 +352,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Wake-up time"),
         "TR_Settings_Advanced_Set":
             MessageLookupByLibrary.simpleMessage("Advanced Settings"),
+        "TR_Settings_Level_High": MessageLookupByLibrary.simpleMessage("High"),
+        "TR_Settings_Level_Low": MessageLookupByLibrary.simpleMessage("Low"),
+        "TR_Settings_Level_Middle":
+            MessageLookupByLibrary.simpleMessage("Middle"),
+        "TR_Settings_Open_Voice":
+            MessageLookupByLibrary.simpleMessage("Prompt Voice"),
         "TR_Sex_Female": MessageLookupByLibrary.simpleMessage("female"),
         "TR_Sex_Male": MessageLookupByLibrary.simpleMessage("male"),
         "TR_Show_Traces_Tip": MessageLookupByLibrary.simpleMessage(

@@ -19,6 +19,7 @@ import 'package:fcloudsdk_example/pages/door_lock/setting/network/usecase/door_l
 import 'package:fcloudsdk_example/pages/door_lock/setting/quick/door_lock_quick_fun_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/save_power_mode/door_lock_save_power_home_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/setting/screen_set/door_lock_screen_set_page.dart';
+import 'package:fcloudsdk_example/pages/door_lock/setting/tip_volume/door_lock_tip_volume_set_page.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_helper.dart';
 import 'package:fcloudsdk_example/pages/door_lock/usecase/door_lock_operation.dart';
 import 'package:fcloudsdk_example/views/toast/toast.dart';
@@ -111,6 +112,19 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
         function.videoUsbSpeedMode ||
         function.doorbellScreenWakeon;
     if (!supportItem) {
+      return false;
+    }
+    return device.hasPermission(permission: DevicePermission.DP_Settings) ||
+        device.hasPermission(permission: DevicePermission.DP_DoorLockEleKey);
+  }
+
+  ///影子服务能力支持且具备设置/电子钥匙权限的设备才显示提示音入口
+  bool get _showTipVolumeEntry {
+    if (!DoorLockHelper.supportTipVolumeBell(deviceId: widget.deviceId)) {
+      return false;
+    }
+    final device = DeviceManager.instance.getDevice(deviceId: widget.deviceId);
+    if (device == null) {
       return false;
     }
     return device.hasPermission(permission: DevicePermission.DP_Settings) ||
@@ -224,6 +238,32 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
     }
   }
 
+  ///提示音：设备休眠或离线时不进入
+  void _jumpTipVolume() {
+    final device = DeviceManager.instance.getDevice(deviceId: widget.deviceId);
+    if (device == null) {
+      return;
+    }
+    if (device.sleepState == DeviceSleepState.deepSleep) {
+      KToast.show(status: '设备处于深度休眠，无法唤醒');
+      return;
+    }
+    if (device.sleepState == DeviceSleepState.sleeping ||
+        device.sleepState == DeviceSleepState.preSleep) {
+      KToast.show(status: '设备正在休眠，请唤醒后重试');
+      return;
+    }
+    if (device.doolockCmdStatus == DoolockCmdStatus.offline) {
+      KToast.show(status: '设备离线，请稍后重试');
+      return;
+    }
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => DoorLockTipVolumeSetPage(deviceId: widget.deviceId),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -324,6 +364,13 @@ class _DoorLockSettingPageState extends State<DoorLockSettingPage> {
                       ),
                     );
                   },
+                ),
+              if (_showTipVolumeEntry)
+                ListTile(
+                  leading: const Icon(Icons.volume_up_outlined),
+                  title: Text(TR.current.TR_Settings_Open_Voice),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: _jumpTipVolume,
                 ),
             ],
           ),

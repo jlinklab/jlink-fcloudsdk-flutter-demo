@@ -9191,6 +9191,106 @@ class TR {
       args: [],
     );
   }
+
+  /// `提示音`
+  String get TR_Settings_Open_Voice {
+    return Intl.message(
+      '提示音',
+      name: 'TR_Settings_Open_Voice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `室内门铃音量`
+  String get TR_Device_Volume_In_Room {
+    return Intl.message(
+      '室内门铃音量',
+      name: 'TR_Device_Volume_In_Room',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `门锁音量`
+  String get TR_Device_Volume_Doorlock {
+    return Intl.message(
+      '门锁音量',
+      name: 'TR_Device_Volume_Doorlock',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `调节门锁音量大小，包括按键、密码错误等提示音`
+  String get TR_Device_Volume_Doorlock_Tip {
+    return Intl.message(
+      '调节门锁音量大小，包括按键、密码错误等提示音',
+      name: 'TR_Device_Volume_Doorlock_Tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `静音`
+  String get TR_Device_Volume_Mute {
+    return Intl.message(
+      '静音',
+      name: 'TR_Device_Volume_Mute',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `低`
+  String get TR_Settings_Level_Low {
+    return Intl.message(
+      '低',
+      name: 'TR_Settings_Level_Low',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `中`
+  String get TR_Settings_Level_Middle {
+    return Intl.message(
+      '中',
+      name: 'TR_Settings_Level_Middle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `高`
+  String get TR_Settings_Level_High {
+    return Intl.message(
+      '高',
+      name: 'TR_Settings_Level_High',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `获取数据失败`
+  String get TR_Common_Data_Get_Failed {
+    return Intl.message(
+      '获取数据失败',
+      name: 'TR_Common_Data_Get_Failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `锁声音信息同步服务器失败，请尝试手动数据同步！`
+  String get TR_Ble_Doorlock_Voice_Update_Failed {
+    return Intl.message(
+      '锁声音信息同步服务器失败，请尝试手动数据同步！',
+      name: 'TR_Ble_Doorlock_Voice_Update_Failed',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<TR> {

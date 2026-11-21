@@ -798,6 +798,21 @@ class DoorLockHelper {
         false;
   }
 
+  ///设备是否支持提示音设置（影子服务 DoorFunction.TipVolume.DoorBell）
+  static bool supportTipVolumeBell({required String deviceId}) {
+    var map = DoorLockShadow.doorFunction(deviceId: deviceId);
+    if (map.isEmpty) {
+      return false;
+    }
+    var tipVolume = MapParser.readMap(map, 'TipVolume');
+    if (tipVolume == null) {
+      return false;
+    }
+    return MapParser.readBool(tipVolume, 'DoorBell') ??
+        MapParser.readBool(tipVolume, 'doorBell') ??
+        false;
+  }
+
   ///用户管理入口是否显示
   ///首页“用户管理”区域是否渲染：任一能力+对应分享权限命中则显示
   static bool checkUserManagerShow({required String deviceId}) {
