@@ -78,7 +78,16 @@ mixin DoorLockSetConfigMixin on DoorLockOperationMixin {
       return sendByBlue();
     }
     if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue) {
-      return await isBlueSwitchOn ? sendByBlue() : sendByNetIp();
+      ///系统蓝牙已关闭但通道状态未重算时，直接走 WiFi
+      if (!await isBlueSwitchOn) return sendByNetIp();
+
+      ///WiFi与蓝牙双路在线时并发准备，谁先就绪走谁的发送
+      return sendByFirstReady<Tuple2<List<String>, dynamic>>(
+          retry: false,
+          showLoading: false,
+          sendByBlue: sendByBlue,
+          sendByNetIp: sendByNetIp,
+          returnValue: const Tuple2([], null));
     }
     if (DoorLockHelper.isLowPowerBle(deviceId) ||
         DoorLockHelper.isOverSeaDoorLock(deviceId)) {
@@ -168,6 +177,13 @@ mixin DoorLockSetConfigMixin on DoorLockOperationMixin {
       if (result.item2?.err == DoorLockNetIpOperaterResult.needSync) {
         return const _ConfigWriteResult(false, needSync: true);
       }
+
+      ///锁端要求先下载语音包才能生效，当前版本不支持该流程
+      if (result.item2?.err ==
+          DoorLockNetIpOperaterResult.needDownloadVoicePackageFromCloud) {
+        return const _ConfigWriteResult(false,
+            error: '该语言需先下载语音包才能生效，当前版本暂不支持');
+      }
       return _ConfigWriteResult(
         false,
         error: result.item3 != null
@@ -246,9 +262,18 @@ mixin DoorLockSetConfigMixin on DoorLockOperationMixin {
       } else if (device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
         result = await _sendByBlue(ble);
       } else if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue) {
-        result = await isBlueSwitchOn
-            ? await _sendByBlue(ble)
-            : await _sendByNetIp(netIp);
+        if (!await isBlueSwitchOn) {
+          ///系统蓝牙已关闭但通道状态未重算时，直接走 WiFi
+          result = await _sendByNetIp(netIp);
+        } else {
+          ///WiFi与蓝牙双路在线时并发准备，谁先就绪走谁的发送
+          result = await sendByFirstReady<_ConfigWriteResult>(
+              showLoading: false,
+              sendByBlue: () => _sendByBlue(ble),
+              sendByNetIp: () => _sendByNetIp(netIp),
+              returnValue:
+                  const _ConfigWriteResult(false, error: '设备不在附近，请靠近后重试'));
+        }
       } else if (DoorLockHelper.isLowPowerBle(deviceId) ||
           DoorLockHelper.isOverSeaDoorLock(deviceId)) {
         result = await waitBleOnline()

@@ -372,6 +372,142 @@ mixin DoorLockOperationMixin on ChangeNotifier {
     }
   }
 
+  ///WiFi与蓝牙双路在线时的双路竞争
+  ///WiFi链路真发保活Start探测（不复用保活池结果），蓝牙链路连接登录（蓝牙已连接时立即成功），
+  ///谁先就绪走谁的发送；双路同时就绪优先蓝牙；一条失败等另一条；
+  ///双路都失败或判决超时返回[returnValue]，失败文案由调用方按自身约定提示，不引入通用重试弹窗
+  Future<T> sendByFirstReady<T>({
+    bool retry = true,
+    bool showLoading = true,
+    Future<void> Function()? onCancel,
+    required Future<T> Function() sendByBlue,
+    required Future<T> Function() sendByNetIp,
+    required T returnValue,
+  }) async {
+    if (doorLockBleApi == null) {
+      createDoorLockAPI();
+    }
+
+    showLoading ? KToast.show() : null;
+
+    bool? wifiOk;
+    bool? bleOk;
+    DoorLockNetIpOperaterResult? wifiErr;
+    final verdict = Completer<Future<T> Function()>();
+    final wifiWatch = Stopwatch();
+    final bleWatch = Stopwatch();
+    final totalWatch = Stopwatch()..start();
+    String chosenPath = '';
+
+    ///双链路竞争日志
+    void log(String msg) => LogUtils.doorLock.log(msg);
+
+    log('[firstReady] deviceId=$deviceId 开始 | retry=$retry '
+        '${doorLockBleApi?.bleObject.isReady == true ? '蓝牙池:已就绪' : '蓝牙未连接'}');
+
+    ///任一链路出结果即判决，已判决则忽略后续
+    void judge() {
+      if (verdict.isCompleted) return;
+      if (bleOk == true) {
+        chosenPath = '蓝牙';
+        log('[firstReady] 判决：走蓝牙（蓝牙先就绪）');
+        verdict.complete(sendByBlue);
+        return;
+      }
+      if (wifiOk == true) {
+        if (doorLockBleApi?.bleObject.isReady == true) {
+          chosenPath = '蓝牙';
+          log('[firstReady] 判决：走蓝牙（双路同时就绪，优先蓝牙）');
+          verdict.complete(sendByBlue);
+        } else {
+          chosenPath = 'WiFi';
+          log('[firstReady] 判决：走WiFi（WiFi先就绪）');
+          verdict.complete(sendByNetIp);
+        }
+        return;
+      }
+      if (wifiOk == false && bleOk == false) {
+        chosenPath = '双路失败';
+        log('[firstReady] 判决：双路都失败，返回默认值');
+        verdict.complete(() async {
+          ///保活回 '其他用户正在操作' 时保持与单通道发送一致的提示
+          if (wifiErr == DoorLockNetIpOperaterResult.anotherOperating) {
+            KToast.show(status: '其他用户正在操作，请稍后再试');
+          }
+          await onCancel?.call();
+          return returnValue;
+        });
+      }
+      //一条链路已失败另一条未出结果，继续等
+    }
+
+    ///WiFi链路：真发保活Start探测，不复用保活池结果
+    unawaited(() async {
+      wifiWatch.start();
+      try {
+        var result =
+            await DoorLockNetIp.syncDoorStatus(deviceId, ignoreKeepAlive: true);
+        wifiOk = result.item1;
+        wifiErr = result.item2?.err;
+      } catch (e) {
+        log('[firstReady] WiFi链路异常: ${e.toString()}');
+        wifiOk = false;
+      }
+      wifiWatch.stop();
+      log('[firstReady] ${wifiOk == true ? 'wifi保活成功' : 'wifi保活失败'}, '
+          '耗时${wifiWatch.elapsedMilliseconds}ms'
+          '${verdict.isCompleted && chosenPath != 'WiFi' ? '（迟到，判决已定，忽略）' : ''}');
+      judge();
+    }());
+
+    ///蓝牙链路：连接并登录，蓝牙池已就绪时立即成功
+    unawaited(() async {
+      bleWatch.start();
+      try {
+        var result = await doorLockBleApi?.bleObject.waitReadyIfNeed();
+        bleOk = result?.item1 ?? false;
+      } catch (e) {
+        log('[firstReady] 蓝牙链路异常: ${e.toString()}');
+        bleOk = false;
+      }
+      bleWatch.stop();
+      log('[firstReady] ${bleOk == true ? '蓝牙登录成功' : '蓝牙登录失败'}, '
+          '耗时${bleWatch.elapsedMilliseconds}ms'
+          '${verdict.isCompleted && chosenPath != '蓝牙' ? '（迟到，判决已定，忽略）' : ''}');
+      judge();
+    }());
+
+    ///判决兜底超时：两条链路都未在时限内出结果时按双败处理
+    var timeoutTimer = Timer(const Duration(seconds: 35), () {
+      if (!verdict.isCompleted) {
+        chosenPath = '超时';
+        log('[firstReady] 判决：超时兜底，返回默认值');
+        verdict.complete(() async {
+          await onCancel?.call();
+          return returnValue;
+        });
+      }
+    });
+
+    var send = await verdict.future;
+    timeoutTimer.cancel();
+
+    showLoading ? KToast.dismiss() : null;
+
+    T result;
+    try {
+      result = await send();
+    } catch (e) {
+      //发送闭包异常时兜底回调onCancel并返回默认值
+      log('[firstReady] 发送闭包异常: ${e.toString()}');
+      await onCancel?.call();
+      return returnValue;
+    }
+    log('[firstReady] deviceId=$deviceId 结束（走$chosenPath, '
+        '总耗时${totalWatch.elapsedMilliseconds}ms）');
+    return result;
+  }
+
   void createDoorLockAPI() {
     if (keepBleConnectWhenDispose ||
         keepLoginWhenDispose ||
@@ -786,7 +922,12 @@ mixin DoorLockOperationMixin on ChangeNotifier {
         return sendByNetIp();
       }
 
-      return sendByBlue();
+      ///WiFi与蓝牙双路在线时并发准备，谁先就绪走谁的发送
+      return sendByFirstReady<DoorLockDeleteResult>(
+          showLoading: false,
+          sendByBlue: sendByBlue,
+          sendByNetIp: sendByNetIp,
+          returnValue: const DoorLockDeleteResult(false, null, null));
     }
 
     ///离线密码删除的wifi半透传从V2开始才支持，能力集不支持时只能用蓝牙
@@ -924,7 +1065,13 @@ mixin DoorLockOperationMixin on ChangeNotifier {
             .log('doorLockAddPasswordType blue switch off, sendByNetIp');
         return sendByNetIp();
       }
-      return sendByBlue();
+
+      ///WiFi与蓝牙双路在线时并发准备，谁先就绪走谁的发送
+      return sendByFirstReady<DoorLockAddResult>(
+          showLoading: false,
+          sendByBlue: sendByBlue,
+          sendByNetIp: sendByNetIp,
+          returnValue: const DoorLockAddResult(false, -1, null, null));
     } else if (device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
       return sendByBlue();
     } else {
@@ -1273,7 +1420,13 @@ mixin DoorLockOperationMixin on ChangeNotifier {
             .log('doorLockAddOpenType blue switch off, sendByNetIp');
         return sendByNetIp();
       }
-      return sendByBlue();
+
+      ///WiFi与蓝牙双路在线时并发准备，谁先就绪走谁的发送
+      return sendByFirstReady<DoorLockAddResult>(
+          showLoading: false,
+          sendByBlue: sendByBlue,
+          sendByNetIp: sendByNetIp,
+          returnValue: const DoorLockAddResult(false, -1, null, null));
     } else if (device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
       return sendByBlue();
     } else {
@@ -1453,7 +1606,13 @@ mixin DoorLockOperationMixin on ChangeNotifier {
             .log('getLockEndUnlockingList blue switch off, sendByNetIp');
         return sendByNetIp();
       }
-      return sendByBlue();
+
+      ///WiFi与蓝牙双路在线时并发准备，谁先就绪走谁的发送
+      return sendByFirstReady<List<DoorUser>>(
+          showLoading: false,
+          sendByBlue: sendByBlue,
+          sendByNetIp: sendByNetIp,
+          returnValue: []);
     } else if (device.doolockCmdStatus == DoolockCmdStatus.onlyBlue) {
       return sendByBlue();
     } else {
@@ -1532,7 +1691,15 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       return sendByBlue();
     }
     if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue) {
-      return await isBlueSwitchOn ? sendByBlue() : sendByNetIp();
+      ///系统蓝牙已关闭但通道状态未重算时，直接走 WiFi
+      if (!await isBlueSwitchOn) return sendByNetIp();
+
+      ///WiFi与蓝牙双路在线时并发准备，谁先就绪走谁的发送
+      return sendByFirstReady<bool>(
+          showLoading: false,
+          sendByBlue: sendByBlue,
+          sendByNetIp: sendByNetIp,
+          returnValue: false);
     }
     if (DoorLockHelper.isLowPowerBle(deviceId) ||
         DoorLockHelper.isOverSeaDoorLock(deviceId)) {
@@ -1625,7 +1792,15 @@ mixin DoorLockOperationMixin on ChangeNotifier {
       return sendByBlue();
     }
     if (device.doolockCmdStatus == DoolockCmdStatus.wifiAndBlue) {
-      return await isBlueSwitchOn ? sendByBlue() : sendByNetIp();
+      ///系统蓝牙已关闭但通道状态未重算时，直接走 WiFi
+      if (!await isBlueSwitchOn) return sendByNetIp();
+
+      ///WiFi与蓝牙双路在线时并发准备，谁先就绪走谁的发送
+      return sendByFirstReady<bool>(
+          showLoading: false,
+          sendByBlue: sendByBlue,
+          sendByNetIp: sendByNetIp,
+          returnValue: false);
     }
     KToast.show(status: '当前设备离线，无法恢复出厂设置');
     return false;
